@@ -1,0 +1,3366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Garis & Sudut - Kelas 3 SD</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF5E4;
+  --bg-2: #FFEFD5;
+  --primary: #FF6B6B;
+  --primary-dark: #E85555;
+  --secondary: #4ECDC4;
+  --secondary-dark: #3DB5AC;
+  --accent: #FFD93D;
+  --pink: #FF9FF3;
+  --purple: #A29BFE;
+  --green: #95E1A3;
+  --green-dark: #2D7A3F;
+  --orange: #FFA07A;
+  --dark: #2C3E50;
+  --muted: #6B7280;
+  --card: #FFFFFF;
+  --border: rgba(44, 62, 80, 0.12);
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.display { font-family: 'Fredoka', sans-serif; }
+
+.bg-shapes {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-shape {
+  position: absolute;
+  opacity: 0.12;
+  animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-30px) rotate(90deg); }
+  50% { transform: translateY(30px) rotate(180deg); }
+  75% { transform: translateY(-20px) rotate(270deg); }
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand i { font-size: 1.3rem; }
+
+.nav-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dark);
+  font-size: 0.9rem;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary);
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--primary);
+  width: 30px;
+  border-radius: 5px;
+}
+
+.slides-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 20px 40px 30px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(50px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.slide-content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.slide::-webkit-scrollbar { width: 8px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+/* ===== Slide 1: Cover ===== */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(100vh - 100px);
+}
+
+.cover-decoration {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--dark);
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.9rem;
+}
+
+.cover-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+
+.cover-title .word-1 { color: var(--primary); }
+.cover-title .word-2 { color: var(--secondary); }
+.cover-title .word-3 { color: var(--dark); }
+
+.cover-subtitle {
+  font-size: 1.15rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+  font-weight: 600;
+  max-width: 600px;
+}
+
+.name-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.name-input-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  width: 260px;
+  border-top: 6px solid;
+  position: relative;
+}
+
+.name-input-card.player-1 { border-top-color: var(--primary); }
+.name-input-card.player-2 { border-top-color: var(--secondary); }
+
+.player-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: -40px auto 8px;
+  box-shadow: var(--shadow);
+}
+
+.player-1 .player-avatar { background: var(--primary); }
+.player-2 .player-avatar { background: var(--secondary); }
+
+.player-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.player-1 .player-badge { background: var(--primary); }
+.player-2 .player-badge { background: var(--secondary); }
+
+.name-input-card input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+
+.name-input-card input:focus {
+  border-color: var(--primary);
+}
+
+.player-1 input:focus { border-color: var(--primary); }
+.player-2 input:focus { border-color: var(--secondary); }
+
+.btn-start {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 999px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-start:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5);
+}
+
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--muted);
+  box-shadow: none;
+}
+
+/* ===== Common Slide Header ===== */
+.slide-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.slide-tag {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--dark);
+  padding: 4px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.slide-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.slide-subtitle {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ===== Slide 2: Objectives ===== */
+.objectives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.objective-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  border-bottom: 5px solid;
+  transition: transform 0.2s;
+}
+
+.objective-card:hover {
+  transform: translateY(-4px);
+}
+
+.objective-card:nth-child(1) { border-bottom-color: var(--primary); }
+.objective-card:nth-child(2) { border-bottom-color: var(--secondary); }
+.objective-card:nth-child(3) { border-bottom-color: var(--accent); }
+.objective-card:nth-child(4) { border-bottom-color: var(--pink); }
+.objective-card:nth-child(5) { border-bottom-color: var(--green); }
+
+.objective-card .icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: white;
+  margin: 0 auto 12px;
+}
+
+.objective-card:nth-child(1) .icon { background: var(--primary); }
+.objective-card:nth-child(2) .icon { background: var(--secondary); }
+.objective-card:nth-child(3) .icon { background: var(--accent); color: var(--dark); }
+.objective-card:nth-child(4) .icon { background: var(--pink); }
+.objective-card:nth-child(5) .icon { background: var(--green); }
+
+.objective-card h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.objective-card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* ===== Slide 3: Pemantik ===== */
+.pemantik-box {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  max-width: 800px;
+  margin: 24px auto;
+  position: relative;
+}
+
+.pemantik-box::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 30px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 6rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.pemantik-question {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.6rem;
+  color: var(--dark);
+  margin-bottom: 16px;
+  padding-left: 40px;
+}
+
+.pemantik-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.pemantik-text strong { color: var(--primary); }
+
+.thinking-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.thinking-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border-left: 5px solid var(--accent);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.thinking-card .think-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.thinking-card h4 {
+  font-family: 'Fredoka', sans-serif;
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.thinking-card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* ===== Slide 4: Materi ===== */
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tab-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-btn:hover:not(.active) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.4s;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.material-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 14px;
+}
+
+.material-card h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.material-card h3 i { color: var(--primary); }
+
+.material-card p {
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.material-card p strong { color: var(--primary); }
+
+/* Lines demo */
+.lines-demo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.line-demo-card {
+  background: var(--bg);
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  border: 2px solid var(--border);
+  transition: all 0.2s;
+}
+
+.line-demo-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.line-demo-card svg {
+  display: block;
+  margin: 0 auto 8px;
+  background: white;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.line-demo-card .label {
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 4px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+}
+
+.line-demo-card .desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+/* Interactive ruler */
+.ruler-container {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 14px;
+}
+
+.ruler-wrap {
+  background: #FFF8DC;
+  border-radius: 12px;
+  padding: 8px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.ruler-svg {
+  display: block;
+  min-width: 800px;
+}
+
+.ruler-question {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ruler-input {
+  padding: 12px 16px;
+  border: 3px solid var(--primary);
+  border-radius: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  width: 140px;
+  text-align: center;
+  outline: none;
+}
+
+.btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.btn-secondary { background: var(--secondary); }
+.btn-accent { background: var(--accent); color: var(--dark); }
+.btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+
+.feedback {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-align: center;
+  display: none;
+  font-size: 0.95rem;
+}
+
+.feedback.show { display: block; animation: pop 0.3s; }
+.feedback.correct { background: rgba(149, 225, 163, 0.3); color: var(--green-dark); }
+.feedback.wrong { background: rgba(255, 107, 107, 0.2); color: #C0392B; }
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.tool-card {
+  background: var(--bg);
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  border: 2px solid var(--border);
+}
+
+.tool-card .tool-icon {
+  font-size: 2rem;
+  margin-bottom: 6px;
+  color: var(--primary);
+}
+
+.tool-card .tool-name {
+  font-weight: 800;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+}
+
+.tool-card .tool-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Shapes grid */
+.shapes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.shape-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 3px solid transparent;
+}
+
+.shape-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+}
+
+.shape-card.selected {
+  border-color: var(--primary);
+  background: rgba(255, 107, 107, 0.06);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.shape-card svg {
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.shape-card .shape-name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+/* Complex MC */
+.complex-mc {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 14px;
+}
+
+.complex-mc h3 {
+  font-family: 'Fredoka', sans-serif;
+  margin-bottom: 8px;
+  color: var(--dark);
+  font-size: 1.15rem;
+}
+
+.complex-mc .mc-shape-display {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.complex-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.complex-option {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  user-select: none;
+}
+
+.complex-option:hover { border-color: var(--primary); }
+
+.complex-option .checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.complex-option.selected {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: var(--primary);
+}
+
+.complex-option.selected .checkbox {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.complex-option.correct {
+  background: rgba(149, 225, 163, 0.3);
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
+.complex-option.correct .checkbox {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.complex-option.wrong {
+  background: rgba(255, 107, 107, 0.2);
+  border-color: var(--primary);
+}
+
+.complex-option.wrong .checkbox {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* Angle types */
+.angle-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.angle-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  border-top: 4px solid;
+}
+
+.angle-card:nth-child(1) { border-top-color: var(--green); }
+.angle-card:nth-child(2) { border-top-color: var(--primary); }
+.angle-card:nth-child(3) { border-top-color: var(--orange); }
+.angle-card:nth-child(4) { border-top-color: var(--secondary); }
+.angle-card:nth-child(5) { border-top-color: var(--purple); }
+
+.angle-card svg {
+  display: block;
+  margin: 0 auto 8px;
+}
+
+.angle-card .angle-name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.angle-card .angle-deg {
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+/* Flash cards */
+.flashcard-container {
+  position: relative;
+  margin: 16px auto;
+  max-width: 480px;
+}
+
+.flashcard {
+  width: 100%;
+  height: 280px;
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.flashcard-front {
+  background: linear-gradient(135deg, var(--primary), var(--orange));
+  color: white;
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, var(--secondary), var(--green));
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flashcard-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  opacity: 0.85;
+  font-weight: 700;
+}
+
+.flashcard-content {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.flashcard-hint {
+  font-size: 0.82rem;
+  margin-top: 16px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.flashcard-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.flashcard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding: 0 8px;
+}
+
+.flashcard-counter {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--dark);
+  background: var(--card);
+  padding: 6px 14px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.flashcard-nav-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s;
+  color: var(--dark);
+}
+
+.flashcard-nav-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Line types */
+.line-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.line-type-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border-left: 5px solid;
+  transition: transform 0.2s;
+}
+
+.line-type-card:hover { transform: translateY(-4px); }
+
+.line-type-card:nth-child(1) { border-left-color: var(--primary); }
+.line-type-card:nth-child(2) { border-left-color: var(--secondary); }
+.line-type-card:nth-child(3) { border-left-color: var(--accent); }
+.line-type-card:nth-child(4) { border-left-color: var(--purple); }
+
+.line-type-card svg {
+  display: block;
+  margin: 0 auto 10px;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.line-type-card h4 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.line-type-card .definition {
+  font-size: 0.85rem;
+  color: var(--dark);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.line-type-card .example {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.line-type-card .example strong { color: var(--primary); font-style: normal; }
+
+/* ===== Slide 5: Game ===== */
+.game-arena {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 14px;
+}
+
+.game-track {
+  position: relative;
+  height: 110px;
+  background: linear-gradient(90deg, rgba(149, 225, 163, 0.25) 0%, rgba(255, 217, 61, 0.25) 100%);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+}
+
+.track-lane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.track-lane.p1 { top: 0; border-bottom: 1px dashed rgba(0,0,0,0.1); }
+.track-lane.p2 { bottom: 0; }
+
+.player-token {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  z-index: 2;
+  left: 10px;
+  border: 3px solid white;
+}
+
+.player-token.p1 { background: var(--primary); top: 6px; }
+.player-token.p2 { background: var(--secondary); bottom: 6px; }
+
+.game-finish {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 32px;
+  background: repeating-linear-gradient(45deg, var(--dark) 0, var(--dark) 6px, white 6px, white 12px);
+  border-left: 3px solid var(--dark);
+  z-index: 1;
+}
+
+.finish-label {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 0.7rem;
+  background: var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+.game-scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.game-score-card {
+  background: var(--bg);
+  padding: 12px 16px;
+  border-radius: 14px;
+  border-left: 5px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-score-card.p1 { border-left-color: var(--primary); }
+.game-score-card.p2 { border-left-color: var(--secondary); }
+
+.game-score-card .score-label {
+  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+}
+
+.game-score-card .score-value {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.game-score-card.p1 .score-value { color: var(--primary); }
+.game-score-card.p2 .score-value { color: var(--secondary); }
+
+.game-question-box {
+  background: var(--bg);
+  padding: 18px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.game-question-box .round-num {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--dark);
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.game-question-box h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.25rem;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.game-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.game-player-options {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  border-top: 4px solid;
+}
+
+.game-player-options.p1 { border-top-color: var(--primary); }
+.game-player-options.p2 { border-top-color: var(--secondary); }
+
+.game-player-options .player-label {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.game-player-options.p1 .player-label { color: var(--primary); }
+.game-player-options.p2 .player-label { color: var(--secondary); }
+
+.game-option {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+}
+
+.game-option:hover:not(.disabled) {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.game-player-options.p2 .game-option:hover:not(.disabled) {
+  border-color: var(--secondary);
+}
+
+.game-option.selected-p1 {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: var(--primary);
+}
+
+.game-option.selected-p2 {
+  background: rgba(78, 205, 196, 0.15);
+  border-color: var(--secondary);
+}
+
+.game-option.correct {
+  background: rgba(149, 225, 163, 0.4);
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
+.game-option.wrong {
+  background: rgba(255, 107, 107, 0.25);
+  border-color: var(--primary);
+}
+
+.game-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.game-result {
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+
+.game-result.show { display: block; }
+
+.game-result h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+/* ===== Slide 6: Quiz ===== */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quiz-nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.quiz-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.quiz-dot:hover { border-color: var(--primary); }
+.quiz-dot.current { background: var(--accent); border-color: var(--accent); }
+.quiz-dot.answered-p1 { background: rgba(255, 107, 107, 0.2); border-color: var(--primary); color: var(--primary); }
+.quiz-dot.answered-p2 { background: rgba(78, 205, 196, 0.2); border-color: var(--secondary); color: var(--secondary); }
+.quiz-dot.answered-both { background: linear-gradient(135deg, var(--primary), var(--secondary)); border-color: transparent; color: white; }
+
+.quiz-scores {
+  display: flex;
+  gap: 10px;
+}
+
+.quiz-score-mini {
+  background: var(--card);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.quiz-score-mini.p1 { color: var(--primary); }
+.quiz-score-mini.p2 { color: var(--secondary); }
+
+.quiz-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.student-panel {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border-top: 5px solid;
+}
+
+.student-panel.left { border-top-color: var(--primary); }
+.student-panel.right { border-top-color: var(--secondary); }
+
+.student-panel .student-name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.student-panel.left .student-name i { color: var(--primary); }
+.student-panel.right .student-name i { color: var(--secondary); }
+
+.quiz-question-text {
+  background: var(--bg);
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+.quiz-options {
+  display: grid;
+  gap: 8px;
+}
+
+.quiz-option {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.quiz-option:hover:not(.locked) { border-color: var(--primary); transform: translateX(2px); }
+.student-panel.right .quiz-option:hover:not(.locked) { border-color: var(--secondary); }
+
+.quiz-option .letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+}
+
+.student-panel.left .quiz-option.selected { background: rgba(255, 107, 107, 0.1); border-color: var(--primary); }
+.student-panel.left .quiz-option.selected .letter { background: var(--primary); color: white; border-color: var(--primary); }
+
+.student-panel.right .quiz-option.selected { background: rgba(78, 205, 196, 0.1); border-color: var(--secondary); }
+.student-panel.right .quiz-option.selected .letter { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+.quiz-option.correct { background: rgba(149, 225, 163, 0.3); border-color: var(--green); color: var(--green-dark); }
+.quiz-option.correct .letter { background: var(--green); color: white; border-color: var(--green); }
+
+.quiz-option.wrong { background: rgba(255, 107, 107, 0.2); border-color: var(--primary); color: #C0392B; }
+.quiz-option.wrong .letter { background: var(--primary); color: white; border-color: var(--primary); }
+
+.quiz-option.locked { cursor: not-allowed; }
+
+.quiz-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.discussion {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+  border-left: 5px solid var(--secondary);
+  display: none;
+  animation: slideDown 0.4s;
+}
+
+.discussion.show { display: block; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.discussion h4 {
+  font-family: 'Fredoka', sans-serif;
+  color: var(--secondary-dark);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discussion p { line-height: 1.5; }
+
+/* ===== Slide 7: Reflection ===== */
+.reflection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.reflection-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  border-top: 5px solid;
+}
+
+.reflection-card:nth-child(1) { border-top-color: var(--primary); }
+.reflection-card:nth-child(2) { border-top-color: var(--secondary); }
+.reflection-card:nth-child(3) { border-top-color: var(--accent); }
+
+.reflection-card .icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+  margin: 0 auto 14px;
+}
+
+.reflection-card:nth-child(1) .icon { background: var(--primary); }
+.reflection-card:nth-child(2) .icon { background: var(--secondary); }
+.reflection-card:nth-child(3) .icon { background: var(--accent); color: var(--dark); }
+
+.reflection-card h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.reflection-card ul {
+  list-style: none;
+  text-align: left;
+  padding: 0;
+}
+
+.reflection-card li {
+  padding: 6px 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.reflection-card li i { color: var(--primary); margin-top: 4px; font-size: 0.7rem; }
+
+.conclusion-list {
+  list-style: none;
+  padding: 0;
+  max-width: 800px;
+  margin: 18px auto 0;
+}
+
+.conclusion-list li {
+  background: var(--card);
+  padding: 12px 18px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s;
+}
+
+.conclusion-list li:hover { transform: translateX(4px); }
+
+.conclusion-list li .num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.conclusion-list li:nth-child(1) .num { background: var(--primary); }
+.conclusion-list li:nth-child(2) .num { background: var(--secondary); }
+.conclusion-list li:nth-child(3) .num { background: var(--accent); color: var(--dark); }
+.conclusion-list li:nth-child(4) .num { background: var(--pink); }
+.conclusion-list li:nth-child(5) .num { background: var(--green); }
+.conclusion-list li:nth-child(6) .num { background: var(--purple); }
+
+.thankyou-section {
+  text-align: center;
+  padding: 30px 20px;
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+}
+
+.thankyou-section h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 3rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+
+.thankyou-section p {
+  color: var(--muted);
+  font-weight: 600;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.thankyou-stars {
+  font-size: 2rem;
+  margin: 16px 0;
+}
+
+.thankyou-stars i {
+  color: var(--accent);
+  margin: 0 4px;
+  animation: twinkle 1.5s infinite;
+}
+
+.thankyou-stars i:nth-child(2) { animation-delay: 0.3s; }
+.thankyou-stars i:nth-child(3) { animation-delay: 0.6s; }
+.thankyou-stars i:nth-child(4) { animation-delay: 0.9s; }
+.thankyou-stars i:nth-child(5) { animation-delay: 1.2s; }
+
+@keyframes twinkle {
+  0%, 100% { transform: scale(1) rotate(0); opacity: 1; }
+  50% { transform: scale(1.3) rotate(20deg); opacity: 0.8; }
+}
+
+/* Confetti */
+.confetti-piece {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confetti 3s linear forwards;
+}
+
+@keyframes confetti {
+  0% { transform: translateY(-20px) rotate(0); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--dark);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  z-index: 10000;
+  opacity: 0;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-lg);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.success { background: var(--green-dark); }
+.toast.error { background: #C0392B; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .quiz-container { grid-template-columns: 1fr; }
+  .game-options { grid-template-columns: 1fr; }
+  .navbar { padding: 8px 14px; }
+  .brand { font-size: 0.9rem; }
+  .nav-btn { padding: 6px 12px; font-size: 0.8rem; }
+  .progress-dots { display: none; }
+  .slide { padding: 14px 18px 24px; }
+  .slide-title { font-size: 1.6rem; }
+  .cover-title { font-size: 2rem; }
+  .name-inputs { flex-direction: column; align-items: center; }
+  .game-scores { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<!-- Animated background shapes -->
+<div class="bg-shapes" id="bgShapes"></div>
+
+<div class="app">
+  <nav class="navbar">
+    <div class="brand">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Petualangan Garis & Sudut</span>
+    </div>
+    <div class="progress-dots" id="progressDots"></div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i> Kembali</button>
+      <button class="nav-btn" id="nextBtn">Lanjut <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </nav>
+
+  <div class="slides-container">
+    
+    <!-- ===== SLIDE 1: COVER ===== -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-content cover">
+        <div class="cover-badge">
+          <i class="fa-solid fa-star"></i>
+          Matematika Kelas 3 SD
+        </div>
+        <h1 class="cover-title">
+          <span class="word-1">Petualangan</span><br>
+          <span class="word-2">Garis</span> <span class="word-3">&</span> <span class="word-1">Sudut</span>
+        </h1>
+        <p class="cover-subtitle">
+          Yuk menjelajahi dunia sisi, sudut, dan jenis-jenis garis bersama temanmu!
+        </p>
+        
+        <div class="name-inputs">
+          <div class="name-input-card player-1">
+            <div class="player-avatar">A</div>
+            <div class="player-badge"><i class="fa-solid fa-user"></i> Siswa 1</div>
+            <input type="text" id="nameP1" placeholder="Tulis namamu..." maxlength="20">
+          </div>
+          <div class="name-input-card player-2">
+            <div class="player-avatar">B</div>
+            <div class="player-badge"><i class="fa-solid fa-user"></i> Siswa 2</div>
+            <input type="text" id="nameP2" placeholder="Tulis namamu..." maxlength="20">
+          </div>
+        </div>
+        
+        <button class="btn-start" id="startBtn" disabled>
+          <i class="fa-solid fa-rocket"></i>
+          Mulai Petualangan
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 2: TUJUAN ===== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 2</span>
+          <h2 class="slide-title">Tujuan Pembelajaran</h2>
+          <p class="slide-subtitle">Setelah pembelajaran ini, kalian akan mampu:</p>
+        </div>
+        
+        <div class="objectives-grid">
+          <div class="objective-card">
+            <div class="icon"><i class="fa-solid fa-pen-ruler"></i></div>
+            <h3>Mengenal Garis</h3>
+            <p>Memahami pengertian sinar garis, garis, ruas garis, dan cara membacanya</p>
+          </div>
+          <div class="objective-card">
+            <div class="icon"><i class="fa-solid fa-ruler"></i></div>
+            <h3>Mengukur Garis</h3>
+            <p>Mengukur panjang garis menggunakan penggaris dengan tepat</p>
+          </div>
+          <div class="objective-card">
+            <div class="icon"><i class="fa-solid fa-shapes"></i></div>
+            <h3> Mengenal Sisi</h3>
+            <p>Mengetahui bahwa sisi pada bangun datar merupakan ruas garis</p>
+          </div>
+          <div class="objective-card">
+            <div class="icon"><i class="fa-solid fa-angle-up"></i></div>
+            <h3>Mengenal Sudut</h3>
+            <p>Memahami jenis-jenis sudut dan cara membaca nama sudut</p>
+          </div>
+          <div class="objective-card">
+            <div class="icon"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+            <h3>Jenis-jenis Garis</h3>
+            <p>Mengenal garis tegak lurus, sejajar, berpotongan, dan berimpit</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 3: PEMANTIK ===== -->
+    <section class="slide" data-slide="3">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 3</span>
+          <h2 class="slide-title">Pemantik</h2>
+          <p class="slide-subtitle">Mari berpikir sebelum belajar!</p>
+        </div>
+        
+        <div class="pemantik-box">
+          <h3 class="pemantik-question">Apa itu garis?</h3>
+          <p class="pemantik-text">
+            Coba lihat sekelilingmu. Ada banyak benda yang memiliki <strong>garis</strong>! 
+            Pinggiran meja, tepi buku, jejak pensil di kertas, bahkan tepi pintu — semuanya adalah garis.
+          </p>
+          <p class="pemantik-text">
+            <strong>Garis</strong> adalah kumpulan titik-titik yang berderet lurus ke arah tertentu dan memiliki panjang, tetapi tidak memiliki lebar.
+          </p>
+          <p class="pemantik-text" style="margin-top: 14px;">
+            <i class="fa-solid fa-circle-question" style="color: var(--primary);"></i> 
+            <strong>Pertanyaan pemantik:</strong> Apakah garis ada jenisnya? Coba diskusikan dengan temanmu!
+          </p>
+        </div>
+        
+        <div class="thinking-cards">
+          <div class="thinking-card">
+            <div class="think-icon"><i class="fa-solid fa-lightbulb"></i></div>
+            <div>
+              <h4>Bayangkan!</h4>
+              <p>Sinar matahari, rel kereta api, dan tepi penggaris. Apakah sama jenisnya?</p>
+            </div>
+          </div>
+          <div class="thinking-card">
+            <div class="think-icon"><i class="fa-solid fa-comments"></i></div>
+            <div>
+              <h4>Diskusi!</h4>
+              <p>Ceritakan pendapatmu kepada teman sebangkumu. Apa beda garis dan ruas garis?</p>
+            </div>
+          </div>
+          <div class="thinking-card">
+            <div class="think-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div>
+              <h4>Amati!</h4>
+              <p>Carilah 5 benda di kelas yang memiliki garis. Apakah semua garis itu sama?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 4: MATERI ===== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 4</span>
+          <h2 class="slide-title">Materi Pembelajaran</h2>
+          <p class="slide-subtitle">Klik tab di bawah untuk menjelajahi setiap materi</p>
+        </div>
+        
+        <div class="section-tabs">
+          <button class="tab-btn active" data-tab="garis"><i class="fa-solid fa-minus"></i> 1. Garis</button>
+          <button class="tab-btn" data-tab="ukur"><i class="fa-solid fa-ruler"></i> 2. Mengukur</button>
+          <button class="tab-btn" data-tab="sisi"><i class="fa-solid fa-shapes"></i> 3. Sisi</button>
+          <button class="tab-btn" data-tab="sudut"><i class="fa-solid fa-angle-up"></i> 4. Sudut</button>
+          <button class="tab-btn" data-tab="jenis"><i class="fa-solid fa-arrows-left-right"></i> 5. Jenis Garis</button>
+        </div>
+        
+        <!-- Tab 1: Garis -->
+        <div class="tab-content active" id="tab-garis">
+          <div class="material-card">
+            <h3><i class="fa-solid fa-info-circle"></i> Apa itu Garis?</h3>
+            <p>Garis adalah kumpulan titik-titik yang berderet lurus, memiliki panjang, tetapi tidak memiliki lebar. Di matematika, ada <strong>3 macam garis</strong> berdasarkan panjangnya:</p>
+            
+            <div class="lines-demo">
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#FF6B6B" stroke-width="3"/>
+                  <circle cx="20" cy="35" r="5" fill="#FF6B6B"/>
+                  <polygon points="150,28 170,35 150,42" fill="#FF6B6B"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">A</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">B</text>
+                </svg>
+                <div class="label">Sinar Garis AB</div>
+                <div class="desc">Memiliki 1 titik awal, panjang tak terhingga ke satu arah</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <polygon points="10,28 25,35 10,42" fill="#4ECDC4"/>
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#4ECDC4" stroke-width="3"/>
+                  <polygon points="155,28 170,35 155,42" fill="#4ECDC4"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">A</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">B</text>
+                </svg>
+                <div class="label">Garis AB</div>
+                <div class="desc">Panjang tak terhingga ke kedua arah</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#FFD93D" stroke-width="3"/>
+                  <circle cx="20" cy="35" r="5" fill="#FFD93D" stroke="#2C3E50" stroke-width="2"/>
+                  <circle cx="160" cy="35" r="5" fill="#FFD93D" stroke="#2C3E50" stroke-width="2"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">A</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">B</text>
+                </svg>
+                <div class="label">Ruas Garis AB</div>
+                <div class="desc">Memiliki 2 titik ujung, panjangnya tertentu</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="material-card">
+            <h3><i class="fa-solid fa-book-open"></i> Cara Membaca Nama Garis</h3>
+            <p>Nama garis ditulis dengan dua huruf besar, dibaca dari titik awal ke titik akhir.</p>
+            <div class="lines-demo">
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <polygon points="10,28 25,35 10,42" fill="#4ECDC4"/>
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#4ECDC4" stroke-width="3"/>
+                  <polygon points="155,28 170,35 155,42" fill="#4ECDC4"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">P</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">Q</text>
+                </svg>
+                <div class="label">Dibaca: Garis PQ</div>
+                <div class="desc">Sama dengan Garis QP (boleh dibolak-balik)</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#FFD93D" stroke-width="3"/>
+                  <circle cx="20" cy="35" r="5" fill="#FFD93D" stroke="#2C3E50" stroke-width="2"/>
+                  <circle cx="160" cy="35" r="5" fill="#FFD93D" stroke="#2C3E50" stroke-width="2"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">P</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">Q</text>
+                </svg>
+                <div class="label">Dibaca: Ruas Garis PQ</div>
+                <div class="desc">Sama dengan Ruas Garis QP</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#FF6B6B" stroke-width="3"/>
+                  <circle cx="20" cy="35" r="5" fill="#FF6B6B"/>
+                  <polygon points="150,28 170,35 150,42" fill="#FF6B6B"/>
+                  <text x="20" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">P</text>
+                  <text x="160" y="62" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">Q</text>
+                </svg>
+                <div class="label">Dibaca: Sinar Garis PQ</div>
+                <div class="desc">Berbeda dengan Sinar Garis QP!</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="material-card">
+            <h3><i class="fa-solid fa-grip-lines"></i> Jenis-jenis Garis Berdasarkan Bentuknya</h3>
+            <div class="lines-demo">
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="20" y1="35" x2="160" y2="35" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+                <div class="label">Garis Horizontal</div>
+                <div class="desc">Garis mendatar, sejajar permukaan tanah</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <line x1="90" y1="10" x2="90" y2="60" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+                <div class="label">Garis Vertikal</div>
+                <div class="desc">Garis tegak lurus, dari atas ke bawah</div>
+              </div>
+              <div class="line-demo-card">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <path d="M 20 50 Q 90 0 160 50" stroke="#FFD93D" stroke-width="4" fill="none" stroke-linecap="round"/>
+                </svg>
+                <div class="label">Garis Lengkung</div>
+                <div class="desc">Garis yang melengkung seperti pelangi</div>
+              </div>
+              <div class="line-demo-card" style="border-color: var(--primary); background: rgba(255,107,107,0.05);">
+                <svg width="180" height="70" viewBox="0 0 180 70">
+                  <polyline points="20,55 60,15 100,55 140,15 170,55" stroke="#A29BFE" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="20" cy="55" r="4" fill="#A29BFE"/>
+                  <circle cx="60" cy="15" r="4" fill="#A29BFE"/>
+                  <circle cx="100" cy="55" r="4" fill="#A29BFE"/>
+                  <circle cx="140" cy="15" r="4" fill="#A29BFE"/>
+                  <circle cx="170" cy="55" r="4" fill="#A29BFE"/>
+                </svg>
+                <div class="label" style="color: var(--primary);">Zig-Zag = BUKAN 1 Garis!</div>
+                <div class="desc">Terdiri dari 4 ruas garis yang menyatu</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 2: Mengukur -->
+        <div class="tab-content" id="tab-ukur">
+          <div class="material-card">
+            <h3><i class="fa-solid fa-ruler-combined"></i> Mengukur Panjang Garis</h3>
+            <p>Panjang sebuah ruas garis dapat diukur menggunakan alat ukur. Alat yang paling sering digunakan adalah <strong>penggaris</strong>. Tapi ada juga alat lain!</p>
+            
+            <div class="tools-grid">
+              <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-ruler"></i></div>
+                <div class="tool-name">Penggaris</div>
+                <div class="tool-desc">Untuk garis pendek (cm)</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-tape"></i></div>
+                <div class="tool-name">Meteran Pita</div>
+                <div class="tool-desc">Untuk benda panjang (m)</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-ruler-vertical"></i></div>
+                <div class="tool-name">Meteran Lipat</div>
+                <div class="tool-desc">Untuk pengrajin kayu</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-compass"></i></div>
+                <div class="tool-name">Jangka</div>
+                <div class="tool-desc">Untuk membuat lingkaran</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="ruler-container">
+            <h3 style="font-family: 'Fredoka', sans-serif; margin-bottom: 8px; color: var(--dark);">
+              <i class="fa-solid fa-pencil-ruler" style="color: var(--primary);"></i>
+              Ayo Berlatih Mengukur Garis!
+            </h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 8px;">
+              Guru telah menggambar sebuah garis di atas penggaris. Perhatikan dimana garis dimulai dan berakhir, lalu tulis panjangnya!
+            </p>
+            
+            <div class="ruler-wrap">
+              <svg class="ruler-svg" id="rulerSvg" viewBox="0 0 800 110" width="100%"></svg>
+            </div>
+            
+            <div class="ruler-question">
+              <label style="font-weight: 700; font-family: 'Fredoka', sans-serif;">Berapa panjang garis di atas?</label>
+              <input type="number" class="ruler-input" id="rulerAnswer" placeholder="... cm" min="0" max="20">
+              <span style="font-weight: 700;">cm</span>
+              <button class="btn" onclick="checkRulerAnswer()"><i class="fa-solid fa-check"></i> Cek Jawaban</button>
+              <button class="btn btn-secondary" onclick="generateRulerLine()"><i class="fa-solid fa-rotate"></i> Garis Baru</button>
+            </div>
+            
+            <div class="feedback" id="rulerFeedback"></div>
+          </div>
+        </div>
+        
+        <!-- Tab 3: Sisi -->
+        <div class="tab-content" id="tab-sisi">
+          <div class="material-card">
+            <h3><i class="fa-solid fa-shapes"></i> Sisi pada Bangun Datar</h3>
+            <p><strong>Sisi</strong> pada bangun datar adalah <strong>ruas garis</strong> yang membentuk batas bangun tersebut. Setiap titik pertemuan dua sisi disebut <strong>titik sudut</strong>.</p>
+            <p>Klik pada bangun datar di bawah untuk melihat latihan soal!</p>
+            
+            <div class="shapes-grid" id="shapesGrid"></div>
+          </div>
+          
+          <div class="complex-mc" id="complexMC" style="display:none;">
+            <h3 id="mcTitle"></h3>
+            <p style="color: var(--muted); font-size: 0.9rem;">Pilih <strong>semua</strong> ruas garis yang merupakan sisi pada bangun datar di bawah!</p>
+            <div class="mc-shape-display" id="mcShapeDisplay"></div>
+            <div class="complex-options" id="complexOptions"></div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 12px;">
+              <button class="btn" onclick="checkComplexAnswer()"><i class="fa-solid fa-check"></i> Cek Jawaban</button>
+              <button class="btn btn-outline" onclick="resetComplexAnswer()"><i class="fa-solid fa-eraser"></i> Reset</button>
+            </div>
+            <div class="feedback" id="complexFeedback"></div>
+          </div>
+        </div>
+        
+        <!-- Tab 4: Sudut -->
+        <div class="tab-content" id="tab-sudut">
+          <div class="material-card">
+            <h3><i class="fa-solid fa-angle-up"></i> Apa itu Sudut?</h3>
+            <p><strong>Sudut</strong> adalah daerah yang dibentuk oleh dua sinar garis yang berpangkal di satu titik. Titik pertemuan disebut <strong>titik sudut</strong>, dan kedua sinar garis disebut <strong>kaki sudut</strong>.</p>
+            
+            <div style="text-align: center; margin: 16px 0;">
+              <svg width="200" height="120" viewBox="0 0 200 120">
+                <line x1="100" y1="80" x2="30" y2="80" stroke="#FF6B6B" stroke-width="3"/>
+                <line x1="100" y1="80" x2="170" y2="30" stroke="#4ECDC4" stroke-width="3"/>
+                <circle cx="100" cy="80" r="5" fill="#FFD93D" stroke="#2C3E50" stroke-width="2"/>
+                <path d="M 130 80 A 30 30 0 0 0 117 56" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-dasharray="3"/>
+                <text x="100" y="105" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#2C3E50">B</text>
+                <text x="20" y="78" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#FF6B6B">A</text>
+                <text x="180" y="25" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="14" fill="#4ECDC4">C</text>
+                <text x="150" y="65" font-family="Fredoka" font-weight="600" font-size="13" fill="#2C3E50">sudut</text>
+              </svg>
+              <p style="font-weight: 700; font-family: 'Fredoka', sans-serif;">Dibaca: ∠ABC (sudut ABC) — sudut di titik B</p>
+            </div>
+          </div>
+          
+          <div class="material-card">
+            <h3><i class="fa-solid fa-list-ol"></i> Jenis-jenis Sudut</h3>
+            <div class="angle-types-grid">
+              <div class="angle-card">
+                <svg width="120" height="100" viewBox="0 0 120 100">
+                  <path d="M 20 80 L 100 80" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 20 80 L 80 35" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 40 80 A 20 20 0 0 0 33 67" fill="none" stroke="#FF6B6B" stroke-width="2"/>
+                </svg>
+                <div class="angle-name">Sudut Lancip</div>
+                <div class="angle-deg">&lt; 90°</div>
+              </div>
+              <div class="angle-card">
+                <svg width="120" height="100" viewBox="0 0 120 100">
+                  <path d="M 20 80 L 100 80" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 20 80 L 20 20" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 40 80 A 20 20 0 0 0 40 60" fill="none" stroke="#FF6B6B" stroke-width="2"/>
+                  <rect x="20" y="60" width="6" height="6" fill="none" stroke="#FF6B6B" stroke-width="1.5"/>
+                </svg>
+                <div class="angle-name">Sudut Siku-siku</div>
+                <div class="angle-deg">= 90°</div>
+              </div>
+              <div class="angle-card">
+                <svg width="120" height="100" viewBox="0 0 120 100">
+                  <path d="M 20 80 L 100 80" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 20 80 L 95 50" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 40 80 A 20 20 0 0 0 36 70" fill="none" stroke="#FF6B6B" stroke-width="2"/>
+                </svg>
+                <div class="angle-name">Sudut Tumpul</div>
+                <div class="angle-deg">91° - 179°</div>
+              </div>
+              <div class="angle-card">
+                <svg width="120" height="100" viewBox="0 0 120 100">
+                  <path d="M 10 80 L 110 80" stroke="#FF6B6B" stroke-width="3"/>
+                  <circle cx="60" cy="80" r="4" fill="#FF6B6B"/>
+                </svg>
+                <div class="angle-name">Sudut Lurus</div>
+                <div class="angle-deg">= 180°</div>
+              </div>
+              <div class="angle-card">
+                <svg width="120" height="100" viewBox="0 0 120 100">
+                  <path d="M 60 80 L 110 80" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 60 80 L 30 20" stroke="#FF6B6B" stroke-width="3"/>
+                  <path d="M 80 80 A 20 20 0 1 0 49 67" fill="none" stroke="#FF6B6B" stroke-width="2"/>
+                </svg>
+                <div class="angle-name">Sudut Refleks</div>
+                <div class="angle-deg">181° - 359°</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="material-card">
+            <h3><i class="fa-solid fa-layer-group"></i> Flash Card Sudut</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 10px;">Klik kartu untuk membalik dan melihat jawaban! Gunakan tombol panah untuk berpindah kartu.</p>
+            
+            <div class="flashcard-container">
+              <div class="flashcard" id="angleFlashcard" onclick="flipCard('angle')">
+                <div class="flashcard-inner">
+                  <div class="flashcard-front">
+                    <div class="flashcard-icon"><i class="fa-solid fa-question"></i></div>
+                    <div class="flashcard-label">Pertanyaan</div>
+                    <div class="flashcard-content" id="angleFront"></div>
+                    <div class="flashcard-hint"><i class="fa-solid fa-hand-pointer"></i> Klik untuk membalik</div>
+                  </div>
+                  <div class="flashcard-back">
+                    <div class="flashcard-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="flashcard-label">Jawaban</div>
+                    <div class="flashcard-content" id="angleBack"></div>
+                    <div class="flashcard-hint"><i class="fa-solid fa-rotate"></i> Klik untuk kembali</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flashcard-nav">
+                <button class="flashcard-nav-btn" onclick="prevFlashcard('angle')"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="flashcard-counter" id="angleCounter">1 / 20</div>
+                <button class="flashcard-nav-btn" onclick="nextFlashcard('angle')"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 5: Jenis Garis -->
+        <div class="tab-content" id="tab-jenis">
+          <div class="material-card">
+            <h3><i class="fa-solid fa-arrows-left-right"></i> 4 Jenis Garis</h3>
+            <p>Berdasarkan hubungan antar garis, ada 4 jenis garis yang perlu kalian ketahui:</p>
+            
+            <div class="line-types-grid">
+              <div class="line-type-card">
+                <svg width="200" height="80" viewBox="0 0 200 80">
+                  <line x1="20" y1="20" x2="180" y2="20" stroke="#FF6B6B" stroke-width="3"/>
+                  <line x1="20" y1="60" x2="180" y2="60" stroke="#FF6B6B" stroke-width="3"/>
+                </svg>
+                <h4>1. Garis Sejajar</h4>
+                <p class="definition">Dua garis yang tidak akan pernah berpotongan walaupun diperpanjang.</p>
+                <p class="example">Contoh: <strong>Rel kereta api</strong>, sisi kiri-kanan pintu, anak tangga</p>
+              </div>
+              <div class="line-type-card">
+                <svg width="200" height="80" viewBox="0 0 200 80">
+                  <line x1="20" y1="60" x2="180" y2="60" stroke="#4ECDC4" stroke-width="3"/>
+                  <line x1="100" y1="10" x2="100" y2="70" stroke="#4ECDC4" stroke-width="3"/>
+                  <rect x="100" y="55" width="6" height="6" fill="none" stroke="#4ECDC4" stroke-width="1.5"/>
+                </svg>
+                <h4>2. Garis Tegak Lurus</h4>
+                <p class="definition">Dua garis yang berpotongan dengan sudut 90° (siku-siku).</p>
+                <p class="example">Contoh: <strong>Pojok dinding</strong>, tiang bendera & tanah, huruf T</p>
+              </div>
+              <div class="line-type-card">
+                <svg width="200" height="80" viewBox="0 0 200 80">
+                  <line x1="20" y1="70" x2="180" y2="10" stroke="#FFD93D" stroke-width="3"/>
+                  <line x1="20" y1="10" x2="180" y2="70" stroke="#FFD93D" stroke-width="3"/>
+                  <circle cx="100" cy="40" r="4" fill="#FFD93D" stroke="#2C3E50" stroke-width="1.5"/>
+                </svg>
+                <h4>3. Garis Berpotongan</h4>
+                <p class="definition">Dua garis yang saling memotong di satu titik (bukan 90°).</p>
+                <p class="example">Contoh: <strong>Perempatan jalan</strong>, tanda X, gunting terbuka</p>
+              </div>
+              <div class="line-type-card">
+                <svg width="200" height="80" viewBox="0 0 200 80">
+                  <line x1="20" y1="40" x2="180" y2="40" stroke="#A29BFE" stroke-width="6" stroke-linecap="round"/>
+                  <line x1="20" y1="40" x2="180" y2="40" stroke="#FF9FF3" stroke-width="2"/>
+                </svg>
+                <h4>4. Garis Berimpit</h4>
+                <p class="definition">Dua garis atau lebih yang terletak pada posisi yang sama.</p>
+                <p class="example">Contoh: <strong>Tumpukan kertas sejajar</strong>, dua sisi pita yang menumpuk</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="material-card">
+            <h3><i class="fa-solid fa-layer-group"></i> Flash Card Jenis Garis</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 10px;">Klik kartu untuk membalik dan melihat jawaban!</p>
+            
+            <div class="flashcard-container">
+              <div class="flashcard" id="lineFlashcard" onclick="flipCard('line')">
+                <div class="flashcard-inner">
+                  <div class="flashcard-front">
+                    <div class="flashcard-icon"><i class="fa-solid fa-question"></i></div>
+                    <div class="flashcard-label">Pertanyaan</div>
+                    <div class="flashcard-content" id="lineFront"></div>
+                    <div class="flashcard-hint"><i class="fa-solid fa-hand-pointer"></i> Klik untuk membalik</div>
+                  </div>
+                  <div class="flashcard-back">
+                    <div class="flashcard-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="flashcard-label">Jawaban</div>
+                    <div class="flashcard-content" id="lineBack"></div>
+                    <div class="flashcard-hint"><i class="fa-solid fa-rotate"></i> Klik untuk kembali</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flashcard-nav">
+                <button class="flashcard-nav-btn" onclick="prevFlashcard('line')"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="flashcard-counter" id="lineCounter">1 / 20</div>
+                <button class="flashcard-nav-btn" onclick="nextFlashcard('line')"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 5: GAME ===== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 5</span>
+          <h2 class="slide-title">Game: Balap Garis!</h2>
+          <p class="slide-subtitle">Berlomba menjawab soal — siapa cepat dan benar, dialah pemenangnya!</p>
+        </div>
+        
+        <div class="game-arena">
+          <div class="game-track">
+            <div class="track-lane p1">
+              <div class="player-token p1" id="tokenP1">A</div>
+            </div>
+            <div class="track-lane p2">
+              <div class="player-token p2" id="tokenP2">B</div>
+            </div>
+            <div class="game-finish"></div>
+            <div class="finish-label">FINISH</div>
+          </div>
+          
+          <div class="game-scores">
+            <div class="game-score-card p1">
+              <div>
+                <div class="score-label" id="gameNameP1">Siswa 1</div>
+                <div style="font-size: 0.78rem; color: var(--muted);">Posisi: <span id="gamePosP1">0</span>/10</div>
+              </div>
+              <div class="score-value" id="gameScoreP1">0</div>
+            </div>
+            <div class="game-score-card p2">
+              <div>
+                <div class="score-label" id="gameNameP2">Siswa 2</div>
+                <div style="font-size: 0.78rem; color: var(--muted);">Posisi: <span id="gamePosP2">0</span>/10</div>
+              </div>
+              <div class="score-value" id="gameScoreP2">0</div>
+            </div>
+          </div>
+          
+          <div id="gamePlayArea">
+            <div class="game-question-box">
+              <div class="round-num" id="gameRound">Ronde 1 dari 10</div>
+              <h3 id="gameQuestion">Memuat pertanyaan...</h3>
+            </div>
+            
+            <div class="game-options">
+              <div class="game-player-options p1">
+                <div class="player-label"><i class="fa-solid fa-star"></i> <span id="gameNameP1Label">Siswa 1</span> - Pilih Jawabanmu!</div>
+                <div id="gameOptionsP1"></div>
+              </div>
+              <div class="game-player-options p2">
+                <div class="player-label"><i class="fa-solid fa-star"></i> <span id="gameNameP2Label">Siswa 2</span> - Pilih Jawabanmu!</div>
+                <div id="gameOptionsP2"></div>
+              </div>
+            </div>
+            
+            <div class="game-controls">
+              <button class="btn btn-secondary" id="gameNextBtn" onclick="nextGameRound()" disabled>
+                <i class="fa-solid fa-forward"></i> Ronde Berikutnya
+              </button>
+            </div>
+          </div>
+          
+          <div class="game-result" id="gameResult">
+            <h2 id="gameWinner"></h2>
+            <p id="gameWinnerDesc" style="font-size: 1.1rem; margin-bottom: 16px;"></p>
+            <button class="btn" onclick="resetGame()"><i class="fa-solid fa-rotate"></i> Main Lagi</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 6: KUIS ===== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 6</span>
+          <h2 class="slide-title">Kuis Berdua</h2>
+          <p class="slide-subtitle">20 soal pilihan ganda — jawab bersama-sama!</p>
+        </div>
+        
+        <div class="quiz-header">
+          <div class="quiz-nav" id="quizNav"></div>
+          <div class="quiz-scores">
+            <div class="quiz-score-mini p1"><i class="fa-solid fa-star"></i> <span id="quizNameP1">Siswa 1</span>: <span id="quizScoreP1">0</span></div>
+            <div class="quiz-score-mini p2"><i class="fa-solid fa-star"></i> <span id="quizNameP2">Siswa 2</span>: <span id="quizScoreP2">0</span></div>
+          </div>
+        </div>
+        
+        <div class="quiz-question-text" id="quizQuestion">Memuat soal...</div>
+        
+        <div class="quiz-container">
+          <div class="student-panel left">
+            <div class="student-name"><i class="fa-solid fa-user"></i> <span id="quizNameP1Panel">Siswa 1</span></div>
+            <div class="quiz-options" id="quizOptionsP1"></div>
+          </div>
+          <div class="student-panel right">
+            <div class="student-name"><i class="fa-solid fa-user"></i> <span id="quizNameP2Panel">Siswa 2</span></div>
+            <div class="quiz-options" id="quizOptionsP2"></div>
+          </div>
+        </div>
+        
+        <div class="quiz-controls">
+          <button class="btn" onclick="checkQuizAnswer()"><i class="fa-solid fa-check"></i> Cek Jawaban</button>
+          <button class="btn btn-secondary" onclick="toggleDiscussion()"><i class="fa-solid fa-circle-info"></i> Pembahasan</button>
+          <button class="btn btn-outline" onclick="prevQuiz()"><i class="fa-solid fa-chevron-left"></i> Sebelumnya</button>
+          <button class="btn btn-accent" onclick="nextQuiz()">Berikutnya <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        
+        <div class="discussion" id="quizDiscussion">
+          <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan</h4>
+          <p id="quizDiscussionText"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 7: REFLEKSI ===== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-tag">Slide 7</span>
+          <h2 class="slide-title">Refleksi & Kesimpulan</h2>
+          <p class="slide-subtitle">Mari ingat kembali apa yang telah kita pelajari hari ini!</p>
+        </div>
+        
+        <div class="reflection-grid">
+          <div class="reflection-card">
+            <div class="icon"><i class="fa-solid fa-brain"></i></div>
+            <h3>Apa yang Sudah Ku Pelajari?</h3>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> Aku mengenal jenis-jenis garis</li>
+              <li><i class="fa-solid fa-check"></i> Aku bisa mengukur garis</li>
+              <li><i class="fa-solid fa-check"></i> Aku mengenal sisi bangun datar</li>
+              <li><i class="fa-solid fa-check"></i> Aku mengenal jenis-jenis sudut</li>
+              <li><i class="fa-solid fa-check"></i> Aku mengenal 4 jenis garis</li>
+            </ul>
+          </div>
+          <div class="reflection-card">
+            <div class="icon"><i class="fa-solid fa-heart"></i></div>
+            <h3>Bagaimana Perasaanku?</h3>
+            <ul>
+              <li><i class="fa-solid fa-star"></i> Senang belajar matematika</li>
+              <li><i class="fa-solid fa-star"></i> Berani menjawab pertanyaan</li>
+              <li><i class="fa-solid fa-star"></i> Bekerja sama dengan teman</li>
+              <li><i class="fa-solid fa-star"></i> Tidak mudah menyerah</li>
+            </ul>
+          </div>
+          <div class="reflection-card">
+            <div class="icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3>Apa yang Ingin Kupelajari?</h3>
+            <ul>
+              <li><i class="fa-solid fa-arrow-right"></i> Lebih banyak soal cerita</li>
+              <li><i class="fa-solid fa-arrow-right"></i> Bangun ruang 3 dimensi</li>
+              <li><i class="fa-solid fa-arrow-right"></i> Menggambar sendiri</li>
+              <li><i class="fa-solid fa-arrow-right"></i> Bermain game matematika</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3 style="text-align: center; font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin: 24px 0 8px;">Kesimpulan Pembelajaran</h3>
+        <ul class="conclusion-list">
+          <li><span class="num">1</span> <strong>Garis</strong> ada 3 jenis: sinar garis, garis, dan ruas garis. Garis juga bisa horizontal, vertikal, atau lengkung.</li>
+          <li><span class="num">2</span> <strong>Penggaris</strong> digunakan untuk mengukur panjang garis dalam satuan sentimeter (cm).</li>
+          <li><span class="num">3</span> <strong>Sisi</strong> pada bangun datar merupakan ruas garis yang membentuk batas bangun.</li>
+          <li><span class="num">4</span> <strong>Sudut</strong> ada 5 jenis: lancip (&lt;90°), siku-siku (=90°), tumpul (91°-179°), lurus (=180°), dan refleks (181°-359°).</li>
+          <li><span class="num">5</span> <strong>Jenis garis</strong> berdasarkan hubungannya: sejajar, tegak lurus, berpotongan, dan berimpit.</li>
+          <li><span class="num">6</span> Di kehidupan sehari-hari, garis dan sudut ada di mana-mana — di rumah, sekolah, dan jalan!</li>
+        </ul>
+        
+        <div class="thankyou-section">
+          <div class="thankyou-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <h2>Thank You Today!</h2>
+          <p>
+            Terima kasih sudah belajar bersama, <strong id="thankNameP1">Siswa 1</strong> & <strong id="thankNameP2">Siswa 2</strong>! <br>
+            Kalian hebat! Sampai jumpa di petualangan matematika berikutnya!
+          </p>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============== STATE ===============
+const state = {
+  currentSlide: 1,
+  totalSlides: 7,
+  students: { p1: '', p2: '' },
+  ruler: { start: 0, length: 0 },
+  flashcards: { angle: 0, line: 0 },
+  complexSelected: [],
+  game: {
+    round: 0,
+    p1Score: 0,
+    p2Score: 0,
+    p1Answer: null,
+    p2Answer: null,
+    p1Locked: false,
+    p2Locked: false,
+    answered: false
+  },
+  quiz: {
+    current: 0,
+    p1Answers: Array(20).fill(null),
+    p2Answers: Array(20).fill(null),
+    checked: Array(20).fill(false)
+  }
+};
+
+// =============== DATA ===============
+const shapesData = {
+  persegi: {
+    name: 'Persegi',
+    letters: ['A', 'B', 'C', 'D'],
+    correct: ['AB', 'BC', 'CD', 'DA'],
+    distractors: ['AC', 'BD', 'EF', 'IJ'],
+    svg: (letters) => {
+      const [A, B, C, D] = letters;
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <polygon points="30,30 110,30 110,110 30,110" fill="rgba(255,107,107,0.15)" stroke="#FF6B6B" stroke-width="3"/>
+        <text x="30" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${A}</text>
+        <text x="110" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${B}</text>
+        <text x="110" y="128" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${C}</text>
+        <text x="30" y="128" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${D}</text>
+      </svg>`;
+    }
+  },
+  persegipanjang: {
+    name: 'Persegi Panjang',
+    letters: ['E', 'F', 'G', 'H'],
+    correct: ['EF', 'FG', 'GH', 'HE'],
+    distractors: ['EG', 'FH', 'AB', 'IJ'],
+    svg: (letters) => {
+      const [E, F, G, H] = letters;
+      return `<svg width="160" height="120" viewBox="0 0 160 120">
+        <polygon points="20,20 140,20 140,100 20,100" fill="rgba(78,205,196,0.15)" stroke="#4ECDC4" stroke-width="3"/>
+        <text x="20" y="12" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${E}</text>
+        <text x="140" y="12" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${F}</text>
+        <text x="140" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${G}</text>
+        <text x="20" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${H}</text>
+      </svg>`;
+    }
+  },
+  segitiga: {
+    name: 'Segitiga',
+    letters: ['I', 'J', 'K'],
+    correct: ['IJ', 'JK', 'KI'],
+    distractors: ['IK', 'AB', 'EF', 'LM'],
+    svg: (letters) => {
+      const [I, J, K] = letters;
+      return `<svg width="140" height="130" viewBox="0 0 140 130">
+        <polygon points="70,20 20,110 120,110" fill="rgba(255,217,61,0.2)" stroke="#FFD93D" stroke-width="3"/>
+        <text x="70" y="12" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${I}</text>
+        <text x="14" y="124" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${J}</text>
+        <text x="126" y="124" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${K}</text>
+      </svg>`;
+    }
+  },
+  jajargenjang: {
+    name: 'Jajar Genjang',
+    letters: ['L', 'M', 'N', 'O'],
+    correct: ['LM', 'MN', 'NO', 'OL'],
+    distractors: ['LN', 'MO', 'AB', 'EF'],
+    svg: (letters) => {
+      const [L, M, N, O] = letters;
+      return `<svg width="160" height="120" viewBox="0 0 160 120">
+        <polygon points="40,30 140,30 120,100 20,100" fill="rgba(255,159,243,0.15)" stroke="#FF9FF3" stroke-width="3"/>
+        <text x="40" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${L}</text>
+        <text x="140" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${M}</text>
+        <text x="120" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${N}</text>
+        <text x="20" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${O}</text>
+      </svg>`;
+    }
+  },
+  trapesium: {
+    name: 'Trapesium',
+    letters: ['P', 'Q', 'R', 'S'],
+    correct: ['PQ', 'QR', 'RS', 'SP'],
+    distractors: ['PR', 'QS', 'AB', 'EF'],
+    svg: (letters) => {
+      const [P, Q, R, S] = letters;
+      return `<svg width="160" height="120" viewBox="0 0 160 120">
+        <polygon points="40,30 120,30 150,100 10,100" fill="rgba(162,155,254,0.15)" stroke="#A29BFE" stroke-width="3"/>
+        <text x="40" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${P}</text>
+        <text x="120" y="22" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${Q}</text>
+        <text x="155" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${R}</text>
+        <text x="10" y="118" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${S}</text>
+      </svg>`;
+    }
+  },
+  belahketupat: {
+    name: 'Belah Ketupat',
+    letters: ['T', 'U', 'V', 'W'],
+    correct: ['TU', 'UV', 'VW', 'WT'],
+    distractors: ['TV', 'UW', 'AB', 'EF'],
+    svg: (letters) => {
+      const [T, U, V, W] = letters;
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <polygon points="70,15 130,75 70,135 10,75" fill="rgba(149,225,163,0.2)" stroke="#95E1A3" stroke-width="3"/>
+        <text x="70" y="10" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${T}</text>
+        <text x="138" y="80" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${U}</text>
+        <text x="70" y="148" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${V}</text>
+        <text x="2" y="80" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${W}</text>
+      </svg>`;
+    }
+  },
+  layanglayang: {
+    name: 'Layang-layang',
+    letters: ['X', 'Y', 'Z', 'a'],
+    correct: ['XY', 'YZ', 'Za', 'aX'],
+    distractors: ['XZ', 'Ya', 'AB', 'EF'],
+    svg: (letters) => {
+      const [X, Y, Z, a] = letters;
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <polygon points="70,10 130,60 70,135 10,60" fill="rgba(255,160,122,0.2)" stroke="#FFA07A" stroke-width="3"/>
+        <text x="70" y="6" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${X}</text>
+        <text x="138" y="65" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${Y}</text>
+        <text x="70" y="148" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${Z}</text>
+        <text x="2" y="65" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${a}</text>
+      </svg>`;
+    }
+  }
+};
+
+const angleFlashcards = [
+  { q: 'Sudut yang besarnya 90°', a: 'Sudut Siku-siku' },
+  { q: 'Sudut yang besarnya 45°', a: 'Sudut Lancip' },
+  { q: 'Sudut yang besarnya 120°', a: 'Sudut Tumpul' },
+  { q: 'Sudut yang besarnya 180°', a: 'Sudut Lurus' },
+  { q: 'Sudut yang besarnya 270°', a: 'Sudut Refleks' },
+  { q: 'Sudut yang lebih dari 90° tapi kurang dari 180°', a: 'Sudut Tumpul' },
+  { q: 'Sudut yang kurang dari 90°', a: 'Sudut Lancip' },
+  { q: 'Sudut yang lebih dari 180°', a: 'Sudut Refleks' },
+  { q: 'Pada persegi ABCD, sudut di titik A', a: '∠DAB atau ∠BAD (siku-siku)' },
+  { q: 'Pada segitiga IJK, sudut di titik J', a: '∠IJK' },
+  { q: 'Sudut yang dibentuk jarum jam pukul 09:00', a: 'Sudut Siku-siku (90°)' },
+  { q: 'Sudut yang dibentuk jarum jam pukul 06:00', a: 'Sudut Lurus (180°)' },
+  { q: 'Sudut yang dibentuk jarum jam pukul 02:00', a: 'Sudut Lancip (60°)' },
+  { q: 'Sudut yang dibentuk jarum jam pukul 04:00', a: 'Sudut Tumpul (120°)' },
+  { q: 'Sudut pada pojok buku yang terbuka penuh', a: 'Sudut Lurus (180°)' },
+  { q: 'Sudut pada ujung pensil yang runcing', a: 'Sudut Lancip' },
+  { q: 'Pada persegi panjang EFGH, sudut di titik E', a: '∠HEF atau ∠FEH (siku-siku)' },
+  { q: 'Sudut yang besarnya 360°', a: 'Sudut Penuh (satu putaran)' },
+  { q: 'Sudut yang dibentuk sisi meja belajar', a: 'Sudut Siku-siku (90°)' },
+  { q: 'Pada jajar genjang LMNO, sudut di titik L', a: '∠OLM atau ∠MLO' }
+];
+
+const lineFlashcards = [
+  { q: 'Rel kereta api', a: 'Garis Sejajar' },
+  { q: 'Pojok dinding ruangan', a: 'Garis Tegak Lurus' },
+  { q: 'Tanda plus (+)', a: 'Garis Tegak Lurus' },
+  { q: 'Dua sisi pita yang menumpuk sempurna', a: 'Garis Berimpit' },
+  { q: 'Perempatan jalan lurus', a: 'Garis Berpotongan' },
+  { q: 'Anak tangga yang sejajar', a: 'Garis Sejajar' },
+  { q: 'Tiang bendera dengan tanah', a: 'Garis Tegak Lurus' },
+  { q: 'Sisi kiri dan kanan pintu', a: 'Garis Sejajar' },
+  { q: 'Garis yang tidak pernah bertemu', a: 'Garis Sejajar' },
+  { q: 'Garis berpotongan dengan sudut 90°', a: 'Garis Tegak Lurus' },
+  { q: 'Dua garis yang terletak menumpuk', a: 'Garis Berimpit' },
+  { q: 'Tanda silang (X)', a: 'Garis Berpotongan' },
+  { q: 'Sisi atas dan bawah buku tertutup', a: 'Garis Sejajar' },
+  { q: 'Huruf T', a: 'Garis Tegak Lurus' },
+  { q: 'Dua pensil yang diikat sejajar', a: 'Garis Berimpit' },
+  { q: 'Huruf L', a: 'Garis Tegak Lurus' },
+  { q: 'Sisi kiri-kanan jalan raya', a: 'Garis Sejajar' },
+  { q: 'Dua batang lidi yang disilangkan', a: 'Garis Berpotongan' },
+  { q: 'Garis horisontal dan vertikal yang bertemu siku', a: 'Garis Tegak Lurus' },
+  { q: 'Tumpukan kertas yang sejajar sempurna', a: 'Garis Berimpit' }
+];
+
+const gameQuestions = [
+  { q: 'Garis yang memiliki DUA titik ujung disebut...', opts: ['Sinar garis', 'Ruas garis', 'Garis', 'Garis lengkung'], correct: 1 },
+  { q: 'Garis yang panjangnya tak terhingga ke KEDUA arah disebut...', opts: ['Sinar garis', 'Ruas garis', 'Garis', 'Garis vertikal'], correct: 2 },
+  { q: 'Sudut yang besarnya 90° disebut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Lurus'], correct: 1 },
+  { q: 'Sudut yang besarnya 45° termasuk sudut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Refleks'], correct: 0 },
+  { q: 'Rel kereta api adalah contoh garis...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 0 },
+  { q: 'Pojok dinding ruangan adalah contoh garis...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 1 },
+  { q: 'Tanda silang (X) adalah contoh garis...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 2 },
+  { q: 'Alat untuk mengukur panjang garis adalah...', opts: ['Busur derajat', 'Jangka', 'Penggaris', 'Pensil'], correct: 2 },
+  { q: 'Garis yang posisinya mendatar disebut...', opts: ['Horizontal', 'Vertikal', 'Miring', 'Lengkung'], correct: 0 },
+  { q: 'Sudut yang besarnya 180° disebut sudut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Lurus'], correct: 3 }
+];
+
+const quizQuestions = [
+  { q: 'Garis yang memiliki dua titik ujung disebut...', opts: ['Sinar garis', 'Ruas garis', 'Garis', 'Garis lengkung'], correct: 1, discussion: 'Ruas garis memiliki dua titik ujung, sehingga panjangnya bisa diukur.' },
+  { q: 'Garis yang panjangnya tak terhingga ke satu arah disebut...', opts: ['Sinar garis', 'Ruas garis', 'Garis', 'Garis vertikal'], correct: 0, discussion: 'Sinar garis memiliki satu titik awal dan panjang tak terhingga ke satu arah.' },
+  { q: 'Garis yang panjangnya tak terhingga ke kedua arah disebut...', opts: ['Sinar garis', 'Ruas garis', 'Garis', 'Garis horizontal'], correct: 2, discussion: 'Garis memiliki panjang tak terhingga di kedua arah.' },
+  { q: 'Garis yang posisinya mendatar disebut...', opts: ['Vertikal', 'Horizontal', 'Miring', 'Lengkung'], correct: 1, discussion: 'Garis horizontal adalah garis mendatar, sejajar dengan permukaan tanah.' },
+  { q: 'Garis yang posisinya tegak dari atas ke bawah disebut...', opts: ['Vertikal', 'Horizontal', 'Sejajar', 'Lengkung'], correct: 0, discussion: 'Garis vertikal adalah garis tegak, seperti tiang bendera.' },
+  { q: 'Alat yang biasa digunakan untuk mengukur panjang garis adalah...', opts: ['Busur derajat', 'Jangka', 'Penggaris', 'Penyiku'], correct: 2, discussion: 'Penggaris adalah alat ukur panjang garis dalam satuan cm atau mm.' },
+  { q: 'Berapa derajat sudut siku-siku?', opts: ['45°', '90°', '180°', '360°'], correct: 1, discussion: 'Sudut siku-siku besarnya tepat 90 derajat.' },
+  { q: 'Sudut yang besarnya kurang dari 90° disebut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Lurus'], correct: 0, discussion: 'Sudut lancip besarnya kurang dari 90°, contohnya 30°, 45°, 60°.' },
+  { q: 'Sudut yang besarnya lebih dari 90° tetapi kurang dari 180° disebut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Refleks'], correct: 2, discussion: 'Sudut tumpul besarnya antara 90° dan 180°, contohnya 120°, 135°.' },
+  { q: 'Sudut yang besarnya tepat 180° disebut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Lurus'], correct: 3, discussion: 'Sudut lurus besarnya 180°, seperti garis lurus yang ditarik.' },
+  { q: 'Sudut yang besarnya lebih dari 180° disebut...', opts: ['Lancip', 'Siku-siku', 'Tumpul', 'Refleks'], correct: 3, discussion: 'Sudut refleks besarnya antara 180° dan 360°.' },
+  { q: 'Dua garis yang tidak pernah berpotongan disebut...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 0, discussion: 'Garis sejajar tidak akan pernah bertemu walaupun diperpanjang. Contoh: rel kereta api.' },
+  { q: 'Dua garis yang berpotongan dengan sudut 90° disebut...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 1, discussion: 'Garis tegak lurus berpotongan membentuk sudut siku-siku (90°).' },
+  { q: 'Dua garis yang terletak pada posisi yang sama disebut...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 3, discussion: 'Garis berimpit adalah dua garis yang menempati posisi yang sama.' },
+  { q: 'Dua garis yang saling memotong di satu titik (bukan 90°) disebut...', opts: ['Sejajar', 'Tegak lurus', 'Berpotongan', 'Berimpit'], correct: 2, discussion: 'Garis berpotongan saling memotong di satu titik dengan sudut bukan 90°.' },
+  { q: 'Berapa jumlah sisi pada persegi?', opts: ['2', '3', '4', '5'], correct: 2, discussion: 'Persegi memiliki 4 sisi yang sama panjang.' },
+  { q: 'Berapa jumlah sudut pada segitiga?', opts: ['2', '3', '4', '5'], correct: 1, discussion: 'Segitiga memiliki 3 sudut, sesuai namanya.' },
+  { q: 'Sisi pada bangun datar merupakan...', opts: ['Sinar garis', 'Garis', 'Ruas garis', 'Garis lengkung'], correct: 2, discussion: 'Sisi pada bangun datar adalah ruas garis karena memiliki dua titik ujung.' },
+  { q: 'Pada persegi ABCD, ruas garis dari A ke B dapat ditulis...', opts: ['AB saja', 'BA saja', 'AB atau BA', 'A-B'], correct: 2, discussion: 'Ruas garis AB sama dengan ruas garis BA, dapat ditulis dua arah.' },
+  { q: 'Pada segitiga IJK, sudut di titik J ditulis...', opts: ['∠IJK', '∠JKI', '∠KIJ', '∠J'], correct: 0, discussion: 'Sudut di titik J dibentuk oleh sinar garis JI dan JK, jadi ditulis ∠IJK dengan J di tengah.' }
+];
+
+// =============== INITIALIZATION ===============
+function init() {
+  createBgShapes();
+  createProgressDots();
+  setupNav();
+  setupNameInputs();
+  setupTabs();
+  renderShapes();
+  renderFlashcard('angle');
+  renderFlashcard('line');
+  generateRulerLine();
+  initGame();
+  renderQuiz();
+}
+
+function createBgShapes() {
+  const container = document.getElementById('bgShapes');
+  const shapes = ['fa-minus', 'fa-plus', 'fa-times', 'fa-divide', 'fa-equals', 'fa-star', 'fa-heart'];
+  const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#FF9FF3', '#A29BFE', '#95E1A3'];
+  for (let i = 0; i < 15; i++) {
+    const shape = document.createElement('div');
+    shape.className = 'bg-shape';
+    shape.innerHTML = `<i class="fa-solid ${shapes[Math.floor(Math.random() * shapes.length)]}" style="font-size: ${20 + Math.random() * 40}px; color: ${colors[Math.floor(Math.random() * colors.length)]};"></i>`;
+    shape.style.left = Math.random() * 100 + '%';
+    shape.style.top = Math.random() * 100 + '%';
+    shape.style.animationDelay = Math.random() * 20 + 's';
+    shape.style.animationDuration = (15 + Math.random() * 10) + 's';
+    container.appendChild(shape);
+  }
+}
+
+function createProgressDots() {
+  const container = document.getElementById('progressDots');
+  container.innerHTML = '';
+  for (let i = 1; i <= state.totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 1 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    container.appendChild(dot);
+  }
+}
+
+function setupNav() {
+  document.getElementById('prevBtn').onclick = prevSlide;
+  document.getElementById('nextBtn').onclick = nextSlide;
+  updateNavButtons();
+}
+
+function updateNavButtons() {
+  document.getElementById('prevBtn').disabled = state.currentSlide === 1;
+  document.getElementById('nextBtn').disabled = state.currentSlide === state.totalSlides;
+}
+
+function goToSlide(n) {
+  if (n < 1 || n > state.totalSlides) return;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.slide[data-slide="${n}"]`).classList.add('active');
+  state.currentSlide = n;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === n));
+  updateNavButtons();
+  // Scroll to top
+  document.querySelector(`.slide[data-slide="${n}"]`).scrollTop = 0;
+}
+
+function nextSlide() { goToSlide(state.currentSlide + 1); }
+function prevSlide() { goToSlide(state.currentSlide - 1); }
+
+function setupNameInputs() {
+  const input1 = document.getElementById('nameP1');
+  const input2 = document.getElementById('nameP2');
+  const startBtn = document.getElementById('startBtn');
+  
+  const checkInputs = () => {
+    const p1 = input1.value.trim();
+    const p2 = input2.value.trim();
+    startBtn.disabled = !(p1 && p2);
+  };
+  
+  input1.addEventListener('input', checkInputs);
+  input2.addEventListener('input', checkInputs);
+  
+  startBtn.onclick = () => {
+    state.students.p1 = input1.value.trim();
+    state.students.p2 = input2.value.trim();
+    // Update all name displays
+    updateAllNames();
+    goToSlide(2);
+    showToast('Selamat datang, ' + state.students.p1 + ' & ' + state.students.p2 + '! 🎉', 'success');
+  };
+}
+
+function updateAllNames() {
+  const p1 = state.students.p1 || 'Siswa 1';
+  const p2 = state.students.p2 || 'Siswa 2';
+  
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  
+  set('gameNameP1', p1);
+  set('gameNameP2', p2);
+  set('gameNameP1Label', p1);
+  set('gameNameP2Label', p2);
+  set('quizNameP1', p1);
+  set('quizNameP2', p2);
+  set('quizNameP1Panel', p1);
+  set('quizNameP2Panel', p2);
+  set('thankNameP1', p1);
+  set('thankNameP2', p2);
+  
+  // Token letters
+  const t1 = document.getElementById('tokenP1');
+  const t2 = document.getElementById('tokenP2');
+  if (t1) t1.textContent = p1.charAt(0).toUpperCase();
+  if (t2) t2.textContent = p2.charAt(0).toUpperCase();
+}
+
+function setupTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    };
+  });
+}
+
+// =============== INTERACTIVE RULER ===============
+function generateRulerLine() {
+  const start = Math.floor(Math.random() * 4) + 1; // 1-4 cm
+  const length = Math.floor(Math.random() * 6) + 3; // 3-8 cm
+  state.ruler = { start, length };
+  
+  const svg = document.getElementById('rulerSvg');
+  let html = '';
+  
+  // Ruler background
+  html += '<rect x="0" y="0" width="800" height="110" fill="#FFF8DC" rx="8"/>';
+  
+  // Ruler ticks and numbers
+  const scale = 50; // 1 cm = 50 px
+  const offsetX = 20;
+  for (let i = 0; i <= 15; i++) {
+    const x = offsetX + i * scale;
+    // Major tick
+    html += `<line x1="${x}" y1="20" x2="${x}" y2="50" stroke="#2C3E50" stroke-width="2"/>`;
+    // Number
+    html += `<text x="${x}" y="68" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="14" fill="#2C3E50">${i}</text>`;
+    // Minor ticks (mm)
+    for (let j = 1; j < 10; j++) {
+      const mx = x + (j * scale / 10);
+      if (mx < offsetX + 15 * scale) {
+        const tickH = j === 5 ? 12 : 8;
+        html += `<line x1="${mx}" y1="20" x2="${mx}" y2="${20 + tickH}" stroke="#2C3E50" stroke-width="1"/>`;
+      }
+    }
+  }
+  
+  // Ruler border
+  html += '<rect x="0" y="0" width="800" height="80" fill="none" stroke="#2C3E50" stroke-width="2" rx="8"/>';
+  
+  // The line to measure
+  const lineStartX = offsetX + start * scale;
+  const lineEndX = offsetX + (start + length) * scale;
+  html += `<line x1="${lineStartX}" y1="90" x2="${lineEndX}" y2="90" stroke="#FF6B6B" stroke-width="5" stroke-linecap="round"/>`;
+  html += `<circle cx="${lineStartX}" cy="90" r="6" fill="#FF6B6B"/>`;
+  html += `<circle cx="${lineEndX}" cy="90" r="6" fill="#FF6B6B"/>`;
+  
+  svg.innerHTML = html;
+  
+  // Reset input and feedback
+  document.getElementById('rulerAnswer').value = '';
+  const fb = document.getElementById('rulerFeedback');
+  fb.classList.remove('show', 'correct', 'wrong');
+}
+
+function checkRulerAnswer() {
+  const answer = parseFloat(document.getElementById('rulerAnswer').value);
+  const fb = document.getElementById('rulerFeedback');
+  
+  if (isNaN(answer)) {
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Yuk isi panjang garisnya dulu!';
+    return;
+  }
+  
+  if (answer === state.ruler.length) {
+    fb.className = 'feedback correct show';
+    fb.innerHTML = `<i class="fa-solid fa-circle-check"></i> Hebat! Panjang garis = ${state.ruler.length} cm. Benar!`;
+    confetti();
+  } else {
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Belum tepat. Garis dimulai dari cm ${state.ruler.start} dan berakhir di cm ${state.ruler.start + state.ruler.length}. Coba hitung selisihnya!`;
+  }
+}
+
+// =============== SHAPES & COMPLEX MC ===============
+let currentShape = null;
+
+function renderShapes() {
+  const grid = document.getElementById('shapesGrid');
+  let html = '';
+  Object.keys(shapesData).forEach(key => {
+    const s = shapesData[key];
+    html += `<div class="shape-card" onclick="selectShape('${key}')" id="shape-${key}">
+      ${s.svg(s.letters)}
+      <div class="shape-name">${s.name}</div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+function selectShape(key) {
+  currentShape = key;
+  document.querySelectorAll('.shape-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('shape-' + key).classList.add('selected');
+  
+  const s = shapesData[key];
+  document.getElementById('complexMC').style.display = 'block';
+  document.getElementById('mcTitle').textContent = `Pilih sisi-sisi pada ${s.name} ${s.letters.join('')}`;
+  document.getElementById('mcShapeDisplay').innerHTML = s.svg(s.letters);
+  
+  // Combine correct + distractors and shuffle
+  const allOptions = [...s.correct, ...s.distractors];
+  const shuffled = allOptions.sort(() => Math.random() - 0.5);
+  
+  const optsContainer = document.getElementById('complexOptions');
+  optsContainer.innerHTML = '';
+  shuffled.forEach(opt => {
+    const div = document.createElement('div');
+    div.className = 'complex-option';
+    div.dataset.value = opt;
+    div.innerHTML = `<div class="checkbox"><i class="fa-solid fa-check" style="font-size:0.7rem;opacity:0;"></i></div> <span>${opt}</span>`;
+    div.onclick = () => toggleComplexOption(div);
+    optsContainer.appendChild(div);
+  });
+  
+  state.complexSelected = [];
+  const fb = document.getElementById('complexFeedback');
+  fb.classList.remove('show', 'correct', 'wrong');
+}
+
+function toggleComplexOption(el) {
+  const value = el.dataset.value;
+  el.classList.toggle('selected');
+  el.classList.remove('correct', 'wrong');
+  const checkIcon = el.querySelector('.fa-check');
+  if (checkIcon) checkIcon.style.opacity = el.classList.contains('selected') ? '1' : '0';
+  
+  if (el.classList.contains('selected')) {
+    if (!state.complexSelected.includes(value)) state.complexSelected.push(value);
+  } else {
+    state.complexSelected = state.complexSelected.filter(v => v !== value);
+  }
+}
+
+function checkComplexAnswer() {
+  if (!currentShape) {
+    showToast('Pilih bangun datar dulu!', 'error');
+    return;
+  }
+  const s = shapesData[currentShape];
+  const correctSet = new Set(s.correct);
+  const selectedSet = new Set(state.complexSelected);
+  
+  document.querySelectorAll('#complexOptions .complex-option').forEach(el => {
+    const val = el.dataset.value;
+    el.classList.remove('selected', 'correct', 'wrong');
+    if (correctSet.has(val)) {
+      el.classList.add('correct');
+    } else if (selectedSet.has(val)) {
+      el.classList.add('wrong');
+    }
+  });
+  
+  const fb = document.getElementById('complexFeedback');
+  const isCorrect = state.complexSelected.length === s.correct.length && 
+                     s.correct.every(c => state.complexSelected.includes(c));
+  
+  if (isCorrect) {
+    fb.className = 'feedback correct show';
+    fb.innerHTML = `<i class="fa-solid fa-circle-check"></i> Luar biasa! Sisi-sisi ${s.name} adalah: ${s.correct.join(', ')}`;
+    confetti();
+  } else {
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = `<i class="fa-solid fa-circle-info"></i> Sisi yang benar: ${s.correct.join(', ')}. Perhatikan, diagonal BUKAN sisi!`;
+  }
+}
+
+function resetComplexAnswer() {
+  if (!currentShape) return;
+  selectShape(currentShape);
+}
+
+// =============== FLASH CARDS ===============
+function renderFlashcard(type) {
+  const cards = type === 'angle' ? angleFlashcards : lineFlashcards;
+  const idx = state.flashcards[type];
+  const card = cards[idx];
+  
+  document.getElementById(type + 'Front').textContent = card.q;
+  document.getElementById(type + 'Back').textContent = card.a;
+  document.getElementById(type + 'Counter').textContent = `${idx + 1} / ${cards.length}`;
+  
+  const flashcard = document.getElementById(type + 'Flashcard');
+  flashcard.classList.remove('flipped');
+}
+
+function flipCard(type) {
+  document.getElementById(type + 'Flashcard').classList.toggle('flipped');
+}
+
+function nextFlashcard(type) {
+  const cards = type === 'angle' ? angleFlashcards : lineFlashcards;
+  state.flashcards[type] = (state.flashcards[type] + 1) % cards.length;
+  renderFlashcard(type);
+}
+
+function prevFlashcard(type) {
+  const cards = type === 'angle' ? angleFlashcards : lineFlashcards;
+  state.flashcards[type] = (state.flashcards[type] - 1 + cards.length) % cards.length;
+  renderFlashcard(type);
+}
+
+// =============== GAME ===============
+function initGame() {
+  state.game = {
+    round: 0,
+    p1Score: 0,
+    p2Score: 0,
+    p1Answer: null,
+    p2Answer: null,
+    p1Locked: false,
+    p2Locked: false,
+    answered: false
+  };
+  loadGameRound();
+}
+
+function loadGameRound() {
+  const g = state.game;
+  if (g.round >= gameQuestions.length) {
+    endGame();
+    return;
+  }
+  
+  const q = gameQuestions[g.round];
+  document.getElementById('gameRound').textContent = `Ronde ${g.round + 1} dari ${gameQuestions.length}`;
+  document.getElementById('gameQuestion').textContent = q.q;
+  
+  // Render options for both players
+  ['P1', 'P2'].forEach(player => {
+    const container = document.getElementById('gameOptions' + player);
+    container.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'game-option';
+      div.dataset.index = i;
+      div.textContent = opt;
+      div.onclick = () => answerGame(player, i, div);
+      container.appendChild(div);
+    });
+  });
+  
+  g.p1Answer = null;
+  g.p2Answer = null;
+  g.p1Locked = false;
+  g.p2Locked = false;
+  g.answered = false;
+  document.getElementById('gameNextBtn').disabled = true;
+  updateGameUI();
+}
+
+function answerGame(player, optionIdx, el) {
+  const g = state.game;
+  if (g.answered) return;
+  if (player === 'P1' && g.p1Locked) return;
+  if (player === 'P2' && g.p2Locked) return;
+  
+  if (player === 'P1') {
+    g.p1Answer = optionIdx;
+    g.p1Locked = true;
+    // Clear other selected
+    document.querySelectorAll('#gameOptionsP1 .game-option').forEach(o => o.classList.remove('selected-p1'));
+    el.classList.add('selected-p1');
+  } else {
+    g.p2Answer = optionIdx;
+    g.p2Locked = true;
+    document.querySelectorAll('#gameOptionsP2 .game-option').forEach(o => o.classList.remove('selected-p2'));
+    el.classList.add('selected-p2');
+  }
+  
+  // If both answered, check
+  if (g.p1Locked && g.p2Locked) {
+    revealGameAnswers();
+  }
+}
+
+function revealGameAnswers() {
+  const g = state.game;
+  const q = gameQuestions[g.round];
+  g.answered = true;
+  
+  ['P1', 'P2'].forEach(player => {
+    const container = document.getElementById('gameOptions' + player);
+    container.querySelectorAll('.game-option').forEach((opt, i) => {
+      opt.classList.add('disabled');
+      opt.classList.remove('selected-p1', 'selected-p2');
+      if (i === q.correct) {
+        opt.classList.add('correct');
+      } else if (i === (player === 'P1' ? g.p1Answer : g.p2Answer)) {
+        opt.classList.add('wrong');
+      }
+    });
+  });
+  
+  // Award points
+  if (g.p1Answer === q.correct) {
+    g.p1Score++;
+    showToast(state.students.p1 + ' benar! +1', 'success');
+  }
+  if (g.p2Answer === q.correct) {
+    g.p2Score++;
+    showToast(state.students.p2 + ' benar! +1', 'success');
+  }
+  if (g.p1Answer !== q.correct && g.p2Answer !== q.correct) {
+    showToast('Belum ada yang benar. Semangat!', 'error');
+  }
+  
+  document.getElementById('gameNextBtn').disabled = false;
+  updateGameUI();
+  
+  if (g.p1Answer === q.correct || g.p2Answer === q.correct) {
+    confetti();
+  }
+}
+
+function updateGameUI() {
+  const g = state.game;
+  document.getElementById('gameScoreP1').textContent = g.p1Score;
+  document.getElementById('gameScoreP2').textContent = g.p2Score;
+  document.getElementById('gamePosP1').textContent = g.p1Score;
+  document.getElementById('gamePosP2').textContent = g.p2Score;
+  
+  // Move tokens
+  const trackWidth = document.querySelector('.game-track').offsetWidth - 60;
+  const stepWidth = trackWidth / gameQuestions.length;
+  document.getElementById('tokenP1').style.left = (10 + g.p1Score * stepWidth) + 'px';
+  document.getElementById('tokenP2').style.left = (10 + g.p2Score * stepWidth) + 'px';
+}
+
+function nextGameRound() {
+  state.game.round++;
+  loadGameRound();
+}
+
+function endGame() {
+  document.getElementById('gamePlayArea').style.display = 'none';
+  document.getElementById('gameResult').classList.add('show');
+  
+  const g = state.game;
+  const p1Name = state.students.p1;
+  const p2Name = state.students.p2;
+  let winnerText, descText;
+  
+  if (g.p1Score > g.p2Score) {
+    winnerText = '🏆 ' + p1Name + ' Menang!';
+    descText = `Skor akhir: ${p1Name} ${g.p1Score} - ${p2Name} ${g.p2Score}`;
+    confetti();
+  } else if (g.p2Score > g.p1Score) {
+    winnerText = '🏆 ' + p2Name + ' Menang!';
+    descText = `Skor akhir: ${p1Name} ${g.p1Score} - ${p2Name} ${g.p2Score}`;
+    confetti();
+  } else {
+    winnerText = '🤝 Seri!';
+    descText = `Skor akhir: ${p1Name} ${g.p1Score} - ${p2Name} ${g.p2Score}. Kalian sama hebatnya!`;
+  }
+  
+  document.getElementById('gameWinner').textContent = winnerText;
+  document.getElementById('gameWinnerDesc').textContent = descText;
+}
+
+function resetGame() {
+  document.getElementById('gamePlayArea').style.display = 'block';
+  document.getElementById('gameResult').classList.remove('show');
+  initGame();
+}
+
+// =============== QUIZ ===============
+function renderQuiz() {
+  // Nav dots
+  const nav = document.getElementById('quizNav');
+  nav.innerHTML = '';
+  for (let i = 0; i < quizQuestions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'quiz-dot';
+    if (i === state.quiz.current) dot.classList.add('current');
+    dot.textContent = i + 1;
+    dot.onclick = () => goToQuiz(i);
+    nav.appendChild(dot);
+  }
+  
+  loadQuizQuestion();
+  updateQuizScores();
+}
+
+function loadQuizQuestion() {
+  const q = quizQuestions[state.quiz.current];
+  document.getElementById('quizQuestion').textContent = (state.quiz.current + 1) + '. ' + q.q;
+  
+  ['P1', 'P2'].forEach(player => {
+    const container = document.getElementById('quizOptions' + player);
+    container.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'quiz-option';
+      const letter = String.fromCharCode(65 + i);
+      div.innerHTML = `<div class="letter">${letter}</div> <span>${opt}</span>`;
+      div.dataset.index = i;
+      div.dataset.player = player;
+      
+      const saved = player === 'P1' ? state.quiz.p1Answers[state.quiz.current] : state.quiz.p2Answers[state.quiz.current];
+      if (saved === i) div.classList.add('selected');
+      
+      if (state.quiz.checked[state.quiz.current]) {
+        div.classList.add('locked');
+        if (i === q.correct) div.classList.add('correct');
+        else if (saved === i) div.classList.add('wrong');
+      } else {
+        div.onclick = () => selectQuiz(player, i, div);
+      }
+      container.appendChild(div);
+    });
+  });
+  
+  // Update dots
+  document.querySelectorAll('.quiz-dot').forEach((d, i) => {
+    d.classList.remove('current', 'answered-p1', 'answered-p2', 'answered-both');
+    if (i === state.quiz.current) d.classList.add('current');
+    const p1 = state.quiz.p1Answers[i] !== null;
+    const p2 = state.quiz.p2Answers[i] !== null;
+    if (p1 && p2) d.classList.add('answered-both');
+    else if (p1) d.classList.add('answered-p1');
+    else if (p2) d.classList.add('answered-p2');
+  });
+  
+  // Hide discussion by default
+  document.getElementById('quizDiscussion').classList.remove('show');
+}
+
+function selectQuiz(player, idx, el) {
+  if (state.quiz.checked[state.quiz.current]) return;
+  
+  if (player === 'P1') {
+    state.quiz.p1Answers[state.quiz.current] = idx;
+    document.querySelectorAll('#quizOptionsP1 .quiz-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  } else {
+    state.quiz.p2Answers[state.quiz.current] = idx;
+    document.querySelectorAll('#quizOptionsP2 .quiz-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  
+  // Update dots
+  document.querySelectorAll('.quiz-dot').forEach((d, i) => {
+    if (i === state.quiz.current) {
+      d.classList.remove('answered-p1', 'answered-p2', 'answered-both');
+      const p1 = state.quiz.p1Answers[i] !== null;
+      const p2 = state.quiz.p2Answers[i] !== null;
+      if (p1 && p2) d.classList.add('answered-both');
+      else if (p1) d.classList.add('answered-p1');
+      else if (p2) d.classList.add('answered-p2');
+    }
+  });
+}
+
+function checkQuizAnswer() {
+  state.quiz.checked[state.quiz.current] = true;
+  loadQuizQuestion();
+  updateQuizScores();
+  
+  const q = quizQuestions[state.quiz.current];
+  const p1Correct = state.quiz.p1Answers[state.quiz.current] === q.correct;
+  const p2Correct = state.quiz.p2Answers[state.quiz.current] === q.correct;
+  
+  if (p1Correct && p2Correct) {
+    showToast('Kalian berdua benar! 🎉', 'success');
+    confetti();
+  } else if (p1Correct || p2Correct) {
+    showToast('Ada yang benar, ada yang belum!', 'success');
+  } else {
+    showToast('Coba lihat pembahasan ya!', 'error');
+  }
+}
+
+function toggleDiscussion() {
+  const disc = document.getElementById('quizDiscussion');
+  const q = quizQuestions[state.quiz.current];
+  document.getElementById('quizDiscussionText').textContent = q.discussion;
+  disc.classList.toggle('show');
+}
+
+function goToQuiz(idx) {
+  state.quiz.current = idx;
+  loadQuizQuestion();
+}
+
+function nextQuiz() {
+  if (state.quiz.current < quizQuestions.length - 1) {
+    state.quiz.current++;
+    loadQuizQuestion();
+  } else {
+    // Show final results
+    const p1Score = state.quiz.p1Answers.filter((a, i) => a === quizQuestions[i].correct).length;
+    const p2Score = state.quiz.p2Answers.filter((a, i) => a === quizQuestions[i].correct).length;
+    showToast(`Kuis selesai! ${state.students.p1}: ${p1Score}/20, ${state.students.p2}: ${p2Score}/20`, 'success');
+    confetti();
+  }
+}
+
+function prevQuiz() {
+  if (state.quiz.current > 0) {
+    state.quiz.current--;
+    loadQuizQuestion();
+  }
+}
+
+function updateQuizScores() {
+  const p1Score = state.quiz.p1Answers.filter((a, i) => a === quizQuestions[i].correct).length;
+  const p2Score = state.quiz.p2Answers.filter((a, i) => a === quizQuestions[i].correct).length;
+  document.getElementById('quizScoreP1').textContent = p1Score;
+  document.getElementById('quizScoreP2').textContent = p2Score;
+}
+
+// =============== UTILITIES ===============
+function showToast(message, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = '';
+  toast.className = 'toast ' + type;
+  
+  const icon = document.createElement('i');
+  icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 
+                   type === 'error' ? 'fa-solid fa-circle-info' : 
+                   'fa-solid fa-star';
+  toast.appendChild(icon);
+  toast.appendChild(document.createTextNode(' ' + message));
+  
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function confetti() {
+  const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#FF9FF3', '#A29BFE', '#95E1A3', '#FFA07A'];
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.5 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    if (Math.random() > 0.5) piece.style.borderRadius = '50%';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 3500);
+  }
+}
+
+// Initialize
+init();
+</script>
+</body>
+</html>

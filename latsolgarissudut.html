@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Lab — Petualangan Garis & Sudut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-1: #0a1f1c; --bg-2: #0d2818; --bg-3: #103127;
+  --surface: rgba(20, 32, 29, 0.85); --surface-light: rgba(28, 44, 40, 0.7); --surface-elev: rgba(35, 55, 50, 0.95);
+  --border: rgba(255, 209, 102, 0.15); --border-strong: rgba(255, 209, 102, 0.4);
+  --text: #f0f6fc; --text-muted: #a8b3b0; --text-dim: #6b7672;
+  --gold: #ffd166; --gold-bright: #ffe08a; --gold-glow: rgba(255, 209, 102, 0.4);
+  --s1: #ff8c42; --s1-bright: #ffa763; --s1-glow: rgba(255, 140, 66, 0.4); --s1-soft: rgba(255, 140, 66, 0.12);
+  --s2: #06d6a0; --s2-bright: #2ee5b5; --s2-glow: rgba(6, 214, 160, 0.4); --s2-soft: rgba(6, 214, 160, 0.12);
+  --danger: #ef476f; --danger-soft: rgba(239, 71, 111, 0.15); --success: #06d6a0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: radial-gradient(ellipse at top right, rgba(6,214,160,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom left, rgba(255,140,66,0.08) 0%, transparent 50%),
+              linear-gradient(180deg, var(--bg-3) 0%, var(--bg-1) 50%, var(--bg-2) 100%);
+  color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative;
+}
+
+.bg-shapes { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.bg-shape { position: absolute; opacity: 0.13; animation: float 25s infinite ease-in-out; }
+@keyframes float { 0%,100%{transform:translate(0,0) rotate(0deg)} 33%{transform:translate(40px,-30px) rotate(120deg)} 66%{transform:translate(-25px,25px) rotate(240deg)} }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+@keyframes timerPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+.screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
+.screen.active { display: block; animation: fadeIn 0.5s ease; }
+
+.cover { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; min-height: 100vh; text-align: center; }
+.cover-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border: 1px solid var(--border-strong); border-radius: 100px; background: var(--surface); color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; backdrop-filter: blur(10px); }
+.cover-badge::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 12px var(--gold-glow); animation: pulse 2s infinite; }
+.cover-title { font-family: 'Fredoka', sans-serif; font-size: clamp(48px,9vw,110px); font-weight: 700; line-height: 0.95; letter-spacing: -3px; margin-bottom: 16px; background: linear-gradient(135deg, var(--gold-bright) 0%, var(--s1-bright) 50%, var(--s2-bright) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cover-subtitle { font-size: clamp(15px,2vw,19px); color: var(--text-muted); max-width: 620px; line-height: 1.6; margin-bottom: 48px; }
+.cover-subtitle strong { color: var(--gold-bright); font-weight: 700; }
+.cover-students { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; width: 100%; margin-bottom: 32px; }
+.student-input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 32px 24px; position: relative; overflow: hidden; backdrop-filter: blur(10px); transition: all 0.3s; }
+.student-input-card:hover { transform: translateY(-4px); }
+.student-input-card.s1 { border-color: rgba(255,140,66,0.3); box-shadow: 0 8px 32px rgba(255,140,66,0.1); }
+.student-input-card.s2 { border-color: rgba(6,214,160,0.3); box-shadow: 0 8px 32px rgba(6,214,160,0.1); }
+.student-input-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+.student-input-card.s1::before { background: linear-gradient(90deg, var(--s1), var(--s1-bright)); }
+.student-input-card.s2::before { background: linear-gradient(90deg, var(--s2), var(--s2-bright)); }
+.student-avatar { width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-family: 'Fredoka', sans-serif; font-size: 30px; font-weight: 700; }
+.s1 .student-avatar { background: var(--s1-soft); color: var(--s1-bright); border: 2px solid var(--s1); }
+.s2 .student-avatar { background: var(--s2-soft); color: var(--s2-bright); border: 2px solid var(--s2); }
+.student-label { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+.s1 .student-label { color: var(--s1-bright); }
+.s2 .student-label { color: var(--s2-bright); }
+.student-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text); font-family: inherit; font-size: 16px; font-weight: 500; text-align: center; transition: all 0.2s; }
+.student-input::placeholder { color: var(--text-dim); }
+.student-input:focus { outline: none; border-color: var(--gold); background: rgba(0,0,0,0.5); }
+.s1 .student-input:focus { border-color: var(--s1-bright); }
+.s2 .student-input:focus { border-color: var(--s2-bright); }
+.cover-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.btn { font-family: inherit; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-primary { padding: 16px 36px; font-size: 16px; background: linear-gradient(135deg, var(--gold) 0%, var(--s1) 100%); color: #0a1f1c; border-radius: 100px; letter-spacing: 0.5px; box-shadow: 0 8px 24px rgba(255,209,102,0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,209,102,0.5); }
+.btn-secondary { padding: 16px 32px; font-size: 16px; background: var(--surface); color: var(--text); border: 1px solid var(--border-strong); border-radius: 100px; backdrop-filter: blur(10px); }
+.btn-secondary:hover { background: var(--surface-elev); border-color: var(--gold); transform: translateY(-2px); }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(10px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+.modal { background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-1) 100%); border: 1px solid var(--border-strong); border-radius: 24px; max-width: 920px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; animation: slideDown 0.4s ease; }
+.modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.modal-close:hover { background: var(--danger); border-color: var(--danger); }
+.modal h2 { font-family: 'Fredoka', sans-serif; font-size: 32px; margin-bottom: 8px; color: var(--gold-bright); letter-spacing: -0.5px; }
+.modal-intro { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+.material-section { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.material-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.material-section h3 { font-family: 'Fredoka', sans-serif; font-size: 22px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; letter-spacing: -0.3px; }
+.material-section h3 .icon { width: 36px; height: 36px; border-radius: 10px; background: var(--gold-glow); color: var(--gold-bright); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; font-family: 'Fredoka', sans-serif; flex-shrink: 0; }
+.material-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+.material-section p strong { color: var(--text); }
+.material-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px; }
+.material-card { background: var(--surface-light); border: 1px solid var(--border); border-radius: 16px; padding: 18px; text-align: center; transition: all 0.2s; }
+.material-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+.material-card .svg-wrap { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+.material-card svg { width: 100%; height: 70px; display: block; }
+.material-card h4 { font-size: 15px; margin-bottom: 6px; color: var(--gold-bright); font-family: 'Fredoka', sans-serif; }
+.material-card p { font-size: 12px; color: var(--text-muted); margin: 0; line-height: 1.4; }
+.illustration-box { background: var(--surface-light); padding: 24px; border-radius: 12px; margin-top: 12px; border: 1px solid var(--border); }
+.illustration-box svg { display: block; margin: 0 auto; max-width: 100%; }
+
+.quiz { padding: 24px; max-width: 1400px; margin: 0 auto; }
+.quiz-topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; margin-bottom: 20px; padding: 18px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(10px); }
+.quiz-info { display: flex; align-items: center; gap: 16px; }
+.quiz-info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 4px; font-weight: 700; }
+.quiz-info-value { font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600; color: var(--gold-bright); }
+.timer-container { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.timer-ring { position: relative; width: 90px; height: 90px; }
+.timer-ring svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+.timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 700; color: var(--gold-bright); }
+.timer-text.low { color: var(--danger); animation: timerPulse 1s infinite; }
+.timer-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); font-weight: 700; }
+.timer-controls { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+.btn-timer { padding: 11px 18px; font-size: 13px; background: var(--s1-soft); color: var(--s1-bright); border: 1px solid var(--s1); border-radius: 100px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.btn-timer:hover:not(:disabled) { background: var(--s1-glow); transform: translateY(-1px); }
+.btn-timer:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-finish { padding: 11px 22px; font-size: 13px; background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); border-radius: 100px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.btn-finish:hover { background: rgba(239,71,111,0.3); transform: translateY(-1px); }
+
+.tutor-guide { display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: linear-gradient(90deg, rgba(255,209,102,0.08), rgba(255,209,102,0.02)); border: 1px solid rgba(255,209,102,0.2); border-radius: 14px; margin-bottom: 20px; }
+.tutor-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--gold-glow); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.tutor-text { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+.tutor-text strong { color: var(--gold-bright); }
+
+.q-nav { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; backdrop-filter: blur(10px); max-height: 200px; overflow-y: auto; }
+.q-nav-btn { width: 38px; height: 38px; border-radius: 10px; background: var(--surface-light); border: 1px solid var(--border); color: var(--text-muted); font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; position: relative; }
+.q-nav-btn:hover { border-color: var(--gold); color: var(--text); transform: translateY(-2px); }
+.q-nav-btn.current { background: var(--gold); color: var(--bg-1); border-color: var(--gold); box-shadow: 0 4px 16px var(--gold-glow); }
+.q-nav-btn.both-answered { background: var(--s2-soft); border-color: var(--s2); color: var(--s2-bright); }
+.q-nav-btn.both-answered.current { background: var(--s2); color: var(--bg-1); }
+.q-nav-btn .dot { position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--s2); }
+
+.quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; position: relative; }
+.vs-divider { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; border-radius: 50%; background: var(--bg-3); border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 14px; color: var(--gold-bright); z-index: 5; box-shadow: 0 0 24px var(--gold-glow); }
+
+.student-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative; backdrop-filter: blur(10px); animation: fadeIn 0.4s ease; }
+.student-panel.s1 { border-top: 4px solid var(--s1); }
+.student-panel.s2 { border-top: 4px solid var(--s2); }
+.panel-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.15); }
+.panel-student { display: flex; align-items: center; gap: 12px; }
+.panel-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 18px; }
+.s1 .panel-avatar { background: var(--s1-soft); color: var(--s1-bright); border: 2px solid var(--s1); }
+.s2 .panel-avatar { background: var(--s2-soft); color: var(--s2-bright); border: 2px solid var(--s2); }
+.panel-name { font-family: 'Fredoka', sans-serif; font-size: 17px; font-weight: 600; }
+.panel-status { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.panel-status.done { color: var(--s2-bright); }
+.panel-score { font-family: 'Fredoka', sans-serif; font-size: 14px; padding: 6px 12px; border-radius: 100px; font-weight: 600; }
+.s1 .panel-score { background: var(--s1-soft); color: var(--s1-bright); }
+.s2 .panel-score { background: var(--s2-soft); color: var(--s2-bright); }
+.panel-body { padding: 22px 20px; }
+.q-meta { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.q-tag { padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tag.type-bs { background: rgba(167,139,250,0.15); color: #c4b5fd; }
+.q-tag.type-pg { background: rgba(255,209,102,0.15); color: var(--gold-bright); }
+.q-tag.type-pgk { background: rgba(6,214,160,0.15); color: var(--s2-bright); }
+.q-tag.diff-mudah { background: rgba(74,222,128,0.15); color: #4ade80; }
+.q-tag.diff-sedang { background: rgba(251,146,60,0.15); color: #fb923c; }
+.q-tag.diff-sulit { background: rgba(248,113,113,0.15); color: #f87171; }
+.q-tag.diff-hots { background: rgba(244,114,182,0.15); color: #f472b6; }
+.q-text { font-size: 15px; line-height: 1.6; margin-bottom: 18px; color: var(--text); font-weight: 500; }
+.q-text em { color: var(--gold-bright); font-style: italic; font-size: 13px; }
+.q-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.q-option { padding: 12px 14px; background: var(--surface-light); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 12px; font-size: 14px; user-select: none; }
+.q-option:hover:not(.locked) { border-color: var(--gold); background: var(--surface-elev); transform: translateX(2px); }
+.s1 .q-option:hover:not(.locked) { border-color: var(--s1); }
+.s2 .q-option:hover:not(.locked) { border-color: var(--s2); }
+.q-option.selected { background: var(--s1-soft); border-color: var(--s1); }
+.s2 .q-option.selected { background: var(--s2-soft); border-color: var(--s2); }
+.q-option.correct { background: rgba(6,214,160,0.15); border-color: var(--success); color: var(--success); }
+.q-option.wrong { background: rgba(239,71,111,0.15); border-color: var(--danger); color: var(--danger); animation: shake 0.4s; }
+.q-option.locked { cursor: not-allowed; }
+.q-option-letter { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; font-family: 'Fredoka', sans-serif; }
+.q-option.selected .q-option-letter { background: var(--s1); color: white; }
+.s2 .q-option.selected .q-option-letter { background: var(--s2); color: var(--bg-1); }
+.q-option.correct .q-option-letter { background: var(--success); color: var(--bg-1); }
+.q-option.wrong .q-option-letter { background: var(--danger); color: white; }
+.q-checkbox { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--text-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+.q-option.selected .q-checkbox { background: var(--s1); border-color: var(--s1); }
+.s2 .q-option.selected .q-checkbox { background: var(--s2); border-color: var(--s2); }
+.q-option.selected .q-checkbox::after { content: '✓'; color: white; font-size: 14px; font-weight: 700; }
+.s2 .q-option.selected .q-checkbox::after { color: var(--bg-1); }
+.q-option.correct .q-checkbox { background: var(--success); border-color: var(--success); }
+.q-option.correct .q-checkbox::after { content: '✓'; color: var(--bg-1); font-size: 14px; font-weight: 700; }
+.q-option.wrong .q-checkbox { background: var(--danger); border-color: var(--danger); }
+.q-option.wrong .q-checkbox::after { content: '✗'; color: white; font-size: 14px; font-weight: 700; }
+
+.panel-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+.btn-check { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; }
+.btn-check.enabled { background: linear-gradient(135deg, var(--gold), var(--s1)); color: var(--bg-1); }
+.btn-check.enabled.s2 { background: linear-gradient(135deg, var(--gold), var(--s2)); color: var(--bg-1); }
+.btn-check.enabled:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255,209,102,0.3); }
+.btn-check:disabled { background: var(--surface-light); color: var(--text-dim); cursor: not-allowed; }
+.btn-check.locked { background: var(--s2-soft); color: var(--s2-bright); border: 1px solid var(--s2); cursor: default; }
+.btn-discussion { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; background: var(--surface-light); color: var(--text-muted); border: 1px solid var(--border); transition: all 0.2s; font-family: inherit; }
+.btn-discussion:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-discussion.enabled { color: var(--gold-bright); border-color: var(--gold); }
+.btn-discussion.enabled:hover { background: var(--gold-glow); transform: translateY(-2px); }
+.btn-discussion.active { background: var(--gold-glow); color: var(--gold-bright); border-color: var(--gold); }
+.discussion-box { background: rgba(255,209,102,0.06); border: 1px solid var(--border-strong); border-radius: 12px; padding: 16px; display: none; }
+.discussion-box.active { display: block; animation: slideDown 0.3s ease; }
+.discussion-title { font-family: 'Fredoka', sans-serif; font-size: 14px; color: var(--gold-bright); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.discussion-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+.discussion-text strong { color: var(--text); }
+
+.quiz-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; backdrop-filter: blur(10px); }
+.btn-nav { padding: 12px 26px; background: var(--surface-light); border: 1px solid var(--border); border-radius: 100px; color: var(--text); font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn-nav:hover:not(:disabled) { background: var(--surface-elev); border-color: var(--gold); transform: translateY(-2px); }
+.btn-nav:disabled { opacity: 0.35; cursor: not-allowed; }
+.footer-info { color: var(--text-muted); font-size: 13px; text-align: center; }
+
+.results { padding: 60px 24px; max-width: 1200px; margin: 0 auto; text-align: center; }
+.results-title { font-family: 'Fredoka', sans-serif; font-size: clamp(40px,6vw,64px); margin-bottom: 12px; background: linear-gradient(135deg, var(--gold-bright), var(--s2-bright)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1.5px; }
+.results-subtitle { color: var(--text-muted); font-size: 17px; margin-bottom: 48px; }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px; }
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 32px; position: relative; overflow: hidden; backdrop-filter: blur(10px); animation: fadeIn 0.5s ease; }
+.result-card.s1 { border-color: var(--s1); box-shadow: 0 8px 32px rgba(255,140,66,0.15); }
+.result-card.s2 { border-color: var(--s2); box-shadow: 0 8px 32px rgba(6,214,160,0.15); }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; }
+.result-card.s1::before { background: linear-gradient(90deg, var(--s1), var(--s1-bright)); }
+.result-card.s2::before { background: linear-gradient(90deg, var(--s2), var(--s2-bright)); }
+.result-name { font-family: 'Fredoka', sans-serif; font-size: 26px; margin-bottom: 8px; font-weight: 600; }
+.result-card.s1 .result-name { color: var(--s1-bright); }
+.result-card.s2 .result-name { color: var(--s2-bright); }
+.result-rank { display: inline-block; padding: 5px 14px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+.result-score-big { font-family: 'Fredoka', sans-serif; font-size: 56px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.result-score-big span { font-size: 28px; }
+.result-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; font-weight: 700; }
+.result-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.stat-box { background: var(--surface-light); border: 1px solid var(--border); border-radius: 14px; padding: 18px 12px; text-align: center; }
+.stat-value { font-family: 'Fredoka', sans-serif; font-size: 32px; font-weight: 700; margin-bottom: 4px; line-height: 1; }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); font-weight: 700; }
+.stat-box.answered .stat-value { color: var(--gold-bright); }
+.stat-box.correct .stat-value { color: var(--success); }
+.stat-box.wrong .stat-value { color: var(--danger); }
+.stat-box.time .stat-value { color: var(--s1-bright); font-size: 26px; }
+.s2 .stat-box.time .stat-value { color: var(--s2-bright); }
+
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--surface-elev); border: 1px solid var(--border-strong); border-radius: 100px; padding: 14px 26px; font-weight: 700; font-size: 14px; z-index: 200; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 12px 40px rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--success); color: var(--success); }
+.toast.warning { border-color: var(--gold); color: var(--gold-bright); }
+.toast.error { border-color: var(--danger); color: var(--danger); }
+
+.confirm-modal { max-width: 420px; text-align: center; padding: 36px 28px; }
+.confirm-modal h2 { font-size: 26px; margin-bottom: 12px; }
+.confirm-modal p { color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+.confirm-actions { display: flex; gap: 12px; justify-content: center; }
+
+@media (max-width: 900px) {
+  .quiz-grid { grid-template-columns: 1fr; }
+  .vs-divider { display: none; }
+  .cover-students { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .quiz-topbar { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+  .quiz-info { justify-content: center; }
+  .timer-controls { justify-content: center; }
+  .modal { padding: 24px 20px; }
+  .modal h2 { font-size: 24px; }
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes" id="bgShapes"></div>
+
+<!-- COVER SCREEN -->
+<div class="screen active" id="coverScreen">
+  <div class="cover">
+    <div class="cover-badge">Math Lab • Kelas 3 SD</div>
+    <h1 class="cover-title">Geometry Lab</h1>
+    <p class="cover-subtitle">Petualangan seru menjelajahi dunia <strong>Garis & Sudut</strong>. Berdua, adu cepat, dan jadilah juara geometri!</p>
+    <div class="cover-students">
+      <div class="student-input-card s1">
+        <div class="student-avatar">1</div>
+        <div class="student-label">Siswa 1 • Tim Coral</div>
+        <input type="text" class="student-input" id="name1" placeholder="Masukkan nama siswa 1" maxlength="20">
+      </div>
+      <div class="student-input-card s2">
+        <div class="student-avatar">2</div>
+        <div class="student-label">Siswa 2 • Tim Mint</div>
+        <input type="text" class="student-input" id="name2" placeholder="Masukkan nama siswa 2" maxlength="20">
+      </div>
+    </div>
+    <div class="cover-actions">
+      <button class="btn btn-secondary" onclick="openMaterial()">📖 Lihat Materi</button>
+      <button class="btn btn-primary" onclick="startQuiz()">🚀 Mulai Petualangan</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="quizScreen">
+  <div class="quiz">
+    <div class="quiz-topbar">
+      <div class="quiz-info"><div><div class="quiz-info-label">Soal Ke</div><div class="quiz-info-value"><span id="qCurrent">1</span> / <span id="qTotal">40</span></div></div></div>
+      <div class="timer-container">
+        <div class="timer-label">⏱ Waktu</div>
+        <div class="timer-ring">
+          <svg viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="5" fill="none"/>
+            <circle id="timerProgress" cx="45" cy="45" r="40" stroke="#ffd166" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-text" id="timerText">2:00</div>
+        </div>
+      </div>
+      <div class="timer-controls">
+        <button class="btn-timer" id="addTimeBtn" onclick="addTime()">+ 15 detik</button>
+        <button class="btn-finish" onclick="showFinishConfirm()">Finish</button>
+      </div>
+    </div>
+    <div class="tutor-guide">
+      <div class="tutor-icon">👨‍🏫</div>
+      <div class="tutor-text"><strong>Panduan Tutor:</strong> Kerjakan soal sesuai nomor yang ditunjuk. Setiap siswa menjawab soalnya masing-masing, lalu tekan <strong>Cek Jawaban</strong>. Waktu berhenti saat keduanya sudah menjawab.</div>
+    </div>
+    <div class="q-nav" id="qNav"></div>
+    <div class="quiz-grid">
+      <div class="student-panel s1" id="panel1"></div>
+      <div class="vs-divider">VS</div>
+      <div class="student-panel s2" id="panel2"></div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn-nav" id="prevBtn" onclick="prevQuestion()">← Sebelumnya</button>
+      <div class="footer-info">Navigasi sesuai arahan tutor</div>
+      <button class="btn-nav" id="nextBtn" onclick="nextQuestion()">Selanjutnya →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results">
+    <h1 class="results-title">Hasil Petualangan</h1>
+    <p class="results-subtitle">Kerja keras kalian luar biasa! Inilah ringkasan perjalanan geometri kalian.</p>
+    <div class="results-grid">
+      <div class="result-card s1" id="result1"></div>
+      <div class="result-card s2" id="result2"></div>
+    </div>
+    <button class="btn btn-primary" onclick="location.reload()">🔄 Mulai Lagi</button>
+  </div>
+</div>
+
+<!-- MATERIAL MODAL -->
+<div class="modal-overlay" id="materialModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeMaterial()">✕</button>
+    <h2>📚 Materi Garis & Sudut</h2>
+    <p class="modal-intro">Pelajari materi berikut sebelum memulai petualangan. Pahami setiap jenis garis, sudut, dan hubungannya dengan bangun datar.</p>
+    <div class="material-section">
+      <h3><span class="icon">1</span> Nama Garis</h3>
+      <p>Garis adalah kumpulan titik-titik yang berderet lurus ke kedua arah tanpa akhir. Garis dinamai dengan dua huruf kapital di ujungnya, misalnya <strong>garis AB</strong>.</p>
+      <div class="illustration-box">
+        <svg viewBox="0 0 320 80" style="max-width:400px;">
+          <line x1="40" y1="40" x2="280" y2="40" stroke="#ffd166" stroke-width="3"/>
+          <circle cx="40" cy="40" r="7" fill="#ff8c42"/><circle cx="280" cy="40" r="7" fill="#06d6a0"/>
+          <text x="28" y="70" fill="#f0f6fc" font-family="Fredoka" font-size="16" font-weight="700">A</text>
+          <text x="272" y="70" fill="#f0f6fc" font-family="Fredoka" font-size="16" font-weight="700">B</text>
+          <text x="140" y="28" fill="#ffe08a" font-family="Fredoka" font-size="14">garis AB</text>
+        </svg>
+      </div>
+    </div>
+    <div class="material-section">
+      <h3><span class="icon">2</span> Jenis-Jenis Garis</h3>
+      <p>Empat jenis garis berdasarkan hubungan posisinya:</p>
+      <div class="material-grid">
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><line x1="15" y1="22" x2="85" y2="22" stroke="#ffd166" stroke-width="2.5"/><line x1="15" y1="40" x2="85" y2="40" stroke="#ffd166" stroke-width="2.5"/></svg></div><h4>Sejajar</h4><p>Dua garis dengan jarak selalu sama, tidak pernah bertemu.</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><line x1="20" y1="30" x2="80" y2="30" stroke="#ffd166" stroke-width="2.5"/><line x1="50" y1="10" x2="50" y2="50" stroke="#ffd166" stroke-width="2.5"/><rect x="50" y="30" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/></svg></div><h4>Tegak Lurus</h4><p>Berpotongan membentuk sudut 90° (siku-siku).</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><line x1="20" y1="10" x2="80" y2="50" stroke="#ffd166" stroke-width="2.5"/><line x1="20" y1="50" x2="80" y2="10" stroke="#ffd166" stroke-width="2.5"/><circle cx="50" cy="30" r="4" fill="#ff8c42"/></svg></div><h4>Berpotongan</h4><p>Dua garis bertemu di satu titik persekutuan.</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><line x1="15" y1="30" x2="85" y2="30" stroke="#ffd166" stroke-width="3"/><line x1="15" y1="30" x2="85" y2="30" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/></svg></div><h4>Berimpit</h4><p>Dua garis saling menumpuk menjadi satu garis.</p></div>
+      </div>
+    </div>
+    <div class="material-section">
+      <h3><span class="icon">3</span> Pengertian Sudut</h3>
+      <p><strong>Sudut</strong> adalah daerah yang dibentuk oleh dua sinar garis (kaki sudut) yang berpangkal di satu titik yang sama (titik sudut). Sudut diukur dalam satuan derajat (°).</p>
+    </div>
+    <div class="material-section">
+      <h3><span class="icon">4</span> Jenis-Jenis Sudut</h3>
+      <p>Ada lima jenis sudut berdasarkan besar bukaannya:</p>
+      <div class="material-grid">
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 70"><line x1="15" y1="55" x2="85" y2="55" stroke="#ffd166" stroke-width="2.5"/><line x1="15" y1="55" x2="45" y2="20" stroke="#ffd166" stroke-width="2.5"/><path d="M 30 55 A 15 15 0 0 0 23 43" fill="none" stroke="#ff8c42" stroke-width="2"/></svg></div><h4>Lancip</h4><p>Lebih kecil dari 90°</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 70"><line x1="15" y1="55" x2="85" y2="55" stroke="#ffd166" stroke-width="2.5"/><line x1="15" y1="55" x2="15" y2="15" stroke="#ffd166" stroke-width="2.5"/><rect x="15" y="45" width="10" height="10" fill="none" stroke="#06d6a0" stroke-width="2"/></svg></div><h4>Siku-siku</h4><p>Tepat 90°</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 70"><line x1="15" y1="55" x2="85" y2="55" stroke="#ffd166" stroke-width="2.5"/><line x1="15" y1="55" x2="75" y2="20" stroke="#ffd166" stroke-width="2.5"/><path d="M 30 55 A 15 15 0 0 0 23 43" fill="none" stroke="#ef476f" stroke-width="2"/></svg></div><h4>Tumpul</h4><p>Lebih dari 90°, kurang dari 180°</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 70"><line x1="10" y1="35" x2="90" y2="35" stroke="#ffd166" stroke-width="2.5"/><circle cx="50" cy="35" r="3.5" fill="#ffd166"/><path d="M 50 25 A 10 10 0 0 1 50 45" fill="none" stroke="#ffd166" stroke-width="1.5"/></svg></div><h4>Lurus</h4><p>Tepat 180°</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 70"><line x1="15" y1="55" x2="85" y2="55" stroke="#ffd166" stroke-width="2.5"/><line x1="50" y1="55" x2="75" y2="20" stroke="#ffd166" stroke-width="2.5"/><path d="M 65 55 A 15 15 0 1 0 50 41" fill="none" stroke="#ef476f" stroke-width="2"/></svg></div><h4>Refleks</h4><p>Lebih dari 180°, kurang dari 360°</p></div>
+      </div>
+    </div>
+    <div class="material-section">
+      <h3><span class="icon">5</span> Titik Sudut & Kaki Sudut</h3>
+      <p>Pada penamaan sudut tiga huruf seperti <strong>∠ABC</strong>, huruf tengah (B) adalah <strong>titik sudut</strong>, sedangkan garis BA dan BC disebut <strong>kaki sudut</strong>.</p>
+      <div class="illustration-box">
+        <svg viewBox="0 0 320 130" style="max-width:400px;">
+          <line x1="40" y1="100" x2="280" y2="100" stroke="#ffd166" stroke-width="3"/>
+          <line x1="40" y1="100" x2="160" y2="30" stroke="#ffd166" stroke-width="3"/>
+          <circle cx="40" cy="100" r="6" fill="#ff8c42"/><circle cx="160" cy="30" r="6" fill="#06d6a0"/>
+          <text x="20" y="120" fill="#ff8c42" font-family="Fredoka" font-size="15" font-weight="700">A</text>
+          <text x="20" y="95" fill="#ffe08a" font-family="Fredoka" font-size="15" font-weight="700">B</text>
+          <text x="158" y="22" fill="#06d6a0" font-family="Fredoka" font-size="15" font-weight="700">C</text>
+          <text x="80" y="75" fill="#a8b3b0" font-family="Plus Jakarta Sans" font-size="11">kaki sudut BA</text>
+          <text x="180" y="70" fill="#a8b3b0" font-family="Plus Jakarta Sans" font-size="11">kaki sudut BC</text>
+          <text x="38" y="80" fill="#ffe08a" font-family="Plus Jakarta Sans" font-size="10" font-weight="700">titik sudut</text>
+        </svg>
+      </div>
+    </div>
+    <div class="material-section">
+      <h3><span class="icon">6</span> Hubungan dengan Bangun Datar</h3>
+      <p>Sudut dan garis terdapat dalam berbagai bangun datar yang kita kenal sehari-hari:</p>
+      <div class="material-grid">
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><rect x="20" y="10" width="60" height="40" fill="none" stroke="#ffd166" stroke-width="2.5"/><rect x="20" y="10" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/><rect x="72" y="10" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/><rect x="20" y="42" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/><rect x="72" y="42" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/></svg></div><h4>Persegi & Persegi Panjang</h4><p>4 sudut siku-siku, 2 pasang sisi sejajar.</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><polygon points="50,10 85,50 15,50" fill="none" stroke="#ffd166" stroke-width="2.5"/><rect x="46" y="42" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/></svg></div><h4>Segitiga</h4><p>3 titik sudut, jumlah sudut 180°.</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><polygon points="25,15 75,15 90,50 10,50" fill="none" stroke="#ffd166" stroke-width="2.5"/></svg></div><h4>Jajar Genjang</h4><p>Sisi sejajar, punya sudut lancip & tumpul.</p></div>
+        <div class="material-card"><div class="svg-wrap"><svg viewBox="0 0 100 60"><line x1="50" y1="10" x2="50" y2="50" stroke="#ffd166" stroke-width="2.5"/><line x1="20" y1="30" x2="80" y2="30" stroke="#ffd166" stroke-width="2.5"/><rect x="46" y="26" width="8" height="8" fill="none" stroke="#06d6a0" stroke-width="1.5"/></svg></div><h4>Layang-layang</h4><p>Diagonalnya berpotongan tegak lurus.</p></div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 32px;">
+      <button class="btn btn-primary" onclick="closeMaterial()">✓ Saya Sudah Paham</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-modal">
+    <h2>🎯 Akhiri Latihan?</h2>
+    <p>Apakah kalian yakin ingin mengakhiri petualangan sekarang? Hasil akan ditampilkan setelah ini.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-primary" onclick="finishQuiz()">Ya, Akhiri</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA SOAL — 40 SOAL PER SISWA ============
+var Q = [
+// ===== Q1-10: BENAR / SALAH =====
+{t:'bs',d:'Mudah',s1:{q:'Rani berpendapat bahwa sudut tumpul memiliki ukuran bukaan yang lebih kecil daripada sudut lancip.',o:['Benar','Salah'],c:[1],e:'Sudut lancip kecil (runcing, <90°), sudut tumpul lebih lebar (90°-180°). Pernyataan Rani <strong>salah</strong>.'},s2:{q:'Garis sejajar adalah dua garis yang jika diperpanjang terus-menerus tidak akan pernah saling berpotongan.',o:['Benar','Salah'],c:[0],e:'Garis sejajar memiliki jarak selalu sama sehingga tidak akan pernah bertemu. Pernyataan <strong>benar</strong>.'}},
+{t:'bs',d:'Mudah',s1:{q:'Jika kita mengamati huruf kapital "L", garis tegak dan garis mendatarnya saling berpotongan tegak lurus membentuk sudut siku-siku.',o:['Benar','Salah'],c:[0],e:'Huruf L memiliki perpotongan horizontal dan vertikal yang tepat tegak lurus (90°). <strong>Benar</strong>.'},s2:{q:'Meja belajar di kelas yang berbentuk persegi memiliki empat buah sudut yang semuanya adalah sudut lancip.',o:['Benar','Salah'],c:[1],e:'Meja persegi memiliki 4 sudut siku-siku (90°), bukan lancip. <strong>Salah</strong>.'}},
+{t:'bs',d:'Sedang',s1:{q:'Papan catur di kelas berbentuk persegi. Bangun persegi ini memiliki 4 pasang sisi yang saling sejajar.',o:['Benar','Salah'],c:[1],e:'Persegi hanya memiliki <strong>2 pasang</strong> sisi sejajar (atas-bawah, kiri-kanan). <strong>Salah</strong>.'},s2:{q:'Titik tempat bertemunya dua garis atau dua kaki sudut disebut sebagai titik sudut.',o:['Benar','Salah'],c:[0],e:'Titik pertemuan ujung dua garis yang membentuk sudut dinamakan titik sudut. <strong>Benar</strong>.'}},
+{t:'bs',d:'Sedang',s1:{q:'Saat jam dinding menunjukkan pukul 06.00 pagi, jarum panjang dan jarum pendek akan membentuk satu garis datar (sudut lurus).',o:['Benar','Salah'],c:[0],e:'Pukul 06.00 jarum di angka 12 dan 6, saling berseberangan membentuk 180° (sudut lurus). <strong>Benar</strong>.'},s2:{q:'Jarum panjang dan jarum pendek pada jam dinding saat menunjukkan tepat pukul 12.00 adalah contoh garis yang saling sejajar.',o:['Benar','Salah'],c:[1],e:'Pukul 12.00 kedua jarum saling menumpuk. Ini contoh garis <strong>berimpit</strong>, bukan sejajar. <strong>Salah</strong>.'}},
+{t:'bs',d:'HOTS',s1:{q:'Garis berimpit dapat diibaratkan seperti saat kita menutup buku tulis dengan rapat, sehingga batas halaman kiri dan kanan menempel menjadi satu garis.',o:['Benar','Salah'],c:[0],e:'Garis berimpit posisinya saling menumpuk menjadi satu, seperti belahan buku yang ditutup rapat. <strong>Benar</strong>.'},s2:{q:'Sudut tumpul adalah sudut yang ukuran besarannya lebih besar dari sudut siku-siku (lebih dari 90 derajat).',o:['Benar','Salah'],c:[0],e:'Sudut tumpul ukurannya 90°-180°, lebih besar dari siku-siku. <strong>Benar</strong>.'}},
+{t:'bs',d:'Mudah',s1:{q:'Sudut refleks adalah jenis sudut yang besarnya kurang dari 90 derajat.',o:['Benar','Salah'],c:[1],e:'Sudut < 90° adalah sudut lancip. Sudut refleks besarnya > 180°. <strong>Salah</strong>.'},s2:{q:'Kaki sudut pada sebuah bangun datar bisa terbuat dari garis yang melengkung (seperti lingkaran).',o:['Benar','Salah'],c:[1],e:'Kaki sudut selalu dibentuk dari <strong>garis lurus</strong>, bukan melengkung. <strong>Salah</strong>.'}},
+{t:'bs',d:'Sedang',s1:{q:'Garis-garis putih pada zebra cross di jalan raya adalah contoh penerapan garis yang saling sejajar.',o:['Benar','Salah'],c:[0],e:'Garis zebra cross berjejer lurus dengan jarak sama dan tidak bersilangan = garis sejajar. <strong>Benar</strong>.'},s2:{q:'Permukaan papan tulis atau pintu kelas berbentuk persegi panjang, artinya benda tersebut memiliki tepat dua pasang sisi sejajar.',o:['Benar','Salah'],c:[0],e:'Persegi panjang memiliki 2 pasang sisi sejajar: atas-bawah dan kiri-kanan. <strong>Benar</strong>.'}},
+{t:'bs',d:'Mudah',s1:{q:'Kaki sudut pada sebuah gambar sudut ∠XYZ selalu terdiri dari garis XY dan garis YZ.',o:['Benar','Salah'],c:[0],e:'Titik sudut di Y, maka garis yang memancar darinya (XY dan YZ) adalah kaki sudut. <strong>Benar</strong>.'},s2:{q:'Jika kita membuka pintu kamar sangat lebar hingga memutar balik melebihi garis lurus, sudut yang terbentuk disebut sudut refleks.',o:['Benar','Salah'],c:[0],e:'Sudut > 180° namun < 360° disebut sudut refleks. <strong>Benar</strong>.'}},
+{t:'bs',d:'Sulit',s1:{q:'Dua garis miring yang saling menyilang membentuk huruf "X" dipastikan selalu membentuk sudut siku-siku di tengahnya.',o:['Benar','Salah'],c:[1],e:'Garis menyilang huruf X bisa berpotongan landai (lancip & tumpul). Siku-siku hanya jika tegak lurus sempurna (+). <strong>Salah</strong>.'},s2:{q:'Setiap dua garis yang saling bersilangan atau berpotongan di tengah, pasti selalu membentuk sudut siku-siku.',o:['Benar','Salah'],c:[1],e:'Tidak selalu. Garis bersilangan bisa membentuk sudut lancip dan tumpul. Hanya tegak lurus yang membentuk siku-siku. <strong>Salah</strong>.'}},
+{t:'bs',d:'HOTS',s1:{q:'Semua jenis segitiga (baik siku-siku, sama kaki, atau sembarang) pasti memiliki setidaknya dua buah sudut lancip di bagian dalamnya.',o:['Benar','Salah'],c:[0],e:'Jumlah sudut segitiga = 180°. Tidak mungkin ada dua sudut siku/tumpul, sehingga minimal ada <strong>dua sudut lancip</strong>. <strong>Benar</strong>.'},s2:{q:'Huruf abjad "X" kapital merupakan contoh dari dua buah garis lurus yang saling berpotongan.',o:['Benar','Salah'],c:[0],e:'Huruf X terbentuk dari dua garis diagonal yang saling memotong di tengah. <strong>Benar</strong>.'}},
+
+// ===== Q11-20: PILIHAN GANDA KOMPLEKS =====
+{t:'pgk',d:'Mudah',s1:{q:'Benda-benda di taman bermain berikut ini yang memperlihatkan adanya garis sejajar adalah... <em>(Pilih semua yang benar)</em>',o:['Roda sepeda anak','Tiang ayunan sebelah kiri dan kanan','Tangga lurus untuk naik perosotan','Bola kasti'],c:[1,2],e:'Tiang ayunan kiri-kanan dan batang tangga perosotan dibuat sejajar. Roda dan bola berbentuk lingkaran tanpa garis sejajar.'},s2:{q:'Benda-benda di bawah ini yang bagian pojoknya atau pinggirnya membentuk sudut siku-siku adalah... <em>(Pilih semua yang benar)</em>',o:['Kertas HVS','Piring makan','Buku tulis','Jendela kelas'],c:[0,2,3],e:'Kertas, buku, dan jendela berbentuk persegi panjang yang pojoknya siku-siku. Piring berbentuk lingkaran tanpa sudut.'}},
+{t:'pgk',d:'Sedang',s1:{q:'Bangun datar di bawah ini yang pastinya BUKAN memiliki sudut siku-siku di pojoknya adalah... <em>(Pilih semua yang benar)</em>',o:['Persegi','Lingkaran','Layang-layang','Persegi panjang'],c:[1,2],e:'Lingkaran tidak bersudut. Layang-layang memiliki perpaduan sudut lancip dan tumpul. Persegi & persegi panjang bersudut siku-siku.'},s2:{q:'Bangun datar di bawah ini yang memiliki garis atau sisi sejajar adalah... <em>(Pilih semua yang benar)</em>',o:['Persegi panjang','Segitiga sembarang','Persegi','Lingkaran'],c:[0,2],e:'Persegi panjang dan persegi memiliki sisi sejajar. Segitiga sembarang tidak punya sisi sejajar, lingkaran hanya punya sisi lengkung.'}},
+{t:'pgk',d:'Sedang',s1:{q:'Pernyataan yang tepat tentang sebuah segitiga siku-siku adalah... <em>(Pilih semua yang benar)</em>',o:['Memiliki satu buah sudut 90 derajat','Memiliki dua buah sudut lancip','Semua sudutnya besarnya 90 derajat','Terdiri dari 3 titik sudut'],c:[0,1,3],e:'Segitiga siku-siku memiliki 1 sudut 90° dan 2 sudut lancip. Setiap segitiga pasti memiliki 3 titik sudut.'},s2:{q:'Ciri-ciri yang tepat dari dua garis yang saling tegak lurus adalah... <em>(Pilih semua yang benar)</em>',o:['Tidak pernah bertemu','Keduanya saling berpotongan','Membentuk sudut 90 derajat','Membentuk perpotongan seperti huruf T atau tanda tambah (+)'],c:[1,2,3],e:'Garis tegak lurus saling berpotongan membentuk sudut 90°. Bentuknya bisa seperti T, L, atau +.'}},
+{t:'pgk',d:'Sulit',s1:{q:'Huruf kapital di bawah ini yang disusun dari garis sejajar sekaligus garis yang saling berpotongan adalah... <em>(Pilih semua yang benar)</em>',o:['Huruf V','Huruf H','Huruf L','Huruf F'],c:[1,3],e:'Huruf H dan F memiliki garis vertikal tegak dan horizontal mendatar (berpotongan tegak lurus), serta garis-garis yang saling sejajar. V dan L tidak punya garis sejajar.'},s2:{q:'Jarum jam pada dinding akan membentuk sudut lancip (kurang dari 90 derajat) jika menunjuk pada pukul... <em>(Pilih semua yang benar)</em>',o:['Pukul 01.00','Pukul 03.00','Pukul 09.00','Pukul 11.00'],c:[0,3],e:'Pukul 01.00 (30°) dan 11.00 (30°) jarumnya berdekatan = sudut lancip. Pukul 03.00 dan 09.00 membentuk sudut siku-siku (90°).'}},
+{t:'pgk',d:'HOTS',s1:{q:'Pada pukul berapakah jarum panjang dan jarum pendek jam dinding dapat membentuk sudut tumpul? <em>(Pilih semua yang benar)</em>',o:['Pukul 04.00','Pukul 05.00','Pukul 03.00','Pukul 08.00'],c:[0,1,3],e:'Pukul 04.00 (120°), 05.00 (150°), dan 08.00 (120°) = sudut tumpul. Pukul 03.00 = siku-siku (90°).'},s2:{q:'Rudi menggambar segitiga sama sisi PQR. Pernyataan yang benar tentang segitiga ini adalah... <em>(Pilih semua yang benar)</em>',o:['Memiliki 3 titik sudut','Semua sudutnya adalah sudut tumpul','Memiliki 3 sisi yang panjangnya sama','Semua sudutnya adalah sudut lancip'],c:[0,2,3],e:'Segitiga sama sisi punya 3 titik sudut, 3 sisi sama panjang, dan semua sudutnya 60° (lancip).'}},
+{t:'pgk',d:'Sulit',s1:{q:'Bangun datar manakah yang di dalamnya terdapat sudut tumpul? <em>(Pilih semua yang benar)</em>',o:['Segilima beraturan','Persegi','Jajar genjang','Segitiga sama sisi'],c:[0,2],e:'Segilima beraturan dan jajar genjang memiliki sudut tumpul. Persegi semua sudutnya siku-siku, segitiga sama sisi semua sudutnya lancip (60°).'},s2:{q:'Contoh benda atau keadaan yang menunjukkan garis berimpit adalah... <em>(Pilih semua yang benar)</em>',o:['Jarum jam pada pukul 12.00','Rel kereta api','Senar gitar yang ditarik sejajar','Dua halaman buku yang ditutup rapat'],c:[0,3],e:'Garis berimpit posisinya saling menumpuk. Pukul 12.00 (jarum menumpuk) dan buku ditutup rapat adalah contohnya. Rel dan senar adalah garis sejajar.'}},
+{t:'pgk',d:'Sedang',s1:{q:'Di antara pernyataan berikut, manakah yang merupakan ciri-ciri dari "Titik Sudut"? <em>(Pilih semua yang benar)</em>',o:['Merupakan garis pembatas antar dua sudut','Merupakan ujung tempat bertemunya dua garis','Selalu berada di tengah penamaan sudut 3 huruf','Besarnya selalu 90 derajat'],c:[1,2],e:'Titik sudut adalah titik pertemuan dua garis (kaki sudut). Dalam penamaan (mis. ∠ABC), huruf tengah B adalah titik sudut. Titik tidak punya besaran derajat.'},s2:{q:'Bangun datar mana sajakah yang di dalamnya bisa terdapat sudut tumpul? <em>(Pilih semua yang benar)</em>',o:['Trapesium sembarang','Persegi','Persegi panjang','Jajar genjang'],c:[0,3],e:'Trapesium sembarang dan jajar genjang memiliki kombinasi sudut tumpul dan lancip. Persegi dan persegi panjang hanya sudut siku-siku.'}},
+{t:'pgk',d:'Mudah',s1:{q:'Manakah kelompok benda berikut yang jika diamati ujungnya membentuk sudut lancip? <em>(Pilih semua yang benar)</em>',o:['Ujung potongan pizza','Ujung pensil yang baru diserut','Pojok bingkai foto persegi','Pucuk atap rumah yang curam'],c:[0,1,3],e:'Ujung pizza, pensil runcing, dan puncak atap rumah berbentuk menyempit (lancip). Bingkai foto bersudut tegak (siku-siku).'},s2:{q:'Pernyataan yang tepat mengenai kaki sudut dan titik sudut adalah... <em>(Pilih semua yang benar)</em>',o:['Kaki sudut harus berupa garis lurus','Titik sudut adalah titik di tengah-tengah kaki sudut','Titik sudut adalah tempat pertemuan ujung dua kaki sudut','Sebuah sudut hanya memiliki satu kaki sudut'],c:[0,2],e:'Sudut dibentuk dari 2 kaki sudut (garis lurus), dan ujung keduanya bertemu pada 1 titik yang disebut titik sudut.'}},
+{t:'pgk',d:'HOTS',s1:{q:'Sifat-sifat dari garis yang saling berimpit adalah... <em>(Pilih semua yang benar)</em>',o:['Hanya terlihat seperti satu garis lurus saja','Keduanya saling menumpuk letaknya','Memiliki jarak 5 sentimeter dari garis satu ke lainnya','Contohnya jarum jam saat pukul 12.00'],c:[0,1,3],e:'Garis berimpit terletak pada titik yang sama 100%, saling bertumpuk (seperti jarum pukul 12.00). Jika berjarak, itu artinya sejajar terpisah.'},s2:{q:'Benda-benda di sekitar kita yang memperlihatkan contoh garis sejajar adalah... <em>(Pilih semua yang benar)</em>',o:['Roda sepeda bermotor','Garis-garis pada zebra cross','Tiang listrik dan tanah','Rel kereta api'],c:[1,3],e:'Zebra cross dan rel kereta api tersusun dari garis berjarak sama yang tidak bersentuhan (sejajar). Roda itu bulat, tiang dan tanah itu tegak lurus.'}},
+{t:'pgk',d:'Sedang',s1:{q:'Andi memiliki sudut yang dinamakan ∠PQR. Jika ia diminta untuk menyebutkan unsur-unsurnya, manakah yang tepat? <em>(Pilih semua yang benar)</em>',o:['Titik sudutnya adalah Q','Kaki sudutnya adalah PQ dan QR','Titik sudutnya adalah P dan R','Kaki sudutnya adalah huruf PQR'],c:[0,1],e:'Huruf tengah Q adalah titik sudut. Dua ruas garis yang terhubung ke Q (PQ dan QR) adalah kaki sudut.'},s2:{q:'Jika kita menarik dua garis diagonal menyilang di dalam sebuah persegi dari pojok ke pojok, sifat apa yang muncul dari dua garis diagonal tersebut? <em>(Pilih semua yang benar)</em>',o:['Kedua garis tersebut berpotongan','Kedua garis tersebut sejajar','Perpotongan garisnya membentuk sudut siku-siku','Kedua garis tersebut tidak akan bertemu'],c:[0,2],e:'Diagonal pada persegi saling menyilang di tengah (berpotongan) dengan tepat tegak, membentuk 4 sudut siku-siku di tengahnya.'}},
+
+// ===== Q21-40: PILIHAN GANDA =====
+{t:'pg',d:'Mudah',s1:{q:'Ibu memotong kue bolu berbentuk lingkaran secara menyilang menjadi bagian-bagian kecil. Ujung runcing dari potongan kue tersebut menyerupai jenis sudut...',o:['Lurus','Siku-siku','Tumpul','Lancip'],c:[3],e:'Ujung potongan benda bundar yang kecil dan menyempit membentuk sudut lancip (< 90°).'},s2:{q:'Ujung dari sebuah pensil yang sudah diserut tajam menyerupai bentuk sudut...',o:['Siku-siku','Tumpul','Lancip','Lurus'],c:[2],e:'Ujung pensil yang tajam dan runcing memiliki bukaan kecil (< 90°), yaitu sudut lancip.'}},
+{t:'pg',d:'Mudah',s1:{q:'Budi meletakkan buku matematika di atas meja. Pertemuan antara batas bawah dan batas samping kiri buku tersebut membentuk sudut yang saling tegak lurus, yaitu sudut...',o:['Lancip','Tumpul','Siku-siku','Refleks'],c:[2],e:'Buku berbentuk persegi panjang, setiap pojoknya memotong tegak lurus membentuk sudut siku-siku (90°).'},s2:{q:'Besaran sudut dari sebuah sudut siku-siku adalah tepat...',o:['45 derajat','90 derajat','180 derajat','360 derajat'],c:[1],e:'Sudut siku-siku selalu memiliki besaran mutlak tepat 90 derajat.'}},
+{t:'pg',d:'Sedang',s1:{q:'Jarum jam dinding di rumah Rina menunjuk angka 12 dan angka 2 (pukul 14.00). Sudut yang terbentuk oleh kedua jarum tersebut dinamakan sudut...',o:['Tumpul','Lancip','Siku-siku','Lurus'],c:[1],e:'Jarak angka 12 ke 2 = 2 langkah (2×30°=60°). Sudut 60° < 90° = sudut lancip.'},s2:{q:'Terdapat sebuah sudut yang diberi nama ∠KLM. Huruf yang menunjukkan letak titik sudutnya adalah...',o:['K','L','M','K dan M'],c:[1],e:'Pada penamaan sudut tiga huruf, huruf yang berada di tengah (L) selalu menjadi titik sudutnya.'}},
+{t:'pg',d:'Sedang',s1:{q:'Pak Tukang menanam tiang bendera di tanah lapang agar berdiri kokoh dan tidak miring. Tiang yang berdiri tegak tersebut berpotongan dengan permukaan tanah datar dan membentuk sudut sebesar...',o:['45 derajat','90 derajat','120 derajat','180 derajat'],c:[1],e:'Tiang tegak lurus dengan permukaan datar selalu membentuk sudut siku-siku = 90 derajat.'},s2:{q:'Ayah membuka kipas lipat hingga terentang penuh membentuk garis lurus mendatar. Sudut yang dibentuk oleh kipas tersebut dinamakan sudut...',o:['Siku-siku','Lancip','Lurus','Refleks'],c:[2],e:'Garis mendatar lurus memiliki besaran 180°, yang disebut sudut lurus.'}},
+{t:'pg',d:'HOTS',s1:{q:'Ayah menyandarkan tangga ke tembok rumah untuk memperbaiki genting. Ujung bawah tangga yang menyentuh tanah menyempit ke dalam. Sudut antara ujung bawah tangga dan tanah disebut sudut...',o:['Siku-siku','Lurus','Tumpul','Lancip'],c:[3],e:'Kemiringan tangga yang disandarkan membentuk sudut lebih kecil dari 90° dengan tanah = sudut lancip.'},s2:{q:'Hubungan antara tiang bendera yang berdiri tegak lurus dengan permukaan tanah lapang di sekolah membentuk sudut...',o:['Lancip','Tumpul','Siku-siku','Refleks'],c:[2],e:'Benda tegak lurus dengan alas datar selalu menghasilkan sudut 90° = siku-siku.'}},
+{t:'pg',d:'Mudah',s1:{q:'Dalam matematika, tempat bertemunya ujung lidi pertama dengan lidi kedua sehingga membentuk suatu bukaan disebut sebagai...',o:['Titik sudut','Kaki sudut','Garis sejajar','Garis berimpit'],c:[0],e:'Ujung tempat bertemunya dua garis/benda lurus untuk membentuk sudut dinamakan titik sudut.'},s2:{q:'Sita memotong selembar kertas persegi secara diagonal miring dari pojok kiri atas ke kanan bawah. Jenis sudut baru pada potongan yang miring tersebut adalah...',o:['Sudut siku-siku','Sudut lancip','Sudut tumpul','Sudut lurus'],c:[1],e:'Sudut siku-siku 90° dibelah dua menjadi 45°, sehingga berubah menjadi sudut lancip.'}},
+{t:'pg',d:'Mudah',s1:{q:'Bentuk ujung dari sebuah anak panah yang melesat sangatlah tajam. Ketajaman anak panah ini adalah bentuk terapan kehidupan sehari-hari dari sudut...',o:['Refleks','Tumpul','Siku-siku','Lancip'],c:[3],e:'Semakin tajam ujung benda, semakin sempit bukaannya, menandakan sudut lancip (< 90°).'},s2:{q:'Saat Budi berolahraga, ia merentangkan kedua tangannya lebar-lebar ke samping kiri dan kanan sejajar bahu. Kedua tangan Budi membentuk sebuah garis...',o:['Berpotongan','Lurus','Berimpit','Lengkung'],c:[1],e:'Tangan kiri dan kanan yang terentang mendatar penuh membentuk sudut 180° = garis lurus.'}},
+{t:'pg',d:'HOTS',s1:{q:'Andi sedang menonton video di laptop. Karena layar laptopnya menyilaukan, ia mendorong layar ke belakang hingga terbuka sangat lebar melampaui posisi tegak (namun tidak sampai mendatar). Sudut yang terbentuk pada layar laptop adalah sudut...',o:['Siku-siku','Lurus','Tumpul','Lancip'],c:[2],e:'Bukaan layar > 90° namun < 180° = sudut tumpul.'},s2:{q:'Sebuah pizza berbentuk lingkaran dipotong menjadi 8 bagian yang ukurannya sama besar. Ujung pojok dalam dari setiap potongan pizza itu membentuk sudut...',o:['Lancip','Tumpul','Siku-siku','Refleks'],c:[0],e:'360° dibagi 8 = 45°. Sudut 45° < 90° = sudut lancip.'}},
+{t:'pg',d:'Sedang',s1:{q:'Senar pada sebuah gitar keroncong ditarik kencang dari atas ke bawah secara berdampingan. Posisi kelima senar gitar tersebut merupakan contoh yang tepat dari garis yang saling...',o:['Berpotongan','Berimpit','Sejajar','Tegak lurus'],c:[2],e:'Senar gitar disusun berdampingan dengan jarak sama tanpa menyilang = garis sejajar.'},s2:{q:'Dua mobil melaju di dua jalur jalan tol yang lurus dan searah. Kedua jalur jalan tol tersebut merupakan contoh dari garis...',o:['Berimpit','Tegak lurus','Sejajar','Berpotongan'],c:[2],e:'Jalur jalan tol jaraknya selalu sama dan berdampingan lurus = garis sejajar.'}},
+{t:'pg',d:'Sulit',s1:{q:'Anton sedang menghadap ke utara. Kemudian ia berbalik arah memutar tubuhnya hingga menghadap ke selatan. Besaran putaran badan Anton sama dengan sebuah sudut yang besarnya...',o:['90 derajat','180 derajat','270 derajat','360 derajat'],c:[1],e:'Berbalik arah ke belakang = berputar setengah lingkaran penuh = 180°.'},s2:{q:'Jika kamu menulis huruf kapital "V", bagian pojok bawah bertemunya dua garis miring tersebut membentuk sudut...',o:['Lurus','Tumpul','Siku-siku','Lancip'],c:[3],e:'Huruf V bagian bawahnya menyempit dan runcing (bukaan kecil) = sudut lancip.'}},
+{t:'pg',d:'Mudah',s1:{q:'Roda kereta api dapat melaju mulus tanpa terjatuh karena ditopang oleh dua buah rel baja di kiri dan kanannya. Rel baja ini dipasang dengan posisi garis...',o:['Tegak lurus','Berimpit','Sejajar','Melengkung'],c:[2],e:'Rel kiri dan kanan selalu memiliki jarak lebar yang sama tanpa bersilangan = garis sejajar.'},s2:{q:'Pada penulisan huruf kapital "H", terdapat 3 buah garis. Hubungan antar garis tegak kiri, garis tegak kanan, dan garis mendatar di tengah menunjukkan sifat garis...',o:['Sejajar saja','Tegak lurus saja','Berimpit dan Sejajar','Sejajar dan Tegak lurus'],c:[3],e:'Garis kiri dan kanan pada H adalah sejajar. Garis mendatar di tengah berpotongan tegak lurus dengan keduanya.'}},
+{t:'pg',d:'Sedang',s1:{q:'Saat kereta api mau lewat, palang pintu perlintasan ditutup dengan tanda rambu peringatan berbentuk silang (X). Batang merah putih pada rambu peringatan tersebut tersusun dalam bentuk garis...',o:['Berpotongan','Sejajar','Berimpit','Garis putus-putus'],c:[0],e:'Tanda silang (X) terbuat dari dua garis lurus miring yang saling memotong di tengah = garis berpotongan.'},s2:{q:'Pada pukul 16.00, jarum pendek menunjuk ke angka 4 dan jarum panjang menunjuk ke angka 12. Sudut terkecil yang terbentuk oleh kedua jarum tersebut dinamakan sudut...',o:['Siku-siku','Lancip','Tumpul','Lurus'],c:[2],e:'4 langkah × 30° = 120°. Sudut 120° > 90° namun < 180° = sudut tumpul.'}},
+{t:'pg',d:'HOTS',s1:{q:'Sebuah jembatan gantung memiliki tali penyangga panjang yang menjuntai saling berdampingan. Jika kamu menempelkan sebilah papan secara mendatar di atas tali-tali tersebut, maka papan mendatar dan tali vertikal itu dinamakan garis yang...',o:['Berimpit','Berpotongan tegak lurus','Sejajar semua','Refleks'],c:[1],e:'Tali vertikal disilang papan mendatar (horizontal) membentuk sudut 90° = berpotongan tegak lurus.'},s2:{q:'Nina membuka sedikit pintu kamarnya agar udara bisa masuk, tapi tidak terbuka lebar. Celah bukaan pintu kamar dengan kusen pintu membentuk sudut...',o:['Lancip','Siku-siku','Tumpul','Lurus'],c:[0],e:'Pintu yang terbuka sedikit (belum mencapai 90°) membentuk celah sempit = sudut lancip.'}},
+{t:'pg',d:'Mudah',s1:{q:'Jarum pendek dan jarum panjang pada jam tepat berada pada angka 9 dan angka 12 pagi. Besar ukuran sudut tersebut jika diukur dengan busur derajat adalah sebesar...',o:['45°','90°','120°','180°'],c:[1],e:'Pukul 09.00 berbentuk huruf L terbalik = siku-siku = tepat 90°.'},s2:{q:'Atap rumah adat Joglo atau atap berbentuk prisma jika dilihat dari depan memiliki sudut paling puncak yang menjulang tinggi. Sudut di titik tertinggi atap tersebut umumnya berupa sudut...',o:['Siku-siku','Refleks','Lancip','Lurus'],c:[2],e:'Puncak atap dibuat menyempit dan tajam agar air hujan mudah turun = sudut lancip.'}},
+{t:'pg',d:'Sedang',s1:{q:'Bapak membelikan Rio layang-layang. Pada kerangka layang-layang di dalamnya, dua lidi bambu melintang dan membujur dirangkai dan diikat saling memotong. Perpotongan ini membentuk garis...',o:['Berimpit','Sejajar','Tegak lurus','Lancip'],c:[2],e:'Pada layang-layang, dua diagonalnya saling berpotongan dengan tegak lurus membentuk 4 sudut 90°.'},s2:{q:'Di lapangan sekolah, terdapat tiang gawang sepak bola yang tersusun dari tiang baja putih vertikal menancap di tanah. Tiang gawang dan tanah lapang ini merupakan garis yang saling...',o:['Berpotongan tegak lurus','Sejajar lurus','Berimpit sejajar','Melengkung runcing'],c:[0],e:'Tiang ditanam tegak sempurna 90° ke dalam tanah rata = berpotongan tegak lurus.'}},
+{t:'pg',d:'Sulit',s1:{q:'Seorang pemain ski menuruni gunung sambil membungkukkan badan. Jika dihitung dari sudut putaran penuh (360°), maka sudut yang ukurannya melebihi sudut lurus 180° disebut sudut...',o:['Refleks','Siku-siku','Lancip','Tumpul'],c:[0],e:'Sudut refleks adalah sudut > 180° namun < 360°.'},s2:{q:'Dalam kerangka sebuah layang-layang terdapat lidi pendek (mendatar) dan lidi panjang (menurun). Pertemuan antara kedua lidi di dalam layang-layang tersebut akan selalu membentuk...',o:['Garis sejajar','Sudut lancip','Sudut tumpul','Sudut siku-siku'],c:[3],e:'Dua diagonal dalam layang-layang selalu saling berpotongan tegak lurus, membentuk sudut 90° (siku-siku).'}},
+{t:'pg',d:'Sedang',s1:{q:'Diberikan sebuah gambar sudut sembarang yang dinamakan dengan sudut ∠KLM. Huruf M pada penamaan sudut ini menempati posisi sebagai...',o:['Titik sudut','Sudut lancip','Bagian dari nama ujung kaki sudut','Garis sejajar'],c:[2],e:'L adalah titik sudut. K dan M adalah nama huruf penanda ujung kaki sudut (KL dan LM). M bukan titik sudut.'},s2:{q:'Jika sekarang pukul 15.00, maka jarum jam pada dinding (jarum angka 12 dan angka 3) membentuk sudut terkecil dengan ukuran...',o:['45 derajat','90 derajat','180 derajat','360 derajat'],c:[1],e:'Pukul 15.00 berbentuk huruf L (1/4 putaran). Seperempat lingkaran = 360°/4 = 90°.'}},
+{t:'pg',d:'HOTS',s1:{q:'Perhatikan huruf kapital "E". Huruf E tersusun atas satu buah tiang tegak di sebelah kiri dan tiga buah setrip mendatar di sebelah kanannya. Tiga buah setrip mendatar tersebut memiliki sifat saling...',o:['Sejajar','Tegak Lurus','Berpotongan','Berimpit'],c:[0],e:'Tiga garis mendatar pada huruf E mengarah lurus ke kanan dengan jarak sama tanpa bersentuhan = sejajar.'},s2:{q:'Sebuah sudut terbentuk dari pertemuan dua garis penyusun yang diberi nama ∠PQR. Kaki-kaki sudut dari bangun tersebut adalah ruas garis...',o:['PQ dan QR','P dan R','PQ dan PR','Q dan R'],c:[0],e:'Titik sudut di Q. Dua garis yang memancar dari Q menuju P dan R dinamakan kaki sudut PQ dan QR.'}},
+{t:'pg',d:'Mudah',s1:{q:'Di lapangan sekolah, terdapat tiang gawang sepak bola yang tersusun dari tiang baja putih vertikal menancap di tanah. Tiang gawang dan tanah lapang ini merupakan garis yang saling...',o:['Berpotongan tegak lurus','Sejajar lurus','Berimpit sejajar','Melengkung runcing'],c:[0],e:'Tiang ditanam tegak 90° ke dalam tanah rata = berpotongan tegak lurus.'},s2:{q:'Di sebuah ruang kelas, pertemuan atau perpotongan antara dinding tembok yang tegak dengan lantai ubin yang datar akan membentuk sudut...',o:['Tumpul','Lancip','Siku-siku','Lurus'],c:[2],e:'Dinding dibangun tegak lurus 90° terhadap lantai agar bangunan kokoh = sudut siku-siku.'}},
+{t:'pg',d:'Sulit',s1:{q:'Ibu memutar tutup botol selai ke kanan dengan bukaan penuh yang terhenti saat lengannya sejajar rata membentuk garis horizontal dengan bahu. Perputaran lengan Ibu tersebut dinamakan...',o:['Sudut refleks','Sudut lurus','Sudut lancip','Sudut siku-siku'],c:[1],e:'Rentangan kedua lengan lurus horizontal (mendatar rata) = 180° = sudut lurus.'},s2:{q:'Andi memutar roda sepedanya mundur. Jika roda berputar melewati setengah lingkaran (lebih dari 180°) namun belum membentuk lingkaran (kurang dari 360°), maka putaran ini disebut sudut...',o:['Refleks','Siku-siku','Tumpul','Lurus'],c:[0],e:'Sudut > 180° namun < 360° dinamakan sudut refleks.'}}
+];
+
+// ============ STATE ============
+var state = {
+  currentQ: 0, timer: 120, timerInterval: null, timerPaused: false,
+  student1: { name: '', answers: {}, tempSel: {}, times: {}, correct: 0, wrong: 0 },
+  student2: { name: '', answers: {}, tempSel: {}, times: {}, correct: 0, wrong: 0 },
+  discussionShown: { s1: {}, s2: {} }
+};
+
+// ============ INISIALISASI ============
+function init() {
+  createBgShapes();
+  document.getElementById('qTotal').textContent = Q.length;
+  document.getElementById('name1').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('name2').focus(); });
+  document.getElementById('name2').addEventListener('keydown', function(e) { if (e.key === 'Enter') startQuiz(); });
+}
+
+function createBgShapes() {
+  var container = document.getElementById('bgShapes');
+  var shapes = [
+    '<polygon points="50,10 90,90 10,90" fill="none" stroke="#ffd166" stroke-width="2"/>',
+    '<circle cx="50" cy="50" r="40" fill="none" stroke="#06d6a0" stroke-width="2"/>',
+    '<rect x="20" y="20" width="60" height="60" fill="none" stroke="#ff8c42" stroke-width="2" transform="rotate(15 50 50)"/>',
+    '<line x1="10" y1="50" x2="90" y2="50" stroke="#ffd166" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="#ffd166" stroke-width="2"/>',
+    '<path d="M 10 50 L 50 20 L 90 50" fill="none" stroke="#06d6a0" stroke-width="2"/>',
+    '<path d="M 20 80 L 50 20 L 80 80 Z" fill="none" stroke="#ff8c42" stroke-width="2"/>'
+  ];
+  var positions = [
+    { x: '5%', y: '15%', size: 80 }, { x: '85%', y: '20%', size: 100 },
+    { x: '15%', y: '70%', size: 90 }, { x: '78%', y: '75%', size: 80 },
+    { x: '45%', y: '8%', size: 70 }, { x: '70%', y: '40%', size: 75 }
+  ];
+  shapes.forEach(function(svg, i) {
+    var div = document.createElement('div');
+    div.className = 'bg-shape';
+    div.style.left = positions[i].x; div.style.top = positions[i].y;
+    div.style.width = positions[i].size + 'px'; div.style.height = positions[i].size + 'px';
+    div.style.animationDelay = (i * 2.5) + 's';
+    div.innerHTML = '<svg viewBox="0 0 100 100">' + svg + '</svg>';
+    container.appendChild(div);
+  });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function openMaterial() { document.getElementById('materialModal').classList.add('active'); }
+function closeMaterial() { document.getElementById('materialModal').classList.remove('active'); }
+function showFinishConfirm() {
+  var answered1 = Object.keys(state.student1.answers).length;
+  var answered2 = Object.keys(state.student2.answers).length;
+  if (answered1 + answered2 === 0) { showToast('Kerjakan minimal 1 soal dulu!', 'warning'); return; }
+  document.getElementById('confirmModal').classList.add('active');
+}
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('active'); }
+
+function startQuiz() {
+  var n1 = document.getElementById('name1').value.trim();
+  var n2 = document.getElementById('name2').value.trim();
+  if (!n1 || !n2) { showToast('Mohon isi nama kedua siswa terlebih dahulu!', 'warning'); if (!n1) document.getElementById('name1').focus(); else document.getElementById('name2').focus(); return; }
+  if (n1.toLowerCase() === n2.toLowerCase()) { showToast('Nama siswa tidak boleh sama!', 'warning'); return; }
+  state.student1.name = n1; state.student2.name = n2; state.currentQ = 0;
+  showScreen('quizScreen'); renderQuestion(); startTimer();
+}
+
+function renderQuestion() {
+  var qIdx = state.currentQ;
+  var currentQ = Q[qIdx];
+  document.getElementById('qCurrent').textContent = qIdx + 1;
+  renderPanel('panel1', currentQ.s1, currentQ.t, currentQ.d, 's1', state.student1);
+  renderPanel('panel2', currentQ.s2, currentQ.t, currentQ.d, 's2', state.student2);
+  renderQNav();
+  document.getElementById('prevBtn').disabled = qIdx === 0;
+  document.getElementById('nextBtn').disabled = qIdx === Q.length - 1;
+}
+
+function renderPanel(panelId, qData, type, difficulty, side, student) {
+  var panel = document.getElementById(panelId);
+  var qIdx = state.currentQ;
+  var answered = student.answers[qIdx] !== undefined;
+  var selected = answered ? student.answers[qIdx] : (student.tempSel[qIdx] || []);
+  var typeClass = 'type-pg', typeName = 'Pilihan Ganda';
+  if (type === 'bs') { typeClass = 'type-bs'; typeName = 'Benar / Salah'; }
+  else if (type === 'pgk') { typeClass = 'type-pgk'; typeName = 'PG Kompleks'; }
+  var diffClass = 'diff-' + difficulty.toLowerCase();
+  var optionsHtml = '';
+  qData.o.forEach(function(opt, i) {
+    var isSelected = selected.includes(i);
+    var isCorrect = qData.c.includes(i);
+    var cls = 'q-option';
+    if (answered) {
+      cls += ' locked';
+      if (isSelected && isCorrect) cls += ' correct';
+      else if (isSelected && !isCorrect) cls += ' wrong';
+      else if (!isSelected && isCorrect) cls += ' correct';
+    } else if (isSelected) { cls += ' selected'; }
+    var letter = String.fromCharCode(65 + i);
+    var indicator = type === 'pgk' ? '<div class="q-checkbox"></div>' : '<div class="q-option-letter">' + letter + '</div>';
+    optionsHtml += '<div class="' + cls + '" onclick="selectOption(\'' + side + '\',' + qIdx + ',' + i + ')">' + indicator + '<span>' + opt + '</span></div>';
+  });
+  var checkEnabled = selected.length > 0 && !answered;
+  var discEnabled = answered;
+  var discActive = state.discussionShown[side][qIdx];
+  panel.innerHTML =
+    '<div class="panel-header"><div class="panel-student"><div class="panel-avatar">' + student.name.charAt(0).toUpperCase() + '</div><div><div class="panel-name">' + student.name + '</div><div class="panel-status ' + (answered ? 'done' : '') + '">' + (answered ? '✓ Sudah menjawab' : 'Menunggu jawaban...') + '</div></div></div><div class="panel-score">✓ ' + student.correct + ' · ✗ ' + student.wrong + '</div></div>' +
+    '<div class="panel-body"><div class="q-meta"><span class="q-tag ' + typeClass + '">' + typeName + '</span><span class="q-tag ' + diffClass + '">' + difficulty + '</span></div>' +
+    '<div class="q-text">' + qData.q + '</div><div class="q-options">' + optionsHtml + '</div>' +
+    '<div class="panel-actions"><button class="btn-check ' + side + (answered ? ' locked' : (checkEnabled ? ' enabled' : '')) + '" ' + ((!checkEnabled && !answered) ? 'disabled' : '') + ' onclick="' + (answered ? '' : 'checkAnswer(\'' + side + '\')') + '">' + (answered ? '✓ Sudah Dikunci' : 'Cek Jawaban') + '</button>' +
+    '<button class="btn-discussion ' + (discActive ? 'active' : '') + (discEnabled ? ' enabled' : '') + '" ' + (discEnabled ? '' : 'disabled') + ' onclick="toggleDiscussion(\'' + side + '\')">💡 Pembahasan</button></div>' +
+    '<div class="discussion-box ' + (discActive ? 'active' : '') + '" id="disc-' + side + '"><div class="discussion-title">💡 Pembahasan</div><div class="discussion-text">' + qData.e + '</div></div></div>';
+}
+
+function renderQNav() {
+  var nav = document.getElementById('qNav');
+  var html = '';
+  Q.forEach(function(q, i) {
+    var bothAnswered = state.student1.answers[i] !== undefined && state.student2.answers[i] !== undefined;
+    var cls = 'q-nav-btn';
+    if (i === state.currentQ) cls += ' current';
+    if (bothAnswered) cls += ' both-answered';
+    html += '<button class="' + cls + '" onclick="jumpToQuestion(' + i + ')" title="Soal ' + (i+1) + '">' + (i+1) + (bothAnswered ? '<span class="dot"></span>' : '') + '</button>';
+  });
+  nav.innerHTML = html;
+}
+
+function selectOption(side, qIdx, optIdx) {
+  var student = side === 's1' ? state.student1 : state.student2;
+  if (student.answers[qIdx] !== undefined) return;
+  var type = Q[qIdx].t;
+  if (!student.tempSel[qIdx]) student.tempSel[qIdx] = [];
+  if (type === 'pgk') {
+    var sel = student.tempSel[qIdx];
+    var idx = sel.indexOf(optIdx);
+    if (idx >= 0) sel.splice(idx, 1); else sel.push(optIdx);
+  } else { student.tempSel[qIdx] = [optIdx]; }
+  renderQuestion();
+}
+
+function checkAnswer(side) {
+  var student = side === 's1' ? state.student1 : state.student2;
+  var qIdx = state.currentQ;
+  if (student.answers[qIdx] !== undefined) return;
+  var sel = student.tempSel[qIdx] || [];
+  if (sel.length === 0) return;
+  var qData = side === 's1' ? Q[qIdx].s1 : Q[qIdx].s2;
+  var correctSet = new Set(qData.c);
+  var selSet = new Set(sel);
+  var isCorrect = correctSet.size === selSet.size && [...correctSet].every(function(x) { return selSet.has(x); });
+  student.answers[qIdx] = sel;
+  student.times[qIdx] = 120 - state.timer;
+  if (isCorrect) student.correct++; else student.wrong++;
+  if (state.student1.answers[qIdx] !== undefined && state.student2.answers[qIdx] !== undefined) {
+    pauseTimer(); showToast('🎉 Kedua siswa sudah menjawab! Timer dihentikan.', 'success');
+  } else { showToast(student.name + ' sudah menjawab! Menunggu lawan...', 'success'); }
+  renderQuestion();
+}
+
+function toggleDiscussion(side) {
+  var qIdx = state.currentQ;
+  var student = side === 's1' ? state.student1 : state.student2;
+  if (student.answers[qIdx] === undefined) return;
+  state.discussionShown[side][qIdx] = !state.discussionShown[side][qIdx];
+  renderQuestion();
+}
+
+function startTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timer = 120; state.timerPaused = false;
+  var qIdx = state.currentQ;
+  if (state.student1.answers[qIdx] !== undefined && state.student2.answers[qIdx] !== undefined) state.timerPaused = true;
+  updateTimerDisplay();
+  state.timerInterval = setInterval(function() {
+    if (!state.timerPaused) {
+      state.timer = Math.max(0, state.timer - 1);
+      updateTimerDisplay();
+      if (state.timer <= 0) { state.timerPaused = true; showToast('⏰ Waktu habis! Pindah ke soal berikutnya.', 'warning'); }
+    }
+  }, 1000);
+}
+function pauseTimer() { state.timerPaused = true; }
+function addTime() {
+  if (state.timerPaused) { showToast('Timer sedang berhenti, tidak bisa tambah waktu.', 'warning'); return; }
+  state.timer += 15; updateTimerDisplay(); showToast('⏱ +15 detik ditambahkan!', 'success');
+}
+function updateTimerDisplay() {
+  var m = Math.floor(state.timer / 60), s = state.timer % 60;
+  document.getElementById('timerText').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  var circ = 2 * Math.PI * 40;
+  var progress = Math.max(0, Math.min(1, state.timer / 120));
+  var offset = circ * (1 - progress);
+  var circle = document.getElementById('timerProgress');
+  circle.style.strokeDashoffset = offset;
+  var textEl = document.getElementById('timerText');
+  if (state.timer <= 30) { circle.style.stroke = '#ef476f'; textEl.classList.add('low'); }
+  else if (state.timer <= 60) { circle.style.stroke = '#ff8c42'; textEl.classList.remove('low'); }
+  else { circle.style.stroke = '#ffd166'; textEl.classList.remove('low'); }
+  document.getElementById('addTimeBtn').disabled = state.timerPaused;
+}
+
+function nextQuestion() { if (state.currentQ < Q.length - 1) { state.currentQ++; renderQuestion(); startTimer(); } }
+function prevQuestion() { if (state.currentQ > 0) { state.currentQ--; renderQuestion(); startTimer(); } }
+function jumpToQuestion(idx) { if (idx === state.currentQ) return; state.currentQ = idx; renderQuestion(); startTimer(); }
+
+function finishQuiz() { closeConfirm(); if (state.timerInterval) clearInterval(state.timerInterval); showResults(); }
+function showResults() {
+  showScreen('resultsScreen');
+  renderResultCard('result1', state.student1, 's1');
+  renderResultCard('result2', state.student2, 's2');
+}
+function renderResultCard(elId, student, side) {
+  var answered = Object.keys(student.answers).length;
+  var correct = student.correct, wrong = student.wrong;
+  var times = Object.values(student.times);
+  var avgTime = times.length > 0 ? (times.reduce(function(a, b) { return a + b; }, 0) / times.length) : 0;
+  var avgM = Math.floor(avgTime / 60), avgS = Math.round(avgTime % 60);
+  var avgDisplay = avgTime > 0 ? (avgM + ':' + (avgS < 10 ? '0' : '') + avgS) : '0:00';
+  var score = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  var rank = 'Petualang Pemula', rankColor = '#a8b3b0', rankBg = 'rgba(168,179,176,0.15)';
+  if (score >= 80) { rank = '🏆 Master Geometri'; rankColor = '#ffe08a'; rankBg = 'rgba(255,224,138,0.15)'; }
+  else if (score >= 60) { rank = '⭐ Penjelajah Garis'; rankColor = side === 's1' ? '#ffa763' : '#2ee5b5'; rankBg = side === 's1' ? 'rgba(255,167,99,0.15)' : 'rgba(46,229,181,0.15)'; }
+  else if (score >= 40) { rank = '🎯 Pemburu Sudut'; rankColor = '#fb923c'; rankBg = 'rgba(251,146,60,0.15)'; }
+  var scoreColor = score >= 80 ? '#ffe08a' : (score >= 60 ? (side === 's1' ? '#ffa763' : '#2ee5b5') : (side === 's1' ? '#ff8c42' : '#06d6a0'));
+  document.getElementById(elId).innerHTML =
+    '<div class="result-name">' + student.name + '</div>' +
+    '<div class="result-rank" style="background:' + rankBg + ';color:' + rankColor + ';">' + rank + '</div>' +
+    '<div class="result-score-big" style="color:' + scoreColor + ';">' + score + '<span>%</span></div>' +
+    '<div class="result-score-label">Skor Akhir</div>' +
+    '<div class="result-stats">' +
+      '<div class="stat-box answered"><div class="stat-value">' + answered + '</div><div class="stat-label">Soal Dikerjakan</div></div>' +
+      '<div class="stat-box correct"><div class="stat-value">' + correct + '</div><div class="stat-label">Jawaban Benar</div></div>' +
+      '<div class="stat-box wrong"><div class="stat-value">' + wrong + '</div><div class="stat-label">Jawaban Salah</div></div>' +
+      '<div class="stat-box time"><div class="stat-value">' + avgDisplay + '</div><div class="stat-label">Rata-rata Waktu</div></div>' +
+    '</div>';
+}
+
+function showToast(msg, type) {
+  var toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + (type || '');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(function() { toast.className = 'toast ' + (type || ''); }, 2800);
+}
+
+init();
+</script>
+</body>
+</html>

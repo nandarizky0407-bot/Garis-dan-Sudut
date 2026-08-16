@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Adventure — Parallel & Perpendicular Line Segments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #fff0f5;
+    --bg-soft: #ffe4ec;
+    --bg-card: #ffffff;
+    --primary: #ff4d8d;
+    --primary-deep: #c2185b;
+    --accent: #ff8fab;
+    --coral: #ff7e5f;
+    --gold: #ffb627;
+    --mint: #5fd4a8;
+    --text: #3d1f2f;
+    --text-muted: #7a4a5e;
+    --success: #4ade80;
+    --success-deep: #166534;
+    --error: #ef4444;
+    --error-deep: #991b1b;
+    --border: #ffd6e3;
+    --shadow: 0 10px 40px rgba(255, 77, 141, 0.15);
+    --shadow-hover: 0 18px 50px rgba(255, 77, 141, 0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 50%, #ffd6e8 100%);
+    color: var(--text);
+    overflow: hidden;
+    position: relative;
+  }
+  /* Background floating blobs */
+  .bg-decoration {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .bg-blob {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.45;
+  }
+  .bg-blob.b1 { width: 500px; height: 500px; background: radial-gradient(circle, #ff8fab, transparent); top: -200px; right: -100px; animation: float1 22s ease-in-out infinite; }
+  .bg-blob.b2 { width: 400px; height: 400px; background: radial-gradient(circle, #ffd3a5, transparent); bottom: -150px; left: -100px; animation: float2 28s ease-in-out infinite; }
+  .bg-blob.b3 { width: 300px; height: 300px; background: radial-gradient(circle, #c5a8ff, transparent); top: 40%; left: 60%; opacity: 0.3; animation: float3 30s ease-in-out infinite; }
+  @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-60px,60px); } }
+  @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(60px,-50px); } }
+  @keyframes float3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-40px,-30px); } }
+  /* Sparkles */
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 1;
+    color: var(--accent); animation: twinkle 3s ease-in-out infinite;
+    font-size: 14px; opacity: 0.4; user-select: none;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.15; transform: scale(0.8) rotate(0deg); }
+    50% { opacity: 0.7; transform: scale(1.3) rotate(180deg); }
+  }
+  /* Top bar */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid var(--border);
+    z-index: 100;
+  }
+  .brand {
+    font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 700;
+    color: var(--primary-deep); display: flex; align-items: center; gap: 10px;
+  }
+  .brand .logo-icon {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--coral));
+    display: flex; align-items: center; justify-content: center; color: white;
+    box-shadow: 0 4px 12px rgba(255, 77, 141, 0.4);
+  }
+  .student-info {
+    font-size: 14px; color: var(--text); padding: 8px 16px;
+    background: var(--bg-soft); border-radius: 20px; font-weight: 700;
+    display: none; align-items: center; gap: 8px;
+  }
+  .student-info.show { display: flex; }
+  .lang-toggle {
+    display: flex; background: var(--bg-soft); border-radius: 20px; padding: 4px; gap: 4px;
+  }
+  .lang-btn {
+    padding: 6px 14px; border: none; background: transparent; cursor: pointer;
+    border-radius: 16px; font-weight: 700; font-size: 13px;
+    color: var(--text-muted); transition: all 0.3s; font-family: inherit;
+  }
+  .lang-btn.active { background: var(--primary); color: white; }
+  /* Slide container */
+  .slide-container {
+    position: relative; width: 100%; height: 100vh;
+    padding-top: 70px; padding-bottom: 76px; z-index: 2;
+  }
+  .slide {
+    position: absolute; top: 70px; left: 0; right: 0; bottom: 76px;
+    padding: 24px 50px; overflow-y: auto;
+    opacity: 0; pointer-events: none;
+    transform: translateX(60px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .slide::-webkit-scrollbar { width: 8px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  /* Nav */
+  .slide-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border-top: 2px solid var(--border);
+    z-index: 100;
+  }
+  .nav-btn {
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--primary), var(--coral));
+    color: white; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; box-shadow: 0 4px 12px rgba(255, 77, 141, 0.4);
+  }
+  .nav-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255, 77, 141, 0.5); }
+  .nav-btn:disabled { background: var(--border); cursor: not-allowed; box-shadow: none; color: var(--text-muted); }
+  .progress-dots { display: flex; gap: 6px; align-items: center; max-width: 60vw; overflow-x: auto; padding: 4px; }
+  .progress-dots::-webkit-scrollbar { display: none; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--border);
+    cursor: pointer; transition: all 0.3s; flex-shrink: 0;
+  }
+  .dot.active { background: var(--primary); width: 28px; border-radius: 5px; }
+  .dot:hover { background: var(--accent); }
+  /* Slide content */
+  .slide-title {
+    font-family: 'Fredoka', sans-serif; font-size: 38px; font-weight: 700;
+    color: var(--primary-deep); margin-bottom: 6px; text-align: center;
+    line-height: 1.1;
+  }
+  .slide-subtitle {
+    text-align: center; font-size: 16px; color: var(--text-muted); margin-bottom: 24px; font-weight: 600;
+  }
+  /* Cover slide */
+  .cover {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; text-align: center; gap: 16px;
+  }
+  .cover-badge {
+    background: white; padding: 8px 20px; border-radius: 20px;
+    border: 2px solid var(--border); font-weight: 700; color: var(--primary);
+    font-size: 14px; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow);
+  }
+  .cover h1 {
+    font-family: 'Fredoka', sans-serif; font-size: 72px; font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--coral), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1; margin: 4px 0;
+    animation: titleBounce 2s ease-in-out infinite;
+  }
+  @keyframes titleBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .cover .subtitle {
+    font-size: 22px; color: var(--text); font-weight: 700; margin-bottom: 14px;
+  }
+  .cover .subtitle span { color: var(--primary); }
+  .cover-input-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 12px;
+  }
+  .name-input {
+    padding: 14px 22px; font-size: 17px; border: 3px solid var(--border);
+    border-radius: 30px; width: 320px; text-align: center; background: white;
+    font-family: inherit; color: var(--text); font-weight: 600; transition: all 0.3s;
+  }
+  .name-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255, 77, 141, 0.15); }
+  .start-btn {
+    padding: 14px 42px; font-size: 18px; font-weight: 700; border: none;
+    border-radius: 30px; background: linear-gradient(135deg, var(--primary), var(--coral));
+    color: white; cursor: pointer; font-family: inherit;
+    box-shadow: 0 8px 24px rgba(255, 77, 141, 0.4); transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(255, 77, 141, 0.55); }
+  .cover-decoration {
+    display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap; justify-content: center;
+  }
+  .deco-item {
+    background: white; padding: 14px 20px; border-radius: 16px;
+    border: 2px solid var(--border); display: flex; align-items: center; gap: 10px;
+    font-weight: 700; color: var(--text-muted); box-shadow: var(--shadow);
+    transition: transform 0.3s;
+  }
+  .deco-item:hover { transform: translateY(-4px); }
+  .deco-item i { color: var(--primary); font-size: 18px; }
+  /* Cards & Objectives */
+  .objectives-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px; margin-top: 18px;
+  }
+  .objective-card {
+    background: white; border-radius: 22px; padding: 24px;
+    border: 2px solid var(--border); position: relative; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .objective-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+  .objective-card .num {
+    position: absolute; top: -10px; right: 16px; font-size: 72px; font-weight: 800;
+    color: var(--bg-soft); font-family: 'Fredoka'; line-height: 1;
+  }
+  .objective-card .icon {
+    width: 50px; height: 50px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--coral));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255, 77, 141, 0.3);
+    position: relative;
+  }
+  .objective-card h3 {
+    font-family: 'Fredoka'; color: var(--primary-deep); margin-bottom: 8px;
+    font-size: 18px; position: relative;
+  }
+  .objective-card p { color: var(--text-muted); font-size: 14px; line-height: 1.5; position: relative; }
+  /* Concept slides */
+  .concept-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-top: 18px;
+  }
+  .concept-visual {
+    background: white; border-radius: 22px; padding: 20px;
+    border: 2px solid var(--border); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .concept-visual svg { width: 100%; max-width: 460px; height: auto; }
+  .concept-info {
+    background: white; border-radius: 22px; padding: 24px;
+    border: 2px solid var(--border); box-shadow: var(--shadow);
+  }
+  .concept-info h3 {
+    font-family: 'Fredoka'; color: var(--primary-deep); margin-bottom: 12px;
+    font-size: 22px; display: flex; align-items: center; gap: 10px;
+  }
+  .concept-info h3 i { color: var(--coral); }
+  .concept-info ul { list-style: none; padding: 0; }
+  .concept-info li {
+    padding: 10px 0; border-bottom: 1px dashed var(--border);
+    display: flex; gap: 10px; align-items: flex-start; font-size: 15px;
+    color: var(--text); line-height: 1.5;
+  }
+  .concept-info li:last-child { border-bottom: none; }
+  .concept-info li i { color: var(--primary); margin-top: 4px; }
+  .key-point {
+    background: linear-gradient(135deg, #fce7f3, #fef3f8);
+    padding: 14px 16px; border-radius: 14px; margin-top: 14px;
+    border-left: 4px solid var(--primary);
+    font-size: 14px; line-height: 1.5;
+  }
+  .key-point strong { color: var(--primary-deep); }
+  /* Examples gallery */
+  .examples-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px; margin-top: 18px;
+  }
+  .example-card {
+    background: white; border-radius: 22px; padding: 18px;
+    border: 2px solid var(--border); text-align: center;
+    transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden;
+  }
+  .example-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+  .example-card svg { width: 100%; height: 150px; }
+  .example-card h4 {
+    font-family: 'Fredoka'; color: var(--primary-deep);
+    margin: 10px 0 6px; font-size: 17px;
+  }
+  .example-card p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+  .tag-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block; padding: 4px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .tag.parallel { background: #fce7f3; color: var(--primary-deep); }
+  .tag.perpendicular { background: #fef3c7; color: #92400e; }
+  .tag.both { background: linear-gradient(135deg, #fce7f3, #fef3c7); color: var(--primary-deep); }
+  /* Interactive demo */
+  .demo-container {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; margin-top: 16px;
+  }
+  .demo-svg-wrapper {
+    background: white; border-radius: 22px; padding: 16px;
+    border: 2px solid var(--border); box-shadow: var(--shadow);
+  }
+  .demo-svg { width: 100%; height: 360px; touch-action: none; }
+  .demo-info { display: flex; flex-direction: column; gap: 14px; }
+  .status-display {
+    font-family: 'Fredoka'; font-size: 26px; text-align: center;
+    padding: 18px; border-radius: 16px; font-weight: 700;
+    background: var(--bg-soft); color: var(--text-muted);
+    transition: all 0.4s; letter-spacing: 1px;
+  }
+  .status-display.parallel { background: linear-gradient(135deg, #fce7f3, #fbcfe8); color: var(--primary-deep); box-shadow: 0 6px 20px rgba(255, 77, 141, 0.25); }
+  .status-display.perpendicular { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; box-shadow: 0 6px 20px rgba(255, 182, 39, 0.3); }
+  .status-display.neither { background: linear-gradient(135deg, #fee2e2, #fecaca); color: var(--error-deep); }
+  .angle-display {
+    text-align: center; font-size: 16px; color: var(--text-muted); padding: 12px;
+    background: var(--bg-soft); border-radius: 14px; font-weight: 600;
+  }
+  .angle-display span { font-weight: 800; color: var(--primary); font-size: 22px; font-family: 'Fredoka'; }
+  .demo-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .demo-btn {
+    padding: 12px 8px; border: 2px solid var(--border); background: white;
+    color: var(--text); border-radius: 14px; cursor: pointer;
+    font-family: inherit; font-weight: 700; font-size: 13px; transition: all 0.2s;
+  }
+  .demo-btn:hover { border-color: var(--primary); background: var(--bg-soft); color: var(--primary-deep); }
+  .demo-instructions {
+    font-size: 13px; color: var(--text-muted); background: var(--bg-soft);
+    padding: 12px 14px; border-radius: 12px; line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .demo-instructions i { color: var(--primary); margin-top: 2px; }
+  /* Game */
+  .game-container {
+    background: white; border-radius: 24px; padding: 24px;
+    border: 2px solid var(--border); box-shadow: var(--shadow); margin-top: 16px;
+  }
+  .game-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+  }
+  .game-title { font-family: 'Fredoka'; color: var(--primary-deep); font-size: 22px; display: flex; align-items: center; gap: 10px; }
+  .game-title i { color: var(--gold); }
+  .game-stats { display: flex; gap: 10px; }
+  .stat {
+    background: var(--bg-soft); padding: 8px 16px; border-radius: 14px; text-align: center; min-width: 70px;
+  }
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+  .stat-value { font-family: 'Fredoka'; font-size: 20px; font-weight: 700; color: var(--primary-deep); }
+  .game-canvas {
+    background: linear-gradient(135deg, #fff8fb, #ffe4ec);
+    border-radius: 18px; height: 280px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px dashed var(--border); position: relative;
+  }
+  .game-canvas svg { width: 100%; height: 100%; }
+  .game-overlay {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px; background: rgba(255, 255, 255, 0.95);
+    border-radius: 18px; text-align: center; padding: 20px;
+  }
+  .game-overlay h3 { font-family: 'Fredoka'; color: var(--primary-deep); font-size: 26px; }
+  .game-overlay p { color: var(--text-muted); max-width: 360px; line-height: 1.5; }
+  .game-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  .game-btn {
+    padding: 16px 12px; font-size: 16px; font-weight: 700;
+    border: 3px solid var(--border); background: white; color: var(--text);
+    border-radius: 14px; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .game-btn i { font-size: 22px; }
+  .game-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-soft); transform: translateY(-2px); }
+  .game-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+  .game-btn.correct { background: var(--success); border-color: var(--success); color: white; }
+  .game-btn.wrong { background: var(--error); border-color: var(--error); color: white; }
+  .game-feedback {
+    text-align: center; font-weight: 700; padding: 10px; border-radius: 12px;
+    margin-top: 12px; min-height: 22px; font-size: 15px;
+  }
+  .game-feedback.correct { background: #dcfce7; color: var(--success-deep); }
+  .game-feedback.wrong { background: #fee2e2; color: var(--error-deep); }
+  /* Practice */
+  .practice-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+  }
+  .questions-tabs {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 22px; border: 2px solid var(--border); background: white;
+    border-radius: 20px; cursor: pointer; font-family: inherit;
+    font-weight: 700; color: var(--text-muted); transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 8px; font-size: 14px;
+  }
+  .tab-btn .badge {
+    background: var(--bg-soft); color: var(--text-muted);
+    padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  }
+  .tab-btn.active { color: white; border-color: transparent; }
+  .tab-btn.active .badge { background: rgba(255, 255, 255, 0.3); color: white; }
+  .tab-btn[data-level="easy"].active { background: var(--success); }
+  .tab-btn[data-level="medium"].active { background: var(--coral); }
+  .tab-btn[data-level="hots"].active { background: var(--gold); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .question {
+    background: white; border-radius: 18px; padding: 20px;
+    border: 2px solid var(--border); margin-bottom: 14px; transition: all 0.3s;
+  }
+  .question.answered.correct { border-color: var(--success); background: #f0fdf4; }
+  .question.answered.wrong { border-color: var(--error); background: #fef2f2; }
+  .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+  .q-number { font-family: 'Fredoka'; font-weight: 700; color: var(--primary); font-size: 14px; }
+  .q-type {
+    font-size: 10px; padding: 4px 10px; border-radius: 10px;
+    background: var(--bg-soft); color: var(--text-muted); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .q-type.mc { background: #dbeafe; color: #1e40af; }
+  .q-type.cmc { background: #fef3c7; color: #92400e; }
+  .q-type.tf { background: #fce7f3; color: var(--primary-deep); }
+  .q-type.sa { background: #d1fae5; color: #065f46; }
+  .q-text { font-size: 15px; margin-bottom: 14px; line-height: 1.55; color: var(--text); }
+  .q-text .hl { background: linear-gradient(120deg, transparent 0%, #fce7f3 50%, transparent 100%); padding: 0 4px; font-weight: 700; color: var(--primary-deep); }
+  .q-visual {
+    background: var(--bg-soft); border-radius: 12px; padding: 12px;
+    margin-bottom: 14px; display: flex; justify-content: center;
+  }
+  .q-visual svg { max-width: 220px; height: 100px; }
+  .options { display: grid; gap: 8px; }
+  .option {
+    padding: 11px 14px; border: 2px solid var(--border); background: white;
+    border-radius: 12px; cursor: pointer; font-family: inherit; font-size: 14px;
+    text-align: left; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .option:hover { border-color: var(--primary); background: var(--bg-soft); }
+  .option.selected { border-color: var(--primary); background: var(--bg-soft); color: var(--primary-deep); font-weight: 700; }
+  .option .option-letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--bg-soft); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; flex-shrink: 0; transition: all 0.2s;
+  }
+  .option.cmc .option-letter { border-radius: 6px; }
+  .option.selected .option-letter { background: var(--primary); color: white; }
+  .option.correct-answer { border-color: var(--success); background: #f0fdf4; }
+  .option.correct-answer .option-letter { background: var(--success); color: white; }
+  .option.wrong-answer { border-color: var(--error); background: #fef2f2; }
+  .option.wrong-answer .option-letter { background: var(--error); color: white; }
+  .short-answer {
+    padding: 12px 14px; border: 2px solid var(--border); border-radius: 12px;
+    font-family: inherit; font-size: 15px; width: 100%; background: white; font-weight: 600;
+  }
+  .short-answer:focus { outline: none; border-color: var(--primary); }
+  .tf-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tf-btn {
+    padding: 12px; border: 2px solid var(--border); background: white;
+    border-radius: 12px; cursor: pointer; font-family: inherit;
+    font-weight: 700; font-size: 14px; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .tf-btn:hover { border-color: var(--primary); }
+  .tf-btn.selected { border-color: var(--primary); background: var(--bg-soft); color: var(--primary-deep); }
+  .tf-btn.correct-answer { border-color: var(--success); background: #f0fdf4; color: var(--success-deep); }
+  .tf-btn.wrong-answer { border-color: var(--error); background: #fef2f2; color: var(--error-deep); }
+  .q-actions { margin-top: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .check-btn {
+    padding: 9px 22px; background: var(--primary); color: white; border: none;
+    border-radius: 18px; cursor: pointer; font-family: inherit;
+    font-weight: 700; font-size: 13px; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .check-btn:hover { background: var(--primary-deep); }
+  .check-btn:disabled { background: var(--border); cursor: not-allowed; color: var(--text-muted); }
+  .feedback {
+    font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 10px;
+  }
+  .feedback.correct { color: var(--success-deep); background: #dcfce7; }
+  .feedback.wrong { color: var(--error-deep); background: #fee2e2; }
+  .explanation {
+    margin-top: 10px; padding: 12px 14px;
+    background: linear-gradient(135deg, #fef3f8, #fef9fc);
+    border-left: 4px solid var(--primary); border-radius: 10px;
+    font-size: 13px; color: var(--text); display: none; line-height: 1.55;
+  }
+  .explanation.show { display: block; animation: slideIn 0.3s; }
+  .explanation strong { color: var(--primary-deep); }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  /* Conclusion */
+  .conclusion-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 18px; }
+  .summary-card {
+    background: white; border-radius: 22px; padding: 24px;
+    border: 2px solid var(--border); text-align: center;
+    transition: all 0.3s;
+  }
+  .summary-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+  .summary-card .icon {
+    width: 60px; height: 60px; border-radius: 18px; margin: 0 auto 14px;
+    background: linear-gradient(135deg, var(--primary), var(--coral));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 26px; box-shadow: 0 6px 16px rgba(255, 77, 141, 0.35);
+  }
+  .summary-card.gold .icon { background: linear-gradient(135deg, var(--gold), var(--coral)); }
+  .summary-card.mint .icon { background: linear-gradient(135deg, var(--mint), #34d399); }
+  .summary-card h3 { font-family: 'Fredoka'; color: var(--primary-deep); margin-bottom: 8px; font-size: 19px; }
+  .summary-card p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+  /* Reflection */
+  .reflection-box {
+    background: white; border-radius: 22px; padding: 26px;
+    border: 2px solid var(--border); box-shadow: var(--shadow); margin-top: 16px;
+  }
+  .reflection-item { margin-bottom: 18px; }
+  .reflection-item label {
+    display: block; font-weight: 700; color: var(--primary-deep);
+    margin-bottom: 8px; font-family: 'Fredoka'; font-size: 16px;
+  }
+  .emoji-rating { display: flex; gap: 8px; }
+  .emoji-btn {
+    width: 50px; height: 50px; border-radius: 14px; border: 2px solid var(--border);
+    background: white; cursor: pointer; font-size: 26px;
+    transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+  }
+  .emoji-btn:hover { transform: scale(1.1); border-color: var(--primary); }
+  .emoji-btn.selected { border-color: var(--primary); background: var(--bg-soft); transform: scale(1.15); }
+  .star-rating { display: flex; gap: 6px; font-size: 26px; }
+  .star { cursor: pointer; color: var(--border); transition: all 0.2s; user-select: none; }
+  .star:hover, .star.active { color: var(--gold); transform: scale(1.15); }
+  .reflection-text {
+    width: 100%; padding: 12px; border: 2px solid var(--border);
+    border-radius: 12px; font-family: inherit; font-size: 14px;
+    resize: vertical; min-height: 70px; background: white;
+  }
+  .reflection-text:focus { outline: none; border-color: var(--primary); }
+  /* Thank you */
+  .thank-you {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; text-align: center; gap: 16px;
+  }
+  .thank-you .heart-burst {
+    font-size: 80px; color: var(--primary);
+    animation: heartbeat 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(255, 77, 141, 0.4));
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    25% { transform: scale(1.15); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.08); }
+  }
+  .thank-you h1 {
+    font-family: 'Fredoka'; font-size: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--coral), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1.1;
+  }
+  .thank-you .student-name {
+    font-family: 'Fredoka'; font-size: 28px; color: var(--primary-deep);
+  }
+  .thank-you p { font-size: 17px; color: var(--text-muted); max-width: 520px; line-height: 1.6; }
+  .thank-you .achievement {
+    background: white; padding: 14px 26px; border-radius: 20px;
+    border: 2px solid var(--border); display: flex; align-items: center; gap: 14px;
+    box-shadow: var(--shadow); margin-top: 10px;
+  }
+  .thank-you .achievement i { font-size: 30px; color: var(--gold); }
+  .thank-you .achievement div { text-align: left; }
+  .thank-you .achievement .label { font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .thank-you .achievement .value { font-family: 'Fredoka'; color: var(--primary-deep); font-size: 18px; }
+  /* Confetti */
+  .confetti {
+    position: fixed; width: 10px; height: 10px;
+    pointer-events: none; z-index: 9999;
+    animation: confettiFall 3s linear forwards;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  /* Mascot */
+  .mascot {
+    position: fixed; bottom: 90px; right: 24px;
+    width: 60px; height: 60px; z-index: 50;
+    background: linear-gradient(135deg, var(--primary), var(--coral));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 28px; box-shadow: 0 6px 20px rgba(255, 77, 141, 0.4);
+    animation: mascotBob 3s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes mascotBob { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
+  /* Responsive */
+  @media (max-width: 900px) {
+    .concept-grid, .demo-container { grid-template-columns: 1fr; }
+    .slide { padding: 20px 24px; }
+    .slide-title { font-size: 28px; }
+    .cover h1 { font-size: 48px; }
+    .thank-you h1 { font-size: 44px; }
+    .top-bar { padding: 12px 16px; }
+    .brand { font-size: 16px; }
+    .brand .logo-icon { width: 30px; height: 30px; }
+    .student-info { display: none !important; }
+  }
+  @media (max-width: 600px) {
+    .game-buttons { grid-template-columns: 1fr; }
+    .demo-buttons { grid-template-columns: 1fr; }
+    .name-input { width: 100%; max-width: 280px; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-decoration">
+    <div class="bg-blob b1"></div>
+    <div class="bg-blob b2"></div>
+    <div class="bg-blob b3"></div>
+  </div>
+
+  <header class="top-bar">
+    <div class="brand">
+      <div class="logo-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+      <span data-en="Geometry Adventure" data-id="Petualangan Geometri">Geometry Adventure</span>
+    </div>
+    <div class="student-info" id="studentInfo">
+      <i class="fa-solid fa-user"></i>
+      <span id="studentDisplay">Friend</span>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="id">ID</button>
+    </div>
+  </header>
+
+  <main class="slide-container">
+    <!-- SLIDE 1: COVER -->
+    <section class="slide active" data-slide="0">
+      <div class="cover">
+        <div class="cover-badge">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span data-en="Cambridge Curriculum · Grade 5 Maths" data-id="Kurikulum Cambridge · Matematika Kelas 5">Cambridge Curriculum · Grade 5 Maths</span>
+        </div>
+        <h1 data-en="Geometry Adventure" data-id="Petualangan Geometri">Geometry Adventure</h1>
+        <div class="subtitle">
+          <span data-en="Parallel &amp; Perpendicular" data-id="Garis Sejajar &amp; Tegak Lurus">Parallel &amp; Perpendicular</span>
+          <span data-en="Line Segments" data-id="Garis"> Line Segments</span>
+        </div>
+        <div class="cover-input-wrap">
+          <input type="text" class="name-input" id="studentName" placeholder="Type your name here..." maxlength="30">
+          <button class="start-btn" id="startBtn">
+            <i class="fa-solid fa-rocket"></i>
+            <span data-en="Start Adventure" data-id="Mulai Petualangan">Start Adventure</span>
+          </button>
+        </div>
+        <div class="cover-decoration">
+          <div class="deco-item"><i class="fa-solid fa-book-open"></i><span data-en="12 Fun Slides" data-id="12 Slide Seru">12 Fun Slides</span></div>
+          <div class="deco-item"><i class="fa-solid fa-puzzle-piece"></i><span data-en="30 Challenges" data-id="30 Tantangan">30 Challenges</span></div>
+          <div class="deco-item"><i class="fa-solid fa-gamepad"></i><span data-en="1 Mini Game" data-id="1 Mini Game">1 Mini Game</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: LEARNING OBJECTIVES -->
+    <section class="slide" data-slide="1">
+      <h2 class="slide-title" data-en="Today's Learning Goals" data-id="Tujuan Pembelajaran Hari Ini">Today's Learning Goals</h2>
+      <p class="slide-subtitle" data-en="By the end of this lesson, you will be a geometry detective!" data-id="Di akhir pelajaran, kamu akan menjadi detektif geometri!">By the end of this lesson, you will be a geometry detective!</p>
+      <div class="objectives-grid">
+        <div class="objective-card">
+          <div class="num">1</div>
+          <div class="icon"><i class="fa-solid fa-arrows-left-right"></i></div>
+          <h3 data-en="Identify Lines" data-id="Mengenal Garis">Identify Lines</h3>
+          <p data-en="Recognize parallel and perpendicular line segments in shapes and pictures." data-id="Mengenali garis sejajar dan tegak lurus pada bangun dan gambar.">Recognize parallel and perpendicular line segments in shapes and pictures.</p>
+        </div>
+        <div class="objective-card">
+          <div class="num">2</div>
+          <div class="icon"><i class="fa-solid fa-house"></i></div>
+          <h3 data-en="Real-Life Links" data-id="Koneksi Dunia Nyata">Real-Life Links</h3>
+          <p data-en="Spot parallel and perpendicular lines in everyday objects around you." data-id="Menemukan garis sejajar dan tegak lurus di benda sehari-hari.">Spot parallel and perpendicular lines in everyday objects around you.</p>
+        </div>
+        <div class="objective-card">
+          <div class="num">3</div>
+          <div class="icon"><i class="fa-solid fa-pencil-ruler"></i></div>
+          <h3 data-en="Draw &amp; Compare" data-id="Menggambar &amp; Membandingkan">Draw &amp; Compare</h3>
+          <p data-en="Use tools to draw, compare and check line relationships accurately." data-id="Menggunakan alat untuk menggambar, membandingkan, dan memeriksa hubungan garis.">Use tools to draw, compare and check line relationships accurately.</p>
+        </div>
+        <div class="objective-card">
+          <div class="num">4</div>
+          <div class="icon"><i class="fa-solid fa-brain"></i></div>
+          <h3 data-en="Think Critically" data-id="Berpikir Kritis">Think Critically</h3>
+          <p data-en="Solve 30 reasoning problems — from easy warm-ups to HOTS challenges." data-id="Selesaikan 30 soal berpikir — dari mudah hingga HOTS.">Solve 30 reasoning problems — from easy warm-ups to HOTS challenges.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: INTRODUCTION -->
+    <section class="slide" data-slide="2">
+      <h2 class="slide-title" data-en="What is a Line Segment?" data-id="Apa itu Ruas Garis?">What is a Line Segment?</h2>
+      <p class="slide-subtitle" data-en="The building block of every shape" data-id="Dasar dari setiap bangun">The building block of every shape</p>
+      <div class="concept-grid">
+        <div class="concept-visual">
+          <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#ffe4ec" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="460" height="280" fill="url(#grid)" rx="12"/>
+            <!-- Line (infinite) -->
+            <line x1="20" y1="60" x2="440" y2="60" stroke="#ff8fab" stroke-width="2" stroke-dasharray="6,4"/>
+            <text x="240" y="48" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#7a4a5e">Line → extends forever in both directions</text>
+            <!-- Line segment -->
+            <circle cx="100" cy="140" r="6" fill="#ff4d8d"/>
+            <circle cx="360" cy="140" r="6" fill="#ff4d8d"/>
+            <line x1="100" y1="140" x2="360" y2="140" stroke="#ff4d8d" stroke-width="6" stroke-linecap="round"/>
+            <text x="90" y="170" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#c2185b" font-weight="700">A</text>
+            <text x="370" y="170" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#c2185b" font-weight="700">B</text>
+            <text x="240" y="180" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#7a4a5e">Line Segment AB → has 2 endpoints</text>
+            <!-- Ray -->
+            <line x1="80" y1="240" x2="440" y2="240" stroke="#ff7e5f" stroke-width="3" stroke-dasharray="6,4"/>
+            <circle cx="80" cy="240" r="6" fill="#ff7e5f"/>
+            <text x="240" y="270" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#7a4a5e">Ray → has 1 endpoint, extends forever in one direction</text>
+          </svg>
+        </div>
+        <div class="concept-info">
+          <h3><i class="fa-solid fa-lightbulb"></i><span data-en="Key Idea" data-id="Ide Pokok">Key Idea</span></h3>
+          <ul>
+            <li><i class="fa-solid fa-circle" style="color:var(--primary);font-size:8px"></i><span data-en="A line segment is part of a line with two endpoints — it has a clear start and finish." data-id="Ruas garis adalah bagian dari garis dengan dua titik ujung — memiliki awal dan akhir yang jelas.">A line segment is part of a line with two endpoints — it has a clear start and finish.</span></li>
+            <li><i class="fa-solid fa-circle" style="color:var(--primary);font-size:8px"></i><span data-en="A line goes on forever in both directions." data-id="Garis terus memanjang ke dua arah selamanya.">A line goes on forever in both directions.</span></li>
+            <li><i class="fa-solid fa-circle" style="color:var(--primary);font-size:8px"></i><span data-en="A ray has one endpoint and goes on forever in one direction." data-id="Sinar garis memiliki satu titik ujung dan memanjang selamanya ke satu arah.">A ray has one endpoint and goes on forever in one direction.</span></li>
+            <li><i class="fa-solid fa-circle" style="color:var(--primary);font-size:8px"></i><span data-en="We name a segment by its endpoints, like AB or CD." data-id="Kita menamai ruas garis dengan titik ujungnya, seperti AB atau CD.">We name a segment by its endpoints, like AB or CD.</span></li>
+          </ul>
+          <div class="key-point">
+            <strong data-en="Why does this matter? " data-id="Kenapa penting? ">Why does this matter? </strong><span data-en="When two line segments meet or sit near each other, they form special relationships — parallel or perpendicular. Let's explore!" data-id="Ketika dua ruas garis bertemu atau berdekatan, mereka membentuk hubungan khusus — sejajar atau tegak lurus. Mari kita jelajahi!">When two line segments meet or sit near each other, they form special relationships — parallel or perpendicular. Let's explore!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: PARALLEL -->
+    <section class="slide" data-slide="3">
+      <h2 class="slide-title" data-en="Parallel Line Segments" data-id="Ruas Garis Sejajar">Parallel Line Segments</h2>
+      <p class="slide-subtitle" data-en="Same direction · Always the same distance apart · Never meet" data-id="Arah sama · Jarak selalu sama · Tidak pernah bertemu">Same direction · Always the same distance apart · Never meet</p>
+      <div class="concept-grid">
+        <div class="concept-visual">
+          <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="460" height="280" fill="url(#grid)" rx="12"/>
+            <!-- Two parallel lines -->
+            <line x1="40" y1="90" x2="420" y2="90" stroke="#ff4d8d" stroke-width="7" stroke-linecap="round"/>
+            <line x1="40" y1="190" x2="420" y2="190" stroke="#ff7e5f" stroke-width="7" stroke-linecap="round"/>
+            <!-- Direction arrows -->
+            <polygon points="420,90 405,82 405,98" fill="#ff4d8d"/>
+            <polygon points="420,190 405,182 405,198" fill="#ff7e5f"/>
+            <!-- Distance markers -->
+            <line x1="120" y1="90" x2="120" y2="190" stroke="#7a4a5e" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="240" y1="90" x2="240" y2="190" stroke="#7a4a5e" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="360" y1="90" x2="360" y2="190" stroke="#7a4a5e" stroke-width="2" stroke-dasharray="4,3"/>
+            <!-- Distance labels -->
+            <text x="130" y="145" font-family="Fredoka" font-size="13" fill="#7a4a5e">d</text>
+            <text x="250" y="145" font-family="Fredoka" font-size="13" fill="#7a4a5e">d</text>
+            <text x="370" y="145" font-family="Fredoka" font-size="13" fill="#7a4a5e">d</text>
+            <text x="240" y="240" text-anchor="middle" font-family="Fredoka" font-size="15" fill="#c2185b" font-weight="700">Same distance everywhere — never meet!</text>
+            <text x="240" y="262" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#7a4a5e">Symbol: AB ∥ CD</text>
+          </svg>
+        </div>
+        <div class="concept-info">
+          <h3><i class="fa-solid fa-equals"></i><span data-en="Properties" data-id="Sifat-sifat">Properties</span></h3>
+          <ul>
+            <li><i class="fa-solid fa-check"></i><span data-en="They point in the same direction." data-id="Mengarah ke arah yang sama.">They point in the same direction.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="The distance between them is always the same." data-id="Jarak antara keduanya selalu sama.">The distance between them is always the same.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="They will never cross or touch, no matter how far you extend them." data-id="Tidak akan pernah berpotongan atau bersentuhan, sejauh apa pun diperpanjang.">They will never cross or touch, no matter how far you extend them.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="If two segments are both perpendicular to the same line, they are parallel to each other." data-id="Jika dua ruas garis tegak lurus pada garis yang sama, maka keduanya sejajar.">If two segments are both perpendicular to the same line, they are parallel to each other.</span></li>
+          </ul>
+          <div class="key-point">
+            <strong data-en="Think about it: " data-id="Pikirkan: ">Think about it: </strong><span data-en="Train tracks, the sides of a door, the rungs of a ladder — all parallel!" data-id="Rel kereta, sisi pintu, anak tangga — semuanya sejajar!">Train tracks, the sides of a door, the rungs of a ladder — all parallel!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: PERPENDICULAR -->
+    <section class="slide" data-slide="4">
+      <h2 class="slide-title" data-en="Perpendicular Line Segments" data-id="Ruas Garis Tegak Lurus">Perpendicular Line Segments</h2>
+      <p class="slide-subtitle" data-en="Cross at exactly 90° · Form a perfect right angle" data-id="Berpotongan tepat 90° · Membentuk sudut siku-siku">Cross at exactly 90° · Form a perfect right angle</p>
+      <div class="concept-grid">
+        <div class="concept-visual">
+          <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="460" height="280" fill="url(#grid)" rx="12"/>
+            <!-- Horizontal line -->
+            <line x1="50" y1="140" x2="410" y2="140" stroke="#ff4d8d" stroke-width="7" stroke-linecap="round"/>
+            <!-- Vertical line -->
+            <line x1="230" y1="30" x2="230" y2="250" stroke="#ff7e5f" stroke-width="7" stroke-linecap="round"/>
+            <!-- Right angle marker -->
+            <path d="M 250 140 L 250 120 L 230 120" fill="none" stroke="#ffb627" stroke-width="3"/>
+            <text x="260" y="118" font-family="Fredoka" font-size="18" fill="#92400e" font-weight="700">90°</text>
+            <!-- Labels -->
+            <text x="60" y="160" font-family="Fredoka" font-size="14" fill="#c2185b" font-weight="700">Line A</text>
+            <text x="240" y="50" font-family="Fredoka" font-size="14" fill="#92400e" font-weight="700">Line B</text>
+            <text x="230" y="270" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#7a4a5e">Symbol: A ⊥ B (A is perpendicular to B)</text>
+          </svg>
+        </div>
+        <div class="concept-info">
+          <h3><i class="fa-solid fa-square"></i><span data-en="Properties" data-id="Sifat-sifat">Properties</span></h3>
+          <ul>
+            <li><i class="fa-solid fa-check"></i><span data-en="They cross or meet at exactly 90° (a right angle)." data-id="Berpotongan atau bertemu tepat pada 90° (sudut siku-siku).">They cross or meet at exactly 90° (a right angle).</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="Four right angles are formed at the meeting point." data-id="Empat sudut siku-siku terbentuk di titik perpotongan.">Four right angles are formed at the meeting point.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="The sides of a square meet perpendicularly at every corner." data-id="Sisi-sisi persegi bertemu tegak lurus di setiap sudutnya.">The sides of a square meet perpendicularly at every corner.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-en="The plus sign + is made of two perpendicular segments." data-id="Tanda tambah + terdiri dari dua ruas garis yang tegak lurus.">The plus sign + is made of two perpendicular segments.</span></li>
+          </ul>
+          <div class="key-point">
+            <strong data-en="Think about it: " data-id="Pikirkan: ">Think about it: </strong><span data-en="A window cross, the corner of a book, a plus sign — all perpendicular!" data-id="Salib jendela, sudut buku, tanda tambah — semuanya tegak lurus!">A window cross, the corner of a book, a plus sign — all perpendicular!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: REAL-LIFE EXAMPLES -->
+    <section class="slide" data-slide="5">
+      <h2 class="slide-title" data-en="Lines in Real Life" data-id="Garis di Kehidupan Nyata">Lines in Real Life</h2>
+      <p class="slide-subtitle" data-en="Geometry is everywhere — can you spot it?" data-id="Geometri ada di mana-mana — bisakah kamu menemukannya?">Geometry is everywhere — can you spot it?</p>
+      <div class="examples-grid">
+        <!-- Railroad -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <!-- Tracks -->
+            <line x1="10" y1="55" x2="210" y2="55" stroke="#7a4a5e" stroke-width="5"/>
+            <line x1="10" y1="95" x2="210" y2="95" stroke="#7a4a5e" stroke-width="5"/>
+            <!-- Ties -->
+            <rect x="20" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="50" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="80" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="110" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="140" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="170" y="50" width="8" height="50" fill="#a0522d"/>
+            <rect x="200" y="50" width="8" height="50" fill="#a0522d"/>
+            <text x="110" y="135" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Railroad Tracks</text>
+          </svg>
+          <h4 data-en="Railroad Tracks" data-id="Rel Kereta">Railroad Tracks</h4>
+          <p data-en="The two steel rails run side by side forever without meeting." data-id="Dua rel baja berjalan berdampingan tanpa pernah bertemu.">The two steel rails run side by side forever without meeting.</p>
+          <div class="tag-row"><span class="tag parallel">PARALLEL</span></div>
+        </div>
+        <!-- Window -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <rect x="30" y="15" width="160" height="120" fill="none" stroke="#7a4a5e" stroke-width="4"/>
+            <line x1="110" y1="15" x2="110" y2="135" stroke="#7a4a5e" stroke-width="3"/>
+            <line x1="30" y1="75" x2="190" y2="75" stroke="#7a4a5e" stroke-width="3"/>
+            <text x="110" y="148" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Window Panes</text>
+          </svg>
+          <h4 data-en="Window Panes" data-id="Kaca Jendela">Window Panes</h4>
+          <p data-en="The frame's opposite sides are parallel; the bars meet at right angles." data-id="Sisi bingkai yang berhadangan sejajar; palang bertemu siku-siku.">The frame's opposite sides are parallel; the bars meet at right angles.</p>
+          <div class="tag-row"><span class="tag parallel">PARALLEL</span><span class="tag perpendicular">PERPENDICULAR</span></div>
+        </div>
+        <!-- Crossroad -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <rect x="0" y="55" width="220" height="40" fill="#d4d4d4"/>
+            <rect x="90" y="0" width="40" height="150" fill="#d4d4d4"/>
+            <line x1="0" y1="55" x2="220" y2="55" stroke="white" stroke-width="2" stroke-dasharray="8,5"/>
+            <line x1="0" y1="95" x2="220" y2="95" stroke="white" stroke-width="2" stroke-dasharray="8,5"/>
+            <line x1="90" y1="0" x2="90" y2="150" stroke="white" stroke-width="2" stroke-dasharray="8,5"/>
+            <line x1="130" y1="0" x2="130" y2="150" stroke="white" stroke-width="2" stroke-dasharray="8,5"/>
+            <text x="110" y="143" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Crossroads</text>
+          </svg>
+          <h4 data-en="Street Crossroads" data-id="Persimpangan Jalan">Street Crossroads</h4>
+          <p data-en="Two roads meeting at 90° form a perfect cross intersection." data-id="Dua jalan bertemu pada 90° membentuk persimpangan salib.">Two roads meeting at 90° form a perfect cross intersection.</p>
+          <div class="tag-row"><span class="tag perpendicular">PERPENDICULAR</span></div>
+        </div>
+        <!-- Ladder -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <line x1="70" y1="15" x2="70" y2="135" stroke="#7a4a5e" stroke-width="5"/>
+            <line x1="150" y1="15" x2="150" y2="135" stroke="#7a4a5e" stroke-width="5"/>
+            <line x1="70" y1="40" x2="150" y2="40" stroke="#a0522d" stroke-width="4"/>
+            <line x1="70" y1="70" x2="150" y2="70" stroke="#a0522d" stroke-width="4"/>
+            <line x1="70" y1="100" x2="150" y2="100" stroke="#a0522d" stroke-width="4"/>
+            <line x1="70" y1="130" x2="150" y2="130" stroke="#a0522d" stroke-width="4"/>
+            <text x="110" y="148" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Ladder</text>
+          </svg>
+          <h4 data-en="A Ladder" data-id="Tangga">A Ladder</h4>
+          <p data-en="The side rails are parallel; each rung is perpendicular to them." data-id="Sisi tangga sejajar; setiap anak tangga tegak lurus.">The side rails are parallel; each rung is perpendicular to them.</p>
+          <div class="tag-row"><span class="tag both">PARALLEL + PERPENDICULAR</span></div>
+        </div>
+        <!-- Plus sign -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <rect x="60" y="65" width="100" height="20" fill="#ff4d8d" rx="3"/>
+            <rect x="100" y="25" width="20" height="100" fill="#ff7e5f" rx="3"/>
+            <text x="110" y="143" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Plus Sign</text>
+          </svg>
+          <h4 data-en="Plus Sign (+)" data-id="Tanda Tambah (+)">Plus Sign (+)</h4>
+          <p data-en="A perfect plus sign has bars that cross at a right angle." data-id="Tanda plus sempurna memiliki batang yang berpotongan siku-siku.">A perfect plus sign has bars that cross at a right angle.</p>
+          <div class="tag-row"><span class="tag perpendicular">PERPENDICULAR</span></div>
+        </div>
+        <!-- Letter H -->
+        <div class="example-card">
+          <svg viewBox="0 0 220 150">
+            <rect width="220" height="150" fill="#fef3f8" rx="10"/>
+            <line x1="70" y1="20" x2="70" y2="130" stroke="#c2185b" stroke-width="10" stroke-linecap="round"/>
+            <line x1="150" y1="20" x2="150" y2="130" stroke="#c2185b" stroke-width="10" stroke-linecap="round"/>
+            <line x1="70" y1="75" x2="150" y2="75" stroke="#c2185b" stroke-width="10" stroke-linecap="round"/>
+            <text x="110" y="148" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#c2185b">Letter H</text>
+          </svg>
+          <h4 data-en="The Letter H" data-id="Huruf H">The Letter H</h4>
+          <p data-en="The two vertical strokes are parallel; the crossbar is perpendicular to both." data-id="Dua garis vertikal sejajar; batang mendatar tegak lurus keduanya.">The two vertical strokes are parallel; the crossbar is perpendicular to both.</p>
+          <div class="tag-row"><span class="tag both">PARALLEL + PERPENDICULAR</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: INTERACTIVE DEMO -->
+    <section class="slide" data-slide="6">
+      <h2 class="slide-title" data-en="Play with Lines!" data-id="Bermain dengan Garis!">Play with Lines!</h2>
+      <p class="slide-subtitle" data-en="Drag the dots to explore. Watch what happens!" data-id="Geser titik-titik untuk menjelajahi. Lihat apa yang terjadi!">Drag the dots to explore. Watch what happens!</p>
+      <div class="demo-container">
+        <div class="demo-svg-wrapper">
+          <svg id="demoSvg" class="demo-svg" viewBox="0 0 460 340">
+            <defs>
+              <pattern id="grid2" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#ffe4ec" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="460" height="340" fill="url(#grid2)" rx="10"/>
+          </svg>
+        </div>
+        <div class="demo-info">
+          <div class="status-display" id="demoStatus">—</div>
+          <div class="angle-display">
+            <span data-en="Angle between lines: " data-id="Sudut antara garis: ">Angle between lines: </span>
+            <span id="demoAngle">0°</span>
+          </div>
+          <div class="demo-buttons">
+            <button class="demo-btn" id="makeParallel" data-en="Make Parallel" data-id="Buat Sejajar">Make Parallel</button>
+            <button class="demo-btn" id="makePerpendicular" data-en="Make Perpendicular" data-id="Buat Tegak Lurus">Make Perpendicular</button>
+            <button class="demo-btn" id="makeRandom" data-en="Random" data-id="Acak">Random</button>
+          </div>
+          <div class="demo-instructions">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <span data-en="Tip: Drag the colored dots to move the endpoints. The angle is measured between the two line segments." data-id="Tips: Geser titik berwarna untuk memindahkan ujung garis. Sudut diukur antara dua ruas garis.">Tip: Drag the colored dots to move the endpoints. The angle is measured between the two line segments.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: GAME -->
+    <section class="slide" data-slide="7">
+      <h2 class="slide-title" data-en="Game: Line Detective" data-id="Permainan: Detektif Garis">Game: Line Detective</h2>
+      <p class="slide-subtitle" data-en="Look at the lines. Are they parallel, perpendicular, or neither? Decide fast!" data-id="Lihat garisnya. Sejajar, tegak lurus, atau bukan keduanya? Putuskan cepat!">Look at the lines. Are they parallel, perpendicular, or neither? Decide fast!</p>
+      <div class="game-container">
+        <div class="game-header">
+          <div class="game-title"><i class="fa-solid fa-shoe-prints"></i><span data-en="Line Detective Challenge" data-id="Tantangan Detektif Garis">Line Detective Challenge</span></div>
+          <div class="game-stats">
+            <div class="stat"><div class="stat-label" data-en="Score" data-id="Skor">Score</div><div class="stat-value" id="gameScore">0</div></div>
+            <div class="stat"><div class="stat-label" data-en="Streak" data-id="Beruntun">Streak</div><div class="stat-value" id="gameStreak">0</div></div>
+            <div class="stat"><div class="stat-label" data-en="Round" data-id="Ronde">Round</div><div class="stat-value" id="gameRound">0/10</div></div>
+          </div>
+        </div>
+        <div class="game-canvas">
+          <svg id="gameSvg" viewBox="0 0 460 280"></svg>
+          <div class="game-overlay" id="gameOverlay">
+            <i class="fa-solid fa-rocket" style="font-size:42px;color:var(--primary)"></i>
+            <h3 data-en="Ready to Play?" data-id="Siap Bermain?">Ready to Play?</h3>
+            <p data-en="You'll see 10 pairs of line segments. Decide if they are parallel, perpendicular, or neither. Build a streak for bonus points!" data-id="Kamu akan melihat 10 pasang ruas garis. Tentukan apakah sejajar, tegak lurus, atau bukan. Bangun rentetan untuk poin bonus!">You'll see 10 pairs of line segments. Decide if they are parallel, perpendicular, or neither. Build a streak for bonus points!</p>
+            <button class="start-btn" id="gameStart" style="margin-top:6px">
+              <i class="fa-solid fa-play"></i>
+              <span data-en="Start Game" data-id="Mulai Main">Start Game</span>
+            </button>
+          </div>
+        </div>
+        <div class="game-buttons">
+          <button class="game-btn" data-choice="parallel" disabled>
+            <i class="fa-solid fa-equals"></i>
+            <span data-en="Parallel" data-id="Sejajar">Parallel</span>
+          </button>
+          <button class="game-btn" data-choice="perpendicular" disabled>
+            <i class="fa-solid fa-square"></i>
+            <span data-en="Perpendicular" data-id="Tegak Lurus">Perpendicular</span>
+          </button>
+          <button class="game-btn" data-choice="neither" disabled>
+            <i class="fa-solid fa-xmark"></i>
+            <span data-en="Neither" data-id="Bukan Keduanya">Neither</span>
+          </button>
+        </div>
+        <div class="game-feedback" id="gameFeedback"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: PRACTICE -->
+    <section class="slide" data-slide="8">
+      <h2 class="slide-title" data-en="Practice Time — 30 Challenges" data-id="Waktu Latihan — 30 Tantangan">Practice Time — 30 Challenges</h2>
+      <p class="slide-subtitle" data-en="Pick a level. Read carefully. Think before you click!" data-id="Pilih level. Baca dengan teliti. Pikirkan sebelum menjawab!">Pick a level. Read carefully. Think before you click!</p>
+      <div class="questions-tabs">
+        <button class="tab-btn active" data-level="easy">
+          <i class="fa-solid fa-seedling"></i>
+          <span data-en="Easy" data-id="Mudah">Easy</span>
+          <span class="badge">10</span>
+        </button>
+        <button class="tab-btn" data-level="medium">
+          <i class="fa-solid fa-fire"></i>
+          <span data-en="Medium" data-id="Sedang">Medium</span>
+          <span class="badge">10</span>
+        </button>
+        <button class="tab-btn" data-level="hots">
+          <i class="fa-solid fa-crown"></i>
+          <span data-en="HOTS" data-id="HOTS">HOTS</span>
+          <span class="badge">10</span>
+        </button>
+      </div>
+      <div id="questionsContainer"></div>
+    </section>
+
+    <!-- SLIDE 10: CONCLUSION -->
+    <section class="slide" data-slide="9">
+      <h2 class="slide-title" data-en="What We Learned Today" data-id="Yang Kita Pelajari Hari Ini">What We Learned Today</h2>
+      <p class="slide-subtitle" data-en="A quick recap before you go!" data-id="Ringkasan singkat sebelum berakhir!">A quick recap before you go!</p>
+      <div class="conclusion-content">
+        <div class="summary-card">
+          <div class="icon"><i class="fa-solid fa-arrows-left-right"></i></div>
+          <h3 data-en="Parallel Lines" data-id="Garis Sejajar">Parallel Lines</h3>
+          <p data-en="Same direction · Same distance apart · Never meet · Symbol: ∥" data-id="Arah sama · Jarak sama · Tidak pernah bertemu · Simbol: ∥">Same direction · Same distance apart · Never meet · Symbol: ∥</p>
+        </div>
+        <div class="summary-card gold">
+          <div class="icon"><i class="fa-solid fa-square"></i></div>
+          <h3 data-en="Perpendicular Lines" data-id="Garis Tegak Lurus">Perpendicular Lines</h3>
+          <p data-en="Meet at 90° · Form 4 right angles · Symbol: ⊥" data-id="Bertemu pada 90° · Membentuk 4 sudut siku-siku · Simbol: ⊥">Meet at 90° · Form 4 right angles · Symbol: ⊥</p>
+        </div>
+        <div class="summary-card mint">
+          <div class="icon"><i class="fa-solid fa-house"></i></div>
+          <h3 data-en="In Real Life" data-id="Di Dunia Nyata">In Real Life</h3>
+          <p data-en="Train tracks, windows, ladders, streets, plus signs, letters — geometry is everywhere!" data-id="Rel kereta, jendela, tangga, jalan, tanda plus, huruf — geometri ada di mana-mana!">Train tracks, windows, ladders, streets, plus signs, letters — geometry is everywhere!</p>
+        </div>
+        <div class="summary-card">
+          <div class="icon"><i class="fa-solid fa-brain"></i></div>
+          <h3 data-en="Smart Thinking" data-id="Berpikir Cerdas">Smart Thinking</h3>
+          <p data-en="Use a protractor to check 90° · Measure distance at 3 points to check parallel · Always verify, don't just guess!" data-id="Gunakan busur untuk cek 90° · Ukur jarak di 3 titik untuk cek sejajar · Selalu periksa, jangan menebak!">Use a protractor to check 90° · Measure distance at 3 points to check parallel · Always verify, don't just guess!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: REFLECTION -->
+    <section class="slide" data-slide="10">
+      <h2 class="slide-title" data-en="My Reflection" data-id="Refleksiku">My Reflection</h2>
+      <p class="slide-subtitle" data-en="Pause and think about your learning journey today." data-id="Berhenti sejenak dan pikirkan perjalanan belajar hari ini.">Pause and think about your learning journey today.</p>
+      <div class="reflection-box">
+        <div class="reflection-item">
+          <label data-en="1. How do you feel about today's lesson?" data-id="1. Bagaimana perasaanmu tentang pelajaran hari ini?">1. How do you feel about today's lesson?</label>
+          <div class="emoji-rating">
+            <button class="emoji-btn" data-emoji="confused">😕</button>
+            <button class="emoji-btn" data-emoji="neutral">😐</button>
+            <button class="emoji-btn" data-emoji="happy">🙂</button>
+            <button class="emoji-btn" data-emoji="love">😍</button>
+          </div>
+        </div>
+        <div class="reflection-item">
+          <label data-en="2. How well do you understand parallel and perpendicular lines?" data-id="2. Seberapa baik kamu memahami garis sejajar dan tegak lurus?">2. How well do you understand parallel and perpendicular lines?</label>
+          <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+          </div>
+        </div>
+        <div class="reflection-item">
+          <label data-en="3. What was the most interesting thing you discovered?" data-id="3. Apa hal paling menarik yang kamu temukan?">3. What was the most interesting thing you discovered?</label>
+          <textarea class="reflection-text" id="reflectionInteresting" placeholder="Write your thoughts..." data-en-placeholder="Write your thoughts..." data-id-placeholder="Tulis pendapatmu..."></textarea>
+        </div>
+        <div class="reflection-item">
+          <label data-en="4. What is still a little tricky for you?" data-id="4. Apa yang masih sedikit sulit bagimu?">4. What is still a little tricky for you?</label>
+          <textarea class="reflection-text" id="reflectionTricky" placeholder="Be honest — that's how we grow!" data-en-placeholder="Be honest — that's how we grow!" data-id-placeholder="Jujur saja — itu cara kita berkembang!"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: THANK YOU -->
+    <section class="slide" data-slide="11">
+      <div class="thank-you">
+        <div class="heart-burst"><i class="fa-solid fa-heart"></i></div>
+        <h1 data-en="Thank You for Today!" data-id="Terima Kasih untuk Hari Ini!">Thank You for Today!</h1>
+        <div class="student-name">
+          <span data-en="Great job, " data-id="Kerja bagus, ">Great job, </span>
+          <span id="thankYouName">Friend</span>!
+        </div>
+        <p data-en="You explored, you played, you thought hard, and you grew your brain. Geometry is everywhere — keep looking for lines around you!" data-id="Kamu menjelajah, bermain, berpikir keras, dan mengembangkan otakmu. Geometri ada di mana-mana — teruslah mencari garis di sekitarmu!">You explored, you played, you thought hard, and you grew your brain. Geometry is everywhere — keep looking for lines around you!</p>
+        <div class="achievement">
+          <i class="fa-solid fa-trophy"></i>
+          <div>
+            <div class="label" data-en="Geometry Detective" data-id="Detektif Geometri">Geometry Detective</div>
+            <div class="value" data-en="Level: Apprentice Explorer" data-id="Level: Penjelajah Pemula">Level: Apprentice Explorer</div>
+          </div>
+        </div>
+        <p style="margin-top:12px;font-size:14px;color:var(--text-muted)">
+          <i class="fa-solid fa-sparkles" style="color:var(--gold)"></i>
+          <span data-en="Come back anytime to practice again!" data-id="Kapan saja kembali untuk berlatih lagi!">Come back anytime to practice again!</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="slide-nav">
+    <button class="nav-btn prev-btn" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="progress-dots" id="progressDots"></div>
+    <button class="nav-btn next-btn" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+  </nav>
+
+  <div class="mascot" title="Hi there!"><i class="fa-solid fa-star"></i></div>
+
+<script>
+/* =================== STATE =================== */
+let currentSlide = 0;
+let currentLang = 'en';
+let studentName = 'Friend';
+
+/* =================== QUESTIONS DATA =================== */
+const questionsData = {
+  easy: [
+    {
+      type: 'mc',
+      q: { en: 'Look at the railroad tracks in the picture. The two steel rails are an example of what kind of lines?', id: 'Lihat rel kereta api pada gambar. Dua rel baja tersebut adalah contoh garis apa?' },
+      options: [
+        { en: 'Perpendicular lines', id: 'Garis tegak lurus' },
+        { en: 'Parallel lines', id: 'Garis sejajar', correct: true },
+        { en: 'Lines that cross at random angles', id: 'Garis yang berpotongan dengan sudut acak' },
+        { en: 'Curved lines', id: 'Garis melengkung' }
+      ],
+      explanation: { en: 'Railroad tracks run side by side and never meet — that is exactly what parallel lines do!', id: 'Rel kereta api berjalan berdampingan dan tidak pernah bertemu — itulah sifat garis sejajar!' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'Two line segments that cross at exactly 90° are called perpendicular.', id: 'Dua ruas garis yang berpotongan tepat pada 90° disebut tegak lurus.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'true',
+      explanation: { en: 'Yes! Perpendicular lines meet at a right angle, which is exactly 90°.', id: 'Benar! Garis tegak lurus bertemu pada sudut siku-siku, yaitu tepat 90°.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'Which capital letter contains parallel line segments?', id: 'Huruf kapital mana yang memiliki ruas garis sejajar?' },
+      options: [
+        { en: 'V', id: 'V' },
+        { en: 'O', id: 'O' },
+        { en: 'N', id: 'N', correct: true },
+        { en: 'T', id: 'T' }
+      ],
+      explanation: { en: 'The letter N has two slanted strokes that are parallel to each other. V meets at a point, O is curved, and T has perpendicular lines.', id: 'Huruf N memiliki dua garis miring yang sejajar. V bertemu di satu titik, O melengkung, dan T memiliki garis tegak lurus.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'What is the measure (in degrees) of the angle formed where two perpendicular lines meet?', id: 'Berapa besar sudut (dalam derajat) yang terbentuk saat dua garis tegak lurus bertemu?' },
+      accepted: ['90', 'ninety', '90 degrees', '90 deg', '90°'],
+      explanation: { en: 'Perpendicular lines always meet at exactly 90°, which is called a right angle.', id: 'Garis tegak lurus selalu bertemu tepat pada 90°, yang disebut sudut siku-siku.' }
+    },
+    {
+      type: 'cmc',
+      q: { en: 'Which of these everyday objects have PARALLEL line segments? (Select all that apply)', id: 'Benda sehari-hari mana yang memiliki ruas garis SEJAJAR? (Pilih semua yang benar)' },
+      options: [
+        { en: "A ladder's two side rails", id: 'Dua sisi tangga' },
+        { en: 'The two blades of an open pair of scissors', id: 'Dua mata gunting yang terbuka' },
+        { en: 'The opposite sides of a door', id: 'Sisi-sisi berhadapan pada pintu' },
+        { en: 'The spokes of a bicycle wheel', id: 'Jari-jari roda sepeda' }
+      ],
+      correct: ['A','C'],
+      explanation: { en: 'Ladder side rails and door opposite sides are parallel. Scissor blades meet at a pivot, and bicycle spokes all meet at the center hub.', id: 'Sisi tangga dan sisi berhadapan pintu sejajar. Mata gunting bertemu di poros, dan jari-jari roda sepeda semua bertemu di pusat.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'Two lines that are always the same distance apart and never meet are called...', id: 'Dua garis yang selalu berjarak sama dan tidak pernah bertemu disebut...' },
+      options: [
+        { en: 'Perpendicular', id: 'Tegak lurus' },
+        { en: 'Parallel', id: 'Sejajar', correct: true },
+        { en: 'Intersecting', id: 'Berpotongan' },
+        { en: 'Curved', id: 'Melengkung' }
+      ],
+      explanation: { en: 'Parallel lines never meet and stay the same distance apart forever.', id: 'Garis sejajar tidak pernah bertemu dan selalu berjarak sama selamanya.' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'If you extend two parallel line segments forever, they will eventually meet.', id: 'Jika kamu memperpanjang dua ruas garis sejajar selamanya, mereka akhirnya akan bertemu.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'false',
+      explanation: { en: 'False! By definition, parallel lines never meet, no matter how far you extend them.', id: 'Salah! Menurut definisi, garis sejajar tidak pernah bertemu sejauh apa pun diperpanjang.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'A plus sign (+) is made of two line segments. What is their relationship?', id: 'Tanda tambah (+) terdiri dari dua ruas garis. Bagaimana hubungannya?' },
+      options: [
+        { en: 'Parallel', id: 'Sejajar' },
+        { en: 'Perpendicular', id: 'Tegak lurus', correct: true },
+        { en: 'Neither — they do not touch', id: 'Bukan keduanya — tidak bersentuhan' },
+        { en: 'Cannot tell from the picture', id: 'Tidak bisa ditentukan' }
+      ],
+      explanation: { en: 'The horizontal and vertical bars of a plus sign cross at 90°, so they are perpendicular.', id: 'Batang mendatar dan tegak pada tanda plus berpotongan pada 90°, jadi tegak lurus.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'What symbol (made of characters) do mathematicians use to mean "is perpendicular to"?', id: 'Simbol (terbuat dari karakter) apa yang digunakan matematikawan untuk "tegak lurus terhadap"?' },
+      accepted: ['⊥', 'perpendicular symbol', 'upside down T', 'upside-down t'],
+      explanation: { en: 'The symbol ⊥ (an upside-down T) means "is perpendicular to". For example, A ⊥ B means line A is perpendicular to line B.', id: 'Simbol ⊥ (T terbalik) berarti "tegak lurus terhadap". Contoh: A ⊥ B berarti garis A tegak lurus garis B.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'Look at a rectangular door. The top edge and the bottom edge of the door are:', id: 'Lihat pintu persegi panjang. Sisi atas dan sisi bawah pintu adalah:' },
+      options: [
+        { en: 'Perpendicular', id: 'Tegak lurus' },
+        { en: 'Parallel', id: 'Sejajar', correct: true },
+        { en: 'Crossing at a corner', id: 'Berpotongan di sudut' },
+        { en: 'Curved', id: 'Melengkung' }
+      ],
+      explanation: { en: 'The top and bottom edges of a door are parallel — they never meet and stay the same distance apart.', id: 'Sisi atas dan bawah pintu sejajar — tidak pernah bertemu dan selalu berjarak sama.' }
+    }
+  ],
+  medium: [
+    {
+      type: 'mc',
+      q: { en: 'How many PAIRS of parallel sides does a rectangle have?', id: 'Berapa PASANG sisi sejajar yang dimiliki persegi panjang?' },
+      options: [
+        { en: '1 pair', id: '1 pasang' },
+        { en: '2 pairs', id: '2 pasang', correct: true },
+        { en: '3 pairs', id: '3 pasang' },
+        { en: '4 pairs', id: '4 pasang' }
+      ],
+      explanation: { en: 'A rectangle has 2 pairs of parallel sides: top/bottom and left/right.', id: 'Persegi panjang memiliki 2 pasang sisi sejajar: atas/bawah dan kiri/kanan.' }
+    },
+    {
+      type: 'cmc',
+      q: { en: 'Which of these shapes have perpendicular sides? (Select all that apply)', id: 'Bangun mana yang memiliki sisi tegak lurus? (Pilih semua yang benar)' },
+      options: [
+        { en: 'Square', id: 'Persegi' },
+        { en: 'Equilateral triangle', id: 'Segitiga sama sisi' },
+        { en: 'Rectangle', id: 'Persegi panjang' },
+        { en: 'Regular hexagon', id: 'Heksagon beraturan' }
+      ],
+      correct: ['A','C'],
+      explanation: { en: 'Squares and rectangles have 90° corners, so their adjacent sides are perpendicular. Equilateral triangles have 60° angles; hexagons have 120° angles.', id: 'Persegi dan persegi panjang memiliki sudut 90°, sehingga sisi yang berdekatan tegak lurus. Segitiga sama sisi memiliki sudut 60°; heksagon memiliki sudut 120°.' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'Every rectangle has perpendicular diagonals.', id: 'Setiap persegi panjang memiliki diagonal yang tegak lurus.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'false',
+      explanation: { en: 'False. Only a square (a special rectangle) has perpendicular diagonals. A long, thin rectangle has diagonals that cross but are not at 90°.', id: 'Salah. Hanya persegi (persegi panjang khusus) yang memiliki diagonal tegak lurus. Persegi panjang yang panjang dan tipis memiliki diagonal yang berpotongan tapi tidak 90°.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'In the capital letter E, how many horizontal line segments are perpendicular to the vertical backbone?', id: 'Pada huruf kapital E, berapa ruas garis mendatar yang tegak lurus dengan batang vertikal?' },
+      accepted: ['3', 'three'],
+      explanation: { en: 'The letter E has 3 horizontal bars (top, middle, bottom). Each meets the vertical backbone at 90°, so 3 perpendicular segments.', id: 'Huruf E memiliki 3 batang mendatar (atas, tengah, bawah). Setiap batang bertemu batang vertikal pada 90°, jadi 3 ruas garis tegak lurus.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'Line A is perpendicular to Line B. Line B is perpendicular to Line C. What is the relationship between Line A and Line C?', id: 'Garis A tegak lurus terhadap Garis B. Garis B tegak lurus terhadap Garis C. Bagaimana hubungan Garis A dan Garis C?' },
+      options: [
+        { en: 'Perpendicular', id: 'Tegak lurus' },
+        { en: 'Parallel', id: 'Sejajar', correct: true },
+        { en: 'Intersecting at 45°', id: 'Berpotongan pada 45°' },
+        { en: 'Cannot be determined', id: 'Tidak bisa ditentukan' }
+      ],
+      explanation: { en: 'If both A and C are perpendicular to B, then A and C must be parallel to each other (in a flat plane).', id: 'Jika A dan C keduanya tegak lurus terhadap B, maka A dan C harus sejajar satu sama lain (pada bidang datar).' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'On a book cover, the top edge and the right edge meet at a corner. What is their relationship?', id: 'Pada sampul buku, sisi atas dan sisi kanan bertemu di sudut. Bagaimana hubungannya?' },
+      options: [
+        { en: 'Parallel', id: 'Sejajar' },
+        { en: 'Perpendicular', id: 'Tegak lurus', correct: true },
+        { en: 'They do not touch', id: 'Tidak bersentuhan' },
+        { en: 'Curved', id: 'Melengkung' }
+      ],
+      explanation: { en: 'Adjacent edges of a book meet at a corner with a 90° angle, so they are perpendicular.', id: 'Sisi yang berdekatan pada buku bertemu di sudut dengan sudut 90°, jadi tegak lurus.' }
+    },
+    {
+      type: 'cmc',
+      q: { en: 'Which capital letters contain ONLY perpendicular line segments (no parallel pairs)? (Select all that apply)', id: 'Huruf kapital mana yang HANYA memiliki ruas garis tegak lurus (tanpa pasangan sejajar)? (Pilih semua yang benar)' },
+      options: [
+        { en: 'L', id: 'L' },
+        { en: 'T', id: 'T' },
+        { en: 'E', id: 'E' },
+        { en: 'H', id: 'H' }
+      ],
+      correct: ['A','B'],
+      explanation: { en: 'L and T have only perpendicular segments. E has parallel horizontal bars (top, middle, bottom are parallel). H has parallel vertical strokes.', id: 'L dan T hanya memiliki ruas garis tegak lurus. E memiliki batang mendatar yang sejajar (atas, tengah, bawah sejajar). H memiliki batang vertikal yang sejajar.' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'In a square, the two diagonals are perpendicular to each other.', id: 'Pada persegi, kedua diagonal saling tegak lurus.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'true',
+      explanation: { en: 'True! In a square, the diagonals cross at exactly 90°, so they are perpendicular to each other.', id: 'Benar! Pada persegi, diagonal berpotongan tepat pada 90°, jadi tegak lurus satu sama lain.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'When two perpendicular lines cross, how many right angles are formed at the point of intersection?', id: 'Saat dua garis tegak lurus berpotongan, berapa sudut siku-siku yang terbentuk di titik potong?' },
+      accepted: ['4', 'four'],
+      explanation: { en: 'Four right angles are formed at the intersection point — one in each "quarter" around the crossing.', id: 'Empat sudut siku-siku terbentuk di titik perpotongan — satu di setiap "kuadran" di sekitar perpotongan.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'A tic-tac-toe board has 2 horizontal lines and 2 vertical lines. The horizontal lines are ___ to each other, and the vertical lines are ___ to the horizontal lines.', id: 'Papan tic-tac-toe memiliki 2 garis mendatar dan 2 garis tegak. Garis mendatar ___ satu sama lain, dan garis tegak ___ terhadap garis mendatar.' },
+      options: [
+        { en: 'perpendicular; parallel', id: 'tegak lurus; sejajar' },
+        { en: 'parallel; perpendicular', id: 'sejajar; tegak lurus', correct: true },
+        { en: 'parallel; parallel', id: 'sejajar; sejajar' },
+        { en: 'perpendicular; perpendicular', id: 'tegak lurus; tegak lurus' }
+      ],
+      explanation: { en: 'The 2 horizontal lines are parallel to each other. The 2 vertical lines are also parallel to each other. But horizontal and vertical lines are perpendicular.', id: '2 garis mendatar sejajar satu sama lain. 2 garis tegak juga sejajar satu sama lain. Tapi garis mendatar dan tegak saling tegak lurus.' }
+    }
+  ],
+  hots: [
+    {
+      type: 'mc',
+      q: { en: 'A carpenter wants to verify that two wooden boards are truly parallel. Which method is MOST reliable?', id: 'Seorang tukang kayu ingin memastikan dua papan kayu benar-benar sejajar. Metode mana yang PALING andal?' },
+      options: [
+        { en: 'Look at them carefully from far away', id: 'Melihatnya dengan teliti dari jauh' },
+        { en: 'Measure the distance between them at 3 different points — if all equal, they are parallel', id: 'Mengukur jarak antara keduanya di 3 titik berbeda — jika semua sama, mereka sejajar', correct: true },
+        { en: 'Check that both boards are the same color', id: 'Memastikan kedua papan berwarna sama' },
+        { en: 'Measure the length of each board', id: 'Mengukur panjang masing-masing papan' }
+      ],
+      explanation: { en: 'Parallel lines stay the same distance apart. Measuring the distance at multiple points verifies this. Color and length do not matter.', id: 'Garis sejajar selalu berjarak sama. Mengukur jarak di beberapa titik memverifikasi hal ini. Warna dan panjang tidak memengaruhi.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'A street has two parallel lanes. A cross street is perpendicular to one lane. What angle (in degrees) does the cross street make with the OTHER lane?', id: 'Sebuah jalan memiliki dua jalur sejajar. Jalan melintang tegak lurus terhadap satu jalur. Sudut berapa (derajat) yang dibentuk jalan melintang dengan jalur LAINNYA?' },
+      accepted: ['90', '90 degrees', '90°', 'ninety', 'right angle'],
+      explanation: { en: 'Since the two lanes are parallel, any line perpendicular to one is also perpendicular to the other. So the angle is 90°.', id: 'Karena dua jalur sejajar, setiap garis yang tegak lurus pada satu juga tegak lurus pada yang lain. Jadi sudutnya 90°.' }
+    },
+    {
+      type: 'cmc',
+      q: { en: 'Consider all the lines that are perpendicular to a given line L. Which statements are ALWAYS true? (Select all that apply)', id: 'Pertimbangkan semua garis yang tegak lurus terhadap garis L tertentu. Pernyataan mana yang SELALU benar? (Pilih semua yang benar)' },
+      options: [
+        { en: 'They are all parallel to each other', id: 'Mereka semua sejajar satu sama lain' },
+        { en: 'They all meet L at the same point', id: 'Mereka semua bertemu L di titik yang sama' },
+        { en: 'They all form a 90° angle with L', id: 'Mereka semua membentuk sudut 90° dengan L' },
+        { en: 'They are all the same length', id: 'Mereka semua memiliki panjang yang sama' }
+      ],
+      correct: ['A','C'],
+      explanation: { en: 'All lines perpendicular to L form 90° with L (C is true). In 2D, they are also all parallel to each other (A is true). They meet L at DIFFERENT points (B is false) and can have any length (D is false).', id: 'Semua garis tegak lurus terhadap L membentuk 90° dengan L (C benar). Pada bidang 2D, mereka juga sejajar satu sama lain (A benar). Mereka bertemu L di titik yang BERBEDA (B salah) dan bisa memiliki panjang apa saja (D salah).' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'If two line segments do not intersect, then they must be parallel.', id: 'Jika dua ruas garis tidak berpotongan, maka mereka pasti sejajar.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'false',
+      explanation: { en: 'False! Two segments may not intersect because they are short, but if extended they might meet. They could also be at different angles without being parallel. To be parallel, they must be going in the same direction.', id: 'Salah! Dua ruas garis mungkin tidak berpotongan karena pendek, tetapi jika diperpanjang mereka mungkin bertemu. Mereka juga bisa pada sudut berbeda tanpa sejajar. Untuk sejajar, mereka harus mengarah ke arah yang sama.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'At exactly 3:00 on an analog clock, the hour hand points at 3 and the minute hand points at 12. What kind of lines do the hands form?', id: 'Tepat pukul 03:00 pada jam analog, jarum jam menunjuk angka 3 dan jarum menit menunjuk angka 12. Jenis garis apa yang dibentuk kedua jarum?' },
+      options: [
+        { en: 'Parallel', id: 'Sejajar' },
+        { en: 'Perpendicular', id: 'Tegak lurus', correct: true },
+        { en: 'Neither — they form a 45° angle', id: 'Bukan keduanya — membentuk sudut 45°' },
+        { en: 'They overlap, so no angle is formed', id: 'Mereka tumpang tindih, tidak ada sudut' }
+      ],
+      explanation: { en: 'From 12 to 3 is exactly one quarter of the clock face, which is 90°. So the hands are perpendicular at 3:00.', id: 'Dari 12 ke 3 adalah tepat seperempat lingkaran jam, yaitu 90°. Jadi jarum tegak lurus pada pukul 03:00.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'A square has 4 sides. How many PAIRS of perpendicular adjacent sides does it have? (Hint: each corner is one pair)', id: 'Sebuah persegi memiliki 4 sisi. Berapa PASANG sisi berdekatan yang tegak lurus? (Petunjuk: setiap sudut adalah satu pasang)' },
+      accepted: ['4', 'four'],
+      explanation: { en: 'A square has 4 corners, and at each corner, the two adjacent sides meet at 90°. So there are 4 pairs of perpendicular adjacent sides.', id: 'Persegi memiliki 4 sudut, dan di setiap sudut, dua sisi berdekatan bertemu pada 90°. Jadi ada 4 pasang sisi berdekatan yang tegak lurus.' }
+    },
+    {
+      type: 'mc',
+      q: { en: 'Two roads cross at an angle of 85°. Which statement is correct?', id: 'Dua jalan berpotongan dengan sudut 85°. Pernyataan mana yang benar?' },
+      options: [
+        { en: 'They are perpendicular', id: 'Mereka tegak lurus' },
+        { en: 'They are parallel', id: 'Mereka sejajar' },
+        { en: 'They are intersecting but NOT perpendicular', id: 'Mereka berpotongan tetapi TIDAK tegak lurus', correct: true },
+        { en: 'They cannot be measured', id: 'Tidak bisa diukur' }
+      ],
+      explanation: { en: 'Perpendicular requires exactly 90°. At 85°, the roads definitely intersect, but they are not perpendicular.', id: 'Tegak lurus memerlukan tepat 90°. Pada 85°, jalan pasti berpotongan, tetapi tidak tegak lurus.' }
+    },
+    {
+      type: 'cmc',
+      q: { en: 'Which methods can correctly verify that two line segments are PARALLEL? (Select all that apply)', id: 'Metode mana yang dapat memverifikasi bahwa dua ruas garis SEJAJAR? (Pilih semua yang benar)' },
+      options: [
+        { en: 'Measure the distance between them at 3 different points — all should be equal', id: 'Mengukur jarak antara keduanya di 3 titik berbeda — semua harus sama' },
+        { en: 'Check that both make the same angle with a third crossing line', id: 'Memastikan keduanya membentuk sudut yang sama dengan garis ketiga yang memotong' },
+        { en: 'Extend both lines very far — they should not meet', id: 'Memperpanjang kedua garis sangat jauh — mereka tidak boleh bertemu' },
+        { en: 'Measure their lengths — they should be equal', id: 'Mengukur panjangnya — harus sama' }
+      ],
+      correct: ['A','B','C'],
+      explanation: { en: 'Methods A, B, and C all test the definition of parallel lines. D is wrong because parallel segments can have different lengths — length does not determine parallelism.', id: 'Metode A, B, dan C semua menguji definisi garis sejajar. D salah karena ruas garis sejajar bisa memiliki panjang berbeda — panjang tidak menentukan kesejajaran.' }
+    },
+    {
+      type: 'tf',
+      q: { en: 'In a parallelogram, the diagonals are always perpendicular to each other.', id: 'Pada jajargenjang, diagonal selalu tegak lurus satu sama lain.' },
+      options: [
+        { en: 'True', id: 'Benar', value: 'true' },
+        { en: 'False', id: 'Salah', value: 'false' }
+      ],
+      correct: 'false',
+      explanation: { en: 'False. Only a rhombus (a special parallelogram with all sides equal) has perpendicular diagonals. A general parallelogram does not.', id: 'Salah. Hanya belah ketupat (jajargenjang khusus dengan semua sisi sama) yang memiliki diagonal tegak lurus. Jajargenjang umum tidak.' }
+    },
+    {
+      type: 'sa',
+      q: { en: 'You are designing a flag with a symmetric cross. To look balanced, the horizontal and vertical bars of the cross must be ______ to each other. (One word)', id: 'Kamu merancang bendera dengan salib simetris. Agar terlihat seimbang, batang mendatar dan tegak salib harus ______ satu sama lain. (Satu kata)' },
+      accepted: ['perpendicular', 'tegak lurus'],
+      explanation: { en: 'For a symmetric cross, the bars must meet at exactly 90° — they must be perpendicular. Otherwise the cross would look tilted or uneven.', id: 'Untuk salib simetris, batang harus bertemu tepat pada 90° — harus tegak lurus. Jika tidak, salib akan terlihat miring atau tidak rata.' }
+    }
+  ]
+};
+
+/* =================== INITIALIZATION =================== */
+function init() {
+  createSparkles();
+  setupNavigation();
+  setupLanguageToggle();
+  setupCover();
+  setupDemo();
+  setupGame();
+  renderQuestions();
+  setupTabs();
+  setupReflection();
+  buildProgressDots();
+}
+
+function createSparkles() {
+  const symbols = ['♥', '✦', '✿', '★', '◆'];
+  for (let i = 0; i < 18; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    sparkle.style.left = Math.random() * 100 + '%';
+    sparkle.style.top = Math.random() * 100 + '%';
+    sparkle.style.animationDelay = Math.random() * 3 + 's';
+    sparkle.style.fontSize = (10 + Math.random() * 14) + 'px';
+    document.body.appendChild(sparkle);
+  }
+}
+
+/* =================== NAVIGATION =================== */
+function buildProgressDots() {
+  const container = document.getElementById('progressDots');
+  const slides = document.querySelectorAll('.slide');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    container.appendChild(dot);
+  });
+}
+
+function setupNavigation() {
+  document.querySelector('.prev-btn').addEventListener('click', prevSlide);
+  document.querySelector('.next-btn').addEventListener('click', nextSlide);
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+}
+
+function goToSlide(n) {
+  const slides = document.querySelectorAll('.slide');
+  if (n < 0 || n >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+  document.querySelector('.prev-btn').disabled = currentSlide === 0;
+  document.querySelector('.next-btn').disabled = currentSlide === slides.length - 1;
+  // Scroll to top of slide
+  slides[currentSlide].scrollTop = 0;
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+/* =================== LANGUAGE =================== */
+function setupLanguageToggle() {
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const text = el.dataset[lang];
+    if (text !== undefined) el.textContent = text;
+  });
+  document.querySelectorAll('[data-en-placeholder]').forEach(el => {
+    el.placeholder = el.dataset[lang + '-placeholder'];
+  });
+  document.documentElement.lang = lang;
+  // Re-render demo status & game in new language
+  updateDemoStatus();
+}
+
+/* =================== COVER =================== */
+function setupCover() {
+  const input = document.getElementById('studentName');
+  const btn = document.getElementById('startBtn');
+  btn.addEventListener('click', () => {
+    studentName = input.value.trim() || (currentLang === 'en' ? 'Friend' : 'Teman');
+    document.getElementById('studentDisplay').textContent = studentName;
+    document.getElementById('studentInfo').classList.add('show');
+    document.getElementById('thankYouName').textContent = studentName;
+    nextSlide();
+    burstConfetti();
+  });
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') btn.click();
+  });
+}
+
+/* =================== INTERACTIVE DEMO =================== */
+let demoLines = [
+  { p1: {x: 80, y: 120}, p2: {x: 380, y: 120}, color: '#ff4d8d' },
+  { p1: {x: 80, y: 220}, p2: {x: 380, y: 220}, color: '#ff7e5f' }
+];
+let drag = null;
+
+function setupDemo() {
+  const svg = document.getElementById('demoSvg');
+  
+  function getSVGPoint(e) {
+    const rect = svg.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (460 / rect.width);
+    const y = (e.clientY - rect.top) * (340 / rect.height);
+    return { x: Math.max(20, Math.min(440, x)), y: Math.max(20, Math.min(320, y)) };
+  }
+  
+  svg.addEventListener('pointerdown', (e) => {
+    const target = e.target.closest('[data-line]');
+    if (target) {
+      drag = { lineIdx: parseInt(target.dataset.line), point: target.dataset.point };
+      target.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+  });
+  svg.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const pt = getSVGPoint(e);
+    demoLines[drag.lineIdx][drag.point].x = pt.x;
+    demoLines[drag.lineIdx][drag.point].y = pt.y;
+    renderDemo();
+  });
+  svg.addEventListener('pointerup', () => { drag = null; });
+  svg.addEventListener('pointercancel', () => { drag = null; });
+  
+  document.getElementById('makeParallel').addEventListener('click', () => {
+    const angle = Math.random() * Math.PI;
+    const len = 200;
+    const cx1 = 130, cy1 = 130, cx2 = 230, cy2 = 210;
+    demoLines[0] = {
+      p1: { x: cx1 - len/2 * Math.cos(angle), y: cy1 - len/2 * Math.sin(angle) },
+      p2: { x: cx1 + len/2 * Math.cos(angle), y: cy1 + len/2 * Math.sin(angle) },
+      color: '#ff4d8d'
+    };
+    demoLines[1] = {
+      p1: { x: cx2 - len/2 * Math.cos(angle), y: cy2 - len/2 * Math.sin(angle) },
+      p2: { x: cx2 + len/2 * Math.cos(angle), y: cy2 + len/2 * Math.sin(angle) },
+      color: '#ff7e5f'
+    };
+    renderDemo();
+  });
+  document.getElementById('makePerpendicular').addEventListener('click', () => {
+    const cx = 230, cy = 170, len = 100;
+    demoLines[0] = {
+      p1: { x: cx - len, y: cy }, p2: { x: cx + len, y: cy }, color: '#ff4d8d'
+    };
+    demoLines[1] = {
+      p1: { x: cx, y: cy - len }, p2: { x: cx, y: cy + len }, color: '#ff7e5f'
+    };
+    renderDemo();
+  });
+  document.getElementById('makeRandom').addEventListener('click', () => {
+    demoLines[0] = {
+      p1: { x: 50 + Math.random() * 100, y: 60 + Math.random() * 80 },
+      p2: { x: 280 + Math.random() * 140, y: 60 + Math.random() * 80 },
+      color: '#ff4d8d'
+    };
+    demoLines[1] = {
+      p1: { x: 50 + Math.random() * 100, y: 200 + Math.random() * 80 },
+      p2: { x: 280 + Math.random() * 140, y: 200 + Math.random() * 80 },
+      color: '#ff7e5f'
+    };
+    renderDemo();
+  });
+  
+  renderDemo();
+}
+
+function renderDemo() {
+  const svg = document.getElementById('demoSvg');
+  // Keep grid pattern and background rect, replace rest
+  const ns = 'http://www.w3.org/2000/svg';
+  // Clear all children except rect with grid
+  while (svg.children.length > 1) svg.removeChild(svg.lastChild);
+  
+  // Draw lines
+  demoLines.forEach((line, i) => {
+    // Line shadow / glow
+    const shadow = document.createElementNS(ns, 'line');
+    shadow.setAttribute('x1', line.p1.x); shadow.setAttribute('y1', line.p1.y);
+    shadow.setAttribute('x2', line.p2.x); shadow.setAttribute('y2', line.p2.y);
+    shadow.setAttribute('stroke', line.color);
+    shadow.setAttribute('stroke-width', '14');
+    shadow.setAttribute('stroke-linecap', 'round');
+    shadow.setAttribute('opacity', '0.2');
+    svg.appendChild(shadow);
+    
+    const lineEl = document.createElementNS(ns, 'line');
+    lineEl.setAttribute('x1', line.p1.x); lineEl.setAttribute('y1', line.p1.y);
+    lineEl.setAttribute('x2', line.p2.x); lineEl.setAttribute('y2', line.p2.y);
+    lineEl.setAttribute('stroke', line.color);
+    lineEl.setAttribute('stroke-width', '6');
+    lineEl.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(lineEl);
+    
+    // Endpoints
+    ['p1', 'p2'].forEach(pt => {
+      const circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('cx', line[pt].x);
+      circle.setAttribute('cy', line[pt].y);
+      circle.setAttribute('r', '10');
+      circle.setAttribute('fill', 'white');
+      circle.setAttribute('stroke', line.color);
+      circle.setAttribute('stroke-width', '4');
+      circle.style.cursor = 'grab';
+      circle.setAttribute('data-line', i);
+      circle.setAttribute('data-point', pt);
+      svg.appendChild(circle);
+    });
+  });
+  
+  updateDemoStatus();
+}
+
+function updateDemoStatus() {
+  const l1 = demoLines[0], l2 = demoLines[1];
+  const a1 = Math.atan2(l1.p2.y - l1.p1.y, l1.p2.x - l1.p1.x);
+  const a2 = Math.atan2(l2.p2.y - l2.p1.y, l2.p2.x - l2.p1.x);
+  let angleDiff = Math.abs(a1 - a2) * 180 / Math.PI;
+  if (angleDiff > 180) angleDiff = 360 - angleDiff;
+  // Smallest angle between lines (0 to 90)
+  let displayAngle = angleDiff;
+  if (displayAngle > 90) displayAngle = 180 - displayAngle;
+  
+  const statusEl = document.getElementById('demoStatus');
+  const angleEl = document.getElementById('demoAngle');
+  
+  let status, cls;
+  if (displayAngle < 5) {
+    status = currentLang === 'en' ? 'PARALLEL' : 'SEJAJAR';
+    cls = 'parallel';
+  } else if (Math.abs(displayAngle - 90) < 5) {
+    status = currentLang === 'en' ? 'PERPENDICULAR' : 'TEGAK LURUS';
+    cls = 'perpendicular';
+  } else {
+    status = currentLang === 'en' ? 'NEITHER' : 'BUKAN KEDUANYA';
+    cls = 'neither';
+  }
+  
+  statusEl.textContent = status;
+  statusEl.className = 'status-display ' + cls;
+  angleEl.textContent = Math.round(displayAngle) + '°';
+}
+
+/* =================== GAME =================== */
+let gameState = {
+  score: 0, streak: 0, round: 0, maxRound: 10,
+  currentAnswer: '', active: false
+};
+
+function setupGame() {
+  document.getElementById('gameStart').addEventListener('click', startGame);
+  document.querySelectorAll('.game-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleGameAnswer(btn.dataset.choice));
+  });
+}
+
+function startGame() {
+  gameState = { score: 0, streak: 0, round: 0, maxRound: 10, currentAnswer: '', active: true };
+  document.getElementById('gameOverlay').style.display = 'none';
+  document.getElementById('gameScore').textContent = '0';
+  document.getElementById('gameStreak').textContent = '0';
+  document.querySelectorAll('.game-btn').forEach(b => b.disabled = false);
+  nextRound();
+}
+
+function nextRound() {
+  if (gameState.round >= gameState.maxRound) {
+    endGame();
+    return;
+  }
+  gameState.round++;
+  document.getElementById('gameRound').textContent = gameState.round + '/10';
+  document.getElementById('gameFeedback').textContent = '';
+  document.getElementById('gameFeedback').className = 'game-feedback';
+  
+  const types = ['parallel', 'perpendicular', 'neither'];
+  const type = types[Math.floor(Math.random() * 3)];
+  gameState.currentAnswer = type;
+  
+  const svg = document.getElementById('gameSvg');
+  svg.innerHTML = '';
+  const ns = 'http://www.w3.org/2000/svg';
+  
+  let line1, line2;
+  const cx = 230, cy = 140;
+  
+  if (type === 'parallel') {
+    const angle = Math.random() * Math.PI;
+    const len = 110;
+    const offset = 70;
+    const dx = offset * Math.cos(angle + Math.PI/2);
+    const dy = offset * Math.sin(angle + Math.PI/2);
+    line1 = {
+      x1: cx - len/2 * Math.cos(angle) - dx/2, y1: cy - len/2 * Math.sin(angle) - dy/2,
+      x2: cx + len/2 * Math.cos(angle) - dx/2, y2: cy + len/2 * Math.sin(angle) - dy/2
+    };
+    line2 = {
+      x1: cx - len/2 * Math.cos(angle) + dx/2, y1: cy - len/2 * Math.sin(angle) + dy/2,
+      x2: cx + len/2 * Math.cos(angle) + dx/2, y2: cy + len/2 * Math.sin(angle) + dy/2
+    };
+  } else if (type === 'perpendicular') {
+    const angle = Math.random() * Math.PI;
+    const len = 90;
+    line1 = {
+      x1: cx - len * Math.cos(angle), y1: cy - len * Math.sin(angle),
+      x2: cx + len * Math.cos(angle), y2: cy + len * Math.sin(angle)
+    };
+    line2 = {
+      x1: cx - len * Math.cos(angle + Math.PI/2), y1: cy - len * Math.sin(angle + Math.PI/2),
+      x2: cx + len * Math.cos(angle + Math.PI/2), y2: cy + len * Math.sin(angle + Math.PI/2)
+    };
+  } else {
+    // Neither: random angles, not 0/90/180
+    let a1 = Math.random() * Math.PI;
+    let a2 = a1 + Math.PI/6 + Math.random() * Math.PI/3; // 30-90 deg offset, but not exactly 90
+    if (Math.abs((a2 - a1) - Math.PI/2) < 0.2) a2 += 0.3; // avoid accidental perpendicular
+    const len = 110;
+    line1 = {
+      x1: cx - 60 - len/2 * Math.cos(a1), y1: cy - len/2 * Math.sin(a1),
+      x2: cx - 60 + len/2 * Math.cos(a1), y2: cy + len/2 * Math.sin(a1)
+    };
+    line2 = {
+      x1: cx + 60 - len/2 * Math.cos(a2), y1: cy - len/2 * Math.sin(a2),
+      x2: cx + 60 + len/2 * Math.cos(a2), y2: cy + len/2 * Math.sin(a2)
+    };
+  }
+  
+  [line1, line2].forEach((line, i) => {
+    const shadow = document.createElementNS(ns, 'line');
+    shadow.setAttribute('x1', line.x1); shadow.setAttribute('y1', line.y1);
+    shadow.setAttribute('x2', line.x2); shadow.setAttribute('y2', line.y2);
+    shadow.setAttribute('stroke', i === 0 ? '#ff4d8d' : '#ff7e5f');
+    shadow.setAttribute('stroke-width', '14');
+    shadow.setAttribute('stroke-linecap', 'round');
+    shadow.setAttribute('opacity', '0.2');
+    svg.appendChild(shadow);
+    
+    const el = document.createElementNS(ns, 'line');
+    el.setAttribute('x1', line.x1); el.setAttribute('y1', line.y1);
+    el.setAttribute('x2', line.x2); el.setAttribute('y2', line.y2);
+    el.setAttribute('stroke', i === 0 ? '#ff4d8d' : '#ff7e5f');
+    el.setAttribute('stroke-width', '7');
+    el.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(el);
+  });
+  
+  document.querySelectorAll('.game-btn').forEach(btn => {
+    btn.classList.remove('correct', 'wrong');
+    btn.disabled = false;
+  });
+}
+
+function handleGameAnswer(choice) {
+  if (!gameState.active) return;
+  document.querySelectorAll('.game-btn').forEach(b => b.disabled = true);
+  
+  const fb = document.getElementById('gameFeedback');
+  
+  if (choice === gameState.currentAnswer) {
+    document.querySelector(`.game-btn[data-choice="${choice}"]`).classList.add('correct');
+    const points = 10 + gameState.streak * 2;
+    gameState.score += points;
+    gameState.streak++;
+    fb.className = 'game-feedback correct';
+    fb.textContent = (currentLang === 'en' ? '✓ Correct! ' : '✓ Benar! ') + `+${points} points` + (gameState.streak > 1 ? ` · ${gameState.streak}x streak!` : '');
+  } else {
+    document.querySelector(`.game-btn[data-choice="${choice}"]`).classList.add('wrong');
+    document.querySelector(`.game-btn[data-choice="${gameState.currentAnswer}"]`).classList.add('correct');
+    gameState.streak = 0;
+    fb.className = 'game-feedback wrong';
+    fb.textContent = currentLang === 'en' ? '✗ Not quite — see the correct answer highlighted.' : '✗ Belum tepat — lihat jawaban benar yang disorot.';
+  }
+  
+  document.getElementById('gameScore').textContent = gameState.score;
+  document.getElementById('gameStreak').textContent = gameState.streak;
+  
+  setTimeout(() => {
+    if (gameState.round >= gameState.maxRound) endGame();
+    else nextRound();
+  }, 1400);
+}
+
+function endGame() {
+  gameState.active = false;
+  document.querySelectorAll('.game-btn').forEach(b => b.disabled = true);
+  const overlay = document.getElementById('gameOverlay');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = '';
+  
+  const icon = document.createElement('i');
+  icon.className = 'fa-solid fa-trophy';
+  icon.style.fontSize = '42px';
+  icon.style.color = 'var(--gold)';
+  overlay.appendChild(icon);
+  
+  const h3 = document.createElement('h3');
+  h3.textContent = currentLang === 'en' ? 'Game Complete!' : 'Permainan Selesai!';
+  overlay.appendChild(h3);
+  
+  const scoreP = document.createElement('p');
+  scoreP.innerHTML = (currentLang === 'en' ? 'Your score: ' : 'Skor kamu: ') + `<strong style="color:var(--primary);font-size:22px;font-family:Fredoka">${gameState.score}</strong>`;
+  overlay.appendChild(scoreP);
+  
+  const msgP = document.createElement('p');
+  let msg;
+  if (gameState.score >= 130) msg = currentLang === 'en' ? '🌟 Amazing! You are a true Line Detective Master!' : '🌟 Luar biasa! Kamu Detektif Garis Sejati!';
+  else if (gameState.score >= 90) msg = currentLang === 'en' ? '💕 Great job! Keep up the good work!' : '💕 Kerja bagus! Terus semangat!';
+  else msg = currentLang === 'en' ? '🌸 Nice try! Play again to beat your score!' : '🌸 Bagus! Main lagi untuk mengalahkan skor ini!';
+  msgP.textContent = msg;
+  overlay.appendChild(msgP);
+  
+  const btn = document.createElement('button');
+  btn.className = 'start-btn';
+  btn.style.marginTop = '6px';
+  btn.innerHTML = '<i class="fa-solid fa-rotate"></i><span>' + (currentLang === 'en' ? 'Play Again' : 'Main Lagi') + '</span>';
+  btn.addEventListener('click', startGame);
+  overlay.appendChild(btn);
+  
+  if (gameState.score >= 100) burstConfetti();
+}
+
+/* =================== QUESTIONS =================== */
+function renderQuestions() {
+  const container = document.getElementById('questionsContainer');
+  
+  ['easy', 'medium', 'hots'].forEach((level, levelIdx) => {
+    const tab = document.createElement('div');
+    tab.className = 'tab-content' + (level === 'easy' ? ' active' : '');
+    tab.dataset.level = level;
+    
+    questionsData[level].forEach((q, i) => {
+      const qNum = level === 'easy' ? i + 1 : (level === 'medium' ? i + 11 : i + 21);
+      const qEl = createQuestionElement(q, qNum, level);
+      tab.appendChild(qEl);
+    });
+    
+    container.appendChild(tab);
+  });
+}
+
+function createBilingual(el, en, id) {
+  el.dataset.en = en;
+  el.dataset.id = id;
+  el.textContent = currentLang === 'en' ? en : id;
+  return el;
+}
+
+function createQuestionElement(q, num, level) {
+  const ns = 'http://www.w3.org/1999/xhtml';
+  const div = document.createElement('div');
+  div.className = 'question';
+  div.dataset.type = q.type;
+  div.dataset.level = level;
+  
+  const typeLabels = {
+    mc: { en: 'Multiple Choice', id: 'Pilihan Ganda' },
+    cmc: { en: 'Complex Choice', id: 'Pilihan Ganda Kompleks' },
+    tf: { en: 'True / False', id: 'Benar / Salah' },
+    sa: { en: 'Short Answer', id: 'Isian Singkat' }
+  };
+  
+  // Header
+  const header = document.createElement('div');
+  header.className = 'q-header';
+  const numEl = document.createElement('div');
+  numEl.className = 'q-number';
+  numEl.textContent = 'Q' + num;
+  const typeEl = document.createElement('div');
+  typeEl.className = 'q-type ' + q.type;
+  createBilingual(typeEl, typeLabels[q.type].en, typeLabels[q.type].id);
+  header.appendChild(numEl);
+  header.appendChild(typeEl);
+  div.appendChild(header);
+  
+  // Question text
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  // Highlight key terms
+  const enText = q.q.en.replace(/(parallel|perpendicular|90°|right angle|parallel lines|perpendicular lines)/gi, '<span class="hl">$1</span>');
+  const idText = q.q.id.replace(/(sejajar|tegak lurus|90°|siku-siku|garis sejajar|garis tegak lurus)/gi, '<span class="hl">$1</span>');
+  qText.innerHTML = currentLang === 'en' ? enText : idText;
+  qText.dataset.en = enText;
+  qText.dataset.id = idText;
+  div.appendChild(qText);
+  
+  // Options / Input
+  if (q.type === 'mc' || q.type === 'cmc') {
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'options';
+    const letters = ['A','B','C','D','E'];
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option ' + q.type;
+      btn.dataset.option = letters[i];
+      if (q.type === 'cmc' && opt.correct) btn.dataset.correct = '1';
+      if (q.type === 'mc' && opt.correct) div.dataset.correct = letters[i];
+      
+      const letterSpan = document.createElement('span');
+      letterSpan.className = 'option-letter';
+      letterSpan.textContent = letters[i];
+      const textSpan = document.createElement('span');
+      createBilingual(textSpan, opt.en, opt.id);
+      btn.appendChild(letterSpan);
+      btn.appendChild(textSpan);
+      
+      btn.addEventListener('click', () => {
+        if (div.classList.contains('answered')) return;
+        if (q.type === 'cmc') {
+          btn.classList.toggle('selected');
+        } else {
+          optsWrap.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          btn.classList.add('selected');
+        }
+      });
+      optsWrap.appendChild(btn);
+    });
+    div.appendChild(optsWrap);
+  } else if (q.type === 'tf') {
+    const tfWrap = document.createElement('div');
+    tfWrap.className = 'tf-buttons';
+    div.dataset.correct = q.correct;
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'tf-btn';
+      btn.dataset.value = opt.value;
+      createBilingual(btn, opt.en, opt.id);
+      btn.innerHTML = '<i class="fa-solid ' + (opt.value === 'true' ? 'fa-check' : 'fa-xmark') + '"></i> ' + (currentLang === 'en' ? opt.en : opt.id);
+      btn.dataset.en = '<i class="fa-solid ' + (opt.value === 'true' ? 'fa-check' : 'fa-xmark') + '"></i> ' + opt.en;
+      btn.dataset.id = '<i class="fa-solid ' + (opt.value === 'true' ? 'fa-check' : 'fa-xmark') + '"></i> ' + opt.id;
+      btn.addEventListener('click', () => {
+        if (div.classList.contains('answered')) return;
+        tfWrap.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+      tfWrap.appendChild(btn);
+    });
+    div.appendChild(tfWrap);
+  } else if (q.type === 'sa') {
+    div.dataset.accepted = JSON.stringify(q.accepted);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'short-answer';
+    input.placeholder = currentLang === 'en' ? 'Type your answer here...' : 'Ketik jawabanmu di sini...';
+    input.dataset.enPlaceholder = 'Type your answer here...';
+    input.dataset.idPlaceholder = 'Ketik jawabanmu di sini...';
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkBtn.click();
+    });
+    div.appendChild(input);
+  }
+  
+  // Actions
+  const actions = document.createElement('div');
+  actions.className = 'q-actions';
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'check-btn';
+  checkBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span' + (currentLang === 'en' ? '' : '') + '>' + (currentLang === 'en' ? 'Check Answer' : 'Periksa Jawaban') + '</span>';
+  checkBtn.dataset.en = '<i class="fa-solid fa-circle-check"></i> Check Answer';
+  checkBtn.dataset.id = '<i class="fa-solid fa-circle-check"></i> Periksa Jawaban';
+  const feedback = document.createElement('div');
+  feedback.className = 'feedback';
+  feedback.style.display = 'none';
+  
+  checkBtn.addEventListener('click', () => {
+    checkAnswer(div, q, feedback);
+  });
+  
+  actions.appendChild(checkBtn);
+  actions.appendChild(feedback);
+  div.appendChild(actions);
+  
+  // Explanation
+  const expl = document.createElement('div');
+  expl.className = 'explanation';
+  expl.innerHTML = '<strong>' + (currentLang === 'en' ? 'Explanation: ' : 'Pembahasan: ') + '</strong>' + (currentLang === 'en' ? q.explanation.en : q.explanation.id);
+  expl.dataset.en = '<strong>Explanation: </strong>' + q.explanation.en;
+  expl.dataset.id = '<strong>Pembahasan: </strong>' + q.explanation.id;
+  div.appendChild(expl);
+  
+  return div;
+}
+
+function checkAnswer(div, q, feedback) {
+  const type = q.type;
+  let userAnswer = '';
+  let isCorrect = false;
+  
+  if (type === 'mc') {
+    const selected = div.querySelector('.option.selected');
+    if (!selected) {
+      feedback.className = 'feedback wrong';
+      feedback.textContent = currentLang === 'en' ? '⚠ Please pick an answer first!' : '⚠ Pilih jawaban dulu!';
+      feedback.style.display = 'block';
+      return;
+    }
+    userAnswer = selected.dataset.option;
+    isCorrect = userAnswer === div.dataset.correct;
+    // Highlight correct/wrong
+    div.querySelectorAll('.option').forEach(o => {
+      o.classList.add('disabled');
+      if (o.dataset.option === div.dataset.correct) o.classList.add('correct-answer');
+      else if (o.classList.contains('selected') && !isCorrect) o.classList.add('wrong-answer');
+    });
+  } else if (type === 'cmc') {
+    const selected = Array.from(div.querySelectorAll('.option.selected')).map(o => o.dataset.option);
+    if (selected.length === 0) {
+      feedback.className = 'feedback wrong';
+      feedback.textContent = currentLang === 'en' ? '⚠ Pick at least one answer!' : '⚠ Pilih minimal satu jawaban!';
+      feedback.style.display = 'block';
+      return;
+    }
+    const correctSet = div.querySelectorAll('.option[data-correct="1"]');
+    const correctLetters = Array.from(correctSet).map(o => o.dataset.option).sort().join(',');
+    userAnswer = selected.sort().join(',');
+    isCorrect = userAnswer === correctLetters;
+    div.querySelectorAll('.option').forEach(o => {
+      o.classList.add('disabled');
+      if (o.dataset.correct === '1') o.classList.add('correct-answer');
+      else if (o.classList.contains('selected')) o.classList.add('wrong-answer');
+    });
+  } else if (type === 'tf') {
+    const selected = div.querySelector('.tf-btn.selected');
+    if (!selected) {
+      feedback.className = 'feedback wrong';
+      feedback.textContent = currentLang === 'en' ? '⚠ Pick True or False!' : '⚠ Pilih Benar atau Salah!';
+      feedback.style.display = 'block';
+      return;
+    }
+    userAnswer = selected.dataset.value;
+    isCorrect = userAnswer === div.dataset.correct;
+    div.querySelectorAll('.tf-btn').forEach(b => {
+      if (b.dataset.value === div.dataset.correct) b.classList.add('correct-answer');
+      else if (b.classList.contains('selected')) b.classList.add('wrong-answer');
+    });
+  } else if (type === 'sa') {
+    const input = div.querySelector('.short-answer');
+    if (!input.value.trim()) {
+      feedback.className = 'feedback wrong';
+      feedback.textContent = currentLang === 'en' ? '⚠ Type your answer!' : '⚠ Ketik jawabanmu!';
+      feedback.style.display = 'block';
+      return;
+    }
+    const accepted = JSON.parse(div.dataset.accepted);
+    const userVal = input.value.trim().toLowerCase().replace(/[°.]/g, '').replace(/\s+/g, ' ').trim();
+    isCorrect = accepted.some(a => {
+      const norm = a.toLowerCase().replace(/[°.]/g, '').replace(/\s+/g, ' ').trim();
+      return userVal === norm || userVal.includes(norm) || norm.includes(userVal);
+    });
+    input.disabled = true;
+  }
+  
+  div.classList.add('answered');
+  div.classList.add(isCorrect ? 'correct' : 'wrong');
+  feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  feedback.innerHTML = isCorrect
+    ? '<i class="fa-solid fa-check-circle"></i> ' + (currentLang === 'en' ? 'Correct! Great thinking!' : 'Benar! Pemikiran bagus!')
+    : '<i class="fa-solid fa-times-circle"></i> ' + (currentLang === 'en' ? 'Not quite — see the explanation below.' : 'Belum tepat — lihat pembahasan di bawah.');
+  feedback.style.display = 'block';
+  
+  div.querySelector('.explanation').classList.add('show');
+  
+  const checkBtn = div.querySelector('.check-btn');
+  checkBtn.disabled = true;
+  
+  if (isCorrect) burstConfetti(8);
+}
+
+/* =================== TABS =================== */
+function setupTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const level = btn.dataset.level;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.level === level));
+    });
+  });
+}
+
+/* =================== REFLECTION =================== */
+function setupReflection() {
+  document.querySelectorAll('.emoji-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+  const stars = document.querySelectorAll('#starRating .star');
+  let starValue = 0;
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      starValue = parseInt(star.dataset.value);
+      stars.forEach((s, i) => s.classList.toggle('active', i < starValue));
+    });
+    star.addEventListener('mouseenter', () => {
+      const v = parseInt(star.dataset.value);
+      stars.forEach((s, i) => s.classList.toggle('active', i < v));
+    });
+  });
+  document.getElementById('starRating').addEventListener('mouseleave', () => {
+    stars.forEach((s, i) => s.classList.toggle('active', i < starValue));
+  });
+}
+
+/* =================== CONFETTI =================== */
+function burstConfetti(count = 20) {
+  const colors = ['#ff4d8d', '#ff7e5f', '#ffb627', '#5fd4a8', '#c66fbc', '#ffd3a5'];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = (50 + (Math.random() - 0.5) * 60) + '%';
+    c.style.top = '40%';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.transform = `translate(${(Math.random() - 0.5) * 400}px, 0) rotate(${Math.random() * 360}deg)`;
+    c.style.animationDelay = (Math.random() * 0.3) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+/* =================== START =================== */
+init();
+</script>
+</body>
+</html>

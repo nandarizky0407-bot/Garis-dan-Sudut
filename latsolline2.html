@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Practice: Lines, Segments, and Rays — Cambridge Grade 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg-deep: #050513;
+  --bg-mid: #0d0d28;
+  --card-bg: rgba(18, 18, 48, 0.65);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --cyan: #00f0ff;
+  --magenta: #ff2e93;
+  --yellow: #ffd60a;
+  --mint: #00f5a0;
+  --red: #ff4757;
+  --text: #f0f4ff;
+  --text-muted: #8892b8;
+  --text-dim: #5a6378;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; min-height: 100vh; overflow-x: hidden; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  position: relative;
+}
+#bg-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; opacity: 0.4;
+  pointer-events: none;
+}
+.bg-gradient {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%; z-index: 1;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(255, 46, 147, 0.08), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 214, 10, 0.04), transparent 60%);
+  pointer-events: none;
+}
+#app { position: relative; z-index: 2; width: 100%; min-height: 100vh; }
+.slide {
+  display: none; min-height: 100vh; padding: 2rem;
+  animation: fadeIn 0.6s ease;
+}
+.slide.active {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cover-content { max-width: 700px; width: 100%; text-align: center; padding: 3rem 2rem; }
+.cover-badge {
+  display: inline-block; padding: 0.5rem 1.5rem;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 2rem;
+}
+.cover-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700; line-height: 1.1; margin-bottom: 1rem;
+  background: linear-gradient(135deg, #00f0ff 0%, #ffffff 50%, #ff2e93 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cover-subtitle { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.cover-meta { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 3rem; }
+.name-input-group { margin-bottom: 2rem; }
+.name-input-group label {
+  display: block; font-size: 0.9rem; font-weight: 600;
+  color: var(--text-muted); margin-bottom: 0.75rem; letter-spacing: 0.05em;
+}
+.name-input {
+  width: 100%; padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px; color: var(--text);
+  font-size: 1.1rem; font-family: inherit;
+  transition: all 0.3s ease; text-align: center;
+}
+.name-input:focus {
+  outline: none; border-color: var(--cyan);
+  background: rgba(0, 240, 255, 0.05);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+}
+.name-input::placeholder { color: var(--text-dim); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 0.85rem 2rem; border: none;
+  border-radius: 14px; font-family: inherit; font-size: 1rem;
+  font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+  text-decoration: none; position: relative; overflow: hidden;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+  color: var(--bg-deep);
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 240, 255, 0.5); }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08); color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); }
+.btn-accent {
+  background: linear-gradient(135deg, var(--magenta), var(--yellow));
+  color: var(--bg-deep);
+  box-shadow: 0 4px 20px rgba(255, 46, 147, 0.3);
+}
+.btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255, 46, 147, 0.5); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+.question-container {
+  max-width: 800px; width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border); border-radius: 24px;
+  padding: 2.5rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+.question-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+}
+.question-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.section-badge {
+  padding: 0.35rem 0.9rem; border-radius: 8px;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.section-a { background: rgba(0, 240, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 240, 255, 0.3); }
+.section-b { background: rgba(255, 214, 10, 0.15); color: var(--yellow); border: 1px solid rgba(255, 214, 10, 0.3); }
+.section-c { background: rgba(255, 46, 147, 0.15); color: var(--magenta); border: 1px solid rgba(255, 46, 147, 0.3); }
+.question-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+.concept-tag { font-size: 0.75rem; color: var(--text-dim); font-style: italic; }
+.timer-container { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+.timer-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+.timer-bg-circle { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 4; }
+.timer-progress-circle {
+  fill: none; stroke: var(--cyan); stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+.timer-progress-circle.warning { stroke: var(--yellow); }
+.timer-progress-circle.danger { stroke: var(--red); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.timer-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem; font-weight: 700; color: var(--text);
+}
+.timer-text.danger { color: var(--red); }
+.question-text {
+  font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;
+  color: var(--text); white-space: pre-line;
+}
+.question-text.id { display: none; }
+.options-container { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+.option {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px; cursor: pointer;
+  transition: all 0.25s ease; user-select: none;
+}
+.option:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(0, 240, 255, 0.3); transform: translateX(4px); }
+.option.selected { background: rgba(0, 240, 255, 0.1); border-color: var(--cyan); }
+.option.correct { background: rgba(0, 245, 160, 0.15); border-color: var(--mint); }
+.option.wrong { background: rgba(255, 71, 87, 0.15); border-color: var(--red); }
+.option-marker {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;
+  font-weight: 700; flex-shrink: 0; transition: all 0.25s ease;
+}
+.option.selected .option-marker { background: var(--cyan); border-color: var(--cyan); color: var(--bg-deep); }
+.option.correct .option-marker { background: var(--mint); border-color: var(--mint); color: var(--bg-deep); }
+.option.wrong .option-marker { background: var(--red); border-color: var(--red); color: white; }
+.option-text { font-size: 0.95rem; line-height: 1.4; white-space: pre-line; }
+.tf-container { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.tf-btn {
+  flex: 1; padding: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px; color: var(--text);
+  font-family: inherit; font-size: 1.1rem; font-weight: 700;
+  cursor: pointer; transition: all 0.25s ease;
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+}
+.tf-btn:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+.tf-btn.selected { border-color: var(--cyan); background: rgba(0, 240, 255, 0.1); }
+.tf-btn.correct { border-color: var(--mint); background: rgba(0, 245, 160, 0.15); color: var(--mint); }
+.tf-btn.wrong { border-color: var(--red); background: rgba(255, 71, 87, 0.15); color: var(--red); }
+.action-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.action-btn {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px; color: var(--text);
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.25s ease;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.action-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+.action-btn.check { background: rgba(0, 245, 160, 0.1); border-color: rgba(0, 245, 160, 0.3); color: var(--mint); }
+.action-btn.check:hover { background: rgba(0, 245, 160, 0.2); }
+.action-btn.explain { background: rgba(255, 214, 10, 0.1); border-color: rgba(255, 214, 10, 0.3); color: var(--yellow); }
+.action-btn.explain:hover { background: rgba(255, 214, 10, 0.2); }
+.action-btn.translate { background: rgba(255, 46, 147, 0.1); border-color: rgba(255, 46, 147, 0.3); color: var(--magenta); }
+.action-btn.translate:hover { background: rgba(255, 46, 147, 0.2); }
+.explanation-panel {
+  display: none; padding: 1.25rem;
+  background: rgba(255, 214, 10, 0.05);
+  border: 1px solid rgba(255, 214, 10, 0.2);
+  border-radius: 14px; margin-bottom: 1.5rem;
+  animation: slideDown 0.3s ease;
+}
+.explanation-panel.show { display: block; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.explanation-title {
+  font-size: 0.85rem; font-weight: 700; color: var(--yellow);
+  margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.explanation-text { font-size: 0.95rem; line-height: 1.6; color: var(--text); }
+.nav-buttons { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
+.progress-bar-container {
+  width: 100%; max-width: 800px;
+  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+}
+.progress-bar { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--cyan), var(--mint));
+  border-radius: 3px; transition: width 0.3s ease; width: 0%;
+}
+.progress-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;
+}
+.results-container { max-width: 900px; width: 100%; }
+.results-header { text-align: center; margin-bottom: 2rem; }
+.results-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.results-subtitle { color: var(--text-muted); font-size: 1.1rem; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.stat-card {
+  padding: 1.5rem; background: var(--card-bg);
+  backdrop-filter: blur(20px); border: 1px solid var(--card-border);
+  border-radius: 18px; text-align: center;
+}
+.stat-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem; }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-card.correct .stat-value { color: var(--mint); }
+.stat-card.wrong .stat-value { color: var(--red); }
+.stat-card.time .stat-value { color: var(--cyan); }
+.stat-card.avg .stat-value { color: var(--yellow); }
+.results-table-container {
+  background: var(--card-bg); backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border); border-radius: 18px;
+  padding: 1.5rem; margin-bottom: 2rem; max-height: 400px; overflow-y: auto;
+}
+.results-table { width: 100%; border-collapse: collapse; }
+.results-table th {
+  text-align: left; padding: 0.75rem; font-size: 0.75rem;
+  font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky; top: 0; background: var(--bg-mid);
+}
+.results-table td { padding: 0.6rem 0.75rem; font-size: 0.85rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.status-correct { color: var(--mint); font-weight: 600; }
+.status-wrong { color: var(--red); font-weight: 600; }
+.status-unanswered { color: var(--text-dim); font-weight: 600; }
+.conclusion-container { max-width: 800px; width: 100%; text-align: center; }
+.conclusion-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--magenta), var(--yellow));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.conclusion-card {
+  background: var(--card-bg); backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border); border-radius: 18px;
+  padding: 2rem; margin-bottom: 1.5rem; text-align: left;
+}
+.conclusion-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.conclusion-card p { line-height: 1.7; color: var(--text-muted); margin-bottom: 0.75rem; }
+.conclusion-card ul { list-style: none; padding-left: 0; }
+.conclusion-card li {
+  padding: 0.5rem 0; padding-left: 1.5rem;
+  position: relative; color: var(--text-muted); line-height: 1.6;
+}
+.conclusion-card li::before { content: "▸"; position: absolute; left: 0; color: var(--cyan); }
+.thank-you {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+  margin: 2rem 0;
+  background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--yellow));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+@keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.game-container { max-width: 900px; width: 100%; text-align: center; }
+.game-header { margin-bottom: 1.5rem; }
+.game-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 700; margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.game-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+.game-stats {
+  display: flex; justify-content: center; gap: 2rem;
+  margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.game-stat { text-align: center; }
+.game-stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; }
+.game-stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.game-canvas-wrapper {
+  background: var(--card-bg); backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border); border-radius: 18px;
+  padding: 1.5rem; margin-bottom: 1.5rem; position: relative;
+}
+#game-canvas {
+  width: 100%; max-width: 700px; height: 350px;
+  background: rgba(0, 0, 0, 0.3); border-radius: 12px;
+  display: block; margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+}
+.game-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.game-answer-btn {
+  padding: 1rem 1.5rem; border: 2px solid;
+  border-radius: 14px; font-family: inherit; font-size: 0.95rem;
+  font-weight: 700; cursor: pointer; transition: all 0.25s ease;
+  min-width: 130px; background: transparent;
+}
+.game-answer-btn.parallel { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 240, 255, 0.05); }
+.game-answer-btn.perpendicular { border-color: var(--magenta); color: var(--magenta); background: rgba(255, 46, 147, 0.05); }
+.game-answer-btn.intersecting { border-color: var(--yellow); color: var(--yellow); background: rgba(255, 214, 10, 0.05); }
+.game-answer-btn:hover { transform: translateY(-3px); }
+.game-answer-btn.parallel:hover { background: rgba(0, 240, 255, 0.15); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2); }
+.game-answer-btn.perpendicular:hover { background: rgba(255, 46, 147, 0.15); box-shadow: 0 8px 20px rgba(255, 46, 147, 0.2); }
+.game-answer-btn.intersecting:hover { background: rgba(255, 214, 10, 0.15); box-shadow: 0 8px 20px rgba(255, 214, 10, 0.2); }
+.game-answer-btn.game-btn-disabled {
+  opacity: 0.35; cursor: not-allowed; pointer-events: none;
+}
+.game-feedback {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem; font-weight: 700;
+  opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+  z-index: 5;
+}
+.game-feedback.show { animation: feedbackPop 0.6s ease; }
+@keyframes feedbackPop {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  40% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+.game-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(6, 6, 26, 0.92); border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 1rem; z-index: 10; padding: 2rem;
+}
+.game-overlay.hidden { display: none; }
+.game-overlay-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; text-align: center; }
+.game-overlay-text { color: var(--text-muted); font-size: 0.95rem; max-width: 450px; text-align: center; line-height: 1.6; }
+.confetti { position: fixed; width: 10px; height: 10px; pointer-events: none; z-index: 1000; }
+@keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+.warning-msg {
+  padding: 0.75rem 1.25rem; background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3); border-radius: 10px;
+  color: var(--red); font-size: 0.85rem; margin-top: 1rem; display: none;
+}
+.warning-msg.show { display: block; }
+.student-name-display { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--cyan); }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.4); }
+.toast {
+  position: fixed; top: 20px; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 0.75rem 1.5rem; background: rgba(255, 71, 87, 0.9);
+  color: white; border-radius: 10px; font-size: 0.9rem;
+  font-weight: 600; z-index: 9999;
+  transition: transform 0.3s ease; backdrop-filter: blur(10px);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+@media (max-width: 768px) {
+  .slide { padding: 1rem; }
+  .question-container { padding: 1.5rem; }
+  .question-text { font-size: 1rem; }
+  .tf-container { flex-direction: column; }
+  .nav-buttons { flex-direction: column; }
+  .nav-buttons .btn { width: 100%; }
+  .action-buttons { flex-direction: column; }
+  .action-btn { width: 100%; justify-content: center; }
+  .game-answer-btn { min-width: 100px; padding: 0.75rem 1rem; font-size: 0.85rem; }
+  .results-table th, .results-table td { font-size: 0.75rem; padding: 0.5rem; }
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="bg-gradient"></div>
+
+<div id="app">
+  <section class="slide active" id="slide-cover">
+    <div class="cover-content">
+      <div class="cover-badge">Cambridge Primary Mathematics • Grade 5</div>
+      <h1 class="cover-title">Geometry Practice</h1>
+      <p class="cover-subtitle">Lines, Segments, and Rays</p>
+      <p class="cover-meta">Critical Thinking • Spatial Reasoning • Problem Solving</p>
+      <div class="name-input-group">
+        <label for="student-name">Student's Name</label>
+        <input type="text" id="student-name" class="name-input" placeholder="Type your name here..." maxlength="50">
+      </div>
+      <button class="btn btn-primary" id="start-btn" onclick="startQuiz()">
+        <i class="fas fa-play"></i> Start Adventure
+      </button>
+      <div class="warning-msg" id="cover-warning">
+        <i class="fas fa-exclamation-circle"></i> Please enter your name to begin.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-question">
+    <div class="progress-bar-container">
+      <div class="progress-text" id="progress-text">Question 1 of 20</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="question-container">
+      <div class="question-header">
+        <div class="question-meta">
+          <span class="section-badge" id="section-badge">Section A</span>
+          <span class="question-number" id="question-number">Question 1</span>
+          <span class="concept-tag" id="concept-tag"></span>
+        </div>
+        <div class="timer-container">
+          <svg class="timer-svg" viewBox="0 0 64 64">
+            <circle class="timer-bg-circle" cx="32" cy="32" r="28"/>
+            <circle class="timer-progress-circle" id="timer-progress" cx="32" cy="32" r="28" stroke-dasharray="175.93" stroke-dashoffset="0"/>
+          </svg>
+          <span class="timer-text" id="timer-text">2:00</span>
+        </div>
+      </div>
+      <div class="question-text en" id="question-text-en"></div>
+      <div class="question-text id" id="question-text-id"></div>
+      <div id="options-wrapper"></div>
+      <div class="action-buttons">
+        <button class="action-btn check" id="check-btn" onclick="checkAnswer()"><i class="fas fa-check-circle"></i> Check Answer</button>
+        <button class="action-btn explain" id="explain-btn" onclick="toggleExplanation()"><i class="fas fa-lightbulb"></i> Explanation</button>
+        <button class="action-btn translate" id="translate-btn" onclick="toggleTranslation()"><i class="fas fa-language"></i> Translate to Indonesia</button>
+      </div>
+      <div class="explanation-panel" id="explanation-panel">
+        <div class="explanation-title"><i class="fas fa-graduation-cap"></i> Pembahasan (Bahasa Indonesia)</div>
+        <div class="explanation-text" id="explanation-text"></div>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> Previous</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next <i class="fas fa-arrow-right"></i></button>
+        <button class="btn btn-accent" id="finish-btn" onclick="finishQuiz()" style="display: none;"><i class="fas fa-flag-checkered"></i> Finished!</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-results">
+    <div class="results-container">
+      <div class="results-header">
+        <h1 class="results-title">Well Done!</h1>
+        <p class="results-subtitle">Here are your results, <span class="student-name-display" id="results-name"></span>!</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card correct">
+          <div class="stat-icon"><i class="fas fa-check-circle" style="color: var(--mint);"></i></div>
+          <div class="stat-value" id="correct-count">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-card wrong">
+          <div class="stat-icon"><i class="fas fa-times-circle" style="color: var(--red);"></i></div>
+          <div class="stat-value" id="wrong-count">0</div>
+          <div class="stat-label">Wrong</div>
+        </div>
+        <div class="stat-card time">
+          <div class="stat-icon"><i class="fas fa-clock" style="color: var(--cyan);"></i></div>
+          <div class="stat-value" id="total-time">0:00</div>
+          <div class="stat-label">Total Time</div>
+        </div>
+        <div class="stat-card avg">
+          <div class="stat-icon"><i class="fas fa-stopwatch" style="color: var(--yellow);"></i></div>
+          <div class="stat-value" id="avg-time">0:00</div>
+          <div class="stat-label">Avg per Question</div>
+        </div>
+      </div>
+      <div class="results-table-container">
+        <table class="results-table">
+          <thead><tr><th>#</th><th>Sec</th><th>Your Answer</th><th>Correct</th><th>Status</th><th>Time</th></tr></thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="btn btn-primary" onclick="goToSlide('slide-conclusion')"><i class="fas fa-arrow-right"></i> View Conclusion</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-conclusion">
+    <div class="conclusion-container">
+      <h1 class="conclusion-title">Conclusion & Reflection</h1>
+      <div class="conclusion-card">
+        <h3><i class="fas fa-book-open" style="color: var(--cyan);"></i> What We Learned Today</h3>
+        <ul>
+          <li><strong>Line Segment</strong> — has 2 endpoints, measurable length (segment AB = segment BA).</li>
+          <li><strong>Ray</strong> — has 1 endpoint, extends infinitely in one direction (Ray PQ ≠ Ray QP).</li>
+          <li><strong>Line</strong> — extends infinitely in both directions, cannot be measured.</li>
+          <li><strong>Parallel lines (//)</strong> — same plane, constant distance, never meet.</li>
+          <li><strong>Perpendicular lines (⊥)</strong> — intersect at exactly 90°.</li>
+          <li><strong>Coincident lines</strong> — lie on top of each other, share infinitely many points.</li>
+          <li><strong>Intersecting lines</strong> — meet at one point (perpendicular is a special case).</li>
+        </ul>
+      </div>
+      <div class="conclusion-card">
+        <h3><i class="fas fa-brain" style="color: var(--magenta);"></i> Reflection Questions</h3>
+        <p>Take a moment to think about these questions:</p>
+        <ul>
+          <li>Which type of line relationship was easiest for you to identify? Why?</li>
+          <li>Which question challenged you the most? What made it tricky?</li>
+          <li>Can you find 3 examples of parallel lines and 3 examples of perpendicular lines in your classroom right now?</li>
+          <li>Why do you think train tracks are designed to be parallel? What would happen if they weren't?</li>
+          <li>How does understanding lines help architects and engineers build safe structures?</li>
+        </ul>
+      </div>
+      <div class="conclusion-card">
+        <h3><i class="fas fa-star" style="color: var(--yellow);"></i> Key Takeaways</h3>
+        <p>Geometry is everywhere around us — in letters, buildings, nature, and even in the clock on the wall! Understanding how lines relate to each other helps us make sense of the world and solve real-world problems.</p>
+        <p>Remember: <strong>Practice makes progress!</strong> Every mathematician started exactly where you are now.</p>
+      </div>
+      <h2 class="thank-you">Thank You for Today!</h2>
+      <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+        Great job exploring the world of lines, <span class="student-name-display" id="conclusion-name"></span>! You've worked hard and learned a lot. Keep being curious!
+      </p>
+      <button class="btn btn-accent" onclick="goToSlide('slide-game')">
+        <i class="fas fa-gamepad"></i> Play Bonus Game: Line Detective Rush!
+      </button>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-game">
+    <div class="game-container">
+      <div class="game-header">
+        <h1 class="game-title">Line Detective Rush</h1>
+        <p class="game-subtitle">Look at the two lines. Are they Parallel, Perpendicular, or Intersecting? Click fast and score big!</p>
+      </div>
+      <div class="game-stats">
+        <div class="game-stat"><div class="game-stat-value" id="game-score" style="color: var(--cyan);">0</div><div class="game-stat-label">Score</div></div>
+        <div class="game-stat"><div class="game-stat-value" id="game-timer" style="color: var(--yellow);">45</div><div class="game-stat-label">Time Left</div></div>
+        <div class="game-stat"><div class="game-stat-value" id="game-streak" style="color: var(--magenta);">0</div><div class="game-stat-label">Streak</div></div>
+        <div class="game-stat"><div class="game-stat-value" id="game-best" style="color: var(--mint);">0</div><div class="game-stat-label">Best Score</div></div>
+      </div>
+      <div class="game-canvas-wrapper">
+        <canvas id="game-canvas" width="700" height="350"></canvas>
+        <div class="game-feedback" id="game-feedback"></div>
+        <div class="game-overlay" id="game-overlay">
+          <h2 class="game-overlay-title" id="game-overlay-title">Ready to Play?</h2>
+          <p class="game-overlay-text" id="game-overlay-text">
+            Two lines will appear on the screen. Quickly decide if they are:
+            <br><strong style="color: var(--cyan);">Parallel</strong> — never meet, same distance apart
+            <br><strong style="color: var(--magenta);">Perpendicular</strong> — meet at 90°
+            <br><strong style="color: var(--yellow);">Intersecting</strong> — meet but not at 90°
+            <br><br>You have 45 seconds. Correct = +10 points. Wrong = -5 points. Build streaks for bonus points!
+          </p>
+          <button class="btn btn-primary" id="game-start-btn" onclick="startGame()"><i class="fas fa-play"></i> Start Game</button>
+        </div>
+      </div>
+      <div class="game-buttons">
+        <button class="game-answer-btn parallel game-btn-disabled" id="btn-parallel" onclick="answerGame('parallel')"><i class="fas fa-equals"></i> Parallel //</button>
+        <button class="game-answer-btn perpendicular game-btn-disabled" id="btn-perpendicular" onclick="answerGame('perpendicular')"><i class="fas fa-times"></i> Perpendicular ⊥</button>
+        <button class="game-answer-btn intersecting game-btn-disabled" id="btn-intersecting" onclick="answerGame('intersecting')"><i class="fas fa-plus"></i> Intersecting ✕</button>
+      </div>
+      <div style="margin-top: 2rem;">
+        <button class="btn btn-secondary" onclick="goToSlide('slide-cover')"><i class="fas fa-redo"></i> Back to Cover</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Question Data =====
+const questionsData = [
+  { id:1, section:"A", type:"single", concept:"Line Concepts",
+    question:"Emma draws a straight path from point A to point B and stops exactly at point B. What geometric figure has she drawn?",
+    translation:"Emma menggambar jalur lurus dari titik A ke titik B dan berhenti tepat di titik B. Bangun geometri apa yang telah ia gambar?",
+    options:["A Ray","A Line","A Line Segment","An Intersecting Line"], correct:2,
+    explanation:"Segmen garis (line segment) adalah bagian dari garis yang memiliki dua titik ujung yang pasti (titik A dan titik B). Oleh karena itu, ia berhenti di kedua ujungnya dan dapat diukur." },
+  { id:2, section:"A", type:"single", concept:"Perpendicular Lines",
+    question:"Two lines, Line L and Line M, are drawn on a piece of paper. They cross each other exactly at point P to form a 90-degree angle. How do we describe the relationship between Line L and Line M?",
+    translation:"Dua garis, Garis L dan Garis M, digambar di selembar kertas. Keduanya saling berpotongan tepat di titik P untuk membentuk sudut 90 derajat. Bagaimana kita mendeskripsikan hubungan antara Garis L dan Garis M?",
+    options:["They are parallel lines.","They are perpendicular lines.","They are coincident lines.","They are non-intersecting lines."], correct:1,
+    explanation:"Garis tegak lurus (perpendicular) adalah dua garis yang berpotongan dan membentuk sudut siku-siku (90 derajat)." },
+  { id:3, section:"A", type:"single", concept:"3D Geometry",
+    question:"Imagine a 3D shape, specifically a standard rectangular box (cuboid). If you look at the top front edge and the bottom back edge, what is true about these two line segments?",
+    translation:"Bayangkan sebuah bangun 3D, khususnya kotak persegi panjang standar (balok). Jika Anda melihat rusuk depan atas dan rusuk belakang bawah, apa yang benar tentang kedua segmen garis ini?",
+    options:["They intersect at a corner.","They are perpendicular to each other.","They are parallel to each other.","They are coincident."], correct:2,
+    explanation:"Pada sebuah balok (cuboid), rusuk atas bagian depan dan rusuk bawah bagian belakang tidak akan pernah bertemu meskipun diperpanjang, dan keduanya sejajar dalam ruang 3D (mereka berada pada bidang diagonal yang sama)." },
+  { id:4, section:"A", type:"single", concept:"Coincident Lines",
+    question:'Which of the following best describes "coincident lines"?',
+    translation:'Manakah dari berikut ini yang paling tepat mendeskripsikan "garis berimpit" (coincident lines)?',
+    options:["Lines that never meet, no matter how far they are extended.","Lines that cross at exactly one point.","Lines that lie completely on top of each other, sharing all points.","Lines that meet to form a right angle."], correct:2,
+    explanation:"Garis berimpit (coincident lines) adalah dua garis yang secara visual terlihat seperti satu garis yang sama karena menempati posisi yang persis sama." },
+  { id:5, section:"A", type:"single", concept:"Letter Geometry",
+    question:"Look at the capital letter 'H'. How many pairs of parallel line segments are there in this letter?",
+    translation:"Lihat huruf kapital 'H'. Berapa banyak pasangan segmen garis sejajar yang ada pada huruf ini?",
+    options:["0 pairs","1 pair","2 pairs","3 pairs"], correct:1,
+    explanation:"Huruf 'H' memiliki dua garis vertikal yang sejajar satu sama lain. Garis horizontal di tengah memotong kedua garis tersebut. Jadi hanya ada 1 pasang garis sejajar." },
+  { id:6, section:"A", type:"single", concept:"Spatial Modeling",
+    question:"A flashlight shines a beam of light into the night sky. In geometry, this beam of light is the best real-world example of which concept?",
+    translation:"Sebuah senter memancarkan seberkas cahaya ke langit malam. Dalam geometri, berkas cahaya ini adalah contoh dunia nyata terbaik dari konsep apa?",
+    options:["A Line","A Line Segment","A Ray","A Point"], correct:2,
+    explanation:"Sinar garis (ray) memiliki satu titik pangkal (sumber cahaya senter) dan terus memanjang tak terbatas ke satu arah (cahaya di langit)." },
+  { id:7, section:"A", type:"single", concept:"2D Shapes",
+    question:"In a square named WXYZ, what is the relationship between the diagonal segment WY and diagonal XZ?",
+    translation:"Dalam sebuah persegi bernama WXYZ, apa hubungan antara segmen diagonal WY dan diagonal XZ?",
+    options:["They are parallel.","They are coincident.","They are perpendicular and intersecting.","They do not intersect."], correct:2,
+    explanation:"Sifat dari bangun datar persegi (square) adalah memiliki diagonal yang tidak hanya saling berpotongan (intersecting) di tengah, tetapi juga berpotongan membentuk sudut siku-siku (perpendicular)." },
+  { id:8, section:"A", type:"single", concept:"Deductive Logic",
+    question:"If Line C and Line D are parallel, and Line E is perpendicular to Line C. What must be true about the relationship between Line E and Line D? (Assume they are all on the same flat 2D plane).",
+    translation:"Jika Garis C dan Garis D sejajar, dan Garis E tegak lurus terhadap Garis C. Apa yang pasti benar tentang hubungan antara Garis E dan Garis D? (Asumsikan semuanya berada pada bidang 2D datar yang sama).",
+    options:["Line E is parallel to Line D.","Line E is perpendicular to Line D.","Line E is coincident with Line D.","Line E does not intersect Line D."], correct:1,
+    explanation:"Pada bidang datar (2D), jika sebuah garis tegak lurus pada salah satu dari dua garis sejajar, maka ia PASTI akan tegak lurus dengan garis sejajar yang satunya lagi." },
+  { id:9, section:"A", type:"single", concept:"Geometric Notation",
+    question:"You are naming a triangle using its vertices A, B, and C. Which of the following is the correct mathematical way to write the line segment connecting point A and point C?",
+    translation:"Anda menamai sebuah segitiga menggunakan titik sudutnya A, B, dan C. Manakah dari berikut ini yang merupakan cara matematis yang benar untuk menulis segmen garis yang menghubungkan titik A dan titik C?",
+    options:["Ray AC","AC","Line AC","Point AC"], correct:1,
+    explanation:"Notasi standar dalam matematika untuk segmen garis dari titik A ke titik C adalah dengan menuliskan huruf AC dengan garis lurus di atasnya." },
+  { id:10, section:"A", type:"single", concept:"3D Geometry",
+    question:"Imagine a triangular pyramid (a tetrahedron). How many pairs of parallel edges does it have?",
+    translation:"Bayangkan sebuah limas segitiga (tetrahedron). Berapa banyak pasang rusuk sejajar yang dimilikinya?",
+    options:["0 pairs","1 pair","2 pairs","3 pairs"], correct:0,
+    explanation:"Limas segitiga (tetrahedron) tidak memiliki rusuk yang sejajar (parallel). Semua rusuknya baik bertemu di satu titik (berpotongan) atau bersilangan (skew) tetapi tidak ada yang sejajar." },
+  { id:11, section:"B", type:"tf", concept:"Line Segments",
+    question:"A line segment can be measured with a ruler, but a ray cannot be fully measured.",
+    translation:"Segmen garis dapat diukur dengan penggaris, tetapi sinar garis tidak dapat diukur sepenuhnya.",
+    correct:0,
+    explanation:"Segmen garis memiliki panjang yang pasti karena dibatasi oleh dua titik. Sinar garis tidak bisa diukur total panjangnya karena satu ujungnya terus memanjang tak terhingga." },
+  { id:12, section:"B", type:"tf", concept:"3D Geometry",
+    question:"In a 3D cube, an edge on the front face can be parallel to an edge on the back face.",
+    translation:"Dalam kubus 3D, rusuk pada sisi depan dapat sejajar dengan rusuk pada sisi belakang.",
+    correct:0,
+    explanation:"Pada kubus 3D, rusuk horizontal di sisi depan sejajar dengan rusuk horizontal di sisi belakang pada ketinggian yang sama." },
+  { id:13, section:"B", type:"tf", concept:"Intersecting Lines",
+    question:"Two intersecting lines can cross each other at exactly two different points.",
+    translation:"Dua garis berpotongan dapat saling berpotongan tepat di dua titik yang berbeda.",
+    correct:1,
+    explanation:"Dua garis lurus yang berpotongan (intersecting) HANYA BISA bertemu tepat di SATU titik, tidak pernah dua titik (kecuali jika mereka berimpit/coincident, yang berarti bersentuhan di titik tak terhingga)." },
+  { id:14, section:"B", type:"tf", concept:"Parallel Lines",
+    question:"If two line segments never meet inside a 2D shape, they are always parallel.",
+    translation:"Jika dua segmen garis tidak pernah bertemu di dalam bangun 2D, mereka selalu sejajar.",
+    correct:0,
+    explanation:"Pada bangun datar 2D (seperti di atas kertas), jika dua segmen garis tidak pernah saling berpotongan meskipun diperpanjang, maka kedua garis tersebut dikatakan sejajar (parallel)." },
+  { id:15, section:"B", type:"tf", concept:"Coincident Lines",
+    question:"Coincident lines have an infinite number of intersection points.",
+    translation:"Garis berimpit memiliki jumlah titik potong yang tak terhingga.",
+    correct:0,
+    explanation:"Garis yang berimpit saling tumpang tindih secara sempurna, sehingga mereka berbagi semua titik di sepanjang garis tersebut (jumlahnya tak terhingga)." },
+  { id:16, section:"C", type:"single", concept:"Ray Properties",
+    question:`Which of the following properties are true about a "Ray"? (Select all that apply)
+(1) It has a specific starting point (endpoint).
+(2) It continues infinitely in both directions.
+(3) Its length can be easily measured.
+(4) It continues infinitely in exactly one direction.`,
+    translation:`Manakah dari sifat berikut yang benar tentang "Sinar Garis"? (Pilih semua yang berlaku)
+(1) Memiliki titik awal yang spesifik (titik ujung).
+(2) Memanjang tak terhingga ke kedua arah.
+(3) Panjangnya dapat diukur dengan mudah.
+(4) Memanjang tak terhingga ke tepat satu arah.`,
+    options:["(1) and (2)","(1) and (4)","(2) and (3)","(3) and (4)"], correct:1,
+    explanation:"Sinar garis (Ray) memiliki tepat satu titik pangkal (1) dan berlanjut tanpa henti ke satu arah (4). Ia tidak berlanjut ke dua arah (itu adalah garis/line) dan panjangnya tidak bisa diukur." },
+  { id:17, section:"C", type:"single", concept:"Regular Polygons",
+    question:`Look at a regular hexagon (a 2D shape with 6 equal sides). Which of the following statements about its line segments (sides) are true? (Select all that apply)
+(1) It contains exactly 3 pairs of parallel line segments.
+(2) Some adjacent line segments are perpendicular to each other.
+(3) Every side is a line segment, not a line.
+(4) It has no parallel sides.`,
+    translation:`Lihat segi enam beraturan (bangun 2D dengan 6 sisi yang sama). Manakah dari pernyataan berikut tentang segmen garisnya (sisi-sisinya) yang benar? (Pilih semua yang berlaku)
+(1) Berisi tepat 3 pasang segmen garis sejajar.
+(2) Beberapa segmen garis yang berdekatan saling tegak lurus.
+(3) Setiap sisi adalah segmen garis, bukan garis.
+(4) Tidak memiliki sisi yang sejajar.`,
+    options:["(1) and (3)","(2) and (4)","(1) and (2)","(3) and (4)"], correct:0,
+    explanation:"Segi enam beraturan memiliki 3 pasang sisi yang saling berhadapan dan sejajar (1). Sisi-sisinya adalah segmen garis karena dibatasi titik sudut (3). Tidak ada sudut siku-siku (90 derajat) di segi enam beraturan, sudutnya adalah 120 derajat, jadi tidak ada yang tegak lurus." },
+  { id:18, section:"C", type:"single", concept:"3D Relationships",
+    question:`In a 3D rectangular prism (like a shoebox), which relationships can exist between two different edges? (Select all that apply)
+(1) They can be parallel.
+(2) They can be intersecting.
+(3) They can be perpendicular.
+(4) They can be coincident.`,
+    translation:`Dalam prisma segi empat 3D (seperti kotak sepatu), hubungan apa yang bisa ada antara dua rusuk yang berbeda? (Pilih semua yang berlaku)
+(1) Bisa sejajar.
+(2) Bisa berpotongan.
+(3) Bisa tegak lurus.
+(4) Bisa berimpit.`,
+    options:["(1), (2), and (3)","(1) and (4)","(2) and (3) only","(1), (2), (3), and (4)"], correct:0,
+    explanation:"Dalam balok/prisma segi empat, rusuk bisa sejajar (1), berpotongan di sudut (2), dan rusuk yang berpotongan tersebut membentuk sudut 90 derajat sehingga mereka tegak lurus (3). Rusuk pada bangun ruang tidak ada yang berimpit." },
+  { id:19, section:"C", type:"single", concept:"Applied Signs",
+    question:`Which of the following real-world examples represent intersecting lines that are ALSO perpendicular? (Select all that apply)
+(1) The adjacent edges of a standard piece of A4 paper.
+(2) The letter "X" in a standard font.
+(3) The letter "T" in a standard font.
+(4) Train tracks running side-by-side.`,
+    translation:`Manakah dari contoh dunia nyata berikut yang mewakili garis berpotongan yang JUGA tegak lurus? (Pilih semua yang berlaku)
+(1) Sisi yang berdekatan dari selembar kertas A4 standar.
+(2) Huruf "X" dalam font standar.
+(3) Huruf "T" dalam font standar.
+(4) Rel kereta api yang berjalan berdampingan.`,
+    options:["(1) and (3)","(2) and (4)","(1), (2), and (3)","(1), (3), and (4)"], correct:0,
+    explanation:"Sudut-sudut dari kertas A4 membentuk sudut 90 derajat, yang berarti tegak lurus (1). Huruf 'T' memiliki satu garis horizontal dan satu garis vertikal yang bertemu di sudut 90 derajat (3). Huruf 'X' berpotongan tapi jarang pada 90 derajat, dan rel kereta api adalah contoh garis sejajar." },
+  { id:20, section:"C", type:"single", concept:"Geometric Notation",
+    question:`Which of the following statements correctly describe the rules of naming lines, segments, and rays? (Select all that apply)
+(1) AB is exactly the same segment as BA.
+(2) Ray AB is exactly the same as Ray BA.
+(3) A line named Line PQ can also be named Line QP.
+(4) To name a ray, you must always state its endpoint first.`,
+    translation:`Manakah dari pernyataan berikut yang benar mendeskripsikan aturan penamaan garis, segmen, dan sinar garis? (Pilih semua yang berlaku)
+(1) AB adalah segmen yang sama persis dengan BA.
+(2) Sinar AB sama persis dengan Sinar BA.
+(3) Garis bernama Garis PQ juga dapat diberi nama Garis QP.
+(4) Untuk menamai sinar garis, Anda harus selalu menyebutkan titik pangkalnya terlebih dahulu.`,
+    options:["(1), (2), and (3)","(1), (3), and (4)","(2), (3), and (4)","(1), (2), (3), and (4)"], correct:1,
+    explanation:"Penamaan segmen garis bolak-balik itu sama (1). Penamaan Garis (Line) juga sama dibolak-balik (3). Penamaan sinar garis (Ray) HARUS dimulai dari titik pangkalnya (4). Jadi, Ray AB tidak sama dengan Ray BA karena titik pangkal dan arahnya berlawanan." }
+];
+
+// ===== State Management =====
+let currentQuestionIndex = 0;
+let studentName = "";
+let answers = {};
+let questionTimes = {};
+let checkedQuestions = new Set();
+let timerInterval = null;
+let timeLeft = 120;
+let timerStopped = false;
+let isTranslated = false;
+let isExplanationShown = false;
+
+// ===== Background Canvas Animation =====
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgLines = [];
+
+function resizeBgCanvas() {
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+}
+
+function initBgLines() {
+  bgLines = [];
+  const colors = ['rgba(0, 240, 255, 0.12)', 'rgba(255, 46, 147, 0.10)', 'rgba(255, 214, 10, 0.08)', 'rgba(0, 245, 160, 0.10)'];
+  for (let i = 0; i < 30; i++) {
+    bgLines.push({
+      x: Math.random() * bgCanvas.width,
+      y: Math.random() * bgCanvas.height,
+      angle: Math.random() * Math.PI * 2,
+      speed: 0.15 + Math.random() * 0.25,
+      length: 80 + Math.random() * 200,
+      thickness: 0.5 + Math.random() * 1.5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      angleSpeed: (Math.random() - 0.5) * 0.003
+    });
+  }
+}
+
+function animateBg() {
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  bgLines.forEach(line => {
+    line.angle += line.angleSpeed;
+    const x2 = line.x + Math.cos(line.angle) * line.length;
+    const y2 = line.y + Math.sin(line.angle) * line.length;
+    bgCtx.beginPath();
+    bgCtx.moveTo(line.x, line.y);
+    bgCtx.lineTo(x2, y2);
+    bgCtx.strokeStyle = line.color;
+    bgCtx.lineWidth = line.thickness;
+    bgCtx.stroke();
+    bgCtx.beginPath();
+    bgCtx.arc(line.x, line.y, 1.5, 0, Math.PI * 2);
+    bgCtx.fillStyle = line.color.replace(/[\d.]+\)$/, '0.4)');
+    bgCtx.fill();
+    line.x += Math.cos(line.angle + Math.PI / 2) * line.speed;
+    line.y += Math.sin(line.angle + Math.PI / 2) * line.speed;
+    if (line.x < -line.length) line.x = bgCanvas.width + line.length;
+    if (line.x > bgCanvas.width + line.length) line.x = -line.length;
+    if (line.y < -line.length) line.y = bgCanvas.height + line.length;
+    if (line.y > bgCanvas.height + line.length) line.y = -line.length;
+  });
+  requestAnimationFrame(animateBg);
+}
+
+window.addEventListener('resize', () => { resizeBgCanvas(); initBgLines(); });
+resizeBgCanvas();
+initBgLines();
+animateBg();
+
+// ===== Slide Navigation =====
+function goToSlide(slideId) {
+  const slides = document.querySelectorAll('.slide');
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].classList.remove('active');
+  }
+  document.getElementById(slideId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== Start Quiz =====
+function startQuiz() {
+  const nameInput = document.getElementById('student-name');
+  const warning = document.getElementById('cover-warning');
+  if (!nameInput.value.trim()) {
+    warning.classList.add('show');
+    nameInput.focus();
+    return;
+  }
+  studentName = nameInput.value.trim();
+  warning.classList.remove('show');
+  document.getElementById('results-name').textContent = studentName;
+  document.getElementById('conclusion-name').textContent = studentName;
+  currentQuestionIndex = 0;
+  answers = {};
+  questionTimes = {};
+  checkedQuestions.clear();
+  goToSlide('slide-question');
+  loadQuestion(0);
+}
+
+// ===== Load Question =====
+function loadQuestion(index) {
+  if (currentQuestionIndex !== index) {
+    if (!checkedQuestions.has(currentQuestionIndex) && questionTimes[currentQuestionIndex] === undefined) {
+      const elapsed = 120 - timeLeft;
+      if (elapsed > 0) questionTimes[currentQuestionIndex] = elapsed;
+    }
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  const q = questionsData[index];
+  if (!q) return;
+  currentQuestionIndex = index;
+  timerStopped = false;
+  isTranslated = false;
+  isExplanationShown = false;
+
+  const sectionBadge = document.getElementById('section-badge');
+  sectionBadge.textContent = `Section ${q.section}`;
+  sectionBadge.className = `section-badge section-${q.section.toLowerCase()}`;
+  document.getElementById('question-number').textContent = `Question ${index + 1}`;
+  document.getElementById('concept-tag').textContent = q.concept || '';
+
+  document.getElementById('progress-text').textContent = `Question ${index + 1} of ${questionsData.length}`;
+  document.getElementById('progress-fill').style.width = `${((index + 1) / questionsData.length) * 100}%`;
+
+  document.getElementById('question-text-en').textContent = q.question;
+  document.getElementById('question-text-id').textContent = q.translation || q.question;
+  document.getElementById('question-text-en').style.display = 'block';
+  document.getElementById('question-text-id').style.display = 'none';
+
+  renderOptions(q);
+
+  document.getElementById('explanation-panel').classList.remove('show');
+  document.getElementById('explanation-text').textContent = q.explanation;
+  document.getElementById('explain-btn').innerHTML = '<i class="fas fa-lightbulb"></i> Explanation';
+
+  document.getElementById('translate-btn').innerHTML = '<i class="fas fa-language"></i> Translate to Indonesia';
+
+  document.getElementById('check-btn').disabled = false;
+  document.getElementById('check-btn').innerHTML = '<i class="fas fa-check-circle"></i> Check Answer';
+
+  document.getElementById('prev-btn').style.display = index === 0 ? 'none' : 'inline-flex';
+  document.getElementById('next-btn').style.display = index === questionsData.length - 1 ? 'none' : 'inline-flex';
+  document.getElementById('finish-btn').style.display = index === questionsData.length - 1 ? 'inline-flex' : 'none';
+
+  if (checkedQuestions.has(index)) {
+    if (answers[index] !== undefined) {
+      selectOption(answers[index], false);
+      showCheckedState();
+    }
+    document.getElementById('explanation-panel').classList.add('show');
+    isExplanationShown = true;
+    document.getElementById('explain-btn').innerHTML = '<i class="fas fa-lightbulb"></i> Hide Explanation';
+    timeLeft = 120 - (questionTimes[index] || 0);
+    updateTimerDisplay();
+    timerStopped = true;
+  } else {
+    if (answers[index] !== undefined) {
+      selectOption(answers[index], false);
+    }
+    startTimer();
+  }
+}
+
+// ===== Render Options =====
+function renderOptions(q) {
+  const wrapper = document.getElementById('options-wrapper');
+  wrapper.innerHTML = '';
+  if (q.type === 'tf') {
+    const container = document.createElement('div');
+    container.className = 'tf-container';
+    ['TRUE', 'FALSE'].forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tf-btn';
+      btn.innerHTML = `<i class="fas fa-${label === 'TRUE' ? 'check' : 'times'}-circle"></i> ${label}`;
+      btn.onclick = () => selectOption(i);
+      btn.dataset.index = i;
+      container.appendChild(btn);
+    });
+    wrapper.appendChild(container);
+  } else {
+    const container = document.createElement('div');
+    container.className = 'options-container';
+    const markers = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'option';
+      div.dataset.index = i;
+      div.onclick = () => selectOption(i);
+      div.innerHTML = `<div class="option-marker">${markers[i]}</div><div class="option-text">${opt}</div>`;
+      container.appendChild(div);
+    });
+    wrapper.appendChild(container);
+  }
+}
+
+// ===== Select Option =====
+function selectOption(index, record = true) {
+  const q = questionsData[currentQuestionIndex];
+  if (q.type === 'tf') {
+    document.querySelectorAll('.tf-btn').forEach((btn, i) => {
+      btn.classList.remove('selected', 'correct', 'wrong');
+      if (i === index) btn.classList.add('selected');
+    });
+  } else {
+    document.querySelectorAll('.option').forEach((opt, i) => {
+      opt.classList.remove('selected', 'correct', 'wrong');
+      if (i === index) opt.classList.add('selected');
+    });
+  }
+  if (record) answers[currentQuestionIndex] = index;
+}
+
+// ===== Show Checked State =====
+function showCheckedState() {
+  const q = questionsData[currentQuestionIndex];
+  const selected = answers[currentQuestionIndex];
+  const correct = q.correct;
+  const isCorrect = selected === correct;
+  if (q.type === 'tf') {
+    document.querySelectorAll('.tf-btn').forEach((btn, i) => {
+      btn.classList.remove('selected');
+      if (i === correct) btn.classList.add('correct');
+      else if (i === selected && !isCorrect) btn.classList.add('wrong');
+    });
+  } else {
+    document.querySelectorAll('.option').forEach((opt, i) => {
+      opt.classList.remove('selected');
+      if (i === correct) opt.classList.add('correct');
+      else if (i === selected && !isCorrect) opt.classList.add('wrong');
+    });
+  }
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('check-btn').innerHTML = `<i class="fas fa-${isCorrect ? 'check' : 'times'}-circle"></i> ${isCorrect ? 'Correct!' : 'Wrong!'}`;
+}
+
+// ===== Timer =====
+function startTimer() {
+  timeLeft = 120;
+  timerStopped = false;
+  updateTimerDisplay();
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (timerStopped) return;
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerStopped = true;
+      timeLeft = 0;
+      updateTimerDisplay();
+      if (questionTimes[currentQuestionIndex] === undefined) {
+        questionTimes[currentQuestionIndex] = 120;
+      }
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  document.getElementById('timer-text').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const circumference = 2 * Math.PI * 28;
+  const offset = circumference * (1 - timeLeft / 120);
+  const progress = document.getElementById('timer-progress');
+  progress.style.strokeDashoffset = offset;
+  const timerText = document.getElementById('timer-text');
+  progress.classList.remove('warning', 'danger');
+  timerText.classList.remove('danger');
+  if (timeLeft <= 30) { progress.classList.add('danger'); timerText.classList.add('danger'); }
+  else if (timeLeft <= 60) { progress.classList.add('warning'); }
+}
+
+// ===== Check Answer =====
+function checkAnswer() {
+  const q = questionsData[currentQuestionIndex];
+  if (answers[currentQuestionIndex] === undefined) {
+    showToast('Please select an answer first!');
+    return;
+  }
+  timerStopped = true;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  questionTimes[currentQuestionIndex] = 120 - timeLeft;
+  checkedQuestions.add(currentQuestionIndex);
+  showCheckedState();
+  if (!isExplanationShown) toggleExplanation();
+}
+
+// ===== Toggle Explanation =====
+function toggleExplanation() {
+  const panel = document.getElementById('explanation-panel');
+  isExplanationShown = !isExplanationShown;
+  if (isExplanationShown) {
+    panel.classList.add('show');
+    document.getElementById('explain-btn').innerHTML = '<i class="fas fa-lightbulb"></i> Hide Explanation';
+  } else {
+    panel.classList.remove('show');
+    document.getElementById('explain-btn').innerHTML = '<i class="fas fa-lightbulb"></i> Explanation';
+  }
+}
+
+// ===== Toggle Translation =====
+function toggleTranslation() {
+  isTranslated = !isTranslated;
+  const enText = document.getElementById('question-text-en');
+  const idText = document.getElementById('question-text-id');
+  const btn = document.getElementById('translate-btn');
+  if (isTranslated) {
+    enText.style.display = 'none';
+    idText.style.display = 'block';
+    btn.innerHTML = '<i class="fas fa-language"></i> Show English';
+  } else {
+    enText.style.display = 'block';
+    idText.style.display = 'none';
+    btn.innerHTML = '<i class="fas fa-language"></i> Translate to Indonesia';
+  }
+}
+
+// ===== Navigation =====
+function prevQuestion() {
+  if (currentQuestionIndex > 0) loadQuestion(currentQuestionIndex - 1);
+}
+function nextQuestion() {
+  if (currentQuestionIndex < questionsData.length - 1) loadQuestion(currentQuestionIndex + 1);
+}
+
+// ===== Finish Quiz =====
+function finishQuiz() {
+  if (!checkedQuestions.has(currentQuestionIndex) && questionTimes[currentQuestionIndex] === undefined) {
+    const elapsed = 120 - timeLeft;
+    if (elapsed > 0) questionTimes[currentQuestionIndex] = elapsed;
+  }
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+  let correctCount = 0, wrongCount = 0, totalTime = 0, answeredCount = 0;
+  questionsData.forEach((q, i) => {
+    if (answers[i] !== undefined) {
+      answeredCount++;
+      if (answers[i] === q.correct) correctCount++;
+      else wrongCount++;
+    } else {
+      wrongCount++;
+    }
+    totalTime += questionTimes[i] || 0;
+  });
+  const avgTime = answeredCount > 0 ? totalTime / answeredCount : 0;
+
+  document.getElementById('correct-count').textContent = correctCount;
+  document.getElementById('wrong-count').textContent = wrongCount;
+  document.getElementById('total-time').textContent = formatTime(totalTime);
+  document.getElementById('avg-time').textContent = formatTime(Math.round(avgTime));
+
+  const tbody = document.getElementById('results-tbody');
+  tbody.innerHTML = '';
+  questionsData.forEach((q, i) => {
+    const userAnswer = answers[i];
+    const isCorrect = userAnswer === q.correct;
+    const isAnswered = userAnswer !== undefined;
+    const time = questionTimes[i] || 0;
+    let userAnswerText, correctAnswerText;
+    if (q.type === 'tf') {
+      userAnswerText = isAnswered ? (userAnswer === 0 ? 'TRUE' : 'FALSE') : '—';
+      correctAnswerText = q.correct === 0 ? 'TRUE' : 'FALSE';
+    } else {
+      const markers = ['A', 'B', 'C', 'D'];
+      userAnswerText = isAnswered ? `${markers[userAnswer]}` : '—';
+      correctAnswerText = `${markers[q.correct]}`;
+    }
+    let statusClass, statusText, statusIcon;
+    if (!isAnswered) { statusClass = 'status-unanswered'; statusText = 'Skipped'; statusIcon = 'fa-question-circle'; }
+    else if (isCorrect) { statusClass = 'status-correct'; statusText = 'Correct'; statusIcon = 'fa-check-circle'; }
+    else { statusClass = 'status-wrong'; statusText = 'Wrong'; statusIcon = 'fa-times-circle'; }
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${i + 1}</td><td><span class="section-badge section-${q.section.toLowerCase()}" style="font-size: 0.65rem; padding: 0.2rem 0.5rem;">${q.section}</span></td><td>${userAnswerText}</td><td>${correctAnswerText}</td><td class="${statusClass}"><i class="fas ${statusIcon}"></i> ${statusText}</td><td style="font-family: 'Space Grotesk', sans-serif;">${formatTime(time)}</td>`;
+    tbody.appendChild(row);
+  });
+
+  goToSlide('slide-results');
+  setTimeout(() => triggerConfetti(), 500);
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+// ===== Confetti =====
+function triggerConfetti() {
+  const colors = ['#00f0ff', '#ff2e93', '#ffd60a', '#00f5a0'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-20px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      c.style.transform = `rotate(${Math.random() * 360}deg)`;
+      const duration = 2 + Math.random() * 2;
+      c.style.animation = `confettiFall ${duration}s linear forwards`;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), duration * 1000);
+    }, i * 30);
+  }
+}
+
+// ===== GAME SECTION =====
+let gameState = {
+  active: false,
+  score: 0,
+  timeLeft: 45,
+  streak: 0,
+  bestScore: 0,
+  currentType: null,
+  timerInterval: null,
+  lines: []
+};
+
+try {
+  gameState.bestScore = parseInt(localStorage.getItem('lineGameBest') || '0');
+} catch (e) {
+  gameState.bestScore = 0;
+}
+
+function initGame() {
+  const bestScoreEl = document.getElementById('game-best');
+  if (bestScoreEl) bestScoreEl.textContent = gameState.bestScore;
+  drawGameIdle();
+}
+
+function drawGameIdle() {
+  const canvas = document.getElementById('game-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0,0, cw, ch);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < cw; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, ch); ctx.stroke(); }
+  for (let y = 0; y < ch; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.font = '20px "Space Grotesk", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Click "Start Game" to begin!', cw / 2, ch / 2);
+}
+
+function startGame() {
+  gameState.active = true;
+  gameState.score = 0;
+  gameState.timeLeft = 45;
+  gameState.streak = 0;
+
+  const overlay = document.getElementById('game-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  
+  const scoreEl = document.getElementById('game-score');
+  const streakEl = document.getElementById('game-streak');
+  const timerEl = document.getElementById('game-timer');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (streakEl) streakEl.textContent = '0';
+  if (timerEl) {
+    timerEl.textContent = '45';
+    timerEl.style.color = 'var(--yellow)';
+  }
+
+  const btnP = document.getElementById('btn-parallel');
+  const btnPe = document.getElementById('btn-perpendicular');
+  const btnI = document.getElementById('btn-intersecting');
+  if (btnP) btnP.classList.remove('game-btn-disabled');
+  if (btnPe) btnPe.classList.remove('game-btn-disabled');
+  if (btnI) btnI.classList.remove('game-btn-disabled');
+
+  generateGameLines();
+
+  if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+  gameState.timerInterval = setInterval(function() {
+    gameState.timeLeft--;
+    if (timerEl) timerEl.textContent = gameState.timeLeft;
+    if (gameState.timeLeft <= 10) {
+      if (timerEl) timerEl.style.color = 'var(--red)';
+    }
+    if (gameState.timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
+}
+
+function generateGameLines() {
+  const types = ['parallel', 'perpendicular', 'intersecting'];
+  const type = types[Math.floor(Math.random() * 3)];
+  gameState.currentType = type;
+
+  const canvas = document.getElementById('game-canvas');
+  if (!canvas) return;
+  const cw = canvas.width, ch = canvas.height;
+  
+  const margin = 80;
+  const x1 = margin + Math.random() * (cw - 2 * margin);
+  const y1 = margin + Math.random() * (ch - 2 * margin);
+  const angle1 = Math.random() * Math.PI * 2;
+  const length1 = 180 + Math.random() * 80;
+  const x2 = x1 + Math.cos(angle1) * length1;
+  const y2 = y1 + Math.sin(angle1) * length1;
+
+  let line1 = { x1: x1, y1: y1, x2: x2, y2: y2 };
+  let line2 = {};
+
+  if (type === 'parallel') {
+    const offset = 70 + Math.random() * 30;
+    const perpAngle = angle1 + Math.PI / 2;
+    const dx = Math.cos(perpAngle) * offset;
+    const dy = Math.sin(perpAngle) * offset;
+    line2 = { x1: x1 + dx, y1: y1 + dy, x2: x2 + dx, y2: y2 + dy };
+  } else if (type === 'perpendicular') {
+    const angle2 = angle1 + Math.PI / 2;
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const len2 = 150;
+    line2 = {
+      x1: mx - Math.cos(angle2) * len2 / 2,
+      y1: my - Math.sin(angle2) * len2 / 2,
+      x2: mx + Math.cos(angle2) * len2 / 2,
+      y2: my + Math.sin(angle2) * len2 / 2
+    };
+  } else {
+    let angle2;
+    do {
+      angle2 = angle1 + (Math.random() - 0.5) * Math.PI * 1.5;
+    } while (
+      Math.abs(angle2 - angle1) < 0.3 ||
+      Math.abs(Math.abs(angle2 - angle1) - Math.PI / 2) < 0.3 ||
+      Math.abs(Math.abs(angle2 - angle1) - Math.PI) < 0.3
+    );
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const len2 = 180;
+    line2 = {
+      x1: mx - Math.cos(angle2) * len2 / 2,
+      y1: my - Math.sin(angle2) * len2 / 2,
+      x2: mx + Math.cos(angle2) * len2 / 2,
+      y2: my + Math.sin(angle2) * len2 / 2
+    };
+  }
+
+  gameState.lines = [line1, line2];
+  drawGameLines();
+}
+
+function drawGameLines() {
+  const canvas = document.getElementById('game-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0, 0, cw, ch);
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < cw; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, ch); ctx.stroke(); }
+  for (let y = 0; y < ch; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke(); }
+
+  const colors = ['#00f0ff', '#ff2e93'];
+  gameState.lines.forEach(function(line, i) {
+    const color = colors[i];
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 15;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(line.x1, line.y1);
+    ctx.lineTo(line.x2, line.y2);
+    ctx.stroke();
+
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(line.x1, line.y1, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(line.x2, line.y2, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.shadowBlur = 0;
+}
+
+function answerGame(answer) {
+  if (!gameState.active) return;
+
+  const isCorrect = answer === gameState.currentType;
+  const feedback = document.getElementById('game-feedback');
+  const canvas = document.getElementById('game-canvas');
+
+  if (isCorrect) {
+    gameState.streak++;
+    let points = 10;
+    if (gameState.streak >= 3) points += 5 * Math.min(gameState.streak - 2, 5);
+    gameState.score += points;
+    if (feedback) {
+      feedback.textContent = '+' + points + '!';
+      feedback.style.color = 'var(--mint)';
+      feedback.classList.add('show');
+    }
+    if (canvas) canvas.style.boxShadow = '0 0 30px rgba(0, 245, 160, 0.5)';
+    setTimeout(function() { if (canvas) canvas.style.boxShadow = ''; }, 300);
+  } else {
+    gameState.streak = 0;
+    gameState.score = Math.max(0, gameState.score - 5);
+    if (feedback) {
+      feedback.textContent = 'Wrong!';
+      feedback.style.color = 'var(--red)';
+      feedback.classList.add('show');
+    }
+    if (canvas) canvas.style.boxShadow = '0 0 30px rgba(255, 71, 87, 0.5)';
+    setTimeout(function() { if (canvas) canvas.style.boxShadow = ''; }, 300);
+  }
+
+  setTimeout(function() { if (feedback) feedback.classList.remove('show'); }, 600);
+  
+  const scoreEl = document.getElementById('game-score');
+  const streakEl = document.getElementById('game-streak');
+  if (scoreEl) scoreEl.textContent = gameState.score;
+  if (streakEl) streakEl.textContent = gameState.streak;
+
+  setTimeout(function() {
+    if (gameState.active) generateGameLines();
+  }, 600);
+}
+
+function endGame() {
+  gameState.active = false;
+  clearInterval(gameState.timerInterval);
+
+  const btnP = document.getElementById('btn-parallel');
+  const btnPe = document.getElementById('btn-perpendicular');
+  const btnI = document.getElementById('btn-intersecting');
+  if (btnP) btnP.classList.add('game-btn-disabled');
+  if (btnPe) btnPe.classList.add('game-btn-disabled');
+  if (btnI) btnI.classList.add('game-btn-disabled');
+
+  if (gameState.score > gameState.bestScore) {
+    gameState.bestScore = gameState.score;
+    try {
+      localStorage.setItem('lineGameBest', gameState.bestScore);
+    } catch (e) {}
+    const bestEl = document.getElementById('game-best');
+    if (bestEl) bestEl.textContent = gameState.bestScore;
+  }
+
+  const overlay = document.getElementById('game-overlay');
+  const title = document.getElementById('game-overlay-title');
+  const text = document.getElementById('game-overlay-text');
+  const startBtn = document.getElementById('game-start-btn');
+
+  let rating, ratingColor;
+  if (gameState.score >= 150) { rating = 'Line Master!'; ratingColor = 'var(--yellow)'; }
+  else if (gameState.score >= 100) { rating = 'Geometry Expert!'; ratingColor = 'var(--mint)'; }
+  else if (gameState.score >= 50) { rating = 'Line Detective!'; ratingColor = 'var(--cyan)'; }
+  else { rating = 'Geometry Apprentice!'; ratingColor = 'var(--magenta)'; }
+
+  if (title) {
+    title.textContent = rating;
+    title.style.color = ratingColor;
+  }
+  if (text) {
+    text.innerHTML = 'You scored <strong style="color: var(--cyan); font-size: 1.5rem;">' + gameState.score + '</strong> points!<br>Best Score: ' + gameState.bestScore + '<br><br>Want to try again?';
+  }
+  if (startBtn) startBtn.innerHTML = '<i class="fas fa-redo"></i> Play Again';
+  if (overlay) overlay.classList.remove('hidden');
+
+  if (gameState.score >= 100) triggerConfetti();
+}
+
+// ===== Keyboard shortcuts =====
+document.addEventListener('keydown', function(e) {
+  if (document.getElementById('slide-question').classList.contains('active')) {
+    if (e.key === 'ArrowLeft') prevQuestion();
+    if (e.key === 'ArrowRight') nextQuestion();
+  }
+});
+
+// ===== Enter key on name input =====
+document.getElementById('student-name').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') startQuiz();
+});
+
+// ===== Initialize game immediately =====
+initGame();
+</script>
+</body>
+</html>

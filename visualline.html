@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometri Garis — Laboratorium Interaktif</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-2: #0d1320;
+  --fg: #e8eef5;
+  --muted: #8a94a8;
+  --card: #131825;
+  --card-2: #1a2030;
+  --border: #252d42;
+  --border-light: #323b54;
+  --accent: #ffd60a;
+  --accent-2: #06ffa5;
+  --accent-3: #ff3d7f;
+  --accent-4: #4cc9f0;
+  --parallel: #06ffa5;
+  --perpendicular: #ff3d7f;
+  --intersecting: #ffd60a;
+  --skew: #b388ff;
+  --diagonal: #b388ff;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 15% 0%, rgba(255, 214, 10, 0.10), transparent 50%),
+    radial-gradient(ellipse at 85% 100%, rgba(6, 255, 165, 0.08), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 61, 127, 0.04), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(76, 201, 240, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 201, 240, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+
+.display-font { font-family: 'Space Grotesk', sans-serif; }
+.mono-font { font-family: 'JetBrains Mono', monospace; }
+
+main, header, footer { position: relative; z-index: 1; }
+
+.hero-grid {
+  background-image: 
+    linear-gradient(rgba(255, 214, 10, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 214, 10, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.tab-btn {
+  position: relative;
+  padding: 0.875rem 1.5rem;
+  background: var(--card);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.tab-btn:hover:not(.active) {
+  border-color: var(--accent);
+  color: var(--fg);
+  transform: translateY(-2px);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), #ffb700);
+  color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 6px 24px rgba(255, 214, 10, 0.35);
+}
+
+.tab-btn .tab-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-card {
+  background: linear-gradient(180deg, var(--card), var(--card-2));
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.glass-card-2 {
+  background: rgba(19, 24, 37, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  backdrop-filter: blur(8px);
+}
+
+.btn {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+  background: var(--card-2);
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--card);
+  transform: translateY(-1px);
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #ffb700;
+  border-color: #ffb700;
+  box-shadow: 0 4px 16px rgba(255, 214, 10, 0.4);
+}
+
+.btn-secondary {
+  background: var(--accent-2);
+  color: var(--bg);
+  border-color: var(--accent-2);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #00e090;
+  border-color: #00e090;
+}
+
+.btn-chip {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-chip:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+  transform: translateY(-1px);
+}
+
+.btn-chip.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(255, 214, 10, 0.3);
+}
+
+.svg-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: 
+    radial-gradient(circle at center, rgba(76, 201, 240, 0.08), transparent 70%),
+    var(--bg-2);
+  border-radius: 0.75rem;
+  touch-action: none;
+}
+
+.svg-grid { stroke: rgba(76, 201, 240, 0.08); stroke-width: 0.5; }
+.svg-axis { stroke: rgba(76, 201, 240, 0.15); stroke-width: 1; }
+
+.svg-edge {
+  stroke: var(--fg);
+  stroke-width: 3;
+  fill: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  stroke-linecap: round;
+}
+
+.svg-edge:hover { stroke: var(--accent); stroke-width: 4; }
+
+.svg-edge.selected {
+  stroke: var(--accent) !important;
+  stroke-width: 5;
+  filter: drop-shadow(0 0 8px var(--accent));
+}
+
+.svg-edge.diagonal {
+  stroke: var(--diagonal);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+}
+
+.svg-point {
+  fill: var(--accent);
+  stroke: var(--bg);
+  stroke-width: 3;
+  cursor: grab;
+  transition: r 0.2s ease, fill 0.2s ease;
+  filter: drop-shadow(0 0 6px rgba(255, 214, 10, 0.5));
+}
+
+.svg-point:hover { fill: var(--accent-2); }
+.svg-point.selected {
+  fill: var(--accent-3);
+  filter: drop-shadow(0 0 10px var(--accent-3));
+}
+
+.svg-label {
+  fill: var(--bg);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  user-select: none;
+}
+
+.svg-label-bg { fill: var(--accent); pointer-events: none; }
+.svg-label-bg.selected { fill: var(--accent-3); }
+
+.label-input {
+  width: 38px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.5rem;
+  color: var(--fg);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.label-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.15);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.result-card {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-parallel { border-color: var(--parallel); background: rgba(6, 255, 165, 0.08); }
+.result-perpendicular { border-color: var(--perpendicular); background: rgba(255, 61, 127, 0.08); }
+.result-intersecting { border-color: var(--intersecting); background: rgba(255, 214, 10, 0.08); }
+.result-skew { border-color: var(--skew); background: rgba(179, 136, 255, 0.08); }
+
+.three-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 0.75rem;
+  cursor: grab;
+}
+
+.three-canvas:active { cursor: grabbing; }
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  color: var(--fg);
+  font-weight: 500;
+  font-size: 0.875rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  max-width: 90vw;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success { border-left-color: var(--accent-2); }
+.toast.error { border-left-color: var(--accent-3); }
+.toast.info { border-left-color: var(--accent-4); }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.float-anim { animation: float 5s ease-in-out infinite; }
+
+.segment-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: rgba(6, 255, 165, 0.1);
+  border: 1px solid var(--parallel);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--parallel);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.scroll-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.scroll-x::-webkit-scrollbar { height: 4px; }
+.scroll-x::-webkit-scrollbar-track { background: transparent; }
+.scroll-x::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.three-label {
+  position: absolute;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, background 0.2s ease;
+  text-transform: uppercase;
+  box-shadow: 0 0 12px rgba(255, 214, 10, 0.6);
+  z-index: 5;
+}
+
+.three-label.selected {
+  background: var(--accent-3);
+  box-shadow: 0 0 16px var(--accent-3);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+@media (max-width: 1024px) {
+  .layout-grid { grid-template-columns: 1fr !important; }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-amber {
+  background: rgba(255, 214, 10, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(255, 214, 10, 0.3);
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  animation: confettiFall 1.6s cubic-bezier(0.2, 0.6, 0.3, 1) forwards;
+  z-index: 9999;
+}
+
+@keyframes confettiFall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(720deg); opacity: 0; }
+}
+
+.hero-shape {
+  animation: morph 12s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes morph {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.08); }
+}
+
+.pulse-ring {
+  animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.kbd {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--card-2);
+  border: 1px solid var(--border-light);
+  border-radius: 0.25rem;
+  border-bottom-width: 2px;
+}
+</style>
+</head>
+<body>
+
+<header class="relative overflow-hidden">
+  <div class="absolute inset-0 hero-grid opacity-30"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--bg)]"></div>
+  
+  <div class="relative max-w-7xl mx-auto px-6 pt-12 pb-10">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center float-anim" style="background: linear-gradient(135deg, var(--accent), var(--accent-3));">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a0e1a" stroke-width="2.5" stroke-linecap="round">
+          <path d="M4 20L20 4M4 4h16v16"/>
+          <circle cx="4" cy="20" r="1.5" fill="#0a0e1a"/>
+          <circle cx="20" cy="4" r="1.5" fill="#0a0e1a"/>
+        </svg>
+      </div>
+      <span class="badge badge-amber">Materi SMP — Bab Garis & Sudut</span>
+    </div>
+    
+    <h1 class="display-font text-5xl md:text-7xl font-bold leading-[0.95] mb-5 tracking-tight">
+      <span class="block text-[var(--fg)]">Geometri</span>
+      <span class="block" style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Garis & Sudut</span>
+    </h1>
+    
+    <p class="text-base md:text-lg text-[var(--muted)] max-w-2xl leading-relaxed mb-6">
+      Laboratorium interaktif untuk menjelajahi hubungan antar segmen garis pada bangun datar, bangun ruang, dan kumpulan titik. Beri nama titik sudutmu sendiri, lalu tentukan mana yang <span class="text-[var(--parallel)] font-semibold">sejajar</span>, <span class="text-[var(--perpendicular)] font-semibold">tegak lurus</span>, atau <span class="text-[var(--intersecting)] font-semibold">berpotongan</span>.
+    </p>
+    
+    <div class="flex flex-wrap gap-2">
+      <div class="glass-card-2 px-3 py-2 flex items-center gap-2">
+        <span class="legend-dot" style="background: var(--parallel)"></span>
+        <span class="text-xs font-semibold">Sejajar</span>
+      </div>
+      <div class="glass-card-2 px-3 py-2 flex items-center gap-2">
+        <span class="legend-dot" style="background: var(--perpendicular)"></span>
+        <span class="text-xs font-semibold">Tegak Lurus</span>
+      </div>
+      <div class="glass-card-2 px-3 py-2 flex items-center gap-2">
+        <span class="legend-dot" style="background: var(--intersecting)"></span>
+        <span class="text-xs font-semibold">Berpotongan</span>
+      </div>
+      <div class="glass-card-2 px-3 py-2 flex items-center gap-2">
+        <span class="legend-dot" style="background: var(--skew)"></span>
+        <span class="text-xs font-semibold">Bersilangan</span>
+      </div>
+      <div class="glass-card-2 px-3 py-2 flex items-center gap-2">
+        <span class="legend-dot" style="background: var(--diagonal)"></span>
+        <span class="text-xs font-semibold">Diagonal</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 pb-20">
+  
+  <div class="flex gap-2 mb-6 scroll-x pb-2">
+    <button class="tab-btn active" data-tab="flat">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </span>
+      Bangun Datar
+    </button>
+    <button class="tab-btn" data-tab="solid">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </span>
+      Bangun Ruang
+    </button>
+    <button class="tab-btn" data-tab="line">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18l4-12 4 8 4-4 4 8"/></svg>
+      </span>
+      Garis & Titik
+    </button>
+  </div>
+  
+  <!-- TAB: BANGUN DATAR -->
+  <div id="tab-flat" class="tab-content">
+    <div class="grid lg:grid-cols-[1fr_400px] gap-6 layout-grid">
+      <div class="glass-card p-6">
+        <div class="flex items-start justify-between mb-4 gap-4 flex-wrap">
+          <div>
+            <h2 class="section-title">Kanvas Bangun Datar</h2>
+            <p class="text-sm text-[var(--muted)] mt-1">Seret titik untuk mengubah bentuk. Klik segmen garis untuk menganalisis hubungannya.</p>
+          </div>
+          <div class="flex gap-2">
+            <button id="flat-toggle-diagonal" class="btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19L19 5M5 5h14v14"/></svg>
+              Diagonal
+            </button>
+            <button id="flat-reset" class="btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="btn-chip active" data-shape="rectangle">Persegi Panjang</button>
+          <button class="btn-chip" data-shape="square">Persegi</button>
+          <button class="btn-chip" data-shape="parallelogram">Jajaran Genjang</button>
+          <button class="btn-chip" data-shape="trapezoid">Trapesium</button>
+          <button class="btn-chip" data-shape="rhombus">Belah Ketupat</button>
+          <button class="btn-chip" data-shape="kite">Layang-Layang</button>
+          <button class="btn-chip" data-shape="triangle">Segitiga</button>
+        </div>
+        
+        <div class="relative aspect-[6/5] bg-[var(--bg-2)] rounded-xl overflow-hidden border border-[var(--border)]">
+          <svg id="flat-svg" class="svg-canvas" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="glass-card p-5">
+          <h3 class="section-title text-base mb-3 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7V4h18v3M9 20h6M12 4v16"/></svg>
+            Namai Titik Sudut
+          </h3>
+          <p class="text-xs text-[var(--muted)] mb-3">Ubah huruf label setiap titik sudut sesuai keinginanmu.</p>
+          <div id="flat-labels" class="grid grid-cols-4 gap-2"></div>
+        </div>
+        
+        <div class="glass-card p-5">
+          <h3 class="section-title text-base mb-3 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>
+            Analisis Hubungan
+          </h3>
+          <p class="text-xs text-[var(--muted)] mb-3">Pilih dua segmen garis pada bangun, lalu tentukan hubungannya.</p>
+          
+          <div id="flat-selected-segments" class="mb-3">
+            <div class="text-xs text-[var(--muted)] italic">Belum ada segmen dipilih. Klik dua segmen pada bangun.</div>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <button class="btn-chip" data-answer="parallel">Sejajar</button>
+            <button class="btn-chip" data-answer="perpendicular">Tegak Lurus</button>
+            <button class="btn-chip" data-answer="intersecting">Berpotongan</button>
+          </div>
+          
+          <button id="flat-check" class="btn btn-primary w-full justify-center" disabled>Cek Jawaban</button>
+          
+          <div id="flat-result" class="mt-3"></div>
+        </div>
+        
+        <div class="glass-card-2 p-4">
+          <div class="text-xs font-bold text-[var(--accent)] mb-2 mono-font tracking-wider">TIPS BELAJAR</div>
+          <p class="text-xs text-[var(--muted)] leading-relaxed">
+            <span class="text-[var(--parallel)] font-semibold">Sejajar</span>: tidak akan pernah berpotongan.<br>
+            <span class="text-[var(--perpendicular)] font-semibold">Tegak lurus</span>: membentuk sudut 90°.<br>
+            <span class="text-[var(--intersecting)] font-semibold">Berpotongan</span>: memiliki satu titik temu.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- TAB: BANGUN RUANG -->
+  <div id="tab-solid" class="tab-content hidden">
+    <div class="grid lg:grid-cols-[1fr_400px] gap-6 layout-grid">
+      <div class="glass-card p-6">
+        <div class="flex items-start justify-between mb-4 gap-4 flex-wrap">
+          <div>
+            <h2 class="section-title">Kanvas Bangun Ruang 3D</h2>
+            <p class="text-sm text-[var(--muted)] mt-1">Seret untuk memutar, scroll untuk zoom. Klik segmen untuk analisis.</p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button id="solid-toggle-face-diag" class="btn">Diagonal Sisi</button>
+            <button id="solid-toggle-space-diag" class="btn">Diagonal Ruang</button>
+            <button id="solid-reset-view" class="btn">Reset View</button>
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="btn-chip active" data-solid="cube">Kubus</button>
+          <button class="btn-chip" data-solid="cuboid">Balok</button>
+          <button class="btn-chip" data-solid="prism">Prisma Segitiga</button>
+          <button class="btn-chip" data-solid="pyramid">Limas Segiempat</button>
+        </div>
+        
+        <div class="relative aspect-[6/5] bg-[var(--bg-2)] rounded-xl overflow-hidden border border-[var(--border)]">
+          <canvas id="solid-canvas" class="three-canvas"></canvas>
+          <div id="solid-labels-overlay" class="absolute inset-0 pointer-events-none"></div>
+        </div>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="glass-card p-5">
+          <h3 class="section-title text-base mb-3 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7V4h18v3M9 20h6M12 4v16"/></svg>
+            Namai Titik Sudut
+          </h3>
+          <p class="text-xs text-[var(--muted)] mb-3">Ubah huruf label setiap titik sudut bangun ruang.</p>
+          <div id="solid-labels" class="grid grid-cols-4 gap-2"></div>
+        </div>
+        
+        <div class="glass-card p-5">
+          <h3 class="section-title text-base mb-3 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>
+            Analisis Hubungan
+          </h3>
+          <p class="text-xs text-[var(--muted)] mb-3">Pilih dua segmen pada bangun ruang, tentukan hubungannya.</p>
+          
+          <div id="solid-selected-segments" class="mb-3">
+            <div class="text-xs text-[var(--muted)] italic">Belum ada segmen dipilih.</div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <button class="btn-chip" data-solid-answer="parallel">Sejajar</button>
+            <button class="btn-chip" data-solid-answer="perpendicular">Tegak Lurus</button>
+            <button class="btn-chip" data-solid-answer="intersecting">Berpotongan</button>
+            <button class="btn-chip" data-solid-answer="skew">Bersilangan</button>
+          </div>
+          
+          <button id="solid-check" class="btn btn-primary w-full justify-center" disabled>Cek Jawaban</button>
+          
+          <div id="solid-result" class="mt-3"></div>
+        </div>
+        
+        <div class="glass-card-2 p-4">
+          <div class="text-xs font-bold text-[var(--accent)] mb-2 mono-font tracking-wider">INFO 3D</div>
+          <p class="text-xs text-[var(--muted)] leading-relaxed">
+            <span class="text-[var(--diagonal)] font-semibold">Diagonal sisi</span>: di dalam satu sisi persegi/persegi panjang.<br>
+            <span class="text-[var(--accent-3)] font-semibold">Diagonal ruang</span>: membelah bangun ruang dari ujung ke ujung.<br>
+            <span class="text-[var(--skew)] font-semibold">Bersilangan</span>: garis yang tidak sejajar dan tidak berpotongan di 3D.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- TAB: GARIS & TITIK -->
+  <div id="tab-line" class="tab-content hidden">
+    <div class="grid lg:grid-cols-[1fr_400px] gap-6 layout-grid">
+      <div class="glass-card p-6">
+        <div class="flex items-start justify-between mb-4 gap-4 flex-wrap">
+          <div>
+            <h2 class="section-title">Garis & Titik</h2>
+            <p class="text-sm text-[var(--muted)] mt-1" id="line-instruction">Sebutkan semua segmen garis yang terbentuk dari kumpulan titik.</p>
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="btn-chip active" data-line-layout="straight">Garis Lurus</button>
+          <button class="btn-chip" data-line-layout="zigzag">Zigzag</button>
+          <button class="btn-chip" data-line-layout="M">Huruf M</button>
+          <button class="btn-chip" data-line-layout="N">Huruf N</button>
+          <button class="btn-chip" data-line-layout="Z">Huruf Z</button>
+          <button class="btn-chip" data-line-layout="W">Huruf W</button>
+          <button class="btn-chip" data-line-layout="A">Huruf A</button>
+          <button class="btn-chip" data-line-layout="E">Huruf E</button>
+          <button class="btn-chip" data-line-layout="H">Huruf H</button>
+        </div>
+        
+        <div class="relative aspect-[6/5] bg-[var(--bg-2)] rounded-xl overflow-hidden border border-[var(--border)]">
+          <svg id="line-svg" class="svg-canvas" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="glass-card p-5">
+          <h3 class="section-title text-base mb-3 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+            Sebutkan Segmen
+          </h3>
+          <p class="text-xs text-[var(--muted)] mb-3">
+            Klik dua titik untuk menyebutkan segmen yang menghubungkannya. Temukan semuanya!
+          </p>
+          
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold">Ditemukan:</span>
+            <span id="line-progress" class="mono-font text-sm font-bold text-[var(--accent)]">0 / 0</span>
+          </div>
+          
+          <div class="w-full bg-[var(--bg-2)] rounded-full h-2.5 mb-4 overflow-hidden">
+            <div id="line-progress-bar" class="h-full transition-all duration-500" style="width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2));"></div>
+          </div>
+          
+          <div id="line-segments-found" class="flex flex-wrap gap-2 mb-4 min-h-[60px] p-2 rounded-lg bg-[var(--bg-2)] border border-[var(--border)]">
+            <div class="text-xs text-[var(--muted)] italic">Klik titik untuk memulai...</div>
+          </div>
+          
+          <div class="flex gap-2">
+            <button id="line-hint" class="btn flex-1 justify-center">Petunjuk</button>
+            <button id="line-show-all" class="btn btn-secondary flex-1 justify-center">Lihat Semua</button>
+            <button id="line-reset" class="btn">Reset</button>
+          </div>
+        </div>
+        
+        <div class="glass-card-2 p-4">
+          <div class="text-xs font-bold text-[var(--accent)] mb-2 mono-font tracking-wider">CARA BERMAIN</div>
+          <p class="text-xs text-[var(--muted)] leading-relaxed">
+            1. Perhatikan titik dan garis di kanvas.<br>
+            2. Untuk <span class="text-[var(--fg)] font-semibold">garis lurus</span>, semua pasangan titik adalah segmen.<br>
+            3. Untuk <span class="text-[var(--fg)] font-semibold">huruf/zigzag</span>, hanya segmen yang membentuk bangun.<br>
+            4. Klik <span class="kbd">titik A</span> lalu <span class="kbd">titik B</span> untuk menyebut segmen AB.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</main>
+
+<footer class="relative max-w-7xl mx-auto px-6 pb-10">
+  <div class="border-t border-[var(--border)] pt-6 flex flex-wrap items-center justify-between gap-4">
+    <div class="text-xs text-[var(--muted)]">
+      Laboratorium Geometri Interaktif — Belajar garis, sudut, dan hubungan antar segmen dengan eksplorasi langsung.
+    </div>
+    <div class="flex items-center gap-3 text-xs text-[var(--muted)]">
+      <span class="mono-font">v1.0</span>
+      <span>•</span>
+      <span>Dibuat untuk pembelajaran</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ============= STATE =============
+const state = {
+  currentTab: 'flat',
+  flat: {
+    shape: 'rectangle',
+    points: [],
+    labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+    showDiagonals: true,
+    selectedSegments: [],
+    userAnswer: null,
+    answered: false
+  },
+  solid: {
+    shape: 'cube',
+    points: [],
+    labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+    showFaceDiag: false,
+    showSpaceDiag: false,
+    selectedSegments: [],
+    userAnswer: null,
+    answered: false
+  },
+  line: {
+    layout: 'straight',
+    points: [],
+    labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+    selectedPoints: [],
+    foundSegments: new Set(),
+    showAll: false
+  }
+};
+
+// ============= UTILITIES =============
+function showToast(msg, type = 'info') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = `toast ${type}`;
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function spawnConfetti(big = false) {
+  const colors = ['#ffd60a', '#06ffa5', '#ff3d7f', '#4cc9f0', '#b388ff'];
+  const count = big ? 60 : 25;
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = '50%';
+    c.style.top = '40%';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.setProperty('--tx', ((Math.random() - 0.5) * 700) + 'px');
+    c.style.setProperty('--ty', ((Math.random() * 0.6 + 0.4) * 500) + 'px');
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 1700);
+  }
+}
+
+function analyzeSegments2D(p1, p2, p3, p4) {
+  const d1 = { x: p2.x - p1.x, y: p2.y - p1.y };
+  const d2 = { x: p4.x - p3.x, y: p4.y - p3.y };
+  const len1 = Math.hypot(d1.x, d1.y);
+  const len2 = Math.hypot(d2.x, d2.y);
+  if (len1 < 0.001 || len2 < 0.001) return 'unknown';
+  const cross = d1.x * d2.y - d1.y * d2.x;
+  const crossNorm = Math.abs(cross) / (len1 * len2);
+  if (crossNorm < 0.06) return 'parallel';
+  const dot = d1.x * d2.x + d1.y * d2.y;
+  const dotNorm = Math.abs(dot) / (len1 * len2);
+  if (dotNorm < 0.06) return 'perpendicular';
+  return 'intersecting';
+}
+
+function analyzeSegments3D(p1, p2, p3, p4) {
+  const d1 = { x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
+  const d2 = { x: p4.x - p3.x, y: p4.y - p3.y, z: p4.z - p3.z };
+  const len1 = Math.hypot(d1.x, d1.y, d1.z);
+  const len2 = Math.hypot(d2.x, d2.y, d2.z);
+  if (len1 < 0.001 || len2 < 0.001) return 'unknown';
+  
+  const cross = {
+    x: d1.y * d2.z - d1.z * d2.y,
+    y: d1.z * d2.x - d1.x * d2.z,
+    z: d1.x * d2.y - d1.y * d2.x
+  };
+  const crossMag = Math.hypot(cross.x, cross.y, cross.z);
+  const crossNorm = crossMag / (len1 * len2);
+  if (crossNorm < 0.06) return 'parallel';
+  
+  const r = { x: p3.x - p1.x, y: p3.y - p1.y, z: p3.z - p1.z };
+  const triple = r.x * cross.x + r.y * cross.y + r.z * cross.z;
+  const rMag = Math.hypot(r.x, r.y, r.z);
+  const tripleNorm = rMag > 0.001 ? Math.abs(triple) / (len1 * len2 * rMag) : 0;
+  
+  if (tripleNorm < 0.06) {
+    const dot = d1.x * d2.x + d1.y * d2.y + d1.z * d2.z;
+    const dotNorm = Math.abs(dot) / (len1 * len2);
+    if (dotNorm < 0.06) return 'perpendicular';
+    return 'intersecting';
+  }
+  return 'skew';
+}
+
+// ============= TAB SWITCHING =============
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    state.currentTab = tab;
+    if (tab === 'solid' && !threeScene) initThree();
+    if (tab === 'solid' && threeScene) {
+      setTimeout(() => onSolidResize(), 50);
+    }
+  });
+});
+
+// ============= FLAT SHAPES =============
+const flatShapes = {
+  rectangle: {
+    points: [[150, 150], [450, 150], [450, 350], [150, 350]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  square: {
+    points: [[200, 130], [400, 130], [400, 330], [200, 330]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  parallelogram: {
+    points: [[120, 350], [230, 150], [490, 150], [380, 350]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  trapezoid: {
+    points: [[130, 360], [220, 140], [400, 140], [470, 360]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  rhombus: {
+    points: [[300, 100], [500, 250], [300, 400], [100, 250]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  kite: {
+    points: [[300, 90], [460, 240], [300, 410], [140, 240]],
+    edges: [[0,1],[1,2],[2,3],[3,0]],
+    diagonals: [[0,2],[1,3]],
+    numVertices: 4
+  },
+  triangle: {
+    points: [[300, 110], [500, 400], [100, 400]],
+    edges: [[0,1],[1,2],[2,0]],
+    diagonals: [],
+    numVertices: 3
+  }
+};
+
+function setupFlatShape(shapeName) {
+  state.flat.shape = shapeName;
+  const shape = flatShapes[shapeName];
+  state.flat.points = shape.points.map(p => ({ x: p[0], y: p[1] }));
+  state.flat.selectedSegments = [];
+  state.flat.userAnswer = null;
+  state.flat.answered = false;
+  const defaultLabels = ['A', 'B', 'C', 'D', 'E', 'F'];
+  state.flat.labels = defaultLabels.slice(0, shape.numVertices);
+  renderFlatShape();
+  renderFlatLabels();
+  renderFlatSelected();
+  document.getElementById('flat-result').innerHTML = '';
+  document.getElementById('flat-check').disabled = true;
+  document.querySelectorAll('[data-answer]').forEach(b => b.classList.remove('active'));
+}
+
+function renderFlatShape() {
+  const svg = document.getElementById('flat-svg');
+  const { points, labels, showDiagonals, selectedSegments } = state.flat;
+  const shape = flatShapes[state.flat.shape];
+  let html = '';
+  
+  // Grid pattern
+  html += '<defs><pattern id="flatgrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" class="svg-grid"/></pattern></defs>';
+  html += '<rect width="600" height="500" fill="url(#flatgrid)"/>';
+  
+  // Axes
+  html += '<line x1="0" y1="250" x2="600" y2="250" class="svg-axis" stroke-dasharray="2 6" opacity="0.4"/>';
+  html += '<line x1="300" y1="0" x2="300" y2="500" class="svg-axis" stroke-dasharray="2 6" opacity="0.4"/>';
+  
+  // Shape fill
+  if (points.length >= 3) {
+    const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+    html += `<path d="${pathD}" fill="rgba(255, 214, 10, 0.04)" stroke="none"/>`;
+  }
+  
+  // Diagonals
+  if (showDiagonals && shape.diagonals.length > 0) {
+    shape.diagonals.forEach(d => {
+      const p1 = points[d[0]];
+      const p2 = points[d[1]];
+      const isSelected = selectedSegments.some(s => 
+        (s[0] === d[0] && s[1] === d[1]) || (s[0] === d[1] && s[1] === d[0]));
+      html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" class="svg-edge diagonal ${isSelected ? 'selected' : ''}" data-segment="${d[0]}-${d[1]}"/>`;
+    });
+  }
+  
+  // Edges
+  shape.edges.forEach(e => {
+    const p1 = points[e[0]];
+    const p2 = points[e[1]];
+    const isSelected = selectedSegments.some(s => 
+      (s[0] === e[0] && s[1] === e[1]) || (s[0] === e[1] && s[1] === e[0]));
+    html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" class="svg-edge ${isSelected ? 'selected' : ''}" data-segment="${e[0]}-${e[1]}"/>`;
+  });
+  
+  // Points with labels
+  points.forEach((p, i) => {
+    const isVertexSelected = selectedSegments.some(s => s[0] === i || s[1] === i);
+    html += `<g transform="translate(${p.x}, ${p.y})">`;
+    html += `<circle cx="0" cy="0" r="9" class="svg-point" data-point-idx="${i}"/>`;
+    html += `<circle cx="15" cy="-15" r="11" class="svg-label-bg ${isVertexSelected ? 'selected' : ''}"/>`;
+    html += `<text x="15" y="-15" class="svg-label">${labels[i]}</text>`;
+    html += `</g>`;
+  });
+  
+  svg.innerHTML = html;
+}
+
+let flatDragging = null;
+function setupFlatCanvas() {
+  const svg = document.getElementById('flat-svg');
+  
+  svg.addEventListener('click', (e) => {
+    if (flatDragging !== null) return;
+    const edge = e.target.closest('.svg-edge');
+    if (edge) {
+      const [a, b] = edge.dataset.segment.split('-').map(Number);
+      toggleFlatSegment([a, b]);
+    }
+  });
+  
+  svg.addEventListener('mousedown', (e) => {
+    const point = e.target.closest('.svg-point');
+    if (point) {
+      e.preventDefault();
+      flatDragging = parseInt(point.dataset.pointIdx);
+    }
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if (flatDragging === null) return;
+    const rect = svg.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 600;
+    const y = ((e.clientY - rect.top) / rect.height) * 500;
+    state.flat.points[flatDragging].x = Math.max(40, Math.min(560, x));
+    state.flat.points[flatDragging].y = Math.max(40, Math.min(460, y));
+    renderFlatShape();
+  });
+  
+  document.addEventListener('mouseup', () => { 
+    setTimeout(() => { flatDragging = null; }, 50);
+  });
+  
+  // Touch
+  svg.addEventListener('touchstart', (e) => {
+    const point = e.target.closest('.svg-point');
+    if (point) {
+      e.preventDefault();
+      flatDragging = parseInt(point.dataset.pointIdx);
+    }
+  }, { passive: false });
+  
+  svg.addEventListener('touchmove', (e) => {
+    if (flatDragging === null) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = svg.getBoundingClientRect();
+    const x = ((touch.clientX - rect.left) / rect.width) * 600;
+    const y = ((touch.clientY - rect.top) / rect.height) * 500;
+    state.flat.points[flatDragging].x = Math.max(40, Math.min(560, x));
+    state.flat.points[flatDragging].y = Math.max(40, Math.min(460, y));
+    renderFlatShape();
+  }, { passive: false });
+  
+  document.addEventListener('touchend', () => {
+    setTimeout(() => { flatDragging = null; }, 50);
+  });
+}
+
+function toggleFlatSegment(seg) {
+  const selected = state.flat.selectedSegments;
+  const idx = selected.findIndex(s => 
+    (s[0] === seg[0] && s[1] === seg[1]) || (s[0] === seg[1] && s[1] === seg[0]));
+  if (idx >= 0) selected.splice(idx, 1);
+  else {
+    if (selected.length >= 2) selected.shift();
+    selected.push(seg);
+  }
+  state.flat.userAnswer = null;
+  state.flat.answered = false;
+  document.getElementById('flat-result').innerHTML = '';
+  document.getElementById('flat-check').disabled = selected.length !== 2;
+  document.querySelectorAll('[data-answer]').forEach(b => b.classList.remove('active'));
+  renderFlatShape();
+  renderFlatSelected();
+}
+
+function renderFlatSelected() {
+  const container = document.getElementById('flat-selected-segments');
+  const { selectedSegments, labels } = state.flat;
+  if (selectedSegments.length === 0) {
+    container.innerHTML = '<div class="text-xs text-[var(--muted)] italic">Belum ada segmen dipilih. Klik dua segmen pada bangun.</div>';
+    return;
+  }
+  let html = '<div class="space-y-2">';
+  selectedSegments.forEach((seg, i) => {
+    const l1 = labels[seg[0]], l2 = labels[seg[1]];
+    html += `<div class="flex items-center justify-between p-2 rounded-lg bg-[var(--bg-2)] border border-[var(--border)]">
+      <span class="text-xs text-[var(--muted)]">Segmen ${i+1}</span>
+      <span class="mono-font font-bold text-sm text-[var(--accent)]">${l1}${l2}</span>
+    </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderFlatLabels() {
+  const container = document.getElementById('flat-labels');
+  const { labels } = state.flat;
+  let html = '';
+  labels.forEach((label, i) => {
+    html += `<div class="flex flex-col items-center gap-1">
+      <div class="w-7 h-7 rounded-full bg-[var(--accent)] flex items-center justify-center text-[var(--bg)] font-bold text-xs">${label}</div>
+      <input type="text" class="label-input" value="${label}" data-idx="${i}" maxlength="2">
+    </div>`;
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('.label-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      const val = e.target.value.toUpperCase().slice(0, 2);
+      state.flat.labels[idx] = val || '?';
+      renderFlatShape();
+      renderFlatSelected();
+    });
+  });
+}
+
+function checkFlatAnswer() {
+  if (state.flat.selectedSegments.length !== 2) return;
+  const seg1 = state.flat.selectedSegments[0];
+  const seg2 = state.flat.selectedSegments[1];
+  const p1 = state.flat.points[seg1[0]];
+  const p2 = state.flat.points[seg1[1]];
+  const p3 = state.flat.points[seg2[0]];
+  const p4 = state.flat.points[seg2[1]];
+  const result = analyzeSegments2D(p1, p2, p3, p4);
+  const userAnswer = state.flat.userAnswer;
+  const correct = result === userAnswer;
+  const labels = state.flat.labels;
+  const seg1Label = `${labels[seg1[0]]}${labels[seg1[1]]}`;
+  const seg2Label = `${labels[seg2[0]]}${labels[seg2[1]]}`;
+  const resultText = { parallel: 'Sejajar', perpendicular: 'Tegak Lurus', intersecting: 'Berpotongan' };
+  const resultColor = { parallel: 'var(--parallel)', perpendicular: 'var(--perpendicular)', intersecting: 'var(--intersecting)' };
+  
+  let html = `<div class="result-card result-${result}">
+    <div class="flex items-start gap-3">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: ${correct ? 'var(--accent-2)' : 'var(--accent-3)'}; color: var(--bg);">
+        ${correct ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>'}
+      </div>
+      <div class="flex-1">
+        <div class="font-bold text-sm mb-1">${correct ? 'Tepat sekali!' : 'Belum tepat'}</div>
+        <div class="text-xs leading-relaxed text-[var(--muted)]">
+          Segmen <span class="mono-font font-bold text-[var(--fg)]">${seg1Label}</span> dan <span class="mono-font font-bold text-[var(--fg)]">${seg2Label}</span> 
+          bersifat <span class="font-bold" style="color: ${resultColor[result]}">${resultText[result]}</span>.
+          ${correct ? 'Kamu menjawab dengan benar.' : `Kamu menjawab: ${resultText[userAnswer] || '?'}.`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('flat-result').innerHTML = html;
+  state.flat.answered = true;
+  if (correct) {
+    showToast('Jawaban benar! Kerja bagus!', 'success');
+    spawnConfetti();
+  } else {
+    showToast('Coba lagi, perhatikan arah garisnya.', 'error');
+  }
+}
+
+document.querySelectorAll('[data-shape]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-shape]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setupFlatShape(btn.dataset.shape);
+  });
+});
+
+document.getElementById('flat-toggle-diagonal').addEventListener('click', (e) => {
+  state.flat.showDiagonals = !state.flat.showDiagonals;
+  e.currentTarget.style.background = state.flat.showDiagonals ? 'var(--accent)' : '';
+  e.currentTarget.style.color = state.flat.showDiagonals ? 'var(--bg)' : '';
+  e.currentTarget.style.borderColor = state.flat.showDiagonals ? 'var(--accent)' : '';
+  renderFlatShape();
+});
+
+document.getElementById('flat-reset').addEventListener('click', () => setupFlatShape(state.flat.shape));
+
+document.querySelectorAll('[data-answer]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-answer]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.flat.userAnswer = btn.dataset.answer;
+  });
+});
+
+document.getElementById('flat-check').addEventListener('click', checkFlatAnswer);
+
+// ============= SOLID SHAPES (Three.js) =============
+const solidShapes = {
+  cube: {
+    points: [
+      [-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1],
+      [-1, 1, -1], [1, 1, -1], [1, 1, 1], [-1, 1, 1]
+    ],
+    edges: [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]],
+    faceDiagonals: [[0,2],[1,3],[4,6],[5,7],[0,5],[1,4],[3,6],[2,7],[0,7],[3,4],[1,6],[2,5]],
+    spaceDiagonals: [[0,6],[1,7],[2,4],[3,5]],
+    numVertices: 8
+  },
+  cuboid: {
+    points: [
+      [-1.5, -1, -0.75], [1.5, -1, -0.75], [1.5, -1, 0.75], [-1.5, -1, 0.75],
+      [-1.5, 1, -0.75], [1.5, 1, -0.75], [1.5, 1, 0.75], [-1.5, 1, 0.75]
+    ],
+    edges: [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]],
+    faceDiagonals: [[0,2],[1,3],[4,6],[5,7],[0,5],[1,4],[3,6],[2,7],[0,7],[3,4],[1,6],[2,5]],
+    spaceDiagonals: [[0,6],[1,7],[2,4],[3,5]],
+    numVertices: 8
+  },
+  prism: {
+    points: [
+      [-1, -1, -0.866], [1, -1, -0.866], [0, -1, 1.732],
+      [-1, 1, -0.866], [1, 1, -0.866], [0, 1, 1.732]
+    ],
+    edges: [[0,1],[1,2],[2,0],[3,4],[4,5],[5,3],[0,3],[1,4],[2,5]],
+    faceDiagonals: [[0,4],[1,3],[1,5],[2,4],[0,5],[2,3]],
+    spaceDiagonals: [],
+    numVertices: 6
+  },
+  pyramid: {
+    points: [
+      [-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1],
+      [0, 1.3, 0]
+    ],
+    edges: [[0,1],[1,2],[2,3],[3,0],[0,4],[1,4],[2,4],[3,4]],
+    faceDiagonals: [[0,2],[1,3]],
+    spaceDiagonals: [],
+    numVertices: 5
+  }
+};
+
+let threeScene = null, threeCamera = null, threeRenderer = null, threeControls = null;
+let threeRaycaster = null, threeMouse = null;
+let threeEdgeLines = [];
+let threeVertices = [];
+
+function initThree() {
+  const canvas = document.getElementById('solid-canvas');
+  const container = canvas.parentElement;
+  
+  threeScene = new THREE.Scene();
+  threeScene.background = new THREE.Color(0x0d1320);
+  
+  threeCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+  threeCamera.position.set(4.5, 3.5, 5.5);
+  
+  threeRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  threeRenderer.setSize(container.clientWidth, container.clientHeight);
+  threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  
+  threeControls = new OrbitControls(threeCamera, canvas);
+  threeControls.enableDamping = true;
+  threeControls.dampingFactor = 0.08;
+  threeControls.minDistance = 3;
+  threeControls.maxDistance = 18;
+  threeControls.target.set(0, 0, 0);
+  
+  const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+  threeScene.add(ambient);
+  const dir1 = new THREE.DirectionalLight(0xffd60a, 0.7);
+  dir1.position.set(5, 5, 5);
+  threeScene.add(dir1);
+  const dir2 = new THREE.DirectionalLight(0x4cc9f0, 0.4);
+  dir2.position.set(-5, 3, -5);
+  threeScene.add(dir2);
+  
+  // Grid
+  const grid = new THREE.GridHelper(12, 12, 0x4cc9f0, 0x1a2030);
+  grid.position.y = -2;
+  grid.material.opacity = 0.25;
+  grid.material.transparent = true;
+  threeScene.add(grid);
+  
+  // Axes subtle
+  const axesGroup = new THREE.Group();
+  const axisMat = new THREE.LineBasicMaterial({ color: 0x4cc9f0, transparent: true, opacity: 0.3 });
+  const xAxis = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6, -2, 0), new THREE.Vector3(6, -2, 0)]);
+  const zAxis = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -2, -6), new THREE.Vector3(0, -2, 6)]);
+  axesGroup.add(new THREE.Line(xAxis, axisMat));
+  axesGroup.add(new THREE.Line(zAxis, axisMat));
+  threeScene.add(axesGroup);
+  
+  threeRaycaster = new THREE.Raycaster();
+  threeRaycaster.params.Line.threshold = 0.18;
+  threeMouse = new THREE.Vector2();
+  
+  setupSolidShape('cube');
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    threeControls.update();
+    updateSolidLabels();
+    threeRenderer.render(threeScene, threeCamera);
+  }
+  animate();
+  
+  window.addEventListener('resize', onSolidResize);
+  canvas.addEventListener('click', onSolidCanvasClick);
+}
+
+function onSolidResize() {
+  if (!threeRenderer) return;
+  const canvas = document.getElementById('solid-canvas');
+  const container = canvas.parentElement;
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  if (w === 0 || h === 0) return;
+  threeCamera.aspect = w / h;
+  threeCamera.updateProjectionMatrix();
+  threeRenderer.setSize(w, h);
+}
+
+function setupSolidShape(shapeName) {
+  state.solid.shape = shapeName;
+  const shape = solidShapes[shapeName];
+  state.solid.points = shape.points.map(p => ({ x: p[0], y: p[1], z: p[2] }));
+  state.solid.selectedSegments = [];
+  state.solid.userAnswer = null;
+  state.solid.answered = false;
+  const defaultLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  state.solid.labels = defaultLabels.slice(0, shape.numVertices);
+  
+  // Clear old
+  threeEdgeLines.forEach(l => {
+    threeScene.remove(l);
+    l.geometry.dispose();
+    l.material.dispose();
+  });
+  threeEdgeLines = [];
+  threeVertices.forEach(v => {
+    threeScene.remove(v);
+    v.geometry.dispose();
+    v.material.dispose();
+  });
+  threeVertices = [];
+  
+  const scale = 1.3;
+  
+  // Vertices
+  shape.points.forEach((p, i) => {
+    const geom = new THREE.SphereGeometry(0.09, 20, 20);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffd60a });
+    const sphere = new THREE.Mesh(geom, mat);
+    sphere.position.set(p[0] * scale, p[1] * scale, p[2] * scale);
+    sphere.userData = { type: 'vertex', idx: i };
+    threeScene.add(sphere);
+    threeVertices.push(sphere);
+  });
+  
+  // Edges
+  shape.edges.forEach((e, idx) => {
+    const p1 = shape.points[e[0]];
+    const p2 = shape.points[e[1]];
+    addSolidLine(p1, p2, 0xe8eef5, 2.5, 'edge', idx, e, scale);
+  });
+  
+  // Face diagonals
+  if (state.solid.showFaceDiag) {
+    shape.faceDiagonals.forEach((d, idx) => {
+      const p1 = shape.points[d[0]];
+      const p2 = shape.points[d[1]];
+      addSolidLine(p1, p2, 0xb388ff, 2, 'faceDiag', idx, d, scale, true);
+    });
+  }
+  
+  // Space diagonals
+  if (state.solid.showSpaceDiag) {
+    shape.spaceDiagonals.forEach((d, idx) => {
+      const p1 = shape.points[d[0]];
+      const p2 = shape.points[d[1]];
+      addSolidLine(p1, p2, 0xff3d7f, 2, 'spaceDiag', idx, d, scale, true);
+    });
+  }
+  
+  renderSolidLabels();
+  renderSolidSelected();
+  document.getElementById('solid-result').innerHTML = '';
+  document.getElementById('solid-check').disabled = true;
+  document.querySelectorAll('[data-solid-answer]').forEach(b => b.classList.remove('active'));
+}
+
+function addSolidLine(p1, p2, color, width, type, idx, segment, scale, dashed = false) {
+  const pts = [
+    new THREE.Vector3(p1[0] * scale, p1[1] * scale, p1[2] * scale),
+    new THREE.Vector3(p2[0] * scale, p2[1] * scale, p2[2] * scale)
+  ];
+  const geom = new THREE.BufferGeometry().setFromPoints(pts);
+  let mat;
+  if (dashed) {
+    mat = new THREE.LineDashedMaterial({ color, dashSize: 0.18, gapSize: 0.12, linewidth: width });
+  } else {
+    mat = new THREE.LineBasicMaterial({ color, linewidth: width });
+  }
+  const line = new THREE.Line(geom, mat);
+  if (dashed) line.computeLineDistances();
+  line.userData = { type, idx, segment, baseColor: color };
+  threeScene.add(line);
+  threeEdgeLines.push(line);
+}
+
+function updateSolidLabels() {
+  if (!threeCamera) return;
+  const overlay = document.getElementById('solid-labels-overlay');
+  const canvas = document.getElementById('solid-canvas');
+  const container = canvas.parentElement;
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  const labels = state.solid.labels;
+  const points = solidShapes[state.solid.shape].points;
+  const scale = 1.3;
+  
+  let html = '';
+  points.forEach((p, i) => {
+    const vec = new THREE.Vector3(p[0] * scale, p[1] * scale, p[2] * scale);
+    vec.project(threeCamera);
+    if (vec.z > 1) return;
+    const x = (vec.x * 0.5 + 0.5) * w;
+    const y = (-vec.y * 0.5 + 0.5) * h;
+    const isVertexSelected = state.solid.selectedSegments.some(s => s[0] === i || s[1] === i);
+    html += `<div class="three-label ${isVertexSelected ? 'selected' : ''}" style="left: ${x + 14}px; top: ${y - 14}px;">${labels[i]}</div>`;
+  });
+  overlay.innerHTML = html;
+}
+
+function onSolidCanvasClick(e) {
+  const canvas = document.getElementById('solid-canvas');
+  const rect = canvas.getBoundingClientRect();
+  threeMouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  threeMouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  threeRaycaster.setFromCamera(threeMouse, threeCamera);
+  const intersects = threeRaycaster.intersectObjects(threeEdgeLines);
+  if (intersects.length > 0) {
+    const obj = intersects[0].object;
+    toggleSolidSegment(obj.userData.segment);
+  }
+}
+
+function toggleSolidSegment(seg) {
+  const selected = state.solid.selectedSegments;
+  const idx = selected.findIndex(s => 
+    (s[0] === seg[0] && s[1] === seg[1]) || (s[0] === seg[1] && s[1] === seg[0]));
+  if (idx >= 0) selected.splice(idx, 1);
+  else {
+    if (selected.length >= 2) selected.shift();
+    selected.push([...seg].sort((a,b) => a-b));
+  }
+  state.solid.userAnswer = null;
+  state.solid.answered = false;
+  document.getElementById('solid-result').innerHTML = '';
+  document.getElementById('solid-check').disabled = selected.length !== 2;
+  document.querySelectorAll('[data-solid-answer]').forEach(b => b.classList.remove('active'));
+  
+  // Update line colors
+  threeEdgeLines.forEach(line => {
+    const s = line.userData.segment;
+    const isSelected = selected.some(sel => 
+      (sel[0] === s[0] && sel[1] === s[1]) || (sel[0] === s[1] && sel[1] === s[0]));
+    if (isSelected) {
+      line.material.color.set(0xffd60a);
+    } else {
+      line.material.color.set(line.userData.baseColor);
+    }
+  });
+  
+  renderSolidSelected();
+}
+
+function renderSolidSelected() {
+  const container = document.getElementById('solid-selected-segments');
+  const { selectedSegments, labels } = state.solid;
+  if (selectedSegments.length === 0) {
+    container.innerHTML = '<div class="text-xs text-[var(--muted)] italic">Belum ada segmen dipilih. Klik segmen pada bangun ruang.</div>';
+    return;
+  }
+  let html = '<div class="space-y-2">';
+  selectedSegments.forEach((seg, i) => {
+    const l1 = labels[seg[0]], l2 = labels[seg[1]];
+    html += `<div class="flex items-center justify-between p-2 rounded-lg bg-[var(--bg-2)] border border-[var(--border)]">
+      <span class="text-xs text-[var(--muted)]">Segmen ${i+1}</span>
+      <span class="mono-font font-bold text-sm text-[var(--accent)]">${l1}${l2}</span>
+    </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderSolidLabels() {
+  const container = document.getElementById('solid-labels');
+  const { labels } = state.solid;
+  let html = '';
+  labels.forEach((label, i) => {
+    html += `<div class="flex flex-col items-center gap-1">
+      <div class="w-7 h-7 rounded-full bg-[var(--accent)] flex items-center justify-center text-[var(--bg)] font-bold text-xs">${label}</div>
+      <input type="text" class="label-input" value="${label}" data-idx="${i}" maxlength="2">
+    </div>`;
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('.label-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      const val = e.target.value.toUpperCase().slice(0, 2);
+      state.solid.labels[idx] = val || '?';
+      renderSolidSelected();
+    });
+  });
+}
+
+function checkSolidAnswer() {
+  if (state.solid.selectedSegments.length !== 2) return;
+  const seg1 = state.solid.selectedSegments[0];
+  const seg2 = state.solid.selectedSegments[1];
+  const p1 = state.solid.points[seg1[0]];
+  const p2 = state.solid.points[seg1[1]];
+  const p3 = state.solid.points[seg2[0]];
+  const p4 = state.solid.points[seg2[1]];
+  const result = analyzeSegments3D(p1, p2, p3, p4);
+  const userAnswer = state.solid.userAnswer;
+  const correct = result === userAnswer;
+  const labels = state.solid.labels;
+  const seg1Label = `${labels[seg1[0]]}${labels[seg1[1]]}`;
+  const seg2Label = `${labels[seg2[0]]}${labels[seg2[1]]}`;
+  const resultText = { parallel: 'Sejajar', perpendicular: 'Tegak Lurus', intersecting: 'Berpotongan', skew: 'Bersilangan' };
+  const resultColor = { parallel: 'var(--parallel)', perpendicular: 'var(--perpendicular)', intersecting: 'var(--intersecting)', skew: 'var(--skew)' };
+  const resultClass = { parallel: 'result-parallel', perpendicular: 'result-perpendicular', intersecting: 'result-intersecting', skew: 'result-skew' };
+  
+  let html = `<div class="result-card ${resultClass[result]}">
+    <div class="flex items-start gap-3">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: ${correct ? 'var(--accent-2)' : 'var(--accent-3)'}; color: var(--bg);">
+        ${correct ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>'}
+      </div>
+      <div class="flex-1">
+        <div class="font-bold text-sm mb-1">${correct ? 'Tepat sekali!' : 'Belum tepat'}</div>
+        <div class="text-xs leading-relaxed text-[var(--muted)]">
+          Segmen <span class="mono-font font-bold text-[var(--fg)]">${seg1Label}</span> dan <span class="mono-font font-bold text-[var(--fg)]">${seg2Label}</span> 
+          bersifat <span class="font-bold" style="color: ${resultColor[result]}">${resultText[result]}</span>.
+          ${correct ? 'Kamu menjawab dengan benar.' : `Kamu menjawab: ${resultText[userAnswer] || '?'}.`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('solid-result').innerHTML = html;
+  state.solid.answered = true;
+  if (correct) {
+    showToast('Jawaban benar! Pemahaman 3D yang baik!', 'success');
+    spawnConfetti();
+  } else {
+    showToast('Coba lagi, bayangkan posisinya di 3D.', 'error');
+  }
+}
+
+document.querySelectorAll('[data-solid]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-solid]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setupSolidShape(btn.dataset.solid);
+  });
+});
+
+document.getElementById('solid-toggle-face-diag').addEventListener('click', (e) => {
+  state.solid.showFaceDiag = !state.solid.showFaceDiag;
+  e.currentTarget.style.background = state.solid.showFaceDiag ? 'var(--diagonal)' : '';
+  e.currentTarget.style.color = state.solid.showFaceDiag ? 'var(--bg)' : '';
+  e.currentTarget.style.borderColor = state.solid.showFaceDiag ? 'var(--diagonal)' : '';
+  setupSolidShape(state.solid.shape);
+});
+
+document.getElementById('solid-toggle-space-diag').addEventListener('click', (e) => {
+  state.solid.showSpaceDiag = !state.solid.showSpaceDiag;
+  e.currentTarget.style.background = state.solid.showSpaceDiag ? 'var(--accent-3)' : '';
+  e.currentTarget.style.color = state.solid.showSpaceDiag ? 'var(--bg)' : '';
+  e.currentTarget.style.borderColor = state.solid.showSpaceDiag ? 'var(--accent-3)' : '';
+  setupSolidShape(state.solid.shape);
+});
+
+document.getElementById('solid-reset-view').addEventListener('click', () => {
+  if (threeCamera && threeControls) {
+    threeCamera.position.set(4.5, 3.5, 5.5);
+    threeControls.target.set(0, 0, 0);
+    threeControls.update();
+  }
+});
+
+document.querySelectorAll('[data-solid-answer]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-solid-answer]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.solid.userAnswer = btn.dataset.solidAnswer;
+  });
+});
+
+document.getElementById('solid-check').addEventListener('click', checkSolidAnswer);
+
+// ============= LINE LAYOUTS =============
+const lineLayouts = {
+  straight: {
+    title: 'Garis Lurus dengan 5 Titik',
+    instruction: 'Sebutkan semua segmen garis yang dapat dibentuk dari kelima titik kolinear ini!',
+    points: [[80, 250], [220, 250], [340, 250], [460, 250], [560, 250]],
+    segments: 'all-pairs'
+  },
+  zigzag: {
+    title: 'Garis Zigzag',
+    instruction: 'Sebutkan semua segmen garis yang membentuk zigzag ini!',
+    points: [[80, 380], [220, 140], [340, 380], [460, 140], [560, 380]],
+    segments: [[0,1],[1,2],[2,3],[3,4]]
+  },
+  M: {
+    title: 'Huruf M',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf M!',
+    points: [[100, 400], [100, 100], [300, 280], [500, 100], [500, 400]],
+    segments: [[0,1],[1,2],[2,3],[3,4]]
+  },
+  N: {
+    title: 'Huruf N',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf N!',
+    points: [[120, 400], [120, 100], [480, 400], [480, 100]],
+    segments: [[0,1],[1,2],[2,3],[0,2]]
+  },
+  Z: {
+    title: 'Huruf Z',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf Z!',
+    points: [[100, 100], [500, 100], [100, 400], [500, 400]],
+    segments: [[0,1],[1,2],[2,3]]
+  },
+  W: {
+    title: 'Huruf W',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf W!',
+    points: [[80, 100], [200, 400], [320, 200], [440, 400], [560, 100]],
+    segments: [[0,1],[1,2],[2,3],[3,4]]
+  },
+  A: {
+    title: 'Huruf A',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf A!',
+    points: [[100, 400], [300, 100], [500, 400], [200, 280], [400, 280]],
+    segments: [[0,1],[1,2],[3,4]]
+  },
+  E: {
+    title: 'Huruf E',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf E!',
+    points: [[450, 100], [150, 100], [150, 250], [450, 250], [150, 400], [450, 400]],
+    segments: [[0,1],[1,2],[2,3],[2,4],[4,5]]
+  },
+  H: {
+    title: 'Huruf H',
+    instruction: 'Sebutkan semua segmen garis yang membentuk huruf H!',
+    points: [[150, 100], [150, 250], [150, 400], [450, 100], [450, 250], [450, 400]],
+    segments: [[0,1],[1,2],[3,4],[4,5],[1,4]]
+  }
+};
+
+function setupLineLayout(name) {
+  state.line.layout = name;
+  const layout = lineLayouts[name];
+  state.line.points = layout.points.map(p => ({ x: p[0], y: p[1] }));
+  const numPoints = layout.points.length;
+  const defaultLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  state.line.labels = defaultLabels.slice(0, numPoints);
+  state.line.selectedPoints = [];
+  state.line.foundSegments = new Set();
+  state.line.showAll = false;
+  document.getElementById('line-instruction').textContent = layout.instruction;
+  renderLineLayout();
+  updateLineProgress();
+}
+
+function getAllValidSegments() {
+  const layout = lineLayouts[state.line.layout];
+  if (layout.segments === 'all-pairs') {
+    const n = state.line.points.length;
+    const segs = [];
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) segs.push([i, j]);
+    return segs;
+  }
+  return layout.segments;
+}
+
+function renderLineLayout() {
+  const svg = document.getElementById('line-svg');
+  const { points, labels, selectedPoints, foundSegments, showAll } = state.line;
+  let html = '';
+  
+  html += '<defs><pattern id="linegrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" class="svg-grid"/></pattern></defs>';
+  html += '<rect width="600" height="500" fill="url(#linegrid)"/>';
+  
+  // For straight line, draw extended line
+  if (state.line.layout === 'straight') {
+    const p1 = points[0];
+    const p2 = points[points.length - 1];
+    html += `<line x1="${p1.x - 50}" y1="${p1.y}" x2="${p2.x + 50}" y2="${p2.y}" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>`;
+    // Arrow heads
+    html += `<polygon points="${p2.x + 50},${p1.y} ${p2.x + 40},${p1.y - 6} ${p2.x + 40},${p1.y + 6}" fill="var(--muted)" opacity="0.5"/>`;
+    html += `<polygon points="${p1.x - 50},${p1.y} ${p1.x - 40},${p1.y - 6} ${p1.x - 40},${p1.y + 6}" fill="var(--muted)" opacity="0.5"/>`;
+  }
+  
+  // Show all valid segments (faded)
+  if (showAll) {
+    const validSegments = getAllValidSegments();
+    validSegments.forEach(seg => {
+      const key = `${Math.min(seg[0], seg[1])}-${Math.max(seg[0], seg[1])}`;
+      if (foundSegments.has(key)) return;
+      const p1 = points[seg[0]];
+      const p2 = points[seg[1]];
+      html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" opacity="0.35" stroke-dasharray="4 4"/>`;
+    });
+  }
+  
+  // Original strokes (for non-straight)
+  if (state.line.layout !== 'straight') {
+    const layout = lineLayouts[state.line.layout];
+    if (layout.segments !== 'all-pairs') {
+      layout.segments.forEach(seg => {
+        const key = `${Math.min(seg[0], seg[1])}-${Math.max(seg[0], seg[1])}`;
+        if (foundSegments.has(key)) return;
+        const p1 = points[seg[0]];
+        const p2 = points[seg[1]];
+        html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round" opacity="0.75"/>`;
+      });
+    }
+  }
+  
+  // Found segments (highlighted)
+  foundSegments.forEach(key => {
+    const [i, j] = key.split('-').map(Number);
+    const p1 = points[i];
+    const p2 = points[j];
+    html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="var(--accent-2)" stroke-width="4" stroke-linecap="round" style="filter: drop-shadow(0 0 8px var(--accent-2));"/>`;
+  });
+  
+  // Selected points preview line
+  if (selectedPoints.length === 1) {
+    const p = points[selectedPoints[0]];
+    html += `<circle cx="${p.x}" cy="${p.y}" r="22" fill="none" stroke="var(--accent-3)" stroke-width="2" opacity="0.4" class="pulse-ring"/>`;
+  }
+  
+  // Points with labels
+  points.forEach((p, i) => {
+    const isSelected = selectedPoints.includes(i);
+    const isFound = Array.from(foundSegments).some(key => {
+      const [a, b] = key.split('-').map(Number);
+      return a === i || b === i;
+    });
+    html += `<g transform="translate(${p.x}, ${p.y})">`;
+    html += `<circle cx="0" cy="0" r="11" class="svg-point ${isSelected ? 'selected' : ''}" data-point-idx="${i}"/>`;
+    const labelOffsetY = state.line.layout === 'straight' ? -22 : -18;
+    const labelOffsetX = state.line.layout === 'straight' ? 0 : 16;
+    html += `<circle cx="${labelOffsetX}" cy="${labelOffsetY}" r="12" class="svg-label-bg ${isSelected ? 'selected' : ''}"/>`;
+    html += `<text x="${labelOffsetX}" y="${labelOffsetY}" class="svg-label">${labels[i]}</text>`;
+    html += `</g>`;
+  });
+  
+  svg.innerHTML = html;
+  setupLineInteractions();
+}
+
+function setupLineInteractions() {
+  const svg = document.getElementById('line-svg');
+  svg.onclick = (e) => {
+    const point = e.target.closest('.svg-point');
+    if (point) {
+      const idx = parseInt(point.dataset.pointIdx);
+      selectLinePoint(idx);
+    }
+  };
+}
+
+function selectLinePoint(idx) {
+  const selected = state.line.selectedPoints;
+  if (selected.length === 0) {
+    selected.push(idx);
+  } else if (selected.length === 1) {
+    if (selected[0] === idx) {
+      selected.pop();
+    } else {
+      selected.push(idx);
+      const seg = [selected[0], selected[1]];
+      const key = `${Math.min(seg[0], seg[1])}-${Math.max(seg[0], seg[1])}`;
+      const validSegments = getAllValidSegments();
+      const isValid = validSegments.some(s => 
+        (s[0] === seg[0] && s[1] === seg[1]) || (s[0] === seg[1] && s[1] === seg[0]));
+      if (isValid) {
+        if (state.line.foundSegments.has(key)) {
+          showToast(`Segmen ${state.line.labels[seg[0]]}${state.line.labels[seg[1]]} sudah ditemukan!`, 'info');
+        } else {
+          state.line.foundSegments.add(key);
+          const total = getAllValidSegments().length;
+          if (state.line.foundSegments.size === total) {
+            showToast('Luar biasa! Semua segmen ditemukan!', 'success');
+            spawnConfetti(true);
+          } else {
+            showToast(`Segmen ${state.line.labels[seg[0]]}${state.line.labels[seg[1]]} benar!`, 'success');
+            spawnConfetti();
+          }
+        }
+      } else {
+        showToast(`Bukan segmen garis yang valid. Coba lagi!`, 'error');
+      }
+      selected.length = 0;
+    }
+  }
+  renderLineLayout();
+  updateLineProgress();
+}
+
+function updateLineProgress() {
+  const validSegments = getAllValidSegments();
+  const total = validSegments.length;
+  const found = state.line.foundSegments.size;
+  document.getElementById('line-progress').textContent = `${found} / ${total}`;
+  document.getElementById('line-progress-bar').style.width = `${total > 0 ? (found / total) * 100 : 0}%`;
+  
+  const container = document.getElementById('line-segments-found');
+  if (state.line.foundSegments.size === 0) {
+    container.innerHTML = '<div class="text-xs text-[var(--muted)] italic">Klik titik untuk memulai...</div>';
+    return;
+  }
+  let html = '';
+  const sorted = Array.from(state.line.foundSegments).sort((a, b) => {
+    const [a1, a2] = a.split('-').map(Number);
+    const [b1, b2] = b.split('-').map(Number);
+    if (a1 !== b1) return a1 - b1;
+    return a2 - b2;
+  });
+  sorted.forEach(key => {
+    const [i, j] = key.split('-').map(Number);
+    const label = `${state.line.labels[i]}${state.line.labels[j]}`;
+    html += `<div class="segment-pill">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      ${label}
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+document.querySelectorAll('[data-line-layout]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-line-layout]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setupLineLayout(btn.dataset.lineLayout);
+  });
+});
+
+document.getElementById('line-hint').addEventListener('click', () => {
+  const validSegments = getAllValidSegments();
+  const remaining = validSegments.filter(s => {
+    const key = `${Math.min(s[0], s[1])}-${Math.max(s[0], s[1])}`;
+    return !state.line.foundSegments.has(key);
+  });
+  if (remaining.length === 0) {
+    showToast('Semua segmen sudah ditemukan!', 'success');
+    return;
+  }
+  const hint = remaining[Math.floor(Math.random() * remaining.length)];
+  showToast(`Coba cari segmen yang menghubungkan titik ${state.line.labels[hint[0]]} dan ${state.line.labels[hint[1]]}`, 'info');
+});
+
+document.getElementById('line-show-all').addEventListener('click', () => {
+  state.line.showAll = !state.line.showAll;
+  const btn = document.getElementById('line-show-all');
+  if (state.line.showAll) {
+    btn.textContent = 'Sembunyikan';
+  } else {
+    btn.textContent = 'Lihat Semua';
+  }
+  renderLineLayout();
+});
+
+document.getElementById('line-reset').addEventListener('click', () => {
+  state.line.foundSegments = new Set();
+  state.line.selectedPoints = [];
+  state.line.showAll = false;
+  document.getElementById('line-show-all').textContent = 'Lihat Semua';
+  renderLineLayout();
+  updateLineProgress();
+});
+
+// ============= INIT =============
+setupFlatShape('rectangle');
+setupFlatCanvas();
+
+// Set initial button states
+document.getElementById('flat-toggle-diagonal').style.background = 'var(--accent)';
+document.getElementById('flat-toggle-diagonal').style.color = 'var(--bg)';
+document.getElementById('flat-toggle-diagonal').style.borderColor = 'var(--accent)';
+
+setupLineLayout('straight');
+
+// Welcome toast
+setTimeout(() => {
+  showToast('Selamat datang! Pilih bentuk dan mulai menjelajah.', 'info');
+}, 600);
+
+</script>
+
+</body>
+</html>

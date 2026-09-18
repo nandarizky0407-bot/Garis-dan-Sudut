@@ -184,7 +184,6 @@ ul.pts li b{color:var(--verm)}
 <div id="errbox"></div>
 
 <script>
-/* ============ PENANGKAP ERROR ============ */
 function showErr(m){var b=document.getElementById('errbox');if(b){b.style.display='block';b.textContent='ERROR: '+m;}}
 window.onerror=function(msg){showErr(msg);};
 
@@ -198,7 +197,6 @@ function txt(parent,x,y,str,cls,anchor){var e=el('text',{x:x,y:y,'class':cls||'l
 function pt(cx,cy,r,d){var a=d*RAD;return[cx+r*Math.cos(a),cy-r*Math.sin(a)];}
 function arcPath(cx,cy,r,a1,a2){var p1=pt(cx,cy,r,a1),p2=pt(cx,cy,r,a2);var lg=(a2-a1)>180?1:0;
 return 'M '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' A '+r+' '+r+' 0 '+lg+' 0 '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}
-/* lr = radius label opsional; otomatis didorong keluar & mengecil untuk sektor sempit */
 function angGroup(svg,cx,cy,a1,a2,r,label,cls,lr){
   if(a2-a1<3){return null;}
   var span=a2-a1;
@@ -236,14 +234,12 @@ function linkGroups(arcs,ga,gb){
 }
 
 /* ============ FIGUR-FIGUR ============ */
-/* garis lurus: sektor kiri (ray..180) = labL, sektor kanan (0..ray) = labR.
-   Label sektor sempit didorong lebih jauh agar tidak menabrak sinar. */
 function figLP(svg,ray,labL,labR){
   vb(svg,420,240);
   var O=[150,190];
   lineSeg(svg,25,190,395,190,'sl','ma','ma');
   var tip=pt(O[0],O[1],118,ray);
-  lineSeg(svg,O[0],O[1],tip[0],tip[1],'sl',null,'ma'); /* panah hanya di ujung, bukan di titik O */
+  lineSeg(svg,O[0],O[1],tip[0],tip[1],'sl',null,'ma');
   dotAt(svg,O[0],O[1]);
   var spanL=180-ray,spanR=ray;
   var lrL=(spanL<45)?78:((spanL<70)?62:48);
@@ -269,14 +265,18 @@ function figFT(svg,a,b,labs){
   var angs=[a,b,360-a-b],acc=0;
   for(var i=0;i<3;i++){
     var t=pt(O[0],O[1],88,acc);
-    lineSeg(svg,O[0],O[1],t[0],t[1],'sl',null,'ma'); /* tanpa panah di pusat O */
+    lineSeg(svg,O[0],O[1],t[0],t[1],'sl',null,'ma');
     dotAt(svg,O[0],O[1]);
     angGroup(svg,O[0],O[1],acc,acc+angs[i],26,labs[i]);
     acc+=angs[i];
   }
   txt(svg,O[0]+14,O[1]+20,'O','lb','start');
 }
-function angVal(n,al){if(n===1||n===4||n===5||n===8){return 180-al;}return al;}
+/* DIPERBAIKI: penomoran sekarang sesuai geometri sebenarnya.
+   Transversal dari P menuju Q mengarah kanan-bawah, sehingga sinar transversal
+   di P berada pada sudut 180-al (kiri-atas) dan 360-al (kanan-bawah).
+   Sudut ganjil (1,3,5,7) = 180-al ; sudut genap (2,4,6,8) = al. */
+function angVal(n,al){return (n%2===1)?(180-al):al;}
 function figX(svg,al,known,target,demo){
   vb(svg,420,260);
   var y1=75,y2=195,px=150,arcs={},n;
@@ -285,18 +285,18 @@ function figX(svg,al,known,target,demo){
   var s=Math.sin(al*RAD),c=Math.cos(al*RAD),d=(y2-y1)/s,Q=px+d*c;
   lineSeg(svg,px-55*c,y1-55*s,Q+45*c,y2+45*s,'sl vm','mv','mv');
   dotAt(svg,px,y1);dotAt(svg,Q,y2);
-  var st=[al,0,180,180+al],en=[180,al,180+al,360];
+  var st=[0,180-al,180,360-al], en=[180-al,180,360-al,360];
   for(n=1;n<=8;n++){
     var i=(n-1)%4,ox,oy;
     if(n<=4){ox=px;oy=y1;}else{ox=Q;oy=y2;}
     var label,cls='';
-    if(demo){label=n+' = '+angVal(n,al)+'°';if(angVal(n,al)===al){cls='b';}}
+    if(demo){label=n+' = '+angVal(n,al)+'°';if(n%2===0){cls='b';}}
     else if(n===known){label=n+' = '+angVal(n,al)+'°';}
     else if(n===target){label=n+' = ?';cls='q';}
     else{label=''+n;}
     arcs[n]=angGroup(svg,ox,oy,st[i],en[i],(en[i]-st[i])>90?34:24,label,cls);
   }
-  if(demo){linkGroups(arcs,[2,3,6,7],[1,4,5,8]);}
+  if(demo){linkGroups(arcs,[2,4,6,8],[1,3,5,7]);}
   txt(svg,px-10,y1-8,'P','lb','end');
   txt(svg,Q+10,y2-8,'Q','lb','start');
   return arcs;
@@ -361,7 +361,9 @@ function figTrap(svg,b,lab){
   txt(svg,C[0]+12,C[1]-4,'C','lb');
   txt(svg,D[0]-8,D[1]-6,'D','lb');
 }
-function figCirc(svg,al,mode){
+/* mode: 'k' = pusat ditanya, 'p' = keliling ditanya, 's' = semua tampil.
+   labP/labK = label teks pengganti (dipakai soal aljabar agar jawaban tidak bocor). */
+function figCirc(svg,al,mode,labP,labK){
   vb(svg,420,270);
   var O=[205,135],r=90;
   var A=pt(O[0],O[1],r,90+al/2),B=pt(O[0],O[1],r,90-al/2),Q=[O[0],O[1]+r];
@@ -372,9 +374,11 @@ function figCirc(svg,al,mode){
   lineSeg(svg,Q[0],Q[1],A[0],A[1],'sl th vm');
   lineSeg(svg,Q[0],Q[1],B[0],B[1],'sl th vm');
   dotAt(svg,O[0],O[1]);dotAt(svg,A[0],A[1]);dotAt(svg,B[0],B[1]);dotAt(svg,Q[0],Q[1]);
-  angGroup(svg,O[0],O[1],90-al/2,90+al/2,26,(mode==='k'?'sudut pusat = ?':'sudut pusat = '+al+'°'),(mode==='k'?'q':''));
+  var lP=(labP!==undefined)?labP:(mode==='k'?'sudut pusat = ?':'sudut pusat = '+al+'°');
+  angGroup(svg,O[0],O[1],90-al/2,90+al/2,26,lP,(mode==='k'?'q':''));
   if(mode!=='k'){
-    polyAng(svg,Q,A,B,26,(mode==='p'?'sudut keliling = ?':'sudut keliling = '+(al/2)+'°'),(mode==='p'?'q':''));
+    var lK=(labK!==undefined)?labK:(mode==='p'?'sudut keliling = ?':'sudut keliling = '+(al/2)+'°');
+    polyAng(svg,Q,A,B,26,lK,(mode==='p'?'q':''));
   }
   txt(svg,O[0]-12,O[1]+18,'O','lb','end');
   txt(svg,A[0]-10,A[1]-8,'A','lb');
@@ -383,6 +387,7 @@ function figCirc(svg,al,mode){
 }
 
 /* ============ BANK SOAL: 7 TOPIK × 20 ============ */
+/* --- T1 · Kuis 1: DIPERBAIKI — varian "diketahui ∠B" kini kuncinya = a (bukan 180-a) --- */
 var T1=[];
 [35,50,65,70,110,125,135,150,160,20].forEach(function(a,i){
   var askB=(i%2===0);
@@ -390,11 +395,13 @@ var T1=[];
     return {
       txt:(askB?'∠A dan ∠B saling <b>berpelurus</b>. Jika besar ∠A = '+a+'°, berapakah besar ∠B?'
                :'∠A dan ∠B saling <b>berpelurus</b>. Jika besar ∠B = '+(180-a)+'°, berapakah besar ∠A?'),
-      ans:180-a,
-      exp:'Sudut berpelurus berjumlah <b>180°</b> karena membentuk garis lurus.<br>Jawaban = 180° − '+(askB?a:(180-a))+'° = <b>'+(180-a)+'°</b>',
+      ans:(askB?(180-a):a),
+      exp:(askB
+        ?'Sudut berpelurus berjumlah <b>180°</b> karena membentuk garis lurus.<br>Jawaban = 180° − '+a+'° = <b>'+(180-a)+'°</b>'
+        :'Sudut berpelurus berjumlah <b>180°</b> karena membentuk garis lurus.<br>Jawaban = 180° − '+(180-a)+'° = <b>'+a+'°</b>'),
       draw:function(svg){
         if(askB){figLP(svg,180-a,'A = '+a+'°','B = ?');}
-        else{figLP(svg,a,'B = '+(180-a)+'°','A = ?');} /* DIPERBAIKI: label kini cocok dengan sektornya */
+        else{figLP(svg,a,'B = '+(180-a)+'°','A = ?');}
       }
     };
   });
@@ -433,6 +440,7 @@ var T1=[];
   });
 });
 
+/* --- T2 · Kuis 2: perbaikan kunci yang sama untuk varian "diketahui ∠Q" --- */
 var T2=[];
 [15,20,25,35,40,50,55,65,70,75].forEach(function(a,i){
   var askQ=(i%2===0);
@@ -440,8 +448,10 @@ var T2=[];
     return {
       txt:(askQ?'∠P dan ∠Q saling <b>berpenyiku</b>. Jika besar ∠P = '+a+'°, berapakah besar ∠Q?'
                :'∠P dan ∠Q saling <b>berpenyiku</b>. Jika besar ∠Q = '+(90-a)+'°, berapakah besar ∠P?'),
-      ans:90-a,
-      exp:'Sudut berpenyiku berjumlah <b>90°</b> (membentuk sudut siku-siku).<br>Jawaban = 90° − '+(askQ?a:(90-a))+'° = <b>'+(90-a)+'°</b>',
+      ans:(askQ?(90-a):a),
+      exp:(askQ
+        ?'Sudut berpenyiku berjumlah <b>90°</b> (membentuk sudut siku-siku).<br>Jawaban = 90° − '+a+'° = <b>'+(90-a)+'°</b>'
+        :'Sudut berpenyiku berjumlah <b>90°</b> (membentuk sudut siku-siku).<br>Jawaban = 90° − '+(90-a)+'° = <b>'+a+'°</b>'),
       draw:function(svg){
         if(askQ){figCP(svg,a,'P = '+a+'°','Q = ?');}
         else{figCP(svg,a,'P = ?','Q = '+(90-a)+'°');}
@@ -483,8 +493,9 @@ var T2=[];
   });
 });
 
+/* --- T3 · Kuis 3 (satu pasangan diganti agar semua sudut ≤ 180°) --- */
 var T3=[];
-[[95,120],[110,80],[75,135],[90,110],[60,140],[120,85],[100,95],[70,105],[130,60],[45,175]].forEach(function(p){
+[[95,120],[110,80],[75,135],[90,110],[60,140],[120,85],[100,95],[70,145],[130,60],[45,175]].forEach(function(p){
   T3.push(function(){
     var c=360-p[0]-p[1];
     return {
@@ -528,16 +539,17 @@ var T3=[];
   });
 });
 
+/* --- T4 · Kuis 4: pasangan sudut ditulis ulang sesuai penomoran yang benar --- */
 var RELS=[
-[1,4,'bertolak belakang (vertikal)',1],[2,3,'bertolak belakang (vertikal)',1],
-[5,8,'bertolak belakang (vertikal)',1],[6,7,'bertolak belakang (vertikal)',1],
+[1,3,'bertolak belakang (vertikal)',1],[2,4,'bertolak belakang (vertikal)',1],
+[5,7,'bertolak belakang (vertikal)',1],[6,8,'bertolak belakang (vertikal)',1],
 [1,5,'sehadap',1],[2,6,'sehadap',1],[3,7,'sehadap',1],[4,8,'sehadap',1],
-[3,6,'berseberangan dalam',1],[4,5,'berseberangan dalam',1],
-[1,8,'berseberangan luar',1],[2,7,'berseberangan luar',1],
-[1,2,'bersisiran di titik P',0],[3,4,'bersisiran di titik P',0],
-[5,6,'bersisiran di titik Q',0],[7,8,'bersisiran di titik Q',0],
-[3,5,'sepihak dalam',0],[4,6,'sepihak dalam',0],
-[1,7,'sepihak luar',0],[2,8,'sepihak luar',0]];
+[3,5,'berseberangan dalam',1],[4,6,'berseberangan dalam',1],
+[1,7,'berseberangan luar',1],[2,8,'berseberangan luar',1],
+[3,6,'sepihak dalam',0],[4,5,'sepihak dalam',0],
+[1,8,'sepihak luar',0],[2,7,'sepihak luar',0],
+[1,2,'bersisiran di titik P',0],[2,3,'bersisiran di titik P',0],
+[5,6,'bersisiran di titik Q',0],[6,7,'bersisiran di titik Q',0]];
 var T4=RELS.map(function(rel,i){
   return function(){
     var al=[40,45,50,55,60,65,70][i%7];
@@ -642,6 +654,7 @@ var T6=[];
   });
 });
 
+/* --- T7 · Kuis 7: mode gambar dibalik + label simbolik agar jawaban tidak bocor --- */
 var T7=[];
 [40,50,60,70,80,100,120,140].forEach(function(v){
   T7.push(function(){
@@ -649,7 +662,7 @@ var T7=[];
       txt:'∠AOB adalah <b>sudut pusat</b> yang menghadap busur AB (busur merah tebal). Jika ∠AOB = '+v+'°, berapakah besar <b>sudut keliling</b> ∠APB yang menghadap busur yang sama?',
       ans:v/2,
       exp:'Sudut keliling = ½ × sudut pusat (busur sama).<br>∠APB = ½ × '+v+'° = <b>'+(v/2)+'°</b>',
-      draw:function(svg){figCirc(svg,v,'k');}
+      draw:function(svg){figCirc(svg,v,'p');}   /* pusat = v tampil, keliling = ? */
     };
   });
 });
@@ -659,7 +672,7 @@ var T7=[];
       txt:'Sudut keliling ∠APB = '+v+'° menghadap busur AB. Berapakah besar <b>sudut pusat</b> ∠AOB yang menghadap busur yang sama?',
       ans:2*v,
       exp:'Sudut pusat = 2 × sudut keliling.<br>∠AOB = 2 × '+v+'° = <b>'+(2*v)+'°</b>',
-      draw:function(svg){figCirc(svg,2*v,'p');}
+      draw:function(svg){figCirc(svg,2*v,'k');}   /* pusat = ?, keliling = v tampil */
     };
   });
 });
@@ -669,7 +682,7 @@ var T7=[];
       txt:'Andi dan Budi berdiri di titik berbeda pada tepi taman bundar, sama-sama menghadap busur yang sama. Sudut pandang Andi = '+v+'°. Berapakah sudut pandang Budi?',
       ans:v,
       exp:'Sudut keliling yang menghadap busur sama <b>selalu sama besar</b> → <b>'+v+'°</b>',
-      draw:function(svg){figCirc(svg,2*v,'p');}
+      draw:function(svg){figCirc(svg,2*v,'p');}   /* pusat = 2v, keliling = ? (tidak membocorkan v) */
     };
   });
 });
@@ -678,8 +691,9 @@ var T7=[];
     return {
       txt:'Sudut pusat = '+a[0]+' dan sudut keliling (menghadap busur sama) = '+a[1]+'. Tentukan besar <b>sudut pusat</b>!',
       ans:a[2],
-      exp:'Sudut pusat = 2 × sudut keliling. Selesaikan persamaannya → sudut pusat = <b>'+a[2]+'°</b>',
-      draw:function(svg){figCirc(svg,a[2],'p');}
+      exp:'Sudut pusat = 2 × sudut keliling → '+a[0]+' = 2('+a[1]+') → x = '+(a[2]/2===30?30:(a[2]/2))+
+          '. Selesaikan persamaannya → sudut pusat = <b>'+a[2]+'°</b>',
+      draw:function(svg){figCirc(svg,a[2],'p','sudut pusat = '+a[0],'sudut keliling = '+a[1]);}
     };
   });
 });
@@ -720,10 +734,10 @@ var FOCUS=[
 'sifat 360° serta sifat khusus jajargenjang dan trapesium sama kaki.',
 'konsep 2 : 1 — pastikan kedua sudut menghadap busur yang SAMA.'];
 
-/* ============ STATE ============ */
+/* ============ STATE (kunci penyimpanan di-reset agar rekor lama akibat kunci bug tidak menempel) ============ */
 var ANSWERS={};
-try{ANSWERS=JSON.parse(localStorage.getItem('sudut7fix')||'{}');}catch(e){ANSWERS={};}
-function save(){try{localStorage.setItem('sudut7fix',JSON.stringify(ANSWERS));}catch(e){}}
+try{ANSWERS=JSON.parse(localStorage.getItem('sudut7v3')||'{}');}catch(e){ANSWERS={};}
+function save(){try{localStorage.setItem('sudut7v3',JSON.stringify(ANSWERS));}catch(e){}}
 var EXC=[0,0,0,0,0,0,0],STCUR=0;
 function key(ti,qi){return ti+':'+qi;}
 function topicStat(ti){var b=0,w=0,q;for(q=0;q<20;q++){var a=ANSWERS[key(ti,q)];if(a){if(a.s==='benar'){b++;}else{w++;}}}return{b:b,w:w,done:b+w};}
@@ -836,7 +850,7 @@ fig:function(sv,pan,cap){
 {body:'<p>Jumlah ketiga sudut dalam segitiga <b>selalu 180°</b>, apa pun bentuknya.</p><div class="fact"><span class="f">∠A + ∠B + ∠C = 180°</span></div><ul class="pts"><li><b>Kenapa 180°?</b> Tarik garis sejajar melalui satu titik sudut — ketiga sudut segitiga "pindah" ke garis itu dan membentuk garis lurus.</li><li>Segitiga sama kaki: dua sudut alas sama besar.</li><li>Segitiga siku-siku: kedua sudut lancipnya berjumlah 90°.</li></ul><div class="exBox"><div class="t">CONTOH</div>∠A = 48°, ∠B = 74° → ∠C = 180° − 122° = <b>58°</b>.</div>',
 fig:function(sv,pan,cap){
   function dr(a,b){var c=180-a-b;sv.innerHTML='';
-    figTri(sv,[a,b,c],['A = '+a+'°','B = '+b+'°','C = '+c+'°']);   /* DIPERBAIKI: sv, bukan svg */
+    figTri(sv,[a,b,c],['A = '+a+'°','B = '+b+'°','C = '+c+'°']);
     pan.innerHTML=slider('ma4','∠A',25,80,a)+slider('mb4','∠B',25,80,b);
     cap.textContent='A + B + C = '+a+'° + '+b+'° + '+c+'° = 180°.';
     function f(){dr(+document.getElementById('ma4').value,+document.getElementById('mb4').value);}
@@ -851,7 +865,7 @@ fig:function(sv,pan,cap){
   dr(62);}},
 {body:'<p>Pada lingkaran: <b>sudut pusat</b> bertitik sudut di pusat O, <b>sudut keliling</b> bertitik sudut di lingkaran. Jika keduanya <b>menghadap busur yang sama</b>:</p><div class="fact"><span class="f">sudut pusat = 2 × sudut keliling</span></div><ul class="pts"><li>Busur AB = bagian lingkaran "di depan" kedua sudut (merah tebal).</li><li>Dua sudut keliling yang menghadap busur sama <b>selalu sama besar</b>.</li><li>Sudut keliling yang menghadap diameter = 90°.</li></ul><div class="exBox"><div class="t">CONTOH</div>∠AOB = 76° → ∠APB = ½ × 76° = <b>38°</b>.</div>',
 fig:function(sv,pan,cap){
-  function dr(a){sv.innerHTML='';figCirc(sv,a,'s');   /* DIPERBAIKI: sv, bukan svg */
+  function dr(a){sv.innerHTML='';figCirc(sv,a,'s');
     pan.innerHTML=slider('ms6','Sudut pusat',40,160,a);
     cap.textContent='Pusat = '+a+'°, keliling = '+(a/2)+'°. Perbandingan selalu 2 : 1.';
     document.getElementById('ms6').oninput=function(e){dr(+e.target.value);};}
@@ -904,15 +918,14 @@ function drawQ(ti){
   var st=topicStat(ti);
   document.getElementById('exStat'+ti).textContent='terjawab '+st.done+'/20 · benar '+st.b+' · salah '+st.w;
   document.getElementById('qt'+ti).innerHTML='<span class="mono" style="color:var(--verm)">Soal '+(qi+1)+'.</span> '+q.txt;
-  /* DIPERBAIKI: kosongkan SVG dulu agar gambar soal tidak menumpuk */
   var exs=document.getElementById('exSvg'+ti);
   exs.innerHTML='';
   var arcs=q.draw(exs);
   var ar=$('#ansRow'+ti);
-  ar.innerHTML='<input type="number" id="ansIn" placeholder="…" step="any" inputmode="decimal"> <span class="deg">°</span>'+
-  '<button class="btn" id="cekBtn">CEK JAWABAN</button><button class="btn ghost" id="bhBtn">LIHAT PEMBAHASAN</button>';
+  ar.innerHTML='<input type="number" id="ansIn'+ti+'" placeholder="…" step="any" inputmode="decimal"> <span class="deg">°</span>'+
+  '<button class="btn" id="cekBtn'+ti+'">CEK JAWABAN</button><button class="btn ghost" id="bhBtn'+ti+'">LIHAT PEMBAHASAN</button>';
   var done=ANSWERS[key(ti,qi)];
-  var cek=document.getElementById('cekBtn'),inp=document.getElementById('ansIn');
+  var cek=document.getElementById('cekBtn'+ti),inp=document.getElementById('ansIn'+ti);
   cek.onclick=function(){
     var v=parseFloat(inp.value);
     if(isNaN(v)){toast('Isi dulu jawabanmu ya.');return;}
@@ -927,7 +940,7 @@ function drawQ(ti){
     document.getElementById('exStat'+ti).textContent='terjawab '+s2.done+'/20 · benar '+s2.b+' · salah '+s2.w;
   };
   inp.addEventListener('keydown',function(e){if(e.key==='Enter'){cek.click();}});
-  document.getElementById('bhBtn').onclick=function(){
+  document.getElementById('bhBtn'+ti).onclick=function(){
     var bh=$('#bh'+ti);bh.innerHTML='<div class="t">PEMBAHASAN</div>'+q.exp;bh.classList.add('show');};
   if(done){cek.disabled=true;inp.disabled=true;showFb(ti,done.s==='benar',null);}
   else{$('#bh'+ti).classList.remove('show');$('#fb'+ti).className='fb';}

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angle Hunt · Triangle Problems · Year 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,900;1,9..144,600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FBF3E4;--card:#FFFDF6;--ink:#2B211A;--soft:#6F604F;--line:#E4D5BC;--red:#E4572E;--teal:#0F7B6C;--gold:#E29B18;--sh:rgba(43,33,26,.15)}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+body{font-family:'Nunito',sans-serif;color:var(--ink);overflow:hidden;background:var(--paper);
+ background-image:linear-gradient(rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(rgba(120,90,40,.09) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(120,90,40,.09) 1.5px,transparent 1.5px);
+ background-size:28px 28px,28px 28px,140px 140px,140px 140px}
+#topbar{position:fixed;inset:0 0 auto 0;height:58px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 18px;background:rgba(251,243,228,.93);backdrop-filter:blur(6px);border-bottom:2px solid var(--ink)}
+.brand{display:flex;align-items:center;gap:9px;font-family:'Fraunces';font-weight:900;font-size:17.5px}
+#topbar .sp{flex:1}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border:2px solid var(--ink);border-radius:999px;background:var(--card);font-weight:800;font-size:13px}
+.chip.hide{display:none}
+.lang{display:flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--card)}
+.lang button{border:0;background:transparent;font:800 12.5px 'Nunito';padding:6px 13px;cursor:pointer;color:var(--ink)}
+.lang button.on{background:var(--ink);color:var(--paper)}
+#counter{font-weight:900;font-size:13px;color:var(--soft);min-width:52px;text-align:right}
+#prog{position:absolute;left:0;bottom:-2px;height:3px;background:var(--red);width:0;transition:width .5s}
+#track{display:flex;height:100dvh;transition:transform .65s cubic-bezier(.7,0,.25,1)}
+.slide{flex:0 0 100vw;height:100%;overflow-y:auto;padding:82px clamp(16px,4vw,56px) 110px}
+.wrap{max-width:1140px;margin:0 auto}
+.kicker{font-weight:900;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--red);margin-bottom:10px}
+h2.stitle{font-family:'Fraunces';font-weight:900;font-size:clamp(27px,3.8vw,44px);line-height:1.05}
+.lead{font-size:16px;color:var(--soft);font-weight:600;max-width:68ch;margin-top:10px;line-height:1.55}
+.cols{display:grid;gap:clamp(20px,3.2vw,40px);margin-top:24px}
+@media(min-width:921px){.c-2{grid-template-columns:1.02fr .98fr}.c-even{grid-template-columns:1fr 1fr}}
+@media(max-width:920px){.cols{grid-template-columns:1fr}}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:7px 7px 0 var(--sh);padding:clamp(16px,2.3vw,26px)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:800 14px 'Nunito';padding:10px 17px;border-radius:999px;border:2px solid var(--ink);cursor:pointer;background:var(--card);color:var(--ink);box-shadow:4px 4px 0 var(--sh);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translate(-1px,-2px);box-shadow:5px 6px 0 var(--sh)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.btn.primary{background:var(--red);color:#FFFDF6}.btn.teal{background:var(--teal);color:#FFFDF6}
+.btn:disabled{opacity:.35;pointer-events:none}
+.btn.sm{padding:7px 12px;font-size:13px}
+input[type=text],input[type=number]{font:800 15px 'Nunito';padding:9px 12px;border:2px solid var(--ink);border-radius:11px;background:var(--card);color:var(--ink);width:100%}
+input:focus{outline:3px solid var(--gold);outline-offset:2px}
+.ok{color:var(--teal)}.bad{color:var(--red)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.shake{animation:shake .45s}
+.hide{display:none!important}
+.rev{opacity:0}.slide.active .rev{animation:rise .6s var(--d,0s) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.navbtns{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;gap:10px}
+.iconbtn{width:52px;height:52px;border-radius:50%;border:2px solid var(--ink);background:var(--card);cursor:pointer;display:grid;place-items:center;box-shadow:4px 4px 0 var(--sh);transition:transform .15s}
+.iconbtn:hover{transform:translateY(-2px)}.iconbtn:disabled{opacity:.3;pointer-events:none}
+#dots{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:49}
+#dots.locked{opacity:.3;pointer-events:none}
+#dots .dot{width:11px;height:11px;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;padding:0}
+#dots .dot.on{background:var(--red)}
+.cover-grid{display:grid;gap:clamp(22px,4vw,54px);align-items:center;min-height:calc(100dvh - 210px)}
+@media(min-width:921px){.cover-grid{grid-template-columns:1.05fr .95fr}}
+h1 .t-top{display:block;font-family:'Fraunces';font-style:italic;font-weight:600;font-size:clamp(21px,2.8vw,34px)}
+h1 .t-big{display:block;font-family:'Fraunces';font-weight:900;font-size:clamp(44px,6.2vw,84px);color:var(--red);line-height:.95;letter-spacing:-.01em}
+.name-label{display:block;font-weight:900;font-size:16px;margin:22px 0 10px}
+.name-row{display:flex;gap:12px;max-width:520px;flex-wrap:wrap}
+.name-row input{flex:1;min-width:190px}
+.err{color:var(--red);font-weight:800;font-size:13.5px;margin-top:9px;min-height:18px}
+#coverArt svg{width:100%;max-width:440px;display:block;margin:0 auto;animation:bob 5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.goal{display:flex;align-items:center;gap:16px;padding:15px 4px;border-bottom:2px dashed var(--line);cursor:pointer;user-select:none}
+.goal:last-child{border-bottom:0}
+.goal .gnum{font-family:'Fraunces';font-weight:900;font-size:26px;color:var(--soft);width:46px;flex:none}
+.goal .gbox{width:27px;height:27px;flex:none;border:2.5px solid var(--ink);border-radius:8px;display:grid;place-items:center;background:var(--card);transition:background .2s}
+.goal .gbox::after{content:'✓';font-weight:900;font-size:16px;color:#FFFDF6;opacity:0;transform:scale(.4);transition:.2s}
+.goal.done .gbox{background:var(--teal)}.goal.done .gbox::after{opacity:1;transform:none}
+.goal p{font-weight:800;font-size:15.5px}
+.goal.done p{text-decoration:line-through;text-decoration-thickness:2.5px;text-decoration-color:var(--teal);color:var(--soft)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
+.rcard{background:var(--card);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--sh);padding:14px;cursor:pointer;text-align:center;transition:.15s}
+.rcard:hover{transform:translateY(-3px)}
+.rcard b{display:block;font-family:'Fraunces';font-size:16px;margin-top:4px}
+.rcard small{display:block;font-weight:700;color:var(--soft);font-size:12px}
+.rfact{margin-top:10px;border-top:2px dashed var(--line);padding-top:9px;font-weight:800;font-size:13px;line-height:1.4;color:var(--teal);display:none}
+.rcard.open .rfact{display:block}
+.rcard .tap{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-top:8px;display:block}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:24px}
+.tcard3{background:var(--card);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--sh);padding:16px}
+.tcard3 h4{font-family:'Fraunces';font-size:17px;line-height:1.2}
+.tcard3 h4 em{display:block;font-style:italic;font-weight:600;font-size:12px;color:var(--soft)}
+.srow{display:flex;align-items:center;gap:10px;margin-top:10px}
+.srow label{font-weight:900;font-size:12.5px;min-width:80px}
+input[type=range]{flex:1;accent-color:var(--red);height:24px;cursor:pointer}
+output{font-family:'Fraunces';font-weight:900;min-width:48px;text-align:right;font-size:15.5px}
+.eqline{margin-top:12px;border:2px solid var(--ink);border-radius:12px;background:var(--card);padding:8px 12px;font-family:'Fraunces';font-weight:900;font-size:16px;text-align:center}
+.factbox{border:2px solid var(--ink);border-left:8px solid var(--gold);border-radius:12px;background:var(--card);padding:11px 14px;margin-top:14px}
+.factbox b{display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-bottom:3px}
+.factbox span{font-family:'Fraunces';font-weight:900;font-size:15.5px;line-height:1.4}
+.plist{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.plist div{display:flex;gap:9px;align-items:flex-start;font-weight:700;font-size:14px;line-height:1.5}
+.plist svg{color:var(--teal);flex:none;margin-top:2px;width:17px;height:17px}
+.step{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:14px;line-height:1.5;margin-top:9px}
+.step .sn{width:25px;height:25px;flex:none;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:900;font-size:12.5px;background:var(--gold);color:var(--ink)}
+.exans{margin-top:12px;border:2px solid var(--teal);background:#E4F2EE;border-radius:12px;padding:10px 14px;font-family:'Fraunces';font-weight:900;font-size:17px;color:var(--teal);text-align:center}
+.scorebar{display:flex;align-items:center;gap:13px;border:2px solid var(--ink);border-radius:14px;background:var(--card);padding:10px 16px;box-shadow:4px 4px 0 var(--sh);font-weight:900;font-size:14px;margin-top:16px;flex-wrap:wrap}
+.scorebar .fw{flex:1;min-width:120px;height:12px;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.scorebar .fl{height:100%;background:var(--teal);width:0;transition:width .4s}
+.dlegend{font-weight:800;font-size:12.5px;color:var(--soft);margin-top:8px}
+#ql-a,#ql-b,#ql-c{display:grid;gap:15px;margin-top:14px}
+@media(min-width:1000px){#ql-a,#ql-b,#ql-c{grid-template-columns:1fr 1fr}}
+.qitem{display:flex;gap:12px;background:var(--card);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--sh);padding:12px}
+.qitem.okstate{border-color:var(--teal)}
+.qhead{display:flex;flex-direction:column;align-items:center;gap:6px}
+.qnum{width:29px;height:29px;flex:none;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:900;font-size:12.5px}
+.qdiff{font-size:11px;letter-spacing:1px;color:var(--gold)}
+.qsvg{flex:none;width:150px}.qsvg svg{width:100%;display:block}
+.qbody{flex:1;min-width:0}
+.qq{font-weight:900;font-size:13.5px;margin-bottom:8px;line-height:1.4}
+.qrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qrow .xeq{font-weight:900;font-family:'Fraunces';font-size:16px}
+.qrow input{width:74px;padding:7px 9px;text-align:center}
+.fb{font-weight:800;margin-top:8px;min-height:20px;font-size:13px}
+.qsol{margin-top:8px;border-top:2px dashed var(--line);padding-top:8px;display:none}
+.qsol.show{display:block}
+.sol-line{font-weight:700;font-size:13px;line-height:1.5;margin-bottom:4px}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;max-width:760px;margin-left:auto;margin-right:auto}
+@media(max-width:640px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+.mcard{perspective:700px;background:none;border:0;padding:0;cursor:pointer;height:96px}
+.mc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.mcard.flipped .mc-in{transform:rotateY(180deg)}
+.mc-f,.mc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--ink);border-radius:14px;display:grid;place-items:center;box-shadow:3px 3px 0 var(--sh);padding:7px;text-align:center}
+.mc-f{background:var(--card);font-family:'Fraunces';font-weight:900;font-size:26px}
+.mc-b{transform:rotateY(180deg);font-weight:900;font-size:12.5px;line-height:1.3}
+.mcard.cf .mc-b{background:#EAF4F1}
+.mcard.cv .mc-b{background:#FCEBD3}
+.mcard.matched .mc-b{border-color:var(--teal);background:#DFF0EA;color:var(--teal)}
+.mcard.matched{cursor:default}
+.mcard.preview .mc-in{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.04)}}
+.gmeta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px;justify-content:center;font-weight:900}
+#gTimerWrap{font-size:16px;padding:7px 16px}
+#gTimerWrap.hurry{border-color:var(--red);color:var(--red);animation:shake .5s infinite}
+.sumgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:22px}
+.sumcard{border:2px solid var(--ink);border-radius:16px;background:var(--card);box-shadow:5px 5px 0 var(--sh);padding:16px}
+.sumcard b{font-family:'Fraunces';font-size:25px;display:block;color:var(--red)}
+.sumcard span{font-weight:700;font-size:13px;color:var(--soft);line-height:1.45;display:block;margin-top:4px}
+.stars{display:flex;gap:8px;margin:12px 0}
+.stars button{background:none;border:0;cursor:pointer;font-size:33px;line-height:1;color:#D8CBB6;transition:transform .15s,color .15s}
+.stars button.on{color:var(--gold);transform:scale(1.15)}
+.thanks{text-align:center;padding:40px 0}
+.thanks .big{font-family:'Fraunces';font-weight:900;font-size:clamp(36px,5.6vw,70px);color:var(--red);line-height:1.05;margin-top:8px}
+.mini-tri{display:inline-block;animation:bob 3s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="brand"><svg width="23" height="23" viewBox="0 0 24 24"><polygon points="12,3 22,21 2,21" fill="#E4572E" stroke="#2B211A" stroke-width="2" stroke-linejoin="round"/></svg>Angle Hunt</div>
+  <div class="sp"></div>
+  <span class="chip hide" id="nameChip"></span>
+  <div class="lang"><button id="btnEN" class="on">EN</button><button id="btnID">ID</button></div>
+  <span id="counter">1 / 14</span>
+  <div id="prog"></div>
+</div>
+
+<div id="track">
+
+<!-- 0 · COVER -->
+<section class="slide active">
+ <div class="wrap cover-grid">
+  <div>
+   <div class="kicker rev">Year 5 · Mathematics · Cambridge</div>
+   <h1 class="rev" style="--d:.08s"><span class="t-top" data-en="Let's hunt for…" data-id="Ayo berburu…">Let's hunt for…</span><span class="t-big" data-en="HIDDEN ANGLES" data-id="SUDUT TERSEMBUNYI">HIDDEN ANGLES</span></h1>
+   <p class="lead rev" style="--d:.16s" data-en="Triangle angle sums, straight lines, right angles and vertical pairs — 30 challenges await, up to the boss level." data-id="Jumlah sudut segitiga, garis lurus, sudut siku, dan pasangan bertolak belakang — 30 tantangan menantimu hingga level bos.">Triangle angle sums, straight lines, right angles and vertical pairs — 30 challenges await, up to the boss level.</p>
+   <label class="name-label rev" style="--d:.24s" for="nameInput"><span data-en="Hello, angle detective! What's your name?" data-id="Hai, detektif sudut! Siapa namamu?">Hello, angle detective! What's your name?</span></label>
+   <div class="name-row rev" style="--d:.3s">
+     <input type="text" id="nameInput" data-phen="Type your name here…" data-pid="Tulis namamu di sini…" placeholder="Type your name here…" maxlength="24">
+     <button class="btn primary" id="startBtn"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M9 6l6 6-6 6"/></svg><span data-en="Start" data-id="Mulai">Start</span></button>
+   </div>
+   <div class="err" id="nameErr"></div>
+  </div>
+  <div id="coverArt" class="rev" style="--d:.2s">
+   <svg viewBox="0 0 440 400">
+    <circle cx="230" cy="210" r="150" fill="none" stroke="#2B211A" stroke-width="2" stroke-dasharray="6 8" opacity=".5"/>
+    <polygon points="150,60 60,330 400,300" fill="#E29B18" stroke="#2B211A" stroke-width="2.5" stroke-linejoin="round" transform="translate(16,16)" opacity=".85"/>
+    <polygon points="150,60 60,330 400,300" fill="#0F7B6C" stroke="#2B211A" stroke-width="2.5" stroke-linejoin="round" transform="translate(8,8)" opacity=".9"/>
+    <polygon points="150,60 60,330 400,300" fill="#E4572E" stroke="#2B211A" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M355 305 A50 50 0 0 0 350 262" fill="none" stroke="#2B211A" stroke-width="2.5"/>
+    <text x="330" y="252" font-family="Nunito" font-weight="900" font-size="20" fill="#2B211A">x?</text>
+    <circle cx="330" cy="80" r="42" fill="#FFFDF6" stroke="#2B211A" stroke-width="2.5"/>
+    <text x="330" y="90" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="26" fill="#2B211A">180°</text>
+   </svg>
+  </div>
+ </div>
+</section>
+
+<!-- 1 · OBJECTIVES -->
+<section class="slide">
+ <div class="wrap">
+  <div class="kicker rev">Learning objectives</div>
+  <h2 class="stitle rev" style="--d:.05s" data-en="Today's mission" data-id="Misi hari ini">Today's mission</h2>
+  <p class="lead rev" style="--d:.1s" data-en="Click each goal when you feel you have mastered it." data-id="Klik setiap tujuan saat kamu merasa sudah menguasainya.">Click each goal when you feel you have mastered it.</p>
+  <div class="card rev" style="--d:.15s;margin-top:22px" id="goalList">
+   <div class="goal"><span class="gnum">01</span><span class="gbox"></span><p data-en="Recall the four types of triangles and their special properties." data-id="Mengingat kembali empat jenis segitiga dan sifat khasnya.">Recall the four types of triangles and their special properties.</p></div>
+   <div class="goal"><span class="gnum">02</span><span class="gbox"></span><p data-en="Use the 180° triangle sum, straight-line (supplementary) and right-angle (complementary) facts." data-id="Menggunakan fakta jumlah sudut segitiga 180°, garis lurus (berpelurus), dan sudut siku (berpenyiku).">Use the 180° triangle sum, straight-line (supplementary) and right-angle (complementary) facts.</p></div>
+   <div class="goal"><span class="gnum">03</span><span class="gbox"></span><p data-en="Spot vertically opposite angles and use them to unlock hidden angles." data-id="Menemukan sudut bertolak belakang dan menggunakannya untuk membuka sudut tersembunyi.">Spot vertically opposite angles and use them to unlock hidden angles.</p></div>
+   <div class="goal"><span class="gnum">04</span><span class="gbox"></span><p data-en="Solve 30 triangle angle problems — from warm-up to the boss level." data-id="Menyelesaikan 30 soal sudut segitiga — dari pemanasan hingga level bos.">Solve 30 triangle angle problems — from warm-up to the boss level.</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- 2 · RECALL -->
+<section class="slide"><div class="wrap" id="s-recall"></div></section>
+
+<!-- 3 · ANGLE TOOLBOX -->
+<section class="slide"><div class="wrap" id="s-tool"></div></section>
+
+<!-- 4 · VERTICAL ANGLES -->
+<section class="slide"><div class="wrap" id="s-vert"></div></section>
+
+<!-- 5 · EXAMPLE 1 -->
+<section class="slide"><div class="wrap" id="s-ex1"></div></section>
+
+<!-- 6 · EXAMPLE 2 -->
+<section class="slide"><div class="wrap" id="s-ex2"></div></section>
+
+<!-- 7-9 · PRACTICE A / B / C -->
+<section class="slide"><div class="wrap" id="s-pa"></div></section>
+<section class="slide"><div class="wrap" id="s-pb"></div></section>
+<section class="slide"><div class="wrap" id="s-pc"></div></section>
+
+<!-- 10 · GAME -->
+<section class="slide"><div class="wrap" id="s-game"></div></section>
+
+<!-- 11 · CONCLUSION -->
+<section class="slide">
+ <div class="wrap">
+  <div class="kicker rev">Wrap-up</div>
+  <h2 class="stitle rev" style="--d:.05s" data-en="Your angle-solving toolkit" data-id="Perangkat penyelesaian sudutmu">Your angle-solving toolkit</h2>
+  <div class="sumgrid">
+    <div class="sumcard rev" style="--d:.08s"><b>180°</b><span data-en="The three angles of any triangle always sum to 180°." data-id="Jumlah ketiga sudut segitiga apa pun selalu 180°.">The three angles of any triangle always sum to 180°.</span></div>
+    <div class="sumcard rev" style="--d:.12s"><b>180°</b><span data-en="Angles on a straight line are supplementary (berpelurus): they pair up to 180°." data-id="Sudut pada garis lurus berpelurus: pasangannya berjumlah 180°.">Angles on a straight line are supplementary (berpelurus): they pair up to 180°.</span></div>
+    <div class="sumcard rev" style="--d:.16s"><b>90°</b><span data-en="Complementary angles (berpenyiku) team up to make a right angle." data-id="Sudut berpenyiku bergabung membentuk sudut siku.">Complementary angles (berpenyiku) team up to make a right angle.</span></div>
+    <div class="sumcard rev" style="--d:.2s"><b>=</b><span data-en="Vertically opposite angles are always equal — a free angle gift!" data-id="Sudut bertolak belakang selalu sama besar — hadiah sudut gratis!">Vertically opposite angles are always equal — a free angle gift!</span></div>
+  </div>
+  <div class="factbox rev" style="--d:.26s;max-width:640px"><b data-en="Detective routine" data-id="Rutinitas detektif">Detective routine</b><span data-en="Spot the fact → write the equation → solve for x → check it makes sense!" data-id="Temukan fakta → tulis persamaan → hitung x → periksa kewajarannya!">Spot the fact → write the equation → solve for x → check it makes sense!</span></div>
+ </div>
+</section>
+
+<!-- 12 · REFLECTION -->
+<section class="slide">
+ <div class="wrap" style="max-width:720px">
+  <div class="kicker rev">Reflection</div>
+  <h2 class="stitle rev" style="--d:.05s" data-en="How do you feel about angle problems now?" data-id="Bagaimana perasaanmu tentang soal sudut sekarang?">How do you feel about angle problems now?</h2>
+  <div class="card rev" style="--d:.12s;margin-top:20px">
+    <div class="stars" id="stars"></div>
+    <p style="font-weight:800;font-size:14.5px;margin-top:8px" data-en="One thing I will remember from today…" data-id="Satu hal yang akan saya ingat dari hari ini…">One thing I will remember from today…</p>
+    <input type="text" style="margin-top:8px" data-phen="Write your reflection here…" data-pid="Tulis refleksimu di sini…" placeholder="Write your reflection here…">
+  </div>
+ </div>
+</section>
+
+<!-- 13 · THANK YOU -->
+<section class="slide">
+ <div class="wrap thanks">
+   <div class="mini-tri"><svg width="62" height="56" viewBox="0 0 64 58"><polygon points="32,4 60,54 4,54" fill="#E4572E" stroke="#2B211A" stroke-width="3" stroke-linejoin="round"/></svg></div>
+   <h2 class="stitle rev" style="--d:.05s" data-en="Mission complete!" data-id="Misi selesai!">Mission complete!</h2>
+   <div class="big rev" style="--d:.12s"><span data-en="Thank you for today," data-id="Terima kasih untuk hari ini,">Thank you for today,</span><br><span id="thanksName" style="color:var(--teal)">Detective!</span></div>
+   <p class="lead rev" style="--d:.2s;margin:16px auto 0;text-align:center" data-en="You cracked 30 hidden angles like a true detective. Keep hunting for angles around you!" data-id="Kamu memecahkan 30 sudut tersembunyi seperti detektif sejati. Terus buru sudut di sekitarmu!">You cracked 30 hidden angles like a true detective. Keep hunting for angles around you!</p>
+   <div class="rev" style="--d:.28s;margin-top:24px"><button class="btn" id="restartBtn"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M21 12a9 9 0 11-3-6.7M21 3v6h-6"/></svg><span data-en="Back to the start" data-id="Kembali ke awal">Back to the start</span></button></div>
+ </div>
+</section>
+
+</div>
+
+<div id="dots" class="locked"></div>
+<div class="navbtns">
+  <button class="iconbtn" id="prevBtn" disabled><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="iconbtn" id="nextBtn" disabled><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M9 6l6 6-6 6"/></svg></button>
+</div>
+
+<script>
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const setBI=(el,en,id)=>{el.dataset.en=en;el.dataset.id=id;el.textContent=lang==='en'?en:id};
+let lang='en',name='',started=false,slide=0;const N=14;let S=0;
+function setLang(l){lang=l;$('#btnEN').classList.toggle('on',l==='en');$('#btnID').classList.toggle('on',l==='id');
+ $$('[data-en]').forEach(el=>el.textContent=l==='en'?el.dataset.en:el.dataset.id);
+ $$('[data-phen]').forEach(el=>el.placeholder=l==='en'?el.dataset.phen:el.dataset.pid)}
+ $('#btnEN').onclick=()=>setLang('en');$('#btnID').onclick=()=>setLang('id');
+
+/* ============ navigation ============ */
+const dots=$('#dots');for(let i=0;i<N;i++){const d=document.createElement('button');d.className='dot';d.onclick=()=>goto(i);dots.appendChild(d)}
+function goto(i){if(!started&&i>0)i=0;slide=Math.max(0,Math.min(N-1,i));
+ $('#track').style.transform=`translateX(-${slide*100}vw)`;
+ $$('#dots .dot').forEach((d,k)=>d.classList.toggle('on',k===slide));
+ $('#counter').textContent=(slide+1)+' / '+N;$('#prog').style.width=(slide/(N-1)*100)+'%';
+ $('#prevBtn').disabled=slide===0||!started;$('#nextBtn').disabled=slide===N-1||!started;
+ $$('.slide').forEach((s,k)=>s.classList.toggle('active',k===slide))}
+ $('#prevBtn').onclick=()=>goto(slide-1);$('#nextBtn').onclick=()=>goto(slide+1);
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==='ArrowRight')goto(slide+1);if(e.key==='ArrowLeft')goto(slide-1)});
+ $('#startBtn').onclick=()=>{const v=$('#nameInput').value.trim().replace(/[<>"&]/g,'');
+ if(v.length<2){setBI($('#nameErr'),'Please write your name first! (min. 2 letters)','Tulis namamu dulu ya! (min. 2 huruf)');$('#nameInput').classList.add('shake');setTimeout(()=>$('#nameInput').classList.remove('shake'),500);return}
+ name=v;started=true;$('#nameErr').textContent='';$('#nameChip').classList.remove('hide');$('#nameChip').textContent='★ '+name;
+ $('#dots').classList.remove('locked');$('#thanksName').textContent=name+'!';goto(1)};
+ $('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('#startBtn').click()});
+ $('#restartBtn').onclick=()=>location.reload();
+ $$('.goal').forEach(g=>g.onclick=()=>g.classList.toggle('done'));
+
+/* ============ SVG geometry engine ============ */
+const RAD=Math.PI/180;
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],addp=(a,b)=>[a[0]+b[0],a[1]+b[1]],mulv=(a,k)=>[a[0]*k,a[1]*k];
+const nrm=a=>{const m=Math.hypot(a[0],a[1])||1;return[a[0]/m,a[1]/m]};
+function triAng(a,b,g,c=175){const L=c*Math.sin(b*RAD)/Math.sin(g*RAD);
+ return[[0,0],[c,0],[L*Math.cos(a*RAD),-L*Math.sin(a*RAD)]]}
+function vbOf(pts,extra=[],pad=44){const all=pts.concat(extra);
+ const x0=Math.min(...all.map(p=>p[0]))-pad,y0=Math.min(...all.map(p=>p[1]))-pad;
+ return `${x0.toFixed(1)} ${y0.toFixed(1)} ${(Math.max(...all.map(p=>p[0]))-x0+pad).toFixed(1)} ${(Math.max(...all.map(p=>p[1]))-y0+pad).toFixed(1)}`}
+const LN=(A,B,w=3,col='#2B211A')=>`<line x1="${A[0].toFixed(1)}" y1="${A[1].toFixed(1)}" x2="${B[0].toFixed(1)}" y2="${B[1].toFixed(1)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+const PG=(pts,fill='#EDE6F7')=>`<polygon points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="${fill}" stroke="#2B211A" stroke-width="3" stroke-linejoin="round"/>`;
+function ARC(Vv,d1,d2,r,col='#E29B18'){const cr=d1[0]*d2[1]-d1[1]*d2[0],sw=cr>0?1:0;
+ const A=addp(Vv,mulv(d1,r)),B=addp(Vv,mulv(d2,r));
+ return `<path d="M${A[0].toFixed(1)} ${A[1].toFixed(1)} A${r} ${r} 0 0 ${sw} ${B[0].toFixed(1)} ${B[1].toFixed(1)}" fill="none" stroke="${col}" stroke-width="2.6"/>`}
+function LAB(Vv,d1,d2,txt,r,col='#2B211A',size=14.5){let b=nrm(addp(d1,d2));
+ return `<text x="${(Vv[0]+b[0]*r).toFixed(1)}" y="${(Vv[1]+b[1]*r+size*.35).toFixed(1)}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="${size}" fill="${col}">${txt}</text>`}
+function TICK(A,B){const M=mulv(addp(A,B),.5),d=nrm(sub(B,A)),n=[-d[1],d[0]];
+ return LN(addp(M,mulv(n,6)),addp(M,mulv(n,-6)),2.6,'#0F7B6C')}
+function SQ(Vv,d1,d2,s=14){const A=addp(Vv,mulv(d1,s)),B=addp(addp(Vv,mulv(d1,s)),mulv(d2,s)),C=addp(Vv,mulv(d2,s));
+ return `<path d="M${A[0].toFixed(1)} ${A[1].toFixed(1)} L${B[0].toFixed(1)} ${B[1].toFixed(1)} L${C[0].toFixed(1)} ${C[1].toFixed(1)}" fill="none" stroke="#2B211A" stroke-width="2.4"/>`}
+const TLB=(p,dx,dy,txt)=>`<text x="${(p[0]+dx).toFixed(1)}" y="${(p[1]+dy).toFixed(1)}" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="15" fill="#6F604F">${txt}</text>`;
+const VLB=(V,others,txt,r=18)=>{let b=[0,0];others.forEach(q=>{b=addp(b,nrm(sub(q,V)))});b=nrm(b);
+ return TLB(addp(V,mulv(b,-r)),0,4,txt)};
+const figSVG=(pts,extra,inner,mw=290)=>`<svg viewBox="${vbOf(pts,extra)}" style="width:100%;max-width:${mw}px;display:block;margin:0 auto">${inner}</svg>`;
+const dd=(A,B)=>nrm(sub(B,A));
+
+/* ============ figure builders ============ */
+const F={};
+F.sum=(a,b)=>{const g=180-a-b,pts=triAng(a,b,g,190),[A,B,C]=pts;
+ let s=PG(pts);
+ s+=ARC(A,dd(A,B),dd(A,C),22)+LAB(A,dd(A,B),dd(A,C),a+'°',36);
+ s+=ARC(B,dd(B,A),dd(B,C),22)+LAB(B,dd(B,A),dd(B,C),b+'°',36);
+ s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),'x',30,'#E4572E',16);
+ return figSVG(pts,[],s)};
+F.right=a=>{const pts=triAng(90,a,90-a,150),[A,B,C]=pts;
+ let s=PG(pts);
+ s+=SQ(A,dd(A,B),dd(A,C),14);
+ s+=ARC(B,dd(B,A),dd(B,C),22)+LAB(B,dd(B,A),dd(B,C),a+'°',36);
+ s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),'x',30,'#E4572E',16);
+ return figSVG(pts,[],s)};
+F.isoV=v=>{const b=(180-v)/2,pts=triAng(b,b,v,150),[A,B,C]=pts;
+ let s=PG(pts);s+=TICK(A,C)+TICK(B,C);
+ s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),v+'°',36);
+ s+=ARC(A,dd(A,B),dd(A,C),22)+LAB(A,dd(A,B),dd(A,C),'x',30,'#E4572E',16);
+ return figSVG(pts,[],s)};
+F.isoB=b=>{const pts=triAng(b,b,180-2*b,170),[A,B,C]=pts;
+ let s=PG(pts);s+=TICK(A,C)+TICK(B,C);
+ s+=ARC(A,dd(A,B),dd(A,C),22)+LAB(A,dd(A,B),dd(A,C),b+'°',36);
+ s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),'x',30,'#E4572E',16);
+ return figSVG(pts,[],s)};
+F.eq=()=>{const pts=triAng(60,60,60,175),[A,B,C]=pts;
+ let s=PG(pts);s+=TICK(A,B)+TICK(B,C)+TICK(C,A);
+ s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),'x',30,'#E4572E',16);
+ return figSVG(pts,[],s)};
+F.extB=(ext,o={})=>{const beta=180-ext;
+ const alpha=o.a!=null?o.a:(o.iso?beta:(o.right?90:50)),gamma=180-alpha-beta;
+ const pts=triAng(alpha,beta,gamma,180),[A,B,C]=pts,D=addp(B,[95,0]);
+ let s=PG(pts)+LN(B,D);
+ s+=ARC(B,dd(B,C),[1,0],24)+LAB(B,dd(B,C),[1,0],ext+'°',40);
+ if(o.iso)s+=TICK(A,C)+TICK(B,C);
+ if(o.right)s+=SQ(A,dd(A,B),dd(A,C),13);
+ if(o.a!=null)s+=ARC(A,dd(A,B),dd(A,C),22)+LAB(A,dd(A,B),dd(A,C),o.a+'°',38);
+ if(o.x==='B')s+=ARC(B,[-1,0],dd(B,C),17)+LAB(B,[-1,0],dd(B,C),'x',28,'#E4572E',16);
+ if(o.x==='C')s+=ARC(C,dd(C,A),dd(C,B),22)+LAB(C,dd(C,A),dd(C,B),'x',30,'#E4572E',16);
+ if(o.x==='A')s+=ARC(A,dd(A,B),dd(A,C),22)+LAB(A,dd(A,B),dd(A,C),'x',30,'#E4572E',16);
+ return figSVG(pts,[D],s)};
+F.ray=o=>{let pts,ticks=false,sq=false,varc=null;
+ if(o.t==='eq')pts=triAng(60,60,60,150);
+ else if(o.t==='iso'){pts=triAng((180-o.v)/2,(180-o.v)/2,o.v,160);ticks=true;varc=o.v}
+ else if(o.t==='isoB'){pts=triAng(o.b,o.b,180-2*o.b,160);ticks=true}
+ else{pts=triAng(45,45,90,160);ticks=true;sq=true}
+ const[A,B,C]=pts,L=addp(B,[85,0]),kd=[Math.cos(o.th*RAD),-Math.sin(o.th*RAD)],K=addp(B,mulv(kd,95));
+ let s=PG(pts)+LN(B,L)+LN(B,K);
+ if(ticks)s+=TICK(A,C)+TICK(B,C);
+ if(sq)s+=SQ(C,dd(C,A),dd(C,B),13);
+ if(varc!=null)s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),varc+'°',34);
+ if(o.t==='isoB')s+=ARC(A,dd(A,B),dd(A,C),20)+LAB(A,dd(A,B),dd(A,C),o.b+'°',34);
+ s+=ARC(B,kd,[1,0],20)+LAB(B,kd,[1,0],o.th+'°',34);
+ s+=ARC(B,dd(B,C),kd,23)+LAB(B,dd(B,C),kd,'x',32,'#E4572E',16);
+ s+=VLB(C,[A,B],'H')+TLB(A,-14,20,'I')+TLB(B,6,24,'J')+TLB(K,14,-2,'K')+TLB(L,4,24,'L');
+ return figSVG(pts,[L,K],s)};
+F.vert2=(al,be,ga,o={})=>{const pts=triAng(al,be,ga,o.c||165),[A,B,C]=pts;
+ const T=addp(A,[-80,0]),U=addp(A,mulv(dd(A,C),-95));
+ let s=PG(pts)+LN(A,T)+LN(A,U);
+ const dAT=[-1,0],dAU=dd(A,U);
+ s+=ARC(A,dAT,dAU,18)+LAB(A,dAT,dAU,al+'°',34);
+ if(o.p!=null)s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),o.p+'°',34);
+ if(o.b!=null)s+=ARC(B,dd(B,A),dd(B,C),20)+LAB(B,dd(B,A),dd(B,C),o.b+'°',34);
+ (o.ticks||[]).forEach(k=>{if(k==='AB')s+=TICK(A,B);if(k==='BC')s+=TICK(B,C);if(k==='CA')s+=TICK(C,A)});
+ if(o.x==='A')s+=ARC(A,dd(A,B),dd(A,C),20)+LAB(A,dd(A,B),dd(A,C),'x',28,'#E4572E',16);
+ if(o.x==='B')s+=ARC(B,dd(B,A),dd(B,C),20)+LAB(B,dd(B,A),dd(B,C),'x',28,'#E4572E',16);
+ if(o.x==='C')s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),'x',28,'#E4572E',16);
+ s+=TLB(A,16,18,'Q')+TLB(B,4,22,'R')+VLB(C,[A,B],'P')+TLB(T,-8,20,'T')+TLB(U,-14,10,'U');
+ return figSVG(pts,[T,U],s)};
+F.comp=a=>{const O=[0,0],A=[0,-108],B=[108,0],cd=[Math.cos(a*RAD),-Math.sin(a*RAD)],C=addp(O,mulv(cd,94));
+ let s=LN(O,A)+LN(O,B)+LN(O,C,3);
+ s+=SQ(O,[0,-1],[1,0],12);
+ s+=ARC(O,[0,-1],cd,26)+LAB(O,[0,-1],cd,'x',40,'#E4572E',16);
+ s+=ARC(O,cd,[1,0],26)+LAB(O,cd,[1,0],a+'°',40);
+ return figSVG([A,B],[O,C],s,230)};
+F.extA=ext=>{const v=180-ext,b=ext/2,pts=triAng(b,b,v,160),[A,B,C]=pts;
+ const D=addp(C,mulv(dd(C,A),85));
+ let s=PG(pts)+LN(C,D);
+ s+=ARC(C,dd(C,D),dd(C,B),20)+LAB(C,dd(C,D),dd(C,B),ext+'°',36);
+ s+=TICK(C,A)+TICK(C,B);
+ s+=ARC(A,dd(A,B),dd(A,C),20)+LAB(A,dd(A,B),dd(A,C),'x',28,'#E4572E',16);
+ return figSVG(pts,[D],s)};
+F.rightExt=()=>{const pts=triAng(90,60,30,115),[A,B,C]=pts,D=addp(B,[85,0]);
+ let s=PG(pts)+LN(B,D);
+ s+=SQ(A,dd(A,B),dd(A,C),13);
+ s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),'30°',34);
+ s+=ARC(B,dd(B,C),[1,0],20)+LAB(B,dd(B,C),[1,0],'x',28,'#E4572E',16);
+ return figSVG(pts,[D],s)};
+F.isoExt=()=>{const pts=triAng(45,45,90,160),[A,B,C]=pts,D=addp(B,[85,0]);
+ let s=PG(pts)+LN(B,D);
+ s+=SQ(C,dd(C,A),dd(C,B),13)+TICK(C,A)+TICK(C,B);
+ s+=ARC(B,dd(B,C),[1,0],20)+LAB(B,dd(B,C),[1,0],'x',28,'#E4572E',16);
+ return figSVG(pts,[D],s)};
+/* ---- new builders for the boss set ---- */
+F.extBase=ext=>{const b=180-ext,v=180-2*b,pts=triAng(b,b,v,170),[A,B,C]=pts,D=addp(B,[90,0]);
+ let s=PG(pts)+LN(B,D);
+ s+=TICK(C,A)+TICK(C,B);
+ s+=ARC(B,dd(B,C),[1,0],22)+LAB(B,dd(B,C),[1,0],ext+'°',38);
+ s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),'x',28,'#E4572E',16);
+ return figSVG(pts,[D],s)};
+F.vext=b=>{const v=180-2*b,pts=triAng(b,b,v,170),[A,B,C]=pts;
+ const K=addp(B,mulv(dd(B,C),-92)),L=addp(B,[85,0]);
+ let s=PG(pts)+LN(B,L);
+ s+=TICK(C,A)+TICK(C,B);
+ s+=ARC(B,dd(B,K),[1,0],20)+LAB(B,dd(B,K),[1,0],b+'°',36);
+ s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),'x',28,'#E4572E',16);
+ s+=VLB(C,[A,B],'H')+TLB(A,-14,20,'I')+TLB(B,2,22,'J')+TLB(K,10,-12,'K')+TLB(addp(B,[48,0]),2,22,'L');
+ return figSVG(pts,[L,K],s)};
+F.vext2=b=>{const x=180-2*b,pts=triAng(x,b,b,170),[A,B,C]=pts;
+ const K=addp(B,mulv(dd(B,C),-92)),L=addp(B,[85,0]);
+ let s=PG(pts)+LN(B,L);
+ s+=TICK(A,C)+TICK(A,B);
+ s+=ARC(B,dd(B,K),[1,0],20)+LAB(B,dd(B,K),[1,0],b+'°',36);
+ s+=ARC(A,dd(A,B),dd(A,C),20)+LAB(A,dd(A,B),dd(A,C),'x',28,'#E4572E',16);
+ s+=VLB(C,[A,B],'H')+TLB(A,-6,-16,'I')+TLB(B,2,22,'J')+TLB(K,10,-12,'K')+TLB(addp(B,[48,0]),2,22,'L');
+ return figSVG(pts,[L,K],s)};
+F.comp3=(a,b)=>{const O=[0,0],A=[0,-108],B=[108,0];
+ const d1=[Math.cos(a*RAD),-Math.sin(a*RAD)],C=addp(O,mulv(d1,94));
+ const d2=[Math.cos((a+b)*RAD),-Math.sin((a+b)*RAD)],D=addp(O,mulv(d2,94));
+ let s=LN(O,A)+LN(O,B)+LN(O,C,3)+LN(O,D,3);
+ s+=SQ(O,[0,-1],[1,0],12);
+ s+=ARC(O,[0,-1],d1,26)+LAB(O,[0,-1],d1,a+'°',40);
+ s+=ARC(O,d1,d2,26)+LAB(O,d1,d2,'x',40,'#E4572E',16);
+ s+=ARC(O,d2,[1,0],26)+LAB(O,d2,[1,0],b+'°',40);
+ return figSVG([A,B],[O,C,D],s,230)};
+F.ext2=(e1,e2)=>{const pI=180-e1,qI=180-e2,x=e1+e2-180,pts=triAng(pI,qI,x,150),[A,B,C]=pts;
+ const S=addp(A,mulv(dd(A,B),-80)),T=addp(B,mulv(dd(B,C),-80));
+ let s=PG(pts)+LN(A,S)+LN(B,T);
+ s+=ARC(A,dd(A,S),dd(A,C),20)+LAB(A,dd(A,S),dd(A,C),e1+'°',36);
+ s+=ARC(B,dd(B,T),dd(B,A),20)+LAB(B,dd(B,T),dd(B,A),e2+'°',36);
+ s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),'x',28,'#E4572E',16);
+ s+=VLB(C,[A,B],'R')+TLB(A,-16,4,'P')+TLB(S,-12,-10,'S')+TLB(B,8,24,'Q')+TLB(T,14,16,'T');
+ return figSVG(pts,[S,T],s)};
+
+/* ============ slide 2 · recall ============ */
+function mini(sh){let s='';
+ const t=(a,b)=>{const M=mulv(addp(a,b),.5),d=nrm(sub(b,a)),n=[-d[1],d[0]];return LN(addp(M,mulv(n,6)),addp(M,mulv(n,-6)),2.6,'#0F7B6C')};
+ if(sh==='right'){const p=[[20,95],[130,95],[20,20]];s=PG(p)+SQ(p[0],dd(p[0],p[1]),dd(p[0],p[2]),11)}
+ if(sh==='eq'){const p=[[20,95],[130,95],[75,11]];s=PG(p)+t(p[0],p[1])+t(p[1],p[2])+t(p[2],p[0])}
+ if(sh==='iso'){const p=[[20,95],[130,95],[75,18]];s=PG(p)+t(p[0],p[2])+t(p[1],p[2])}
+ if(sh==='sca'){const p=[[45,15],[15,95],[135,80]];s=PG(p)}
+ return `<svg viewBox="0 0 150 115" style="width:110px;display:block;margin:0 auto">${s}</svg>`}
+const RC=[['right','Right triangle','Segitiga siku-siku','Exactly one 90° angle — its two acute angles always make 90° together.','Tepat satu sudut 90° — dua sudut lancipnya selalu berjumlah 90°.'],
+ ['eq','Equilateral','Sama sisi','3 equal sides → all three angles are exactly 60°.','3 sisi sama → ketiga sudutnya tepat 60°.'],
+ ['iso','Isosceles','Sama kaki','2 equal sides → the 2 base angles are equal.','2 sisi sama → kedua sudut alasnya sama besar.'],
+ ['sca','Scalene','Sembarang','No equal sides and no equal angles — but still 180° in total!','Tidak ada sisi/sudut yang sama — tetap berjumlah 180°!']];
+ $('#s-recall').innerHTML=`<div class="kicker rev">Recall · Previous lesson</div>
+ <h2 class="stitle rev" style="--d:.05s" data-en="The four triangle types" data-id="Empat jenis segitiga">The four triangle types</h2>
+ <p class="lead rev" style="--d:.1s" data-en="Click each card to check its secret property — you will need all four today!" data-id="Klik setiap kartu untuk melihat sifat rahasianya — kamu akan membutuhkan semuanya hari ini!">Click each card to check its secret property — you will need all four today!</p>
+ <div class="rgrid">${RC.map((r,i)=>`<div class="rcard rev" style="--d:${.12+i*.06}s" data-r="${i}">${mini(r[0])}<b>${r[1]}</b><small>${r[2]}</small><div class="rfact"><span data-en="${r[3]}" data-id="${r[4]}">${lang==='en'?r[3]:r[4]}</span></div><span class="tap" data-en="Tap to reveal" data-id="Ketuk untuk melihat">Tap to reveal</span></div>`).join('')}</div>`;
+ $$('.rcard').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ============ slide 3 · angle toolbox ============ */
+function srow(id,lbEN,lbID,min,max,val,step=1){return `<div class="srow"><label data-en="${lbEN}" data-id="${lbID}">${lang==='en'?lbEN:lbID}</label><input type="range" id="${id}" min="${min}" max="${max}" value="${val}" step="${step}"><output id="${id}o">${val}°</output></div>`}
+ $('#s-tool').innerHTML=`<div class="kicker rev">Angle facts</div>
+ <h2 class="stitle rev" style="--d:.05s" data-en="Your three magic numbers" data-id="Tiga angka ajaibmu">Your three magic numbers</h2>
+ <p class="lead rev" style="--d:.1s" data-en="Drag the sliders and watch how each fact stays true — no matter the shape!" data-id="Geser slider dan lihat bagaimana setiap fakta tetap benar — apa pun bentuknya!">Drag the sliders and watch how each fact stays true — no matter the shape!</p>
+ <div class="tgrid">
+  <div class="tcard3 rev" style="--d:.12s"><h4 data-en="Angles in a triangle" data-id="Sudut dalam segitiga">Angles in a triangle</h4><em>a + b + c = 180°</em>
+   <div id="tw"></div>${srow('ta','Angle a','Sudut a',20,100,60)}${srow('tb','Angle b','Sudut b',20,100,50)}
+   <div class="eqline" id="teq"></div></div>
+  <div class="tcard3 rev" style="--d:.18s"><h4 data-en="Angles on a straight line" data-id="Sudut pada garis lurus">Angles on a straight line</h4><em data-en="supplementary · berpelurus = 180°" data-id="berpelurus = 180°">supplementary · berpelurus = 180°</em>
+   <div id="sw"></div>${srow('sa','Angle a','Sudut a',20,160,115)}
+   <div class="eqline" id="seq"></div></div>
+  <div class="tcard3 rev" style="--d:.24s"><h4 data-en="Angles in a right angle" data-id="Sudut dalam sudut siku">Angles in a right angle</h4><em data-en="complementary · berpenyiku = 90°" data-id="berpenyiku = 90°">complementary · berpenyiku = 90°</em>
+   <div id="cw"></div>${srow('ca','Angle a','Sudut a',10,80,35)}
+   <div class="eqline" id="ceq"></div></div>
+ </div>`;
+function twUpd(){let a=+$('#ta').value,b=+$('#tb').value;if(a+b>160){b=160-a;$('#tb').value=b}
+ $('#tao').textContent=a+'°';$('#tbo').textContent=b+'°';const c=180-a-b;
+ const pts=triAng(a,b,c,140),[A,B,C]=pts;
+ let s=PG(pts,'#FCEBD3');
+ s+=ARC(A,dd(A,B),dd(A,C),20)+LAB(A,dd(A,B),dd(A,C),a+'°',32);
+ s+=ARC(B,dd(B,A),dd(B,C),20)+LAB(B,dd(B,A),dd(B,C),b+'°',32);
+ s+=ARC(C,dd(C,A),dd(C,B),20)+LAB(C,dd(C,A),dd(C,B),c+'°',32);
+ $('#tw').innerHTML=figSVG(pts,[],s,230);
+ $('#teq').innerHTML=`${a}° + ${b}° + ${c}° = <span class="ok">180°</span>`}
+function swUpd(){const a=+$('#sa').value;$('#sao').textContent=a+'°';
+ const O=[0,0],L=[-120,0],R=[120,0],d=[Math.cos(a*RAD),-Math.sin(a*RAD)],U=addp(O,mulv(d,105));
+ let s=LN(L,R)+LN(O,U,3);
+ s+=ARC(O,d,[1,0],24)+LAB(O,d,[1,0],a+'°',36);
+ s+=ARC(O,d,[-1,0],24)+LAB(O,d,[-1,0],(180-a)+'°',38,'#0F7B6C');
+ $('#sw').innerHTML=`<svg viewBox="-150 -140 300 175" style="width:100%;max-width:230px;display:block;margin:0 auto">${s}</svg>`;
+ $('#seq').innerHTML=`${a}° + ${180-a}° = <span class="ok">180°</span>`}
+function cwUpd(){const a=+$('#ca').value;$('#cao').textContent=a+'°';
+ $('#cw').innerHTML=F.comp(a);
+ $('#ceq').innerHTML=`${a}° + ${90-a}° = <span class="ok">90°</span>`}
+ $('#ta').addEventListener('input',twUpd);$('#tb').addEventListener('input',twUpd);
+ $('#sa').addEventListener('input',swUpd);$('#ca').addEventListener('input',cwUpd);
+twUpd();swUpd();cwUpd();
+
+/* ============ slide 4 · vertical angles ============ */
+ $('#s-vert').innerHTML=`<div class="kicker rev">New fact</div>
+ <h2 class="stitle rev" style="--d:.05s" data-en="Vertically opposite angles" data-id="Sudut bertolak belakang">Vertically opposite angles</h2>
+ <div class="cols c-2">
+  <div class="card rev" style="--d:.1s">
+   <div id="vw"></div>
+   ${srow('va','Rotate the line','Putar garisnya',20,160,60)}
+   <div class="eqline" id="veq"></div>
+  </div>
+  <div class="card rev" style="--d:.18s">
+   <h4 style="font-family:'Fraunces';font-size:20px" data-en="What do you see?" data-id="Apa yang kamu lihat?">What do you see?</h4>
+   <div class="plist">
+    <div><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 7"/></svg><span data-en="The two RED angles are always equal — they are vertically opposite (bertolak belakang)." data-id="Dua sudut MERAH selalu sama besar — keduanya bertolak belakang.">The two RED angles are always equal — they are vertically opposite (bertolak belakang).</span></div>
+    <div><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 7"/></svg><span data-en="The two TEAL angles are equal too." data-id="Dua sudut HIJAU juga sama besar.">The two TEAL angles are equal too.</span></div>
+    <div><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 7"/></svg><span data-en="Any red + teal pair sits on a straight line, so together they make 180° (supplementary)." data-id="Pasangan merah + hijau berada pada garis lurus, jadi jumlahnya 180° (berpelurus).">Any red + teal pair sits on a straight line, so together they make 180° (supplementary).</span></div>
+    <div><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 7"/></svg><span data-en="Detective tip: when two lines cross inside a triangle problem, the opposite angle is a FREE gift!" data-id="Tips detektif: saat dua garis berpotongan dalam soal segitiga, sudut di seberangnya adalah hadiah gratis!">Detective tip: when two lines cross inside a triangle problem, the opposite angle is a FREE gift!</span></div>
+   </div>
+  </div>
+ </div>`;
+function vwUpd(){const t=+$('#va').value;$('#vao').textContent=t+'°';
+ const O=[0,0],d=[Math.cos(t*RAD),-Math.sin(t*RAD)],R=[125,0],L=[-125,0],U=addp(O,mulv(d,110)),D=addp(O,mulv(d,-110));
+ const cols=[['#E4572E',t+'°',dd(O,R),dd(O,U)],['#0F7B6C',(180-t)+'°',dd(O,U),dd(O,L)],['#E4572E',t+'°',dd(O,L),dd(O,D)],['#0F7B6C',(180-t)+'°',dd(O,D),dd(O,R)]];
+ let s=LN(L,R)+LN(U,D,3);
+ cols.forEach(c=>{s+=ARC(O,c[2],c[3],26,c[0])+LAB(O,c[2],c[3],c[1],40,c[0])});
+ s+=`<circle cx="0" cy="0" r="4.5" fill="#2B211A"/>`;
+ $('#vw').innerHTML=`<svg viewBox="-170 -145 340 290" style="width:100%;max-width:330px;display:block;margin:0 auto">${s}</svg>`;
+ $('#veq').innerHTML=`${t}° + ${180-t}° = <span class="ok">180°</span> &nbsp;·&nbsp; ${t}° = ${t}°`}
+ $('#va').addEventListener('input',vwUpd);vwUpd();
+
+/* ============ slides 5-6 · worked examples ============ */
+function exampleHTML(id,titleEN,titleID,fig,qEN,qID){
+ return `<div class="kicker rev">Worked example</div>
+ <h2 class="stitle rev" style="--d:.05s">${titleEN} <span style="font-style:italic;font-weight:600;font-size:.55em;color:var(--soft)">${titleID}</span></h2>
+ <div class="cols c-even" style="margin-top:18px">
+  <div class="card rev" style="--d:.1s">${fig}<div class="eqline hide exans" id="${id}-ans"></div></div>
+  <div class="card rev" style="--d:.18s">
+   <b style="font-family:'Fraunces'" data-en="${titleEN}" data-id="${titleID}">${lang==='en'?titleEN:titleID}</b>
+   <p style="font-weight:700;font-size:14.5px;margin-top:8px;line-height:1.55" data-en="${qEN}" data-id="${qID}">${lang==='en'?qEN:qID}</p>
+   <div class="exsteps" id="${id}-steps"></div>
+   <div style="margin-top:14px"><button class="btn primary sm" id="${id}-btn"><span data-en="Show next step" data-id="Langkah berikutnya">Show next step</span></button>
+   <button class="btn sm hide" id="${id}-reset"><span data-en="Try again" data-id="Coba lagi">Try again</span></button></div>
+  </div>
+ </div>`}
+function bindExample(id,steps,ansEN,ansID){let i=0;
+ $('#'+id+'-btn').onclick=()=>{if(i<steps.length){const st=steps[i];
+   $('#'+id+'-steps').insertAdjacentHTML('beforeend',`<div class="step"><span class="sn">${i+1}</span><span data-en="${st[0]}" data-id="${st[1]}">${lang==='en'?st[0]:st[1]}</span></div>`);i++;
+   if(i===steps.length){const a=$('#'+id+'-ans');a.innerHTML=(lang==='en'?ansEN:ansID);a.dataset.en=ansEN;a.dataset.id=ansID;
+    a.classList.remove('hide');$('#'+id+'-btn').classList.add('hide');$('#'+id+'-reset').classList.remove('hide')}}};
+ $('#'+id+'-reset').onclick=()=>{i=0;$('#'+id+'-steps').innerHTML='';$('#'+id+'-ans').classList.add('hide');
+  $('#'+id+'-btn').classList.remove('hide');$('#'+id+'-reset').classList.add('hide')}}
+
+ $('#s-ex1').innerHTML=exampleHTML('ex1','Example 1 · The equilateral extension','Contoh 1 · Perpanjangan segitiga sama sisi',
+ F.ray({t:'eq',th:53}),
+ 'In triangle HIJ, HI = IJ = HJ. I–J–L is a straight line and ∠KJL = 53°. Find the measure of ∠HJK (marked x).',
+ 'Pada segitiga HIJ, HI = IJ = HJ. I–J–L adalah garis lurus dan ∠KJL = 53°. Tentukan besar ∠HJK (bertanda x).');
+bindExample('ex1',[['HI = IJ = HJ, so HIJ is an equilateral triangle → every angle is 60°. So ∠HJI = 60°.','HI = IJ = HJ, jadi HIJ segitiga sama sisi → setiap sudutnya 60°. Maka ∠HJI = 60°.'],['I, J, L lie on a straight line → ∠HJL and ∠HJI are supplementary: ∠HJL = 180° − 60° = 120°.','I, J, L pada garis lurus → ∠HJL berpelurus dengan ∠HJI: ∠HJL = 180° − 60° = 120°.'],['∠HJK = ∠HJL − ∠KJL = 120° − 53° = 67°.','∠HJK = ∠HJL − ∠KJL = 120° − 53° = 67°.']],'Answer: ∠HJK = 67°','Jawaban: ∠HJK = 67°');
+
+ $('#s-ex2').innerHTML=exampleHTML('ex2','Example 2 · Crossing lines mystery','Contoh 2 · Misteri garis berpotongan',
+ F.vert2(78,24,78,{ticks:['AB','BC'],x:'B'}),
+ 'T–Q–R and P–Q–U are straight lines. ∠TQU = 78° and PR = QR (tick marks). Find m∠PRQ (marked x), following the three steps.',
+ 'T–Q–R dan P–Q–U adalah garis lurus. ∠TQU = 78° dan PR = QR (tanda tick). Tentukan m∠PRQ (bertanda x) dengan tiga langkah.');
+bindExample('ex2',[['T–Q–R and P–Q–U are straight lines → ∠PQR and ∠TQU are vertically opposite: m∠PQR = m∠TQU = 78°.','T–Q–R dan P–Q–U garis lurus → ∠PQR dan ∠TQU bertolak belakang: m∠PQR = m∠TQU = 78°.'],['PR = QR (equal sides) → the angles facing them are equal: m∠QPR = m∠PQR = 78°.','PR = QR (sisi sama) → sudut yang menghadapnya sama besar: m∠QPR = m∠PQR = 78°.'],['m∠PRQ = 180° − 78° − 78° = 24° (angle sum).','m∠PRQ = 180° − 78° − 78° = 24° (jumlah sudut).']],'Answer: m∠PRQ = 24°','Jawaban: m∠PRQ = 24°');
+
+/* ============ slides 7-9 · 30 problems ============ */
+const PROBS=[
+/* --- Set A · ★–★★ --- */
+{d:1,f:F.sum(70,60),a:50,q:['Two angles of a triangle are 70° and 60°. Find the missing angle x.','Dua sudut sebuah segitiga adalah 70° dan 60°. Tentukan sudut x.'],
+ s:[['The angles of a triangle add up to 180°.','Jumlah sudut segitiga adalah 180°.'],['70° + 60° = 130°','70° + 60° = 130°'],['x = 180° − 130° = 50°','x = 180° − 130° = 50°']]},
+{d:1,f:F.right(35),a:55,q:['This triangle has a right angle (marked). One angle is 35°. Find x.','Segitiga ini memiliki sudut siku-siku (bertanda). Salah satu sudutnya 35°. Tentukan x.'],
+ s:[['The square mark means 90°, so 90° + 35° + x = 180°.','Tanda kotak berarti 90°, jadi 90° + 35° + x = 180°.'],['90° + 35° = 125°','90° + 35° = 125°'],['x = 180° − 125° = 55°','x = 180° − 125° = 55°']]},
+{d:1,f:F.isoV(40),a:70,q:['The marked sides are equal (isosceles). The vertex angle is 40°. Find the base angle x.','Dua sisi bertanda sama panjang (sama kaki). Sudut puncaknya 40°. Tentukan sudut alas x.'],
+ s:[['Equal sides → the two base angles are equal.','Sisi sama → kedua sudut alas sama besar.'],['180° − 40° = 140° for both base angles together.','180° − 40° = 140° untuk jumlah kedua sudut alas.'],['x = 140° ÷ 2 = 70°','x = 140° ÷ 2 = 70°']]},
+{d:1,f:F.isoB(65),a:50,q:['An isosceles triangle: one base angle is 65°. Find the vertex angle x.','Segitiga sama kaki: salah satu sudut alasnya 65°. Tentukan sudut puncak x.'],
+ s:[['Equal sides → the other base angle is also 65°.','Sisi sama → sudut alas lainnya juga 65°.'],['65° + 65° = 130°','65° + 65° = 130°'],['x = 180° − 130° = 50°','x = 180° − 130° = 50°']]},
+{d:1,f:F.eq(),a:60,q:['All three sides of this triangle are equal. Find the angle x.','Ketiga sisi segitiga ini sama panjang. Tentukan besar sudut x.'],
+ s:[['All sides equal → equilateral → all angles equal.','Semua sisi sama → sama sisi → semua sudut sama besar.'],['x = 180° ÷ 3 = 60°','x = 180° ÷ 3 = 60°']]},
+{d:1,f:F.sum(100,25),a:55,q:['Find the missing angle x.','Tentukan besar sudut x yang belum diketahui.'],
+ s:[['The angles of a triangle add up to 180°.','Jumlah sudut segitiga adalah 180°.'],['100° + 25° = 125°','100° + 25° = 125°'],['x = 180° − 125° = 55°','x = 180° − 125° = 55°']]},
+{d:2,f:F.extB(115,{x:'B'}),a:65,q:['The side is extended into a straight line. The exterior angle is 115°. Find the interior angle x.','Salah satu sisi diperpanjang menjadi garis lurus. Sudut luarnya 115°. Tentukan sudut dalam x.'],
+ s:[['Angles on a straight line add up to 180° (supplementary).','Sudut pada garis lurus berjumlah 180° (berpelurus).'],['x = 180° − 115° = 65°','x = 180° − 115° = 65°']]},
+{d:2,f:F.ray({t:'eq',th:45}),a:75,q:['HI = IJ = HJ and I–J–L is a straight line. ∠KJL = 45°. Find ∠HJK (x).','HI = IJ = HJ dan I–J–L garis lurus. ∠KJL = 45°. Tentukan ∠HJK (x).'],
+ s:[['HIJ is equilateral → ∠HJI = 60°.','HIJ sama sisi → ∠HJI = 60°.'],['∠HJL = 180° − 60° = 120° (straight line).','∠HJL = 180° − 60° = 120° (garis lurus).'],['x = 120° − 45° = 75°','x = 120° − 45° = 75°']]},
+{d:2,f:F.vert2(85,65,30,{p:30,x:'B',c:120}),a:65,q:['T–Q–R and P–Q–U are straight lines. ∠TQU = 85° and ∠QPR = 30°. Find x (∠PRQ).','T–Q–R dan P–Q–U garis lurus. ∠TQU = 85° dan ∠QPR = 30°. Tentukan x (∠PRQ).'],
+ s:[['∠PQR = ∠TQU = 85° (vertically opposite).','∠PQR = ∠TQU = 85° (bertolak belakang).'],['85° + 30° = 115°','85° + 30° = 115°'],['x = 180° − 115° = 65°','x = 180° − 115° = 65°']]},
+{d:2,f:F.extB(130,{a:50,x:'C'}),a:80,q:['The exterior angle is 130° and one interior angle is 50°. Find x.','Sudut luarnya 130° dan salah satu sudut dalam 50°. Tentukan x.'],
+ s:[['The interior angle next to 130° = 180° − 130° = 50° (straight line).','Sudut di samping 130° = 180° − 130° = 50° (garis lurus).'],['50° + 50° = 100°','50° + 50° = 100°'],['x = 180° − 100° = 80°','x = 180° − 100° = 80°']]},
+/* --- Set B · ★★–★★★ --- */
+{d:2,f:F.rightExt(),a:120,q:['The right angle is marked and one angle is 30°. The side is extended. Find the exterior angle x.','Sudut siku-siku bertanda dan salah satu sudutnya 30°. Sisi diperpanjang. Tentukan sudut luar x.'],
+ s:[['The third interior angle = 180° − 90° − 30° = 60°.','Sudut dalam ketiga = 180° − 90° − 30° = 60°.'],['x = 180° − 60° = 120° (straight line).','x = 180° − 60° = 120° (garis lurus).']]},
+{d:2,f:F.isoExt(),a:135,q:['An isosceles triangle with a 90° vertex angle (marked). Find the exterior angle x.','Segitiga sama kaki dengan sudut puncak 90° (bertanda). Tentukan sudut luar x.'],
+ s:[['Base angles = (180° − 90°) ÷ 2 = 45°.','Sudut alas = (180° − 90°) ÷ 2 = 45°.'],['x = 180° − 45° = 135° (straight line).','x = 180° − 45° = 135° (garis lurus).']]},
+{d:2,f:F.comp(28),a:62,q:['The two angles together form a right angle (90°). One is 28°. Find x.','Kedua sudut bersama membentuk sudut siku (90°). Salah satunya 28°. Tentukan x.'],
+ s:[['Complementary angles make 90° together.','Sudut berpenyiku berjumlah 90°.'],['x = 90° − 28° = 62°','x = 90° − 28° = 62°']]},
+{d:2,f:F.vert2(70,55,55,{ticks:['AB','CA'],x:'C'}),a:55,q:['T–Q–R and P–Q–U are straight lines. ∠TQU = 70° and QP = QR (marked). Find x (∠QPR).','T–Q–R dan P–Q–U garis lurus. ∠TQU = 70° dan QP = QR (bertanda). Tentukan x (∠QPR).'],
+ s:[['∠PQR = ∠TQU = 70° (vertically opposite).','∠PQR = ∠TQU = 70° (bertolak belakang).'],['QP = QR → the two base angles are equal.','QP = QR → kedua sudut alas sama besar.'],['x = (180° − 70°) ÷ 2 = 55°','x = (180° − 70°) ÷ 2 = 55°']]},
+{d:3,f:F.ray({t:'iso',v:50,th:42}),a:73,q:['HI = HJ (marked), the vertex angle is 50°, and I–J–L is a straight line. ∠KJL = 42°. Find x (∠HJK).','HI = HJ (bertanda), sudut puncaknya 50°, dan I–J–L garis lurus. ∠KJL = 42°. Tentukan x (∠HJK).'],
+ s:[['HI = HJ → base angles = (180° − 50°) ÷ 2 = 65°.','HI = HJ → sudut alas = (180° − 50°) ÷ 2 = 65°.'],['∠HJL = 180° − 65° = 115° (straight line).','∠HJL = 180° − 65° = 115° (garis lurus).'],['x = 115° − 42° = 73°','x = 115° − 42° = 73°']]},
+{d:3,f:F.vert2(78,24,78,{ticks:['AB','BC'],x:'B'}),a:24,q:['T–Q–R and P–Q–U are straight lines. ∠TQU = 78° and PR = QR (marked). Find x (∠PRQ).','T–Q–R dan P–Q–U garis lurus. ∠TQU = 78° dan PR = QR (bertanda). Tentukan x (∠PRQ).'],
+ s:[['∠PQR = ∠TQU = 78° (vertically opposite).','∠PQR = ∠TQU = 78° (bertolak belakang).'],['PR = QR → ∠QPR = ∠PQR = 78°.','PR = QR → ∠QPR = ∠PQR = 78°.'],['x = 180° − 78° − 78° = 24°','x = 180° − 78° − 78° = 24°']]},
+{d:3,f:F.extA(140),a:70,q:['The two equal sides are marked. The exterior angle at the apex is 140°. Find the base angle x.','Dua sisi yang sama panjang bertanda. Sudut luar di puncak 140°. Tentukan sudut alas x.'],
+ s:[['Interior apex angle = 180° − 140° = 40° (straight line).','Sudut puncak dalam = 180° − 140° = 40° (garis lurus).'],['Two equal sides → the base angles are equal.','Dua sisi sama → sudut alasnya sama besar.'],['x = (180° − 40°) ÷ 2 = 70°','x = (180° − 40°) ÷ 2 = 70°']]},
+{d:3,f:F.extB(143,{a:51,x:'C'}),a:92,q:['The exterior angle is 143° and one interior angle is 51°. Find x.','Sudut luarnya 143° dan salah satu sudut dalam 51°. Tentukan x.'],
+ s:[['The interior angle next to 143° = 180° − 143° = 37° (straight line).','Sudut di samping 143° = 180° − 143° = 37° (garis lurus).'],['51° + 37° = 88°','51° + 37° = 88°'],['x = 180° − 88° = 92°','x = 180° − 88° = 92°']]},
+{d:3,f:F.extB(125,{iso:true,x:'A'}),a:55,q:['The exterior angle is 125°. The two marked sides are equal. Find x.','Sudut luarnya 125°. Dua sisi bertanda sama panjang. Tentukan x.'],
+ s:[['The interior angle next to 125° = 180° − 125° = 55° (straight line).','Sudut di samping 125° = 180° − 125° = 55° (garis lurus).'],['Equal marked sides → the base angles are equal, so x matches that interior angle.','Sisi sama bertanda → sudut alas sama besar, jadi x sama dengan sudut dalam itu.'],['x = 55°','x = 55°']]},
+{d:3,f:F.ray({t:'ri',th:35}),a:100,q:['HI = HJ with a right angle at H (marked). I–J–L is a straight line and ∠KJL = 35°. Find x.','HI = HJ dengan sudut siku di H (bertanda). I–J–L garis lurus dan ∠KJL = 35°. Tentukan x.'],
+ s:[['Right angle + two equal sides → base angles = (180° − 90°) ÷ 2 = 45°.','Sudut siku + dua sisi sama → sudut alas = (180° − 90°) ÷ 2 = 45°.'],['∠HJL = 180° − 45° = 135° (straight line).','∠HJL = 180° − 45° = 135° (garis lurus).'],['x = 135° − 35° = 100°','x = 135° − 35° = 100°']]},
+/* --- Set C · ★★★★ boss level --- */
+{d:4,f:F.extBase(126),a:72,q:['An isosceles triangle (equal sides marked). The exterior angle at one base corner is 126°. Find the vertex angle x.','Segitiga sama kaki (sisi sama bertanda). Sudut luar di salah satu sudut alas 126°. Tentukan sudut puncak x.'],
+ s:[['Straight line: the interior base angle = 180° − 126° = 54°.','Garis lurus: sudut alas dalam = 180° − 126° = 54°.'],['Equal marked sides → the other base angle is also 54°.','Sisi sama bertanda → sudut alas lainnya juga 54°.'],['x = 180° − 54° − 54° = 72°','x = 180° − 54° − 54° = 72°']]},
+{d:4,f:F.ray({t:'isoB',b:55,th:48}),a:77,q:['HI = HJ (marked). ∠HIJ = 55° and I–J–L is a straight line. ∠KJL = 48°. Find ∠HJK (x).','HI = HJ (bertanda). ∠HIJ = 55° dan I–J–L garis lurus. ∠KJL = 48°. Tentukan ∠HJK (x).'],
+ s:[['HI = HJ → the base angles are equal: ∠IJH = 55°.','HI = HJ → sudut alasnya sama besar: ∠IJH = 55°.'],['Three angles sit on the straight line I–J–L: 55° + x + 48° = 180°.','Tiga sudut berada pada garis lurus I–J–L: 55° + x + 48° = 180°.'],['x = 180° − 55° − 48° = 77°','x = 180° − 55° − 48° = 77°']]},
+{d:4,f:F.vert2(64,41,75,{b:41,x:'C'}),a:75,q:['T–Q–R and P–Q–U are straight lines. ∠TQU = 64° and ∠QRP = 41°. Find x (∠QPR).','T–Q–R dan P–Q–U garis lurus. ∠TQU = 64° dan ∠QRP = 41°. Tentukan x (∠QPR).'],
+ s:[['∠PQR = ∠TQU = 64° (vertically opposite).','∠PQR = ∠TQU = 64° (bertolak belakang).'],['64° + 41° = 105°','64° + 41° = 105°'],['x = 180° − 105° = 75°','x = 180° − 105° = 75°']]},
+{d:4,f:F.extB(140,{right:true,x:'C'}),a:50,q:['The right angle is marked and one side is extended. The exterior angle is 140°. Find x.','Sudut siku-siku bertanda dan salah satu sisi diperpanjang. Sudut luarnya 140°. Tentukan x.'],
+ s:[['Straight line: the interior angle beside 140° = 180° − 140° = 40°.','Garis lurus: sudut di samping 140° = 180° − 140° = 40°.'],['The two acute angles of a right triangle always make 90°.','Dua sudut lancip segitiga siku-siku selalu berjumlah 90°.'],['x = 90° − 40° = 50°','x = 90° − 40° = 50°']]},
+{d:4,f:F.vext(68),a:44,q:['In triangle HIJ, HI = HJ (marked). H–J–K and I–J–L are straight lines. ∠KJL = 68°. Find the apex angle x (∠IHJ).','Pada segitiga HIJ, HI = HJ (bertanda). H–J–K dan I–J–L garis lurus. ∠KJL = 68°. Tentukan sudut puncak x (∠IHJ).'],
+ s:[['Two straight lines cross at J → ∠HJI = ∠KJL = 68° (vertically opposite).','Dua garis lurus berpotongan di J → ∠HJI = ∠KJL = 68° (bertolak belakang).'],['HI = HJ → the other base angle ∠HIJ = 68° too.','HI = HJ → sudut alas lainnya ∠HIJ = 68° juga.'],['x = 180° − 68° − 68° = 44°','x = 180° − 68° − 68° = 44°']]},
+{d:4,f:F.comp3(25,41),a:24,q:['The three angles together fill one right angle (square mark). Two of them are 25° and 41°. Find x.','Ketiga sudut bersama mengisi satu sudut siku (tanda kotak). Dua di antaranya 25° dan 41°. Tentukan x.'],
+ s:[['Complementary angles fill a right angle: the three angles total 90°.','Sudut berpenyiku mengisi sudut siku: ketiga sudut berjumlah 90°.'],['25° + 41° = 66°','25° + 41° = 66°'],['x = 90° − 66° = 24°','x = 90° − 66° = 24°']]},
+{d:4,f:F.vert2(112,34,34,{ticks:['AB','CA'],x:'B'}),a:34,q:['T–Q–R and P–Q–U are straight lines. ∠TQU = 112° and QP = QR (marked). Find x (∠QRP).','T–Q–R dan P–Q–U garis lurus. ∠TQU = 112° dan QP = QR (bertanda). Tentukan x (∠QRP).'],
+ s:[['∠PQR = ∠TQU = 112° (vertically opposite).','∠PQR = ∠TQU = 112° (bertolak belakang).'],['QP = QR → the base angles at P and R are equal.','QP = QR → sudut alas di P dan R sama besar.'],['x = (180° − 112°) ÷ 2 = 34°','x = (180° − 112°) ÷ 2 = 34°']]},
+{d:4,f:F.extB(108,{iso:true,x:'C'}),a:36,q:['The two marked sides are equal. The exterior angle at one base corner is 108°. Find the apex angle x.','Dua sisi bertanda sama panjang. Sudut luar di salah satu sudut alas 108°. Tentukan sudut puncak x.'],
+ s:[['Straight line: the interior angle = 180° − 108° = 72°.','Garis lurus: sudut dalamnya = 180° − 108° = 72°.'],['Equal marked sides → both base angles are 72°.','Sisi sama bertanda → kedua sudut alas 72°.'],['x = 180° − 72° − 72° = 36°','x = 180° − 72° − 72° = 36°']]},
+{d:4,f:F.ext2(118,125),a:63,q:['Q–P–S and R–Q–T are straight lines. ∠SPR = 118° and ∠PQT = 125°. Find x (∠PRQ).','Q–P–S dan R–Q–T garis lurus. ∠SPR = 118° dan ∠PQT = 125°. Tentukan x (∠PRQ).'],
+ s:[['Straight line Q–P–S: ∠QPR = 180° − 118° = 62°.','Garis lurus Q–P–S: ∠QPR = 180° − 118° = 62°.'],['Straight line R–Q–T: ∠PQR = 180° − 125° = 55°.','Garis lurus R–Q–T: ∠PQR = 180° − 125° = 55°.'],['x = 180° − 62° − 55° = 63°','x = 180° − 62° − 55° = 63°']]},
+{d:4,f:F.vext2(71),a:38,q:['In triangle HIJ, HI = IJ (marked). H–J–K and I–J–L are straight lines. ∠KJL = 71°. Find the apex angle x (∠HIJ).','Pada segitiga HIJ, HI = IJ (bertanda). H–J–K dan I–J–L garis lurus. ∠KJL = 71°. Tentukan sudut puncak x (∠HIJ).'],
+ s:[['Two straight lines cross at J → ∠HJI = ∠KJL = 71° (vertically opposite).','Dua garis lurus berpotongan di J → ∠HJI = ∠KJL = 71° (bertolak belakang).'],['HI = IJ → the angles facing them are equal: ∠IHJ = 71°.','HI = IJ → sudut yang menghadapnya sama besar: ∠IHJ = 71°.'],['x = 180° − 71° − 71° = 38°','x = 180° − 71° − 71° = 38°']]}];
+const starsHTML=d=>`<span class="qdiff">${'★'.repeat(d)}${'☆'.repeat(Math.max(0,4-d))}</span>`;
+function probCard(p,i){return `<div class="qitem" id="pc-${i}"><div class="qhead"><span class="qnum">${i+1}</span>${starsHTML(p.d)}</div>
+ <div class="qsvg">${p.f}</div>
+ <div class="qbody"><div class="qq" data-en="${p.q[0]}" data-id="${p.q[1]}">${lang==='en'?p.q[0]:p.q[1]}</div>
+  <div class="qrow"><span class="xeq">x =</span><input type="number" class="pin" id="pin-${i}" placeholder="?" min="1" max="179"><span class="xeq">°</span>
+  <button class="btn teal sm" data-act="c" data-i="${i}"><span data-en="Check" data-id="Periksa">Check</span></button>
+  <button class="btn sm" data-act="s" data-i="${i}"><span data-en="Solution" data-id="Pembahasan">Solution</span></button></div>
+  <div class="fb" id="pf-${i}"></div>
+  <div class="qsol" id="ps-${i}">${p.s.map(t=>`<div class="sol-line" data-en="${t[0]}" data-id="${t[1]}">${lang==='en'?t[0]:t[1]}</div>`).join('')}</div>
+ </div></div>`}
+const headHTML=(tE,tI,dE,dI,sfx)=>`<div class="kicker rev">Practice</div>
+ <h2 class="stitle rev" style="--d:.05s" data-en="${tE}" data-id="${tI}">${lang==='en'?tE:tI}</h2>
+ <div class="scorebar rev" style="--d:.08s"><span data-en="Correct (first try):" data-id="Benar (percobaan pertama):">Correct (first try):</span><div class="fw"><div class="fl" id="sbF-${sfx}"></div></div><span id="sbT-${sfx}">0 / 30</span></div>
+ <p class="dlegend rev" style="--d:.1s" data-en="${dE}" data-id="${dI}">${lang==='en'?dE:dI}</p>`;
+ $('#s-pa').innerHTML=headHTML('Your turn · Set A (Q1–10)','Giliranmu · Set A (Soal 1–10)','★ warm-up · ★★ challenge — spot the straight line, the right angle and the marked sides.','★ pemanasan · ★★ tantangan — perhatikan garis lurus, sudut siku, dan sisi bertanda.','a')+`<div id="ql-a">${PROBS.slice(0,10).map((p,i)=>probCard(p,i)).join('')}</div>`;
+ $('#s-pb').innerHTML=headHTML('Set B (Q11–20)','Set B (Soal 11–20)','★★ challenge · ★★★ brain-buster — combine two facts in one problem!','★★ tantangan · ★★★ menyulitkan — gabungkan dua fakta dalam satu soal!','b')+`<div id="ql-b">${PROBS.slice(10,20).map((p,i)=>probCard(p,i+10)).join('')}</div>`;
+ $('#s-pc').innerHTML=headHTML('Boss level · Set C (Q21–30)','Level bos · Set C (Soal 21–30)','★★★★ boss level — chain three or more facts to crack each one!','★★★★ level bos — rangkai tiga fakta atau lebih untuk memecahkan setiap soal!','c')+`<div id="ql-c">${PROBS.slice(20,30).map((p,i)=>probCard(p,i+20)).join('')}</div>`;
+const updSB=()=>{['a','b','c'].forEach(k=>{$('#sbT-'+k).textContent=S+' / 30';$('#sbF-'+k).style.width=(S/30*100)+'%'})};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;
+ const i=+b.dataset.i,p=PROBS[i];
+ if(b.dataset.act==='s'){$('#ps-'+i).classList.toggle('show');return}
+ const v=parseInt($('#pin-'+i).value),fb=$('#pf-'+i),card=$('#pc-'+i);
+ if(v===p.a){if(!card.dataset.done){card.dataset.done=1;S++;updSB()}
+  fb.className='fb ok';setBI(fb,'Correct! Excellent!','Benar! Hebat!');card.classList.add('okstate');$('#pin-'+i).disabled=true;b.disabled=true}
+ else{fb.className='fb bad';setBI(fb,'Not yet — look for a straight line, right angle, vertical pair or equal sides!','Belum tepat — cari garis lurus, sudut siku, sudut bertolak belakang, atau sisi yang sama!');fb.classList.add('shake');setTimeout(()=>fb.classList.remove('shake'),500)}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('pin')){
+ const i=e.target.id.split('-')[1];const btn=document.querySelector(`[data-act="c"][data-i="${i}"]`);if(btn)btn.click()}});
+updSB();
+
+/* ============ slide 10 · cool-down game (with 20s memorize phase) ============ */
+const PAIRS=[
+[['Angles in a triangle','Sudut dalam segitiga'],['sum to 180°','berjumlah 180°']],
+[['Angles on a straight line','Sudut pada garis lurus'],['supplementary: 180°','berpelurus: 180°']],
+[['Complementary angles','Sudut berpenyiku'],['make 90° together','berjumlah 90°']],
+[['Vertically opposite angles','Sudut bertolak belakang'],['always equal','selalu sama besar']],
+[['Each angle of an equilateral','Setiap sudut segitiga sama sisi'],['exactly 60°','tepat 60°']],
+[['An isosceles triangle has','Segitiga sama kaki memiliki'],['two equal sides','dua sisi sama panjang']]];
+ $('#s-game').innerHTML=`<div class="kicker rev">Cool-down game</div>
+ <h2 class="stitle rev" style="--d:.05s" data-en="Angle Pairs memory match" data-id="Mencocokkan pasangan sudut">Angle Pairs memory match</h2>
+ <p class="lead rev" style="--d:.08s" data-en="You solved 30 problems — time to relax! First, memorize: all cards stay open for 20 seconds. Then they close and you find the pairs from memory. Facts are on green cards, values on orange cards." data-id="Kamu menyelesaikan 30 soal — saatnya bersantai! Pertama, hafalkan: semua kartu terbuka selama 20 detik. Lalu kartu tertutup dan temukan pasangannya dari ingatan. Fakta di kartu hijau, nilai di kartu oranye.">You solved 30 problems — time to relax! First, memorize: all cards stay open for 20 seconds. Then they close and you find the pairs from memory. Facts are on green cards, values on orange cards.</p>
+ <div class="card rev" style="--d:.12s;margin-top:18px">
+  <div class="mgrid" id="mgrid"></div>
+  <div class="gmeta">
+   <span class="chip" id="gTimerWrap">⏱ <b id="gTimer">20</b>s</span>
+   <span data-en="Moves:" data-id="Langkah:">Moves:</span><span id="gmoves">0</span>
+   <button class="btn sm" id="grestart"><span data-en="Shuffle again" data-id="Acak lagi">Shuffle again</span></button></div>
+  <div id="gmsg" style="text-align:center;font-weight:900;font-size:16px;margin-top:10px;min-height:22px"></div>
+ </div>`;
+let gFirst=null,gLock=false,gMoves=0,gDone=0,gTimer=null,gLeft=20;
+function deal(){clearInterval(gTimer);gFirst=null;gLock=true;gMoves=0;gDone=0;gLeft=20;
+ $('#gmoves').textContent='0';$('#gmsg').textContent='';$('#gmsg').className='';
+ $('#gTimerWrap').classList.remove('hide','hurry');$('#gTimer').textContent='20';
+ const deck=[...PAIRS.keys()].flatMap(i=>[{p:i,t:'f'},{p:i,t:'v'}]).sort(()=>Math.random()-.5);
+ $('#mgrid').innerHTML=deck.map((c,k)=>`<button class="mcard ${c.t==='f'?'cf':'cv'}" data-k="${k}" data-p="${c.p}" data-t="${c.t}">
+  <div class="mc-in"><div class="mc-f">?</div><div class="mc-b" data-en="${PAIRS[c.p][c.t==='f'?0:1][0]}" data-id="${PAIRS[c.p][c.t==='f'?0:1][1]}">${lang==='en'?PAIRS[c.p][c.t==='f'?0:1][0]:PAIRS[c.p][c.t==='f'?0:1][1]}</div></div></button>`).join('');
+ /* memorize phase: all cards open for 20 seconds */
+ $$('#mgrid .mcard').forEach(c=>c.classList.add('flipped'));
+ setBI($('#gmsg'),'Memorize the card positions…','Hafalkan posisi kartu-kartunya…');$('#gmsg').className='';
+ gTimer=setInterval(()=>{gLeft--;$('#gTimer').textContent=gLeft;
+  if(gLeft<=5)$('#gTimerWrap').classList.add('hurry');
+  if(gLeft<=0){clearInterval(gTimer);
+   $$('#mgrid .mcard').forEach(c=>c.classList.remove('flipped'));
+   $('#gTimerWrap').classList.add('hide');
+   gLock=false;
+   setBI($('#gmsg'),'Go! Find the pairs!','Ayo! Temukan pasangannya!');$('#gmsg').className='ok'}},1000);
+ $$('#mgrid .mcard').forEach(card=>card.onclick=()=>{
+  if(gLock||card.classList.contains('flipped'))return;
+  card.classList.add('flipped');
+  if(!gFirst){gFirst=card;return}
+  gMoves++;$('#gmoves').textContent=gMoves;
+  const a=gFirst,b=card;gFirst=null;
+  if(a.dataset.p===b.dataset.p&&a.dataset.t!==b.dataset.t){
+   a.classList.add('matched');b.classList.add('matched');gDone++;
+   if(gDone===6)setBI($('#gmsg'),`All pairs found in ${gMoves} moves — great game, ${name||'detective'}! 🎉`,`Semua pasangan ditemukan dalam ${gMoves} langkah — permainan yang hebat, ${name||'detektif'}! 🎉`);$('#gmsg').className='ok'}
+  else{gLock=true;setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');gLock=false},750)}})}
+ $('#grestart').onclick=deal;deal();
+
+/* ============ reflection ============ */
+ $('#stars').innerHTML=[1,2,3,4,5].map(n=>`<button data-s="${n}">★</button>`).join('');
+ $$('#stars button').forEach(b=>b.onclick=()=>{const s=+b.dataset.s;$$('#stars button').forEach(x=>x.classList.toggle('on',+x.dataset.s<=s))});
+
+setLang('en');goto(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Geometri — Titik, Garis, dan Sudut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0820;
+    --bg-2:#160c2e;
+    --card:#1c1240;
+    --card-2:#251858;
+    --border:rgba(255,255,255,.08);
+    --border-2:rgba(255,255,255,.16);
+    --fg:#f6f3ff;
+    --muted:#a59ec8;
+    --primary:#f72585;
+    --secondary:#4cc9f0;
+    --accent:#ffd60a;
+    --success:#06ffa5;
+    --warning:#ff9f1c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden}
+  body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--bg);
+    color:var(--fg);
+    min-height:100vh;
+    overflow-y:auto;
+    background-image:
+      radial-gradient(circle at 15% 20%,rgba(247,37,133,.18),transparent 40%),
+      radial-gradient(circle at 85% 75%,rgba(76,201,240,.18),transparent 45%),
+      radial-gradient(circle at 50% 50%,rgba(255,214,10,.06),transparent 60%);
+  }
+  body::before{
+    content:"";position:fixed;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:60px 60px;
+    pointer-events:none;z-index:0;
+  }
+  .display{font-family:'Bricolage Grotesque',serif;letter-spacing:-.02em}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  /* Progress bar */
+  .progress{
+    position:fixed;top:0;left:0;right:0;height:4px;
+    background:rgba(255,255,255,.05);z-index:100;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--primary),var(--accent),var(--secondary));
+    width:5%;transition:width .5s cubic-bezier(.16,1,.3,1);
+    box-shadow:0 0 20px rgba(247,37,133,.6);
+  }
+
+  /* Stage & slides */
+  .stage{
+    position:relative;z-index:1;
+    min-height:100vh;
+    padding:60px 80px 120px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .slide{
+    display:none;
+    width:100%;max-width:1280px;
+  }
+  .slide.active{
+    display:flex;flex-direction:column;
+    min-height:calc(100vh - 180px);
+    animation:slideIn .6s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes slideIn{
+    from{opacity:0;transform:translateY(30px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+
+  /* Navigation */
+  .nav{
+    position:fixed;bottom:24px;left:50%;
+    transform:translateX(-50%);
+    display:flex;align-items:center;gap:16px;
+    background:rgba(28,18,64,.9);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border-2);
+    padding:10px 14px;border-radius:100px;
+    z-index:50;
+    box-shadow:0 10px 40px rgba(0,0,0,.4);
+  }
+  .nav button{
+    background:transparent;border:none;color:var(--fg);
+    width:36px;height:36px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all .2s;font-size:18px;
+  }
+  .nav button:hover:not(:disabled){background:var(--primary);color:#fff}
+  .nav button:disabled{opacity:.3;cursor:not-allowed}
+  .nav .counter{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;color:var(--muted);
+    min-width:60px;text-align:center;
+  }
+  .dots{display:flex;gap:6px}
+  .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,.2);cursor:pointer;
+    transition:all .3s;
+  }
+  .dot.active{background:var(--accent);width:24px;border-radius:3px}
+
+  /* Common */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:100px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border-2);
+    font-size:12px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.1em;
+    color:var(--accent);
+  }
+  .badge.pink{color:var(--primary)}
+  .badge.cyan{color:var(--secondary)}
+  .badge.green{color:var(--success)}
+
+  .btn{
+    padding:12px 24px;border-radius:12px;
+    font-weight:700;font-size:14px;
+    border:none;cursor:pointer;
+    transition:all .2s;
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 20px rgba(247,37,133,.4)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(247,37,133,.5)}
+  .btn-ghost{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--border-2)}
+  .btn-ghost:hover{background:rgba(255,255,255,.12)}
+  .btn-accent{background:var(--accent);color:#1a0f00}
+  .btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,214,10,.4)}
+
+  /* COVER */
+  .cover{align-items:center;justify-content:center;text-align:center;position:relative}
+  .cover-bg{
+    position:absolute;inset:0;overflow:hidden;border-radius:24px;
+    background:
+      radial-gradient(circle at 30% 40%,rgba(247,37,133,.3),transparent 50%),
+      radial-gradient(circle at 70% 60%,rgba(76,201,240,.3),transparent 50%);
+  }
+  .cover-content{position:relative;z-index:2;padding:40px}
+  .cover h1{
+    font-size:clamp(48px,7vw,96px);
+    font-weight:800;line-height:.95;
+    background:linear-gradient(135deg,#fff 0%,#ffd60a 50%,#f72585 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;margin:20px 0;
+  }
+  .cover .subtitle{font-size:20px;color:var(--muted);max-width:600px;margin:0 auto 32px}
+  .floating-shapes{position:absolute;inset:0;pointer-events:none}
+  .shape{position:absolute;animation:float 6s ease-in-out infinite}
+  @keyframes float{
+    0%,100%{transform:translateY(0) rotate(0deg)}
+    50%{transform:translateY(-20px) rotate(180deg)}
+  }
+
+  /* LIFE GRID */
+  .life-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;flex:1}
+  .life-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .life-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:16px;padding:20px;transition:all .3s;
+  }
+  .life-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+  .life-card .icon{
+    width:48px;height:48px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,rgba(247,37,133,.3),rgba(76,201,240,.3));
+  }
+  .life-card h4{font-size:16px;margin-bottom:6px}
+  .life-card p{font-size:13px;color:var(--muted);line-height:1.5}
+  .trigger-box{
+    background:linear-gradient(135deg,rgba(247,37,133,.15),rgba(255,214,10,.1));
+    border:1px solid var(--primary);
+    border-radius:20px;padding:32px;
+    display:flex;flex-direction:column;justify-content:center;position:relative;
+  }
+  .trigger-box::before{
+    content:"";position:absolute;top:-10px;left:30px;
+    width:30px;height:30px;background:var(--accent);
+    border-radius:50%;box-shadow:0 0 30px var(--accent);
+  }
+  .trigger-box h3{font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:.15em;margin-bottom:16px}
+  .trigger-q{font-family:'Bricolage Grotesque',serif;font-size:22px;line-height:1.3;font-weight:600;margin-bottom:12px}
+  .trigger-q:last-child{color:var(--secondary);font-style:italic}
+
+  /* OBJECTIVES */
+  .objectives{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;flex:1;align-content:center}
+  .obj-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:16px;padding:24px;
+    display:flex;gap:16px;align-items:flex-start;transition:all .3s;
+  }
+  .obj-card:hover{border-color:var(--secondary);transform:translateX(4px)}
+  .obj-num{
+    font-family:'Bricolage Grotesque',serif;
+    font-size:36px;font-weight:800;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;line-height:1;flex-shrink:0;
+  }
+  .obj-card h4{font-size:16px;margin-bottom:6px}
+  .obj-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* TWO COL */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1}
+  .info-side{display:flex;flex-direction:column;justify-content:center}
+  .big-symbol{
+    font-family:'Bricolage Grotesque',serif;
+    font-size:120px;font-weight:800;line-height:1;
+    color:var(--accent);
+    text-shadow:0 0 60px rgba(255,214,10,.5);
+    margin:20px 0;
+  }
+  .interactive-side{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:24px;
+    display:flex;flex-direction:column;
+  }
+  .canvas-area{
+    flex:1;
+    background:radial-gradient(circle at 50% 50%,rgba(247,37,133,.05),transparent 70%),rgba(0,0,0,.3);
+    border-radius:12px;border:1px dashed var(--border-2);
+    position:relative;overflow:hidden;min-height:280px;
+  }
+  .canvas-area .hint{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    color:var(--muted);font-size:14px;text-align:center;pointer-events:none;
+  }
+  .geom-point{
+    position:absolute;width:18px;height:18px;
+    background:var(--accent);border-radius:50%;
+    transform:translate(-50%,-50%);cursor:pointer;
+    box-shadow:0 0 20px var(--accent);
+    animation:pointPop .4s cubic-bezier(.16,1.5,.3,1);
+  }
+  @keyframes pointPop{from{transform:translate(-50%,-50%) scale(0)}to{transform:translate(-50%,-50%) scale(1)}}
+  .geom-point::after{
+    content:attr(data-label);position:absolute;top:-24px;left:50%;
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+    color:var(--accent);text-shadow:0 0 8px rgba(0,0,0,.8);
+  }
+
+  /* LINE TYPES */
+  .line-types{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;flex:1;align-content:center}
+  .line-type-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:16px;padding:24px;transition:all .3s;
+  }
+  .line-type-card:hover{border-color:var(--secondary);transform:translateY(-6px)}
+  .line-visual{height:80px;background:rgba(0,0,0,.3);border-radius:10px;position:relative;margin-bottom:16px;overflow:hidden}
+  .line-name{font-family:'Bricolage Grotesque',serif;font-size:22px;font-weight:700;margin-bottom:8px}
+  .line-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+  .line-symbol{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);padding:6px 10px;background:rgba(255,214,10,.1);border-radius:6px;display:inline-block}
+
+  /* ANGLE EXPLORE */
+  .angle-explore{display:grid;grid-template-columns:1fr 1fr;gap:32px;flex:1}
+  .angle-display{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:24px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .angle-readout{
+    font-family:'Bricolage Grotesque',serif;
+    font-size:64px;font-weight:800;line-height:1;
+    color:var(--accent);text-shadow:0 0 30px currentColor;
+  }
+  .angle-label{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+  .angle-type-info{background:var(--card);border-radius:16px;padding:20px;display:flex;flex-direction:column;justify-content:center}
+  .type-badge{
+    display:inline-block;padding:8px 18px;border-radius:100px;
+    font-weight:700;font-size:14px;margin-bottom:16px;
+    background:var(--primary);color:#fff;transition:all .3s;
+  }
+  .slider-row{margin-top:20px}
+  .slider-row label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.1em}
+  input[type=range]{
+    width:100%;height:6px;background:rgba(255,255,255,.1);
+    border-radius:3px;outline:none;-webkit-appearance:none;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;
+    background:var(--accent);border-radius:50%;
+    box-shadow:0 0 12px var(--accent);cursor:pointer;
+  }
+
+  /* PROTRACTOR */
+  .protractor-demo{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;flex:1}
+  .prot-stage{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:16px;padding:16px;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .prot-svg-wrap{
+    width:100%;
+    background:rgba(0,0,0,.3);border-radius:12px;
+    padding:10px;display:flex;justify-content:center;
+    touch-action:none;
+  }
+  .prot-svg-wrap svg{width:100%;max-width:480px;height:auto;display:block}
+  .steps-list{display:flex;flex-direction:column;gap:12px;justify-content:center}
+  .step-item{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:14px;background:var(--card);
+    border-radius:12px;border-left:3px solid var(--accent);
+  }
+  .step-num{
+    width:32px;height:32px;flex-shrink:0;border-radius:50%;
+    background:var(--accent);color:#000;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;
+  }
+  .step-text{font-size:13px;line-height:1.5}
+  .step-text strong{color:var(--accent)}
+
+  /* RELATION */
+  .relation-stage{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:24px;flex:1;display:flex;flex-direction:column;
+  }
+  .relation-controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .ctrl-btn{
+    padding:8px 16px;border-radius:8px;
+    background:rgba(255,255,255,.06);border:1px solid var(--border-2);
+    color:var(--fg);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;
+  }
+  .ctrl-btn:hover{background:rgba(255,255,255,.12)}
+  .ctrl-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+  /* POLYGON */
+  .polygon-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}
+  .poly-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:16px;text-align:center;
+    cursor:pointer;transition:all .3s;
+  }
+  .poly-card:hover{border-color:var(--secondary);transform:translateY(-4px)}
+  .poly-card.active{border-color:var(--accent);background:rgba(255,214,10,.08)}
+  .poly-card svg{margin-bottom:8px}
+  .poly-card .name{font-size:13px;font-weight:600}
+  .poly-info{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+  .poly-stat{background:var(--card);border-radius:12px;padding:20px;text-align:center}
+  .poly-stat .num{font-family:'Bricolage Grotesque',serif;font-size:42px;font-weight:800;color:var(--accent);line-height:1}
+  .poly-stat .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+
+  /* LATIHAN */
+  .latihan-area{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1}
+  .latihan-q{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+  .latihan-q h4{font-size:15px;margin-bottom:12px;display:flex;gap:10px;align-items:center}
+  .latihan-q .q-num{
+    width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;
+  }
+  .latihan-q input{
+    width:100%;padding:10px 14px;background:rgba(0,0,0,.3);
+    border:1px solid var(--border-2);border-radius:8px;color:var(--fg);
+    font-family:'JetBrains Mono',monospace;font-size:14px;
+  }
+  .latihan-q input:focus{outline:none;border-color:var(--accent)}
+  .check-btn{margin-top:12px;padding:8px 16px;background:var(--secondary);color:#000;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer}
+  .check-btn:hover{transform:translateY(-1px)}
+  .feedback-icon{font-size:14px;margin-left:8px}
+
+  /* GAME */
+  .game-area{display:grid;grid-template-columns:1fr 320px;gap:24px;flex:1}
+  .game-canvas{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column}
+  .game-mode-tabs{display:flex;gap:8px;margin-bottom:16px}
+  .mode-tab{flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);cursor:pointer;text-align:center;transition:all .2s;font-size:13px;font-weight:600}
+  .mode-tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+  .game-svg-wrap{flex:1;background:rgba(0,0,0,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:20px}
+  .game-side{display:flex;flex-direction:column;gap:14px}
+  .score-box{background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:16px;padding:20px;color:#fff}
+  .score-box .label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;opacity:.8}
+  .score-box .value{font-family:'Bricolage Grotesque',serif;font-size:42px;font-weight:800;line-height:1;margin-top:4px}
+  .target-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;flex:1}
+  .target-box h4{font-size:13px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em}
+  .target-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px}
+  .target-item .check{width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;transition:all .3s}
+  .target-item.done .check{background:var(--success);border-color:var(--success)}
+  .target-item.done .check::after{content:"✓";color:#000;font-weight:800;font-size:12px}
+  .target-item.done{color:var(--success);text-decoration:line-through}
+  .clickable-elem{cursor:pointer;transition:all .2s}
+  .clickable-elem:hover{filter:brightness(1.3)}
+  .clickable-elem.found{filter:drop-shadow(0 0 8px var(--success))}
+
+  /* QUIZ */
+  .quiz-container{
+    flex:1;display:flex;flex-direction:column;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:32px;
+    max-width:800px;margin:0 auto;width:100%;
+  }
+  .quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .quiz-progress-text{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+  .quiz-question{font-family:'Bricolage Grotesque',serif;font-size:22px;font-weight:600;margin-bottom:24px;line-height:1.4}
+  .quiz-options{display:flex;flex-direction:column;gap:12px;flex:1}
+  .quiz-option{
+    padding:16px 20px;background:rgba(255,255,255,.03);
+    border:1px solid var(--border);border-radius:12px;
+    cursor:pointer;transition:all .2s;
+    display:flex;align-items:center;gap:14px;font-size:15px;
+  }
+  .quiz-option:hover:not(.disabled){border-color:var(--secondary);background:rgba(76,201,240,.08)}
+  .quiz-option .opt-letter{
+    width:32px;height:32px;flex-shrink:0;border-radius:50%;
+    background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;
+  }
+  .quiz-option.correct{border-color:var(--success);background:rgba(6,255,165,.12)}
+  .quiz-option.correct .opt-letter{background:var(--success);color:#000}
+  .quiz-option.wrong{border-color:var(--primary);background:rgba(247,37,133,.12)}
+  .quiz-option.wrong .opt-letter{background:var(--primary);color:#fff}
+  .quiz-option.disabled{cursor:not-allowed;opacity:.6}
+  .quiz-footer{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
+  .quiz-result{text-align:center;padding:40px}
+  .quiz-result .score-big{
+    font-family:'Bricolage Grotesque',serif;
+    font-size:96px;font-weight:800;line-height:1;
+    background:linear-gradient(135deg,var(--accent),var(--primary));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .feedback-msg{padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;margin-top:16px;display:none}
+  .feedback-msg.show{display:block;animation:fadeIn .3s}
+  .feedback-msg.correct{background:rgba(6,255,165,.15);color:var(--success);border:1px solid var(--success)}
+  .feedback-msg.wrong{background:rgba(247,37,133,.15);color:var(--primary);border:1px solid var(--primary)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* SUMMARY */
+  .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;flex:1;align-content:center}
+  .summary-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+  .summary-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)}
+  .summary-card:nth-child(2)::before{background:var(--primary)}
+  .summary-card:nth-child(3)::before{background:var(--secondary)}
+  .summary-card h3{font-family:'Bricolage Grotesque',serif;font-size:22px;margin-bottom:12px}
+  .summary-card ul{list-style:none;padding:0}
+  .summary-card li{padding:8px 0;font-size:14px;color:var(--muted);border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+  .summary-card li::before{content:"●";color:var(--accent);font-size:10px;margin-top:6px}
+
+  .reflection-box{
+    background:linear-gradient(135deg,rgba(247,37,133,.1),rgba(76,201,240,.1));
+    border:1px solid var(--border-2);border-radius:20px;padding:32px;
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+  }
+  .reflect-input{
+    width:100%;padding:14px 16px;background:rgba(0,0,0,.3);
+    border:1px solid var(--border-2);border-radius:10px;
+    color:var(--fg);font-family:inherit;font-size:14px;
+    margin-bottom:12px;resize:none;
+  }
+  .reflect-input:focus{outline:none;border-color:var(--accent)}
+  .reflect-input::placeholder{color:var(--muted)}
+
+  .thanks{align-items:center;justify-content:center;text-align:center;position:relative}
+  .thanks h1{
+    font-size:clamp(60px,9vw,120px);font-weight:800;line-height:.95;
+    background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 50%,var(--secondary) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .thanks .sub{font-size:22px;color:var(--muted);margin:20px 0 40px}
+  .thanks .signature{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:13px;margin-top:40px}
+
+  /* SLIDE HEADER */
+  .slide-header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);
+  }
+  .slide-header h2{font-family:'Bricolage Grotesque',serif;font-size:34px;font-weight:700;line-height:1.1}
+  .slide-header .sub{font-size:13px;color:var(--muted);margin-top:4px}
+  .slide-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+
+  svg.geom text{font-family:'JetBrains Mono',monospace;font-weight:700}
+
+  @media (max-width:900px){
+    .stage{padding:30px 20px 100px}
+    .two-col,.life-grid,.angle-explore,.protractor-demo,.game-area,.latihan-area{grid-template-columns:1fr}
+    .objectives,.polygon-grid,.summary-grid{grid-template-columns:1fr 1fr}
+    .slide-header h2{font-size:24px}
+  }
+
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+  ::-webkit-scrollbar-thumb{background:var(--card-2);border-radius:5px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="stage">
+
+  <!-- SLIDE 1: COVER -->
+  <section class="slide cover active" data-slide="1">
+    <div class="cover-bg"></div>
+    <div class="floating-shapes">
+      <svg class="shape" style="top:15%;left:12%;width:60px" viewBox="0 0 60 60"><circle cx="30" cy="30" r="8" fill="#ffd60a"/></svg>
+      <svg class="shape" style="top:25%;right:15%;width:120px;animation-delay:1s" viewBox="0 0 120 60"><line x1="10" y1="30" x2="110" y2="30" stroke="#4cc9f0" stroke-width="3"/></svg>
+      <svg class="shape" style="bottom:20%;left:18%;width:100px;animation-delay:2s" viewBox="0 0 100 100"><path d="M10 80 L50 20 L90 80" fill="none" stroke="#f72585" stroke-width="3"/><path d="M50 20 L50 80" stroke="#f72585" stroke-width="2" stroke-dasharray="3 3"/><text x="55" y="55" fill="#f72585" font-size="12">90°</text></svg>
+      <svg class="shape" style="bottom:25%;right:12%;width:80px;animation-delay:.5s" viewBox="0 0 80 80"><polygon points="40,10 70,70 10,70" fill="none" stroke="#06ffa5" stroke-width="2"/></svg>
+    </div>
+    <div class="cover-content">
+      <div class="badge">PETUALANGAN GEOMETRI • KELAS 7</div>
+      <h1 class="display">Titik, Garis,<br>& Sudut</h1>
+      <p class="subtitle">Sebuah perjalanan interaktif untuk memahami elemen-elemen dasar geometri yang membentuk dunia di sekitar kita.</p>
+      <button class="btn btn-primary" onclick="nextSlide()">
+        Mulai Petualangan
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: KEHIDUPAN SEHARI-HARI -->
+  <section class="slide" data-slide="2">
+    <div class="slide-header">
+      <div><div class="badge pink">PENGANTAR</div><h2 class="display">Ada di Sekitar Kita</h2><div class="sub">Titik, garis, dan sudut menyusun bentuk dunia yang kita lihat setiap hari</div></div>
+      <div class="slide-num">02 / 16</div>
+    </div>
+    <div class="life-grid">
+      <div class="life-cards">
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 21L12 3L21 21M7 14H17" stroke="#ffd60a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h4>Atap Rumah</h4><p>Sisi atap bertemu membentuk sudut lancip di puncaknya.</p></div>
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" stroke="#f72585" stroke-width="2"/><line x1="4" y1="4" x2="20" y2="20" stroke="#f72585" stroke-width="2"/></svg></div><h4>Jendela & Pintu</h4><p>Sisi-sisi yang berpotongan tegak lurus membentuk sudut siku-siku.</p></div>
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4cc9f0" stroke-width="2"/><path d="M12 3V12L18 15" stroke="#4cc9f0" stroke-width="2"/></svg></div><h4>Jam Dinding</h4><p>Jarum jam dan menit membentuk sudut yang berubah sepanjang waktu.</p></div>
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 18L8 8L14 14L22 4" stroke="#06ffa5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h4>Peta Jalan</h4><p>Persimpangan jalan adalah titik, dan setiap jalan adalah ruas garis.</p></div>
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke="#ff9f1c" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#ff9f1c"/></svg></div><h4>Layang-layang</h4><p>Bentuk poligon dengan sudut dan sisi yang simetris.</p></div>
+        <div class="life-card"><div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 21H21M5 21V8L12 3L19 8V21M9 21V14H15V21" stroke="#c77dff" stroke-width="2" stroke-linejoin="round"/></svg></div><h4>Gedung & Jembatan</h4><p>Struktur bangunan memanfaatkan sudut untuk kekuatan dan kestabilan.</p></div>
+      </div>
+      <div class="trigger-box">
+        <h3>✦ Pertanyaan Pemantik</h3>
+        <p class="trigger-q">Coba kamu bayangkan rumah impianmu. Bagian atap, jendela, dan pintu membentuk apa?</p>
+        <p class="trigger-q">Mengapa sudut pada pojok ruanganmu selalu terlihat sama besar?</p>
+        <p class="trigger-q">Bagaimana cara tukang kayu memastikan pojok mejanya benar-benar siku?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: TUJUAN -->
+  <section class="slide" data-slide="3">
+    <div class="slide-header">
+      <div><div class="badge cyan">TUJUAN PEMBELAJARAN</div><h2 class="display">Apa yang Akan Kita Kuasai?</h2><div class="sub">Setelah pembelajaran ini, kamu diharapkan mampu:</div></div>
+      <div class="slide-num">03 / 16</div>
+    </div>
+    <div class="objectives">
+      <div class="obj-card"><div class="obj-num">01</div><div><h4>Mengenal Titik</h4><p>Memahami konsep titik sebagai elemen dasar geometri dan cara penamaannya dengan huruf kapital.</p></div></div>
+      <div class="obj-card"><div class="obj-num">02</div><div><h4>Membedakan Jenis Garis</h4><p>Membedakan garis, sinar garis, dan ruas garis serta cara menamai keduanya dengan benar.</p></div></div>
+      <div class="obj-card"><div class="obj-num">03</div><div><h4>Memahami Sudut</h4><p>Mendefinisikan sudut, mengidentifikasi jenis-jenisnya, dan mengukurnya menggunakan busur derajat.</p></div></div>
+      <div class="obj-card"><div class="obj-num">04</div><div><h4>Mengaitkan dengan Poligon</h4><p>Menjelaskan hubungan titik, garis, dan sudut dalam pembentukan poligon serta aplikasinya.</p></div></div>
+      <div class="obj-card"><div class="obj-num">05</div><div><h4>Berpikir Kritis</h4><p>Menganalisis dan menemukan elemen geometri pada objek nyata di sekitar melalui permainan.</p></div></div>
+      <div class="obj-card"><div class="obj-num">06</div><div><h4>Menerapkan Konsep</h4><p>Menerapkan pengetahuan geometri untuk menyelesaikan soal-soal dan tantangan poligon.</p></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: TITIK -->
+  <section class="slide" data-slide="4">
+    <div class="slide-header">
+      <div><div class="badge">MATERI 1</div><h2 class="display">Mengenal Titik</h2><div class="sub">Elemen paling dasar dalam geometri — tak berukuran, hanya posisi</div></div>
+      <div class="slide-num">04 / 16</div>
+    </div>
+    <div class="two-col">
+      <div class="info-side">
+        <div class="big-symbol">•</div>
+        <h3 style="font-family:'Bricolage Grotesque',serif;font-size:26px;margin-bottom:12px">Apa itu Titik?</h3>
+        <p style="color:var(--muted);line-height:1.7;margin-bottom:20px"><strong style="color:var(--fg)">Titik</strong> adalah unsur dasar geometri yang hanya memiliki <strong style="color:var(--accent)">posisi</strong> tetapi tidak memiliki ukuran (panjang, lebar, atau tinggi). Titik menjadi pangkal dari segala bentuk geometri — dari garis hingga bangun ruang.</p>
+        <div style="background:var(--card);padding:16px;border-radius:12px;border-left:3px solid var(--accent);margin-bottom:16px">
+          <p style="font-size:13px;line-height:1.6"><strong style="color:var(--accent)">Cara menamai titik:</strong> Gunakan <strong>huruf kapital</strong> (A, B, C, ..., Z). Bila banyak titik, gunakan A₁, A₂, atau P′ bila perlu.</p>
+        </div>
+        <p style="font-size:13px;color:var(--muted)">👉 Coba klik di area kosong di samping untuk membuat titik sendiri!</p>
+      </div>
+      <div class="interactive-side">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h4 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">🎯 Lab Titik Interaktif</h4>
+          <button class="ctrl-btn" onclick="clearPoints()">Reset</button>
+        </div>
+        <div class="canvas-area" id="pointCanvas"><div class="hint">Klik di mana saja untuk membuat titik<br><span style="font-size:11px;opacity:.6">Setiap titik akan diberi label otomatis</span></div></div>
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">Jumlah titik dibuat: <span id="pointCount" style="color:var(--accent);font-weight:700">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: GARIS -->
+  <section class="slide" data-slide="5">
+    <div class="slide-header">
+      <div><div class="badge">MATERI 2</div><h2 class="display">Mengenal Garis</h2><div class="sub">Tiga bentuk: garis, sinar garis, dan ruas garis</div></div>
+      <div class="slide-num">05 / 16</div>
+    </div>
+    <div class="line-types">
+      <div class="line-type-card">
+        <div class="line-visual"><svg width="100%" height="100%" viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrL" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc9f0"/></marker><marker id="arrR" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc9f0"/></marker></defs><line x1="20" y1="40" x2="220" y2="40" stroke="#4cc9f0" stroke-width="3" marker-start="url(#arrL)" marker-end="url(#arrR)"/><circle cx="80" cy="40" r="4" fill="#ffd60a"/><circle cx="160" cy="40" r="4" fill="#ffd60a"/><text x="80" y="30" fill="#ffd60a" font-size="14">A</text><text x="160" y="30" fill="#ffd60a" font-size="14">B</text></svg></div>
+        <div class="line-name">Garis</div>
+        <p class="line-desc">Garis lurus yang <strong>panjangnya tak terbatas</strong> ke kedua arah. Dua titik hanya menunjukkan arahnya.</p>
+        <span class="line-symbol">↔ AB atau AB</span>
+      </div>
+      <div class="line-type-card">
+        <div class="line-visual"><svg width="100%" height="100%" viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrR2" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f72585"/></marker></defs><line x1="60" y1="40" x2="220" y2="40" stroke="#f72585" stroke-width="3" marker-end="url(#arrR2)"/><circle cx="60" cy="40" r="5" fill="#ffd60a"/><circle cx="160" cy="40" r="4" fill="#ffd60a" opacity=".6"/><text x="56" y="30" fill="#ffd60a" font-size="14">A</text><text x="156" y="30" fill="#ffd60a" font-size="14">B</text></svg></div>
+        <div class="line-name">Sinar Garis</div>
+        <p class="line-desc">Garis yang memiliki <strong>titik awal</strong>, tetapi memanjang tak terbatas ke satu arah.</p>
+        <span class="line-symbol">→ AB</span>
+      </div>
+      <div class="line-type-card">
+        <div class="line-visual"><svg width="100%" height="100%" viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet"><line x1="60" y1="40" x2="180" y2="40" stroke="#06ffa5" stroke-width="3"/><circle cx="60" cy="40" r="5" fill="#ffd60a"/><circle cx="180" cy="40" r="5" fill="#ffd60a"/><text x="56" y="30" fill="#ffd60a" font-size="14">A</text><text x="176" y="30" fill="#ffd60a" font-size="14">B</text></svg></div>
+        <div class="line-name">Ruas Garis</div>
+        <p class="line-desc">Bagian garis yang dibatasi oleh <strong>dua titik ujung</strong>. Memiliki panjang yang dapat diukur.</p>
+        <span class="line-symbol">AB</span>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)">
+      <p style="font-size:14px;line-height:1.6"><strong style="color:var(--accent)">💡 Penamaan:</strong> Selalu gunakan <strong>dua huruf kapital</strong>. Untuk garis dan sinar garis, urutan huruf penting (AB ≠ BA untuk sinar garis). Untuk ruas garis, AB = BA.</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: SUDUT DEFINISI -->
+  <section class="slide" data-slide="6">
+    <div class="slide-header">
+      <div><div class="badge">MATERI 3</div><h2 class="display">Apa itu Sudut?</h2><div class="sub">Pertemuan dua sinar garis pada satu titik yang sama</div></div>
+      <div class="slide-num">06 / 16</div>
+    </div>
+    <div class="two-col">
+      <div class="info-side">
+        <h3 style="font-family:'Bricolage Grotesque',serif;font-size:26px;margin-bottom:12px">Definisi Sudut</h3>
+        <p style="color:var(--muted);line-height:1.7;margin-bottom:20px"><strong style="color:var(--fg)">Sudut</strong> adalah daerah yang dibatasi oleh <strong style="color:var(--accent)">dua sinar garis</strong> yang berpangkal pada <strong style="color:var(--accent)">titik yang sama</strong>. Titik pangkalnya disebut <em>titik sudut</em>, dan kedua sinar garis disebut <em>kaki sudut</em> atau <em>lengan sudut</em>.</p>
+        <div style="background:var(--card);padding:16px;border-radius:12px;border-left:3px solid var(--secondary);margin-bottom:16px"><p style="font-size:14px;line-height:1.6"><strong style="color:var(--secondary)">Satuan sudut:</strong> Derajat (°). Satu putaran penuh = <strong style="color:var(--accent)">360°</strong>, setengah putaran = <strong>180°</strong>, seperempat putaran = <strong>90°</strong>.</p></div>
+        <div style="background:var(--card);padding:16px;border-radius:12px;border-left:3px solid var(--accent)"><p style="font-size:14px;line-height:1.6"><strong style="color:var(--accent)">Cara menamai sudut:</strong><br>• Dengan 3 huruf: <span class="mono" style="color:var(--accent)">∠ABC</span> (B = titik sudut)<br>• Dengan 1 huruf: <span class="mono" style="color:var(--accent)">∠B</span> (jika hanya ada 1 sudut)<br>• Dengan angka: <span class="mono" style="color:var(--accent)">∠1, ∠2</span></p></div>
+      </div>
+      <div class="interactive-side">
+        <h4 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">📐 Visual Sudut</h4>
+        <div class="canvas-area" style="display:flex;align-items:center;justify-content:center;padding:20px">
+          <svg width="320" height="280" viewBox="0 0 320 280">
+            <path d="M 60 220 L 160 220 A 80 80 0 0 0 110 140 Z" fill="rgba(255,214,10,.2)" stroke="none"/>
+            <line x1="60" y1="220" x2="280" y2="220" stroke="#4cc9f0" stroke-width="3"/>
+            <line x1="60" y1="220" x2="110" y2="140" stroke="#f72585" stroke-width="3"/>
+            <circle cx="60" cy="220" r="6" fill="#ffd60a"/>
+            <text x="40" y="245" fill="#ffd60a" font-size="16">A</text>
+            <text x="285" y="225" fill="#4cc9f0" font-size="16">B</text>
+            <text x="115" y="135" fill="#f72585" font-size="16">C</text>
+            <text x="120" y="200" fill="#ffd60a" font-size="14" font-weight="700">∠BAC</text>
+            <path d="M 140 220 A 40 40 0 0 0 110 180" fill="none" stroke="#ffd60a" stroke-width="2" stroke-dasharray="2 2"/>
+            <text x="155" y="215" fill="#ffd60a" font-size="13" class="mono">≈ 56°</text>
+          </svg>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:12px;text-align:center">Sudut <span class="mono" style="color:var(--accent)">∠BAC</span> terbentuk dari sinar AB dan sinar AC dengan titik sudut A</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: JENIS SUDUT INTERAKTIF -->
+  <section class="slide" data-slide="7">
+    <div class="slide-header">
+      <div><div class="badge">MATERI 3</div><h2 class="display">Jelajahi Jenis Sudut</h2><div class="sub">Geser slider untuk melihat sudut berubah — perhatikan namanya!</div></div>
+      <div class="slide-num">07 / 16</div>
+    </div>
+    <div class="angle-explore">
+      <div class="angle-display">
+        <svg width="100%" height="260" viewBox="0 0 320 260" id="angleSvg">
+          <path id="angleFill" d="M 60 220 L 280 220 A 110 110 0 0 0 200 120 Z" fill="rgba(255,214,10,.2)"/>
+          <line x1="60" y1="220" x2="280" y2="220" stroke="#4cc9f0" stroke-width="3"/>
+          <line id="angleLine" x1="60" y1="220" x2="200" y2="120" stroke="#f72585" stroke-width="3"/>
+          <circle cx="60" cy="220" r="6" fill="#ffd60a"/>
+          <text x="40" y="245" fill="#ffd60a" font-size="14">A</text>
+          <path id="angleArc" d="M 170 220 A 110 110 0 0 0 132 165" fill="none" stroke="#ffd60a" stroke-width="2"/>
+        </svg>
+        <div class="angle-readout" id="angleValue">56°</div>
+        <div class="angle-label" id="angleType">SUDUT LANCIP</div>
+      </div>
+      <div class="angle-type-info">
+        <div class="type-badge" id="typeBadge">Lancip</div>
+        <p style="font-size:14px;line-height:1.6" id="typeDesc">Sudut dengan besar antara 0° dan 90°. Terlihat "runcing" seperti ujung pensil.</p>
+        <div class="slider-row">
+          <label>Ubah Besar Sudut: <span id="sliderValue" style="color:var(--accent)">56°</span></label>
+          <input type="range" id="angleSlider" min="0" max="360" value="56">
+        </div>
+        <div style="margin-top:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:12px">
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:var(--success)">Lancip</strong><br><span style="color:var(--muted)">0° — 90°</span></div>
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:var(--accent)">Siku-siku</strong><br><span style="color:var(--muted)">= 90°</span></div>
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:var(--warning)">Tumpul</strong><br><span style="color:var(--muted)">90° — 180°</span></div>
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:var(--secondary)">Lurus</strong><br><span style="color:var(--muted)">= 180°</span></div>
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:var(--primary)">Refleks</strong><br><span style="color:var(--muted)">180° — 360°</span></div>
+          <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px"><strong style="color:#fff">Penuh</strong><br><span style="color:var(--muted)">= 360°</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: BUSUR DERAJAT -->
+  <section class="slide" data-slide="8">
+    <div class="slide-header">
+      <div><div class="badge">MATERI 3</div><h2 class="display">Mengukur dengan Busur</h2><div class="sub">Seret garis merah atau klik di sepanjang busur untuk mengukur sudut</div></div>
+      <div class="slide-num">08 / 16</div>
+    </div>
+    <div class="protractor-demo">
+      <div class="prot-stage">
+        <div class="prot-svg-wrap">
+          <svg id="protractorSvg" viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Setengah lingkaran busur (badan) -->
+            <path d="M 50 250 A 180 180 0 0 1 410 250 Z" fill="rgba(76,201,240,.08)" stroke="#4cc9f0" stroke-width="2"/>
+            <!-- Garis dasar (diameter) -->
+            <line x1="50" y1="250" x2="410" y2="250" stroke="#4cc9f0" stroke-width="3"/>
+            
+            <!-- Container untuk tick marks & label -->
+            <g id="protTicks"></g>
+            
+            <!-- Sudut yang diukur -->
+            <path id="protAngleFill" d="M 230 250 L 410 250 A 180 180 0 0 0 320 80 Z" fill="rgba(247,37,133,.2)"/>
+            <!-- Garis baseline (kaki sudut kanan) -->
+            <line x1="230" y1="250" x2="410" y2="250" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <!-- Garis sudut (kaki sudut kiri) -->
+            <line id="protAngleLine" x1="230" y1="250" x2="320" y2="80" stroke="#f72585" stroke-width="3"/>
+            <!-- Titik pusat -->
+            <circle cx="230" cy="250" r="6" fill="#ffd60a"/>
+            <text x="220" y="275" fill="#ffd60a" font-size="13" font-weight="700">O</text>
+            <!-- Handle untuk drag -->
+            <circle id="dragHandle" cx="320" cy="80" r="11" fill="#f72585" stroke="#fff" stroke-width="2" style="cursor:grab"/>
+            <!-- Tampilan nilai sudut -->
+            <text x="230" y="40" fill="#ffd60a" font-size="36" font-weight="800" text-anchor="middle" font-family="Bricolage Grotesque" id="protAngleValue">53°</text>
+            <text x="230" y="62" fill="var(--muted)" font-size="12" text-anchor="middle" id="protAngleType">SUDUT LANCIP</text>
+          </svg>
+        </div>
+        <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">👉 Seret titik merah atau klik di busur untuk mengubah sudut</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><div class="step-text">Letakkan busur sehingga <strong>titik pusat busur (O)</strong> berimpit dengan <strong>titik sudut</strong> yang akan diukur.</div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-text">Putar busur sehingga <strong>garis nol (0°)</strong> berimpit dengan salah satu <strong>kaki sudut</strong>.</div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-text">Perhatikan <strong>kaki sudut lainnya</strong> menunjuk pada angka di skala busur.</div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Baca angka</strong> yang ditunjuk. Itulah besar sudut dalam derajat (°).</div></div>
+        <div class="step-item" style="border-left-color:var(--success)"><div class="step-num" style="background:var(--success)">✓</div><div class="step-text"><strong style="color:var(--success)">Tips:</strong> Busur punya <strong>dua skala</strong> — luar (0–180 kiri→kanan) dan dalam (180–0 kiri→kanan). Pilih yang sesuai posisi kaki sudut.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: HUBUNGAN -->
+  <section class="slide" data-slide="9">
+    <div class="slide-header">
+      <div><div class="badge green">SINTESIS</div><h2 class="display">Hubungan Mereka Bertiga</h2><div class="sub">Bagaimana titik, garis, dan sudut saling terhubung</div></div>
+      <div class="slide-num">09 / 16</div>
+    </div>
+    <div class="relation-stage">
+      <div class="relation-controls">
+        <button class="ctrl-btn active" data-step="0" onclick="showRelationStep(0)">1. Titik</button>
+        <button class="ctrl-btn" data-step="1" onclick="showRelationStep(1)">2. Dua Titik → Garis</button>
+        <button class="ctrl-btn" data-step="2" onclick="showRelationStep(2)">3. Sinar Garis</button>
+        <button class="ctrl-btn" data-step="3" onclick="showRelationStep(3)">4. Sudut Terbentuk</button>
+        <button class="ctrl-btn" data-step="4" onclick="showRelationStep(4)">5. Poligon</button>
+      </div>
+      <div class="canvas-area" style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px;min-height:340px">
+        <svg width="600" height="320" viewBox="0 0 600 320" id="relationSvg"></svg>
+      </div>
+      <div style="margin-top:16px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--border)">
+        <p id="relationText" style="font-size:14px;line-height:1.6"><strong style="color:var(--accent)">Titik</strong> adalah elemen dasar. Dari satu titik, belum terbentuk apa-apa. Mari kita lihat apa terjadi ketika titik-titik bertemu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: POLIGON -->
+  <section class="slide" data-slide="10">
+    <div class="slide-header">
+      <div><div class="badge">EKSTENSI</div><h2 class="display">Saatnya Berpoligon!</h2><div class="sub">Klik salah satu bangun untuk menyelidiki elemen-elemennya</div></div>
+      <div class="slide-num">10 / 16</div>
+    </div>
+    <div style="display:flex;gap:32px;flex:1">
+      <div style="flex:1;display:flex;flex-direction:column">
+        <div class="polygon-grid">
+          <div class="poly-card active" data-poly="3" onclick="selectPolygon(3)"><svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,8 52,50 8,50" fill="rgba(247,37,133,.2)" stroke="#f72585" stroke-width="2"/></svg><div class="name">Segitiga</div></div>
+          <div class="poly-card" data-poly="4" onclick="selectPolygon(4)"><svg width="60" height="60" viewBox="0 0 60 60"><rect x="10" y="10" width="40" height="40" fill="rgba(76,201,240,.2)" stroke="#4cc9f0" stroke-width="2"/></svg><div class="name">Segiempat</div></div>
+          <div class="poly-card" data-poly="5" onclick="selectPolygon(5)"><svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,8 52,28 44,52 16,52 8,28" fill="rgba(255,214,10,.2)" stroke="#ffd60a" stroke-width="2"/></svg><div class="name">Segilima</div></div>
+          <div class="poly-card" data-poly="6" onclick="selectPolygon(6)"><svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,8 50,20 50,40 30,52 10,40 10,20" fill="rgba(6,255,165,.2)" stroke="#06ffa5" stroke-width="2"/></svg><div class="name">Segienam</div></div>
+          <div class="poly-card" data-poly="8" onclick="selectPolygon(8)"><svg width="60" height="60" viewBox="0 0 60 60"><polygon points="22,8 38,8 52,22 52,38 38,52 22,52 8,38 8,22" fill="rgba(255,159,28,.2)" stroke="#ff9f1c" stroke-width="2"/></svg><div class="name">Segidelapan</div></div>
+        </div>
+        <div class="poly-info">
+          <div class="poly-stat"><div class="num" id="polyVertices">3</div><div class="lbl">Titik Sudut</div></div>
+          <div class="poly-stat"><div class="num" id="polySides">3</div><div class="lbl">Sisi (Garis)</div></div>
+          <div class="poly-stat"><div class="num" id="polyAngles">3</div><div class="lbl">Sudut</div></div>
+        </div>
+      </div>
+      <div style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column">
+        <h4 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Visualisasi Poligon</h4>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center"><svg width="320" height="280" viewBox="0 0 320 280" id="polySvg"></svg></div>
+        <div style="margin-top:16px;padding:12px;background:rgba(0,0,0,.3);border-radius:10px"><p style="font-size:13px;line-height:1.5" id="polyInfo"><strong style="color:var(--accent)">Segitiga</strong> memiliki <strong>3 titik sudut</strong>, <strong>3 sisi</strong>, dan <strong>3 sudut</strong>. Jumlah semua sudutnya = <strong style="color:var(--accent)">180°</strong>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: LATIHAN -->
+  <section class="slide" data-slide="11">
+    <div class="slide-header">
+      <div><div class="badge cyan">LATIHAN</div><h2 class="display">Tantangan Poligon</h2><div class="sub">Hitung jumlah elemen pada bangun berikut</div></div>
+      <div class="slide-num">11 / 16</div>
+    </div>
+    <div class="latihan-area">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;align-items:center;justify-content:center">
+        <svg width="280" height="280" viewBox="0 0 280 280">
+          <polygon points="140,30 250,110 208,240 72,240 30,110" fill="rgba(255,214,10,.1)" stroke="#ffd60a" stroke-width="3"/>
+          <circle cx="140" cy="30" r="5" fill="#f72585"/>
+          <circle cx="250" cy="110" r="5" fill="#f72585"/>
+          <circle cx="208" cy="240" r="5" fill="#f72585"/>
+          <circle cx="72" cy="240" r="5" fill="#f72585"/>
+          <circle cx="30" cy="110" r="5" fill="#f72585"/>
+          <text x="135" y="22" fill="#f72585" font-size="14">A</text>
+          <text x="255" y="108" fill="#f72585" font-size="14">B</text>
+          <text x="213" y="258" fill="#f72585" font-size="14">C</text>
+          <text x="62" y="258" fill="#f72585" font-size="14">D</text>
+          <text x="12" y="108" fill="#f72585" font-size="14">E</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <div class="latihan-q"><h4><span class="q-num">1</span>Berapa jumlah titik sudut pada bangun di samping?</h4><input type="number" id="ans1" placeholder="Jawaban..."><button class="check-btn" onclick="checkAns(1,5)">Periksa</button><span class="feedback-icon" id="fb1"></span></div>
+        <div class="latihan-q"><h4><span class="q-num">2</span>Berapa jumlah sisi pada bangun di samping?</h4><input type="number" id="ans2" placeholder="Jawaban..."><button class="check-btn" onclick="checkAns(2,5)">Periksa</button><span class="feedback-icon" id="fb2"></span></div>
+        <div class="latihan-q"><h4><span class="q-num">3</span>Berapa jumlah sudut pada bangun di samping?</h4><input type="number" id="ans3" placeholder="Jawaban..."><button class="check-btn" onclick="checkAns(3,5)">Periksa</button><span class="feedback-icon" id="fb3"></span></div>
+        <div class="latihan-q"><h4><span class="q-num">4</span>Bagaimana cara menamai sisi antara A dan B?</h4><input type="text" id="ans4" placeholder="Contoh: AB" style="font-family:'JetBrains Mono',monospace"><button class="check-btn" onclick="checkAnsStr(4,'AB')">Periksa</button><span class="feedback-icon" id="fb4"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12: GAME -->
+  <section class="slide" data-slide="12">
+    <div class="slide-header">
+      <div><div class="badge pink">🎯 GAME SERU</div><h2 class="display">Berburu Elemen Geometri</h2><div class="sub">Pilih mode, lalu klik elemen yang sesuai pada gambar!</div></div>
+      <div class="slide-num">12 / 16</div>
+    </div>
+    <div class="game-area">
+      <div class="game-canvas">
+        <div class="game-mode-tabs">
+          <div class="mode-tab active" data-mode="point" onclick="setGameMode('point')">Titik (Sudut)</div>
+          <div class="mode-tab" data-mode="line" onclick="setGameMode('line')">Garis (Sisi)</div>
+          <div class="mode-tab" data-mode="angle" onclick="setGameMode('angle')">Sudut</div>
+        </div>
+        <div class="game-svg-wrap">
+          <svg width="500" height="380" viewBox="0 0 500 380" id="gameSvg">
+            <g id="gameShapes">
+              <polygon class="clickable-elem" data-type="angle" data-id="roof-top" points="100,180 250,80 400,180" fill="rgba(247,37,133,.15)" stroke="#f72585" stroke-width="2"/>
+              <rect class="clickable-elem" data-type="line" data-id="wall-left" x="100" y="180" width="300" height="170" fill="rgba(76,201,240,.1)" stroke="#4cc9f0" stroke-width="2"/>
+              <rect class="clickable-elem" data-type="line" data-id="door" x="220" y="260" width="60" height="90" fill="rgba(255,159,28,.2)" stroke="#ff9f1c" stroke-width="2"/>
+              <rect class="clickable-elem" data-type="line" data-id="window" x="130" y="210" width="60" height="50" fill="rgba(6,255,165,.15)" stroke="#06ffa5" stroke-width="2"/>
+              <line class="clickable-elem" data-type="line" data-id="bottom" x1="100" y1="350" x2="400" y2="350" stroke="#4cc9f0" stroke-width="3"/>
+              <circle class="clickable-elem" data-type="point" data-id="p1" cx="100" cy="180" r="8" fill="#ffd60a"/>
+              <circle class="clickable-elem" data-type="point" data-id="p2" cx="250" cy="80" r="8" fill="#ffd60a"/>
+              <circle class="clickable-elem" data-type="point" data-id="p3" cx="400" cy="180" r="8" fill="#ffd60a"/>
+              <circle class="clickable-elem" data-type="point" data-id="p4" cx="400" cy="350" r="8" fill="#ffd60a"/>
+              <circle class="clickable-elem" data-type="point" data-id="p5" cx="100" cy="350" r="8" fill="#ffd60a"/>
+              <path class="clickable-elem" data-type="angle" data-id="a1" d="M 100 200 A 20 20 0 0 0 120 180" fill="none" stroke="#f72585" stroke-width="3"/>
+              <path class="clickable-elem" data-type="angle" data-id="a2" d="M 400 200 A 20 20 0 0 1 380 180" fill="none" stroke="#f72585" stroke-width="3"/>
+              <path class="clickable-elem" data-type="angle" data-id="a3" d="M 130 180 A 25 25 0 0 0 125 205" fill="none" stroke="#f72585" stroke-width="3"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="game-side">
+        <div class="score-box"><div class="label">SKOR</div><div class="value" id="gameScore">0</div></div>
+        <div class="target-box">
+          <h4 id="targetTitle">🎯 Cari 5 Titik (Sudut)</h4>
+          <div id="targetList"></div>
+        </div>
+        <button class="btn btn-ghost" onclick="resetGame()">🔄 Reset Game</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13: KUIS -->
+  <section class="slide" data-slide="13">
+    <div class="slide-header">
+      <div><div class="badge green">EXIT TICKET</div><h2 class="display">Kuis Akhir</h2><div class="sub">20 soal pilihan ganda — uji pemahamanmu!</div></div>
+      <div class="slide-num">13 / 16</div>
+    </div>
+    <div class="quiz-container" id="quizContainer"></div>
+  </section>
+
+  <!-- SLIDE 14: KESIMPULAN -->
+  <section class="slide" data-slide="14">
+    <div class="slide-header">
+      <div><div class="badge" style="color:var(--accent)">RINGKASAN</div><h2 class="display">Yang Telah Kita Pelajari</h2><div class="sub">Tiga pilar utama geometri dan keterhubungannya</div></div>
+      <div class="slide-num">14 / 16</div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card"><h3 style="color:var(--accent)">• Titik</h3><ul><li>Elemen dasar geometri</li><li>Hanya punya posisi, tak berukuran</li><li>Dinamai dengan huruf kapital: A, B, C</li><li>Penyusun garis dan bangun geometri</li></ul></div>
+      <div class="summary-card"><h3 style="color:var(--primary)">Garis</h3><ul><li>Garis: tak terbatas dua arah (↔)</li><li>Sinar garis: tak terbatas satu arah (→)</li><li>Ruas garis: dibatasi dua titik ujung</li><li>Dinamai dengan dua huruf kapital</li></ul></div>
+      <div class="summary-card"><h3 style="color:var(--secondary)">∠ Sudut</h3><ul><li>Dua sinar garis berpangkal sama</li><li>Satuan: derajat (°)</li><li>Jenis: lancip, siku, tumpul, lurus, refleks</li><li>Diukur dengan busur derajat</li></ul></div>
+    </div>
+    <div style="margin-top:24px;background:linear-gradient(135deg,rgba(247,37,133,.15),rgba(76,201,240,.15));border:1px solid var(--border-2);border-radius:16px;padding:24px;text-align:center">
+      <p style="font-size:18px;line-height:1.5" class="display">"Titik membentuk garis, garis membentuk sudut, dan sudut membentuk poligon — semua terhubung dalam harmoni geometri."</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 15: REFLEKSI -->
+  <section class="slide" data-slide="15">
+    <div class="slide-header">
+      <div><div class="badge">REFLEKSI</div><h2 class="display">Renungkan Sejenak</h2><div class="sub">Apa yang kamu dapat hari ini?</div></div>
+      <div class="slide-num">15 / 16</div>
+    </div>
+    <div class="reflection-box">
+      <h3 style="font-family:'Bricolage Grotesque',serif;font-size:24px;margin-bottom:20px">📝 Refleksi Pembelajaran</h3>
+      <p style="color:var(--muted);margin-bottom:20px;font-size:14px">Jawab pertanyaan berikut jujur untuk mengukur pemahamanmu:</p>
+      <textarea class="reflect-input" rows="2" placeholder="1. Apa konsep paling menarik yang kamu pelajari hari ini?"></textarea>
+      <textarea class="reflect-input" rows="2" placeholder="2. Bagian mana yang masih membuatmu bingung?"></textarea>
+      <textarea class="reflect-input" rows="2" placeholder="3. Di mana kamu melihat titik, garis, atau sudut di rumahmu?"></textarea>
+      <textarea class="reflect-input" rows="2" placeholder="4. Bagaimana kamu akan menjelaskan 'sudut' kepada adikmu?"></textarea>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center">
+        <label style="font-size:14px;color:var(--muted)">Skor pemahamanmu:</label>
+        <input type="range" min="0" max="10" value="7" id="reflectSlider" style="flex:1;max-width:200px">
+        <span class="mono" style="color:var(--accent);font-weight:700" id="reflectValue">7/10</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 16: THANK YOU -->
+  <section class="slide thanks" data-slide="16">
+    <div style="text-align:center;position:relative">
+      <div class="badge" style="margin-bottom:24px">PERJALANAN BERAKHIR</div>
+      <h1 class="display">Thank You<br>for Today!</h1>
+      <p class="sub">Terima kasih sudah ikut petualangan geometri bersama kita 🌟</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="goToSlide(1)">🔄 Ulang dari Awal</button>
+        <button class="btn btn-accent" onclick="goToSlide(13)">📝 Ulangi Kuis</button>
+      </div>
+      <div style="margin-top:60px;display:flex;justify-content:center;gap:30px;flex-wrap:wrap">
+        <div style="text-align:center"><div class="mono" style="font-size:32px;color:var(--accent);font-weight:800" id="finalScore">-</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">Skor Kuis</div></div>
+        <div style="text-align:center"><div class="mono" style="font-size:32px;color:var(--primary);font-weight:800" id="finalGame">0</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">Skor Game</div></div>
+        <div style="text-align:center"><div class="mono" style="font-size:32px;color:var(--secondary);font-weight:800">16</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">Total Slide</div></div>
+      </div>
+      <div class="signature">— Petualangan Geometri • Titik • Garis • Sudut —</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button onclick="prevSlide()" id="prevBtn" title="Slide sebelumnya"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="dots" id="dots"></div>
+  <div class="counter"><span id="curSlide">1</span> / <span id="totalSlides">16</span></div>
+  <button onclick="nextSlide()" id="nextBtn" title="Slide berikutnya"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</div>
+
+<script>
+/* ============ NAVIGATION ============ */
+let currentSlide = 1;
+const totalSlides = 16;
+
+function buildDots(){
+  const d = document.getElementById('dots');
+  d.innerHTML = '';
+  for(let i=1;i<=totalSlides;i++){
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i===currentSlide?' active':'');
+    dot.onclick = () => goToSlide(i);
+    d.appendChild(dot);
+  }
+}
+function updateNav(){
+  document.getElementById('curSlide').textContent = currentSlide;
+  document.getElementById('totalSlides').textContent = totalSlides;
+  document.getElementById('progressFill').style.width = (currentSlide/totalSlides*100)+'%';
+  document.getElementById('prevBtn').disabled = currentSlide===1;
+  document.getElementById('nextBtn').disabled = currentSlide===totalSlides;
+  document.querySelectorAll('.dot').forEach((d,i)=>{d.classList.toggle('active', i+1===currentSlide);});
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.slide[data-slide="${currentSlide}"]`).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(currentSlide===7) initAngleExplorer();
+  if(currentSlide===8) initProtractor();
+  if(currentSlide===9) showRelationStep(0);
+  if(currentSlide===10) selectPolygon(3);
+  if(currentSlide===12) setGameMode('point');
+  if(currentSlide===13) initQuiz();
+  if(currentSlide===15){
+    const slider = document.getElementById('reflectSlider');
+    if(slider) slider.oninput = (e)=>{document.getElementById('reflectValue').textContent=e.target.value+'/10'};
+  }
+  if(currentSlide===16){
+    document.getElementById('finalGame').textContent = gameScore;
+    if(quizScore>=0) document.getElementById('finalScore').textContent = quizScore+'/20';
+  }
+}
+function nextSlide(){ if(currentSlide<totalSlides){currentSlide++;updateNav();} }
+function prevSlide(){ if(currentSlide>1){currentSlide--;updateNav();} }
+function goToSlide(n){ currentSlide=n; updateNav(); }
+document.addEventListener('keydown', (e)=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key==='ArrowRight'||e.key===' ') nextSlide();
+  if(e.key==='ArrowLeft') prevSlide();
+});
+
+/* ============ SLIDE 4: TITIK ============ */
+const pointCanvas = document.getElementById('pointCanvas');
+let pointCount = 0;
+const pointLabels = 'ABCDEFGHIJKLMNOPQR';
+pointCanvas.addEventListener('click', (e)=>{
+  const rect = pointCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const hint = pointCanvas.querySelector('.hint');
+  if(hint) hint.style.display = 'none';
+  const p = document.createElement('div');
+  p.className = 'geom-point';
+  p.style.left = x+'px';
+  p.style.top = y+'px';
+  p.setAttribute('data-label', pointLabels[pointCount % pointLabels.length]);
+  pointCanvas.appendChild(p);
+  pointCount++;
+  document.getElementById('pointCount').textContent = pointCount;
+});
+function clearPoints(){
+  pointCanvas.querySelectorAll('.geom-point').forEach(p=>p.remove());
+  pointCount = 0;
+  document.getElementById('pointCount').textContent = 0;
+  const hint = pointCanvas.querySelector('.hint');
+  if(hint) hint.style.display = 'block';
+}
+
+/* ============ SLIDE 7: ANGLE EXPLORER ============ */
+let angleInited = false;
+function initAngleExplorer(){
+  const slider = document.getElementById('angleSlider');
+  if(!slider) return;
+  if(angleInited) return;
+  angleInited = true;
+  slider.addEventListener('input', updateAngleExplorer);
+  updateAngleExplorer();
+}
+function updateAngleExplorer(){
+  const angle = parseInt(document.getElementById('angleSlider').value);
+  document.getElementById('sliderValue').textContent = angle+'°';
+  document.getElementById('angleValue').textContent = angle+'°';
+  const cx=60, cy=220, len=170;
+  const rad = angle * Math.PI / 180;
+  const ex = cx + len * Math.cos(-rad);
+  const ey = cy + len * Math.sin(-rad);
+  document.getElementById('angleLine').setAttribute('x2', ex);
+  document.getElementById('angleLine').setAttribute('y2', ey);
+  const r = 110;
+  const fx = cx + r * Math.cos(-rad);
+  const fy = cy + r * Math.sin(-rad);
+  const largeArc = angle > 180 ? 1 : 0;
+  document.getElementById('angleFill').setAttribute('d', `M ${cx} ${cy} L ${cx+r} ${cy} A ${r} ${r} 0 ${largeArc} 0 ${fx} ${fy} Z`);
+  const arcR = 40;
+  const arcEx = cx + arcR * Math.cos(-rad);
+  const arcEy = cy + arcR * Math.sin(-rad);
+  document.getElementById('angleArc').setAttribute('d', `M ${cx+arcR} ${cy} A ${arcR} ${arcR} 0 ${largeArc} 0 ${arcEx} ${arcEy}`);
+  let type, color, desc;
+  if(angle===0){type='Nol';color='var(--muted)';desc='Tidak ada sudut terbentuk.'}
+  else if(angle<90){type='Lancip';color='var(--success)';desc='Sudut dengan besar antara 0° dan 90°. Terlihat "runcing" seperti ujung pensil.'}
+  else if(angle===90){type='Siku-siku';color='var(--accent)';desc='Sudut tepat 90°. Sisi-sisinya tegak lurus, seperti pojok buku.'}
+  else if(angle<180){type='Tumpul';color='var(--warning)';desc='Sudut antara 90° dan 180°. Lebih terbuka dari sudut siku-siku.'}
+  else if(angle===180){type='Lurus';color='var(--secondary)';desc='Sudut tepat 180°. Kedua kakinya membentuk satu garis lurus.'}
+  else if(angle<360){type='Refleks';color='var(--primary)';desc='Sudut antara 180° dan 360°. Lebih besar dari setengah lingkaran.'}
+  else{type='Penuh';color='#fff';desc='Sudut 360° — satu putaran penuh kembali ke posisi awal.'}
+  const badge = document.getElementById('typeBadge');
+  badge.textContent = type;
+  badge.style.background = color;
+  document.getElementById('angleType').textContent = 'SUDUT ' + type.toUpperCase();
+  document.getElementById('typeDesc').textContent = desc;
+}
+
+/* ============ SLIDE 8: BUSUR DERAJAT ============ */
+let protInited = false;
+function initProtractor(){
+  if(protInited) return;
+  protInited = true;
+
+  const svg = document.getElementById('protractorSvg');
+  const cx = 230, cy = 250, R = 180;
+  let ticksHtml = '';
+
+  // Generate ticks dan label untuk dua skala
+  for(let i = 0; i <= 180; i += 5){
+    const angleRad = (180 - i) * Math.PI / 180; // 0 di kiri, 180 di kanan
+    const isMajor = i % 10 === 0;
+    const isLabel = i % 30 === 0;
+
+    // OUTER tick (skala luar): dari R ke R-15 (major) atau R-8 (minor)
+    const or1 = R;
+    const or2 = isMajor ? R - 15 : R - 8;
+    const ox1 = cx + or1 * Math.cos(angleRad);
+    const oy1 = cy - or1 * Math.sin(angleRad);
+    const ox2 = cx + or2 * Math.cos(angleRad);
+    const oy2 = cy - or2 * Math.sin(angleRad);
+    ticksHtml += `<line x1="${ox1.toFixed(2)}" y1="${oy1.toFixed(2)}" x2="${ox2.toFixed(2)}" y2="${oy2.toFixed(2)}" stroke="rgba(255,255,255,.5)" stroke-width="${isMajor ? 1.5 : 1}"/>`;
+
+    // OUTER label (0-180 dari kiri ke kanan) - biru cyan
+    if(isLabel){
+      const lr = R + 16;
+      const lx = cx + lr * Math.cos(angleRad);
+      const ly = cy - lr * Math.sin(angleRad);
+      ticksHtml += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" fill="#4cc9f0" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">${i}</text>`;
+    }
+
+    // INNER tick (skala dalam): dari R-25 ke R-35 (major) atau R-30 (minor)
+    const ir1 = R - 25;
+    const ir2 = isMajor ? R - 38 : R - 32;
+    const ix1 = cx + ir1 * Math.cos(angleRad);
+    const iy1 = cy - ir1 * Math.sin(angleRad);
+    const ix2 = cx + ir2 * Math.cos(angleRad);
+    const iy2 = cy - ir2 * Math.sin(angleRad);
+    ticksHtml += `<line x1="${ix1.toFixed(2)}" y1="${iy1.toFixed(2)}" x2="${ix2.toFixed(2)}" y2="${iy2.toFixed(2)}" stroke="rgba(255,255,255,.3)" stroke-width="${isMajor ? 1.2 : .8}"/>`;
+
+    // INNER label (180-0 dari kiri ke kanan) - oranye
+    if(isLabel){
+      const ilr = R - 50;
+      const ilx = cx + ilr * Math.cos(angleRad);
+      const ily = cy - ilr * Math.sin(angleRad);
+      ticksHtml += `<text x="${ilx.toFixed(2)}" y="${ily.toFixed(2)}" fill="#ff9f1c" font-size="11" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">${180 - i}</text>`;
+    }
+  }
+
+  document.getElementById('protTicks').innerHTML = ticksHtml;
+
+  const handle = document.getElementById('dragHandle');
+  let isDragging = false;
+
+  function updateProtAngle(angle){
+    angle = Math.max(0, Math.min(180, angle));
+    const rad = (180 - angle) * Math.PI / 180;
+    const ex = cx + R * Math.cos(rad);
+    const ey = cy - R * Math.sin(rad);
+    document.getElementById('protAngleLine').setAttribute('x2', ex);
+    document.getElementById('protAngleLine').setAttribute('y2', ey);
+    handle.setAttribute('cx', ex);
+    handle.setAttribute('cy', ey);
+    // Fill arc
+    const fillR = 80;
+    const fx = cx + fillR * Math.cos(rad);
+    const fy = cy - fillR * Math.sin(rad);
+    document.getElementById('protAngleFill').setAttribute('d',
+      `M ${cx} ${cy} L ${cx + fillR} ${cy} A ${fillR} ${fillR} 0 0 0 ${fx.toFixed(2)} ${fy.toFixed(2)} Z`);
+    document.getElementById('protAngleValue').textContent = Math.round(angle) + '°';
+    let type;
+    if(angle < 90) type = 'SUDUT LANCIP';
+    else if(angle === 90) type = 'SUDUT SIKU-SIKU';
+    else if(angle < 180) type = 'SUDUT TUMPUL';
+    else type = 'SUDUT LURUS';
+    document.getElementById('protAngleType').textContent = type;
+  }
+
+  // Fungsi untuk menghitung sudut dari koordinat pointer
+  function calcAngleFromPointer(clientX, clientY){
+    const rect = svg.getBoundingClientRect();
+    const sx = (clientX - rect.left) * (460 / rect.width);
+    const sy = (clientY - rect.top) * (300 / rect.height);
+    const dx = sx - cx;
+    const dy = sy - cy;
+    // Jika di bawah diameter, clamp ke 0 atau 180
+    if(dy > 5){
+      return dx < 0 ? 0 : 180;
+    }
+    // Rumus: 0 di kiri (180°), 90 di atas, 180 di kanan (0°)
+    // angle_display = 180 - atan2(-dy, dx) * 180/PI
+    let angle = 180 - Math.atan2(-dy, dx) * 180 / Math.PI;
+    if(angle < 0) angle = 0;
+    if(angle > 180) angle = 180;
+    return angle;
+  }
+
+  // Pointer events untuk drag handle
+  handle.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    try { handle.setPointerCapture(e.pointerId); } catch(err){}
+    handle.style.cursor = 'grabbing';
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  handle.addEventListener('pointermove', (e) => {
+    if(!isDragging) return;
+    updateProtAngle(calcAngleFromPointer(e.clientX, e.clientY));
+    e.preventDefault();
+  });
+
+  handle.addEventListener('pointerup', (e) => {
+    isDragging = false;
+    handle.style.cursor = 'grab';
+    try { handle.releasePointerCapture(e.pointerId); } catch(err){}
+  });
+
+  handle.addEventListener('pointercancel', () => {
+    isDragging = false;
+    handle.style.cursor = 'grab';
+  });
+
+  // Klik di mana saja pada busur untuk set sudut
+  svg.addEventListener('pointerdown', (e) => {
+    if(e.target === handle) return; // sudah ditangani
+    const rect = svg.getBoundingClientRect();
+    const sx = (e.clientX - rect.left) * (460 / rect.width);
+    const sy = (e.clientY - rect.top) * (300 / rect.height);
+    const dx = sx - cx;
+    const dy = sy - cy;
+    if(dy > 5) return; // abaikan klik di bawah diameter
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist < 50 || dist > R + 30) return; // hanya di area busur
+    updateProtAngle(calcAngleFromPointer(e.clientX, e.clientY));
+  });
+
+  updateProtAngle(53);
+}
+
+/* ============ SLIDE 9: RELATION ============ */
+const relationSteps = [
+  {svg:`<circle cx="300" cy="160" r="7" fill="#ffd60a"/><text x="295" y="185" fill="#ffd60a" font-size="16">A</text>`,
+   text:'<strong style="color:var(--accent)">Titik</strong> adalah elemen dasar. Dari satu titik, belum terbentuk apa-apa. Mari kita lihat apa terjadi ketika titik-titik bertemu.'},
+  {svg:`<circle cx="180" cy="160" r="7" fill="#ffd60a"/><text x="175" y="185" fill="#ffd60a" font-size="16">A</text><circle cx="420" cy="160" r="7" fill="#ffd60a"/><text x="415" y="185" fill="#ffd60a" font-size="16">B</text><line x1="186" y1="160" x2="414" y2="160" stroke="#4cc9f0" stroke-width="3"/><text x="280" y="145" fill="#4cc9f0" font-size="13">garis AB</text>`,
+   text:'<strong style="color:var(--secondary)">Dua titik</strong> menentukan sebuah <strong style="color:var(--accent)">garis</strong>. Garis melalui titik A dan B dapat ditulis sebagai ↔ AB atau AB.'},
+  {svg:`<defs><marker id="arrEnd" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f72585"/></marker></defs><circle cx="200" cy="160" r="7" fill="#ffd60a"/><text x="195" y="185" fill="#ffd60a" font-size="16">A</text><circle cx="380" cy="100" r="4" fill="#ffd60a" opacity=".5"/><text x="375" y="90" fill="#ffd60a" font-size="13" opacity=".7">B</text><line x1="206" y1="160" x2="450" y2="80" stroke="#f72585" stroke-width="3" marker-end="url(#arrEnd)"/><text x="280" y="140" fill="#f72585" font-size="13">sinar AB →</text>`,
+   text:'<strong style="color:var(--primary)">Sinar garis</strong> memiliki satu titik awal (A) dan memanjang tak terbatas ke satu arah. Dari sinar, kita bisa membentuk sudut.'},
+  {svg:`<circle cx="200" cy="160" r="7" fill="#ffd60a"/><text x="195" y="185" fill="#ffd60a" font-size="16">A</text><line x1="200" y1="160" x2="400" y2="100" stroke="#4cc9f0" stroke-width="3"/><line x1="200" y1="160" x2="380" y2="240" stroke="#f72585" stroke-width="3"/><path d="M 230 160 A 30 30 0 0 1 222 178" fill="none" stroke="#ffd60a" stroke-width="2"/><text x="245" y="155" fill="#ffd60a" font-size="13">∠A</text>`,
+   text:'<strong style="color:var(--accent)">Sudut</strong> terbentuk ketika <strong>dua sinar garis</strong> berpangkal pada titik yang sama. Titik A adalah titik sudut, dan kedua sinar adalah kaki sudut.'},
+  {svg:`<polygon points="200,40 380,140 320,280 80,280 20,140" fill="rgba(255,214,10,.1)" stroke="#ffd60a" stroke-width="3"/><circle cx="200" cy="40" r="5" fill="#f72585"/><circle cx="380" cy="140" r="5" fill="#f72585"/><circle cx="320" cy="280" r="5" fill="#f72585"/><circle cx="80" cy="280" r="5" fill="#f72585"/><circle cx="20" cy="140" r="5" fill="#f72585"/><text x="195" y="30" fill="#f72585" font-size="13">A</text><text x="385" y="138" fill="#f72585" font-size="13">B</text><text x="325" y="298" fill="#f72585" font-size="13">C</text><text x="70" y="298" fill="#f72585" font-size="13">D</text><text x="5" y="138" fill="#f72585" font-size="13">E</text>`,
+   text:'<strong style="color:var(--accent)">Poligon</strong> terbentuk dari beberapa ruas garis yang saling berhubungan di titik-titik sudut. Inilah hubungan lengkap: titik → garis → sudut → poligon!'}
+];
+function showRelationStep(step){
+  document.querySelectorAll('.relation-controls .ctrl-btn').forEach((b,i)=>{
+    b.classList.toggle('active', i===step);
+  });
+  document.getElementById('relationSvg').innerHTML = relationSteps[step].svg;
+  document.getElementById('relationText').innerHTML = relationSteps[step].text;
+}
+
+/* ============ SLIDE 10: POLYGON ============ */
+const polygonData = {
+  3:{name:'Segitiga',vertices:3,sides:3,angles:3,sum:180},
+  4:{name:'Segiempat',vertices:4,sides:4,angles:4,sum:360},
+  5:{name:'Segilima',vertices:5,sides:5,angles:5,sum:540},
+  6:{name:'Segienam',vertices:6,sides:6,angles:6,sum:720},
+  8:{name:'Segidelapan',vertices:8,sides:8,angles:8,sum:1080}
+};
+function selectPolygon(n){
+  document.querySelectorAll('.poly-card').forEach(c=>c.classList.toggle('active', parseInt(c.dataset.poly)===n));
+  const d = polygonData[n];
+  document.getElementById('polyVertices').textContent = d.vertices;
+  document.getElementById('polySides').textContent = d.sides;
+  document.getElementById('polyAngles').textContent = d.angles;
+  const svg = document.getElementById('polySvg');
+  const cx=160, cy=140, r=100;
+  let pts = [];
+  for(let i=0;i<n;i++){
+    const angle = -Math.PI/2 + i * 2*Math.PI/n;
+    pts.push((cx+r*Math.cos(angle))+','+(cy+r*Math.sin(angle)));
+  }
+  let html = `<polygon points="${pts.join(' ')}" fill="rgba(255,214,10,.1)" stroke="#ffd60a" stroke-width="3"/>`;
+  pts.forEach((p,i)=>{
+    const [x,y] = p.split(',');
+    html += `<circle cx="${x}" cy="${y}" r="5" fill="#f72585"/>`;
+    const labelX = parseFloat(x) + (i===0?0:(i< n/2?10:-20));
+    const labelY = parseFloat(y) + (i===0?-10:5);
+    html += `<text x="${labelX}" y="${labelY}" fill="#f72585" font-size="13" font-weight="700">${String.fromCharCode(65+i)}</text>`;
+  });
+  for(let i=0;i<n;i++){
+    const angle = -Math.PI/2 + i * 2*Math.PI/n;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    html += `<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#06ffa5" stroke-width="2" opacity=".5"/>`;
+  }
+  svg.innerHTML = html;
+  document.getElementById('polyInfo').innerHTML = `<strong style="color:var(--accent)">${d.name}</strong> memiliki <strong>${d.vertices} titik sudut</strong>, <strong>${d.sides} sisi</strong>, dan <strong>${d.angles} sudut</strong>. Jumlah semua sudutnya = <strong style="color:var(--accent)">${d.sum}°</strong>.`;
+}
+
+/* ============ SLIDE 11: LATIHAN ============ */
+function checkAns(num, expected){
+  const v = parseInt(document.getElementById('ans'+num).value);
+  const fb = document.getElementById('fb'+num);
+  if(v===expected){fb.textContent = '✓ Benar!';fb.style.color = 'var(--success)';}
+  else{fb.textContent = '✗ Coba lagi';fb.style.color = 'var(--primary)';}
+}
+function checkAnsStr(num, expected){
+  const v = document.getElementById('ans'+num).value.trim().toUpperCase();
+  const fb = document.getElementById('fb'+num);
+  if(v===expected){fb.textContent = '✓ Benar!';fb.style.color = 'var(--success)';}
+  else{fb.textContent = '✗ Coba lagi (hint: gunakan 2 huruf)';fb.style.color = 'var(--primary)';}
+}
+
+/* ============ SLIDE 12: GAME ============ */
+let gameMode = 'point';
+let gameScore = 0;
+let foundItems = new Set();
+const gameModes = {
+  point:{title:'🎯 Cari 5 Titik (Sudut)',targets:[
+    {id:'p1',label:'Titik pojok kiri atas rumah'},
+    {id:'p2',label:'Titik puncak atap'},
+    {id:'p3',label:'Titik pojok kanan atas rumah'},
+    {id:'p4',label:'Titik pojok kanan bawah rumah'},
+    {id:'p5',label:'Titik pojok kiri bawah rumah'}
+  ]},
+  line:{title:'📏 Cari Garis/Sisi',targets:[
+    {id:'bottom',label:'Garis bawah tanah'},
+    {id:'wall-left',label:'Dinding kotak rumah (luar)'},
+    {id:'roof-top',label:'Segitiga atap rumah'},
+    {id:'door',label:'Pintu depan rumah'},
+    {id:'window',label:'Jendela rumah'}
+  ]},
+  angle:{title:'📐 Cari Sudut pada Rumah',targets:[
+    {id:'a1',label:'Sudut pojok kiri bawah atap'},
+    {id:'a2',label:'Sudut pojok kanan bawah atap'},
+    {id:'a3',label:'Sudut antara atap & dinding'},
+    {id:'roof-top',label:'Sudut puncak atap'},
+    {id:'p1',label:'Sudut pojok kiri atas dinding'}
+  ]}
+};
+function setGameMode(mode){
+  gameMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active', t.dataset.mode===mode));
+  document.getElementById('targetTitle').textContent = gameModes[mode].title;
+  document.querySelectorAll('#gameSvg .clickable-elem').forEach(e=>{
+    e.classList.remove('found');
+    const id = e.dataset.id;
+    if(foundItems.has(mode+'-'+id)) e.classList.add('found');
+  });
+  const list = document.getElementById('targetList');
+  list.innerHTML = '';
+  gameModes[mode].targets.forEach(t=>{
+    const div = document.createElement('div');
+    div.className = 'target-item' + (foundItems.has(mode+'-'+t.id)?' done':'');
+    div.setAttribute('data-target', t.id);
+    div.innerHTML = `<span class="check"></span>${t.label}`;
+    list.appendChild(div);
+  });
+}
+document.querySelectorAll('#gameSvg .clickable-elem').forEach(elem=>{
+  elem.addEventListener('click', ()=>{
+    const type = elem.dataset.type;
+    const id = elem.dataset.id;
+    let isMatch = (type === gameMode);
+    if(gameMode === 'angle' && id === 'roof-top') isMatch = true;
+    if(gameMode === 'line' && id === 'roof-top') isMatch = true;
+    if(!isMatch){
+      elem.style.animation = 'none';
+      setTimeout(()=>{elem.style.animation='shake .4s'},10);
+      return;
+    }
+    const key = gameMode+'-'+id;
+    if(foundItems.has(key)) return;
+    foundItems.add(key);
+    elem.classList.add('found');
+    gameScore += 10;
+    document.getElementById('gameScore').textContent = gameScore;
+    const targetItem = document.querySelector(`.target-item[data-target="${id}"]`);
+    if(targetItem) targetItem.classList.add('done');
+    if(gameModes[gameMode].targets.every(t=>foundItems.has(gameMode+'-'+t.id))){
+      setTimeout(()=>{
+        const targetTitle = document.getElementById('targetTitle');
+        const oldText = targetTitle.textContent;
+        targetTitle.textContent = '🎉 Mode Selesai! +50 Bonus';
+        targetTitle.style.color = 'var(--success)';
+        gameScore += 50;
+        document.getElementById('gameScore').textContent = gameScore;
+        setTimeout(()=>{targetTitle.style.color = '';targetTitle.textContent = oldText;},2500);
+      }, 300);
+    }
+  });
+});
+function resetGame(){
+  foundItems.clear();
+  gameScore = 0;
+  document.getElementById('gameScore').textContent = 0;
+  document.querySelectorAll('#gameSvg .clickable-elem').forEach(e=>e.classList.remove('found'));
+  setGameMode(gameMode);
+}
+const styleAnim = document.createElement('style');
+styleAnim.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}`;
+document.head.appendChild(styleAnim);
+
+/* ============ SLIDE 13: KUIS ============ */
+const quizQuestions = [
+  {q:"Apa yang dimaksud dengan titik dalam geometri?",o:["Sebuah garis pendek","Elemen geometri yang hanya memiliki posisi tanpa ukuran","Perpotongan dua garis","Bagian dari sudut"],c:1},
+  {q:"Dengan apa titik dinamai?",o:["Huruf kecil","Angka saja","Huruf kapital","Simbol khusus"],c:2},
+  {q:"Berapa titik minimum untuk menentukan sebuah garis?",o:["1","2","3","4"],c:1},
+  {q:"Garis yang panjangnya tak terbatas ke kedua arah disebut...",o:["Ruas garis","Sinar garis","Garis","Kurva"],c:2},
+  {q:"Garis yang memiliki titik awal dan memanjang tak terbatas ke satu arah...",o:["Garis","Sinar garis","Ruas garis","Lengkung"],c:1},
+  {q:"Garis yang dibatasi dua titik ujung disebut...",o:["Sinar garis","Garis","Ruas garis","Parabola"],c:2},
+  {q:"Notasi yang tepat untuk garis melalui titik A dan B adalah...",o:["AB","→AB","↔AB atau AB","AB (panjang)"],c:2},
+  {q:"Untuk sinar garis AB, titik awalnya adalah...",o:["B","A","Tidak punya","Tengah AB"],c:1},
+  {q:"Sudut terbentuk dari pertemuan dua...",o:["Titik","Ruas garis sejajar","Sinar garis berpangkal sama","Garis sejajar"],c:2},
+  {q:"Satuan untuk mengukur besar sudut adalah...",o:["cm","derajat (°)","meter","radian saja"],c:1},
+  {q:"Satu putaran penuh sama dengan...",o:["90°","180°","270°","360°"],c:3},
+  {q:"Sudut siku-siku besarnya...",o:["45°","90°","180°","360°"],c:1},
+  {q:"Sudut lancip memiliki besar...",o:["0°–90°","90°–180°","180°–270°","270°–360°"],c:0},
+  {q:"Sudut tumpul memiliki besar...",o:["0°–90°","= 90°","90°–180°","= 180°"],c:2},
+  {q:"Sudut lurus besarnya...",o:["90°","180°","270°","360°"],c:1},
+  {q:"Sudut refleks memiliki besar...",o:["0°–90°","90°–180°","180°–360°","= 360°"],c:2},
+  {q:"Alat yang digunakan untuk mengukur sudut adalah...",o:["Penggaris","Busur derajat","Jangka","Mistar"],c:1},
+  {q:"Cara menamai sudut dengan tiga huruf, huruf tengah menunjukkan...",o:["Kaki sudut","Titik sudut","Sisi sudut","Awal sinar"],c:1},
+  {q:"Pada sudut ∠ABC, titik sudutnya adalah...",o:["A","B","C","Tidak ada"],c:1},
+  {q:"Sebuah segitiga memiliki berapa sudut?",o:["2","3","4","6"],c:1}
+];
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let quizUserAnswers = [];
+function initQuiz(){
+  quizIdx = 0;quizScore = 0;quizUserAnswers = [];
+  renderQuiz();
+}
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  if(quizIdx >= quizQuestions.length){
+    const percentage = Math.round(quizScore/quizQuestions.length*100);
+    let msg, emoji;
+    if(percentage>=90){msg='Luar biasa! Kamu menguasai materi ini dengan sangat baik!';emoji='🏆'}
+    else if(percentage>=70){msg='Bagus sekali! Pemahamanmu sudah baik.';emoji='🌟'}
+    else if(percentage>=50){msg='Cukup baik. Yuk review lagi materi yang masih belum tepat.';emoji='📚'}
+    else{msg='Tetap semangat! Pelajari lagi materi dengan teliti ya.';emoji='💪'}
+    container.innerHTML = `
+      <div class="quiz-result">
+        <div class="badge green" style="margin-bottom:20px">EXIT TICKET SELESAI</div>
+        <div class="score-big">${quizScore}/${quizQuestions.length}</div>
+        <div style="font-size:18px;color:var(--muted);margin:8px 0 4px">${percentage}% benar</div>
+        <div style="font-size:48px">${emoji}</div>
+        <p style="font-size:16px;color:var(--fg);margin:16px 0 24px;max-width:500px">${msg}</p>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button class="btn btn-ghost" onclick="initQuiz()">🔄 Ulangi Kuis</button>
+          <button class="btn btn-accent" onclick="nextSlide()">Lanjut →</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const q = quizQuestions[quizIdx];
+  const letters = ['A','B','C','D'];
+  container.innerHTML = `
+    <div class="quiz-header">
+      <div><div class="badge">SOAL ${quizIdx+1} dari ${quizQuestions.length}</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Skor sementara: <span style="color:var(--accent);font-weight:700">${quizScore}</span></div></div>
+      <div class="quiz-progress-text">${Math.round((quizIdx)/quizQuestions.length*100)}%</div>
+    </div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options" id="quizOptions">
+      ${q.o.map((opt,i)=>`<div class="quiz-option" onclick="answerQuiz(${i})"><div class="opt-letter">${letters[i]}</div><div>${opt}</div></div>`).join('')}
+    </div>
+    <div class="feedback-msg" id="quizFeedback"></div>
+    <div class="quiz-footer">
+      <button class="btn btn-ghost" onclick="prevQuiz()" ${quizIdx===0?'disabled':''}>← Sebelumnya</button>
+      <button class="btn btn-primary" id="nextQBtn" onclick="nextQuiz()" disabled>Lanjut →</button>
+    </div>`;
+  quizAnswered = false;
+}
+function answerQuiz(i){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIdx];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((o,idx)=>{
+    o.classList.add('disabled');
+    if(idx===q.c) o.classList.add('correct');
+    if(idx===i && i!==q.c) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFeedback');
+  if(i===q.c){
+    quizScore++;
+    fb.className = 'feedback-msg show correct';
+    fb.textContent = '✓ Benar! Jawabanmu tepat.';
+  } else {
+    fb.className = 'feedback-msg show wrong';
+    fb.textContent = `✗ Belum tepat. Jawaban benar: ${q.o[q.c]}`;
+  }
+  document.getElementById('nextQBtn').disabled = false;
+  quizUserAnswers[quizIdx] = i;
+}
+function nextQuiz(){if(!quizAnswered) return;quizIdx++;renderQuiz();}
+function prevQuiz(){
+  if(quizIdx>0){
+    quizIdx--;
+    quizScore = quizUserAnswers.slice(0,quizIdx).filter((a,i)=>a===quizQuestions[i].c).length;
+    renderQuiz();
+    if(quizUserAnswers[quizIdx]!==undefined){
+      quizAnswered = true;
+      const q = quizQuestions[quizIdx];
+      const opts = document.querySelectorAll('.quiz-option');
+      opts.forEach((o,idx)=>{
+        o.classList.add('disabled');
+        if(idx===q.c) o.classList.add('correct');
+        if(idx===quizUserAnswers[quizIdx] && quizUserAnswers[quizIdx]!==q.c) o.classList.add('wrong');
+      });
+      document.getElementById('nextQBtn').disabled = false;
+    }
+  }
+}
+
+/* ============ INIT ============ */
+buildDots();
+updateNav();
+</script>
+</body>
+</html>

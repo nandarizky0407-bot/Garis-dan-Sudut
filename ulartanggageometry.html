@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ular Tangga Geometri — Lines, Angles & Triangles</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f7eeda; --ink:#3d2c1e; --wood:#7a4a22; --wood2:#5b3a1a;
+  --cream:#fffaf0; --cream2:#f4e8cd;
+  --green:#2f9e44; --greenD:#256b33;
+  --red:#d9480f; --redD:#8f2d1f;
+  --p1:#e8590c; --p2:#0ca678; --gold:#e8b30f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito',sans-serif;color:var(--ink);min-height:100vh;
+  background-color:var(--paper);
+  background-image:radial-gradient(rgba(122,74,34,.10) 1.2px, transparent 1.3px);
+  background-size:26px 26px;
+}
+header{text-align:center;padding:18px 12px 4px}
+h1{font-family:'Baloo 2',cursive;font-size:clamp(26px,5vw,44px);color:var(--wood2);letter-spacing:.5px;line-height:1.05}
+h1 .a{color:#c92a2a}h1 .b{color:var(--greenD)}h1 .c{color:#1971c2}
+.tagline{font-weight:700;color:#8a6a3f;margin-top:2px;font-size:clamp(12px,2vw,16px)}
+
+.stage{display:flex;gap:22px;justify-content:center;align-items:flex-start;flex-wrap:wrap;padding:14px 16px 40px;max-width:1120px;margin:0 auto}
+
+/* ====== PAPAN ====== */
+.boardWrap{width:min(94vw,620px)}
+.board{position:relative;aspect-ratio:1;border:10px solid var(--wood);border-radius:16px;overflow:hidden;background:var(--cream);
+  box-shadow:0 12px 26px rgba(91,58,26,.28), inset 0 0 0 3px rgba(255,255,255,.35)}
+.grid{position:absolute;inset:0;z-index:1;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr)}
+.cell{position:relative;background:var(--cream);border:.5px solid rgba(122,74,34,.16);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1px;overflow:hidden;text-align:center}
+.cell.alt{background:var(--cream2)}
+/* zona kesulitan: bawah = easy, tengah = medium, atas = hard */
+.cell.p1{background:#f2f8e8}.cell.p1.alt{background:#e9f3da}
+.cell.p2{background:#fdf6e0}.cell.p2.alt{background:#f6eccd}
+.cell.p3{background:#fdeeea}.cell.p3.alt{background:#f8e2da}
+.cell .num{position:absolute;top:1px;left:3px;font-family:'Baloo 2';font-weight:800;font-size:clamp(7px,1.6vw,12px);color:#9a6a33}
+.cell .q{font-size:clamp(6px,1.3vw,10.5px);line-height:1.08;font-weight:800;color:#5a4527;margin-top:9px;word-break:break-word}
+.cell.lad{background:linear-gradient(180deg,#e6f6dd,#d0efc0)}
+.cell.lad .q{color:var(--greenD)}
+.cell.snk{background:linear-gradient(180deg,#ffe8e0,#ffd4c8)}
+.cell.snk .q{color:var(--redD)}
+.cell.start{background:#ffedb0}
+.cell.finish{background:radial-gradient(circle at 50% 42%,#ffe9a0,#ffd43b)}
+.cell .mini{width:36%;max-width:24px;aspect-ratio:1;margin-top:7px}
+.cell.occ0{box-shadow:inset 0 0 0 3px rgba(232,89,12,.65)}
+.cell.occ1{box-shadow:inset 0 0 0 3px rgba(12,166,120,.65)}
+#overlay{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.rail{stroke:#8a5a2b;stroke-width:7;stroke-linecap:round}
+.rung{stroke:#c98d4f;stroke-width:5;stroke-linecap:round}
+.pawn{position:absolute;z-index:10;width:6.2%;aspect-ratio:1;border-radius:50%;border:2.5px solid #fff;
+  box-shadow:0 3px 7px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-family:'Baloo 2';font-weight:800;font-size:clamp(10px,2.4vw,17px);
+  transition:left .3s ease, top .3s ease}
+.pawn.x0{background:radial-gradient(circle at 32% 28%,#ffa94d,var(--p1) 55%,#a83c04)}
+.pawn.x1{background:radial-gradient(circle at 32% 28%,#4fd8b0,var(--p2) 55%,#057a5b)}
+.pawn.noTrans{transition:none}
+.legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#fffdf6;border:1.5px solid #e5d5b0;border-radius:999px;padding:3px 10px;font-weight:700}
+.chip i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* ====== PANEL ====== */
+.panel{width:min(94vw,340px);display:flex;flex-direction:column;gap:12px}
+.card{background:#fffdf6;border:2px solid #e5d5b0;border-radius:14px;padding:14px;box-shadow:0 4px 10px rgba(91,58,26,.08)}
+.cardTitle{font-family:'Baloo 2';font-weight:800;font-size:15px;color:#8a6a3f;margin-bottom:6px}
+.who{font-family:'Baloo 2';font-weight:800;font-size:20px}
+.diceRow{display:flex;align-items:center;gap:16px;margin-top:10px}
+.dice{width:64px;height:64px;flex:none;background:#fff;border:2px solid #d9c79b;border-radius:12px;
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:9px;gap:2px;box-shadow:0 4px 0 #d9c79b}
+.dice.rolling{animation:droll .12s linear infinite}
+@keyframes droll{50%{transform:rotate(7deg) scale(1.05)}}
+.pip{width:9px;height:9px;border-radius:50%;background:#3d2c1e;place-self:center;visibility:hidden}
+.pip.on{visibility:visible}
+.diceSide{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.hintKbd{font-size:11.5px;color:#a08755;font-weight:700}
+.diceVal{font-size:13px;font-weight:800;color:#8a6a3f}
+#msg{min-height:46px;font-weight:700;color:#5b4632;background:#fbf3df;border:1.5px dashed #dcc794;border-radius:10px;padding:8px 10px;margin-top:12px;font-size:14px}
+.playerCard{display:flex;align-items:center;gap:11px;transition:transform .15s}
+.playerCard.active{outline:3px solid #f1d38a;transform:translateY(-1px)}
+.pdot{width:18px;height:18px;border-radius:50%;flex:none;box-shadow:inset -2px -3px 4px rgba(0,0,0,.25)}
+.pname{font-family:'Baloo 2';font-weight:800;font-size:17px}
+.pstat{font-size:13px;color:#6b5335;font-weight:700}
+.st{width:13px;height:13px;vertical-align:-2px}
+.logBox{max-height:150px;overflow:auto;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.logBox div{background:#faf4e4;border-radius:8px;padding:4px 8px;border-left:4px solid #e3d2a8}
+.logBox div.lp0{border-left-color:var(--p1)}
+.logBox div.lp1{border-left-color:var(--p2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ====== TOMBOL ====== */
+.btn{font-family:'Baloo 2';font-weight:700;border:none;border-radius:12px;padding:11px 20px;font-size:16px;cursor:pointer;
+  background:var(--red);color:#fff;box-shadow:0 4px 0 #a63c05;transition:transform .08s, box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a63c05}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.green{background:var(--green);box-shadow:0 4px 0 #1b6e2c}
+.btn.green:active{box-shadow:0 1px 0 #1b6e2c}
+.btn.ghost{background:#fff;color:#6b4f23;border:2px solid #d9c79b;box-shadow:0 3px 0 #d9c79b}
+.btn.small{padding:7px 12px;font-size:13px}
+
+/* ====== OVERLAY / MODAL ====== */
+.ovl{position:fixed;inset:0;background:rgba(59,42,22,.55);backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.ovl.top{z-index:60}
+.hidden{display:none!important}
+.sheet{background:#fffdf6;border-radius:18px;padding:22px;max-width:540px;width:100%;max-height:92vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);border:3px solid var(--wood)}
+.sheet h2{font-family:'Baloo 2';color:var(--wood2);font-size:24px;margin-bottom:6px}
+.nameRow{display:flex;align-items:center;gap:10px;margin:10px 0}
+.nameRow label{font-weight:800;width:118px;font-size:14px;display:flex;align-items:center;gap:7px}
+.nameRow .pdot{width:14px;height:14px}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;border:2px solid #d9c79b;border-radius:10px;font:inherit;font-weight:700;background:#fff}
+input[type=text]:focus{outline:none;border-color:var(--green)}
+.rules{background:#f6efdb;border-radius:12px;padding:12px 14px;font-size:13.5px;margin:12px 0}
+.rules ol{margin-left:18px}
+.rules li{margin:5px 0}
+.tips{margin-top:8px;background:#fdf6d8;border:1.5px dashed #dcb95c;border-radius:8px;padding:8px 10px;font-size:12.5px}
+.center{text-align:center}
+
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:800;font-size:12.5px;padding:4px 12px;border-radius:999px}
+.badge svg{width:14px;height:14px}
+.badge.p1{background:#d3f1c6;color:#256b33}
+.badge.p2{background:#fbe8b8;color:#8a6410}
+.badge.p3{background:#ffd6c9;color:#a03018}
+.badge.hots{background:#ffe9ae;color:#8a6400}
+#qText{font-size:16px;font-weight:700;margin:12px 0 4px;line-height:1.55}
+.qFig{margin:8px 0 4px;display:flex;justify-content:center}
+.qFig svg{width:min(100%,300px);height:auto;background:#faf4e4;border:1.5px solid #e8dcbc;border-radius:10px}
+.optGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.optBtn{display:flex;align-items:center;gap:9px;text-align:left;padding:10px 12px;border:2px solid #d9c79b;border-radius:11px;background:#fff;cursor:pointer;font:inherit;font-weight:700;color:#3d2c1e;transition:.12s}
+.optBtn:hover:not(:disabled){border-color:#b08d3e;background:#fdf6e0;transform:translateY(-1px)}
+.optBtn .key{flex:none;width:26px;height:26px;border-radius:8px;background:#f1e4c3;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;color:#6b4f23}
+.optBtn.correct{border-color:#2f9e44;background:#e3f5e1}
+.optBtn.correct .key{background:#2f9e44;color:#fff}
+.optBtn.wrong{border-color:#d64545;background:#fdeaea;opacity:.75}
+.optBtn.wrong .key{background:#d64545;color:#fff}
+.optBtn.reveal{border-color:#2f9e44;box-shadow:0 0 0 2px rgba(47,158,68,.35)}
+.optBtn:disabled{cursor:default}
+.kbdHint{font-size:11.5px;color:#a08755;font-weight:700;margin-top:9px;text-align:center}
+.qFeedback{margin-top:12px;font-weight:800;display:none;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4}
+.qFeedback.show{display:flex}
+.qFeedback.good{color:#2b8a3e}
+.qFeedback.bad{color:#c92a2a}
+.fi{width:20px;height:20px;flex:none;margin-top:1px}
+.explain{margin-top:10px;background:#f6efdb;border-left:4px solid #b08d3e;padding:9px 11px;font-size:13.5px;border-radius:0 8px 8px 0;line-height:1.5;display:none}
+.explain.show{display:block}
+.qactions{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.shake{animation:shake .28s 2}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* kunci jawaban */
+details{margin:4px 0;border:1.5px solid #efe3c4;border-radius:10px;padding:4px 12px;background:#fdf9ef}
+summary{font-family:'Baloo 2';color:var(--wood2);font-size:15px;padding:7px 0;cursor:pointer;list-style-position:inside}
+.kitem{font-size:13px;line-height:1.5;padding:8px 0;border-bottom:1px solid #efe3c4}
+.kitem i{color:#7a6134}
+
+.wrow{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;background:#faf4e4;border-radius:10px;padding:8px 12px;margin:6px 0;font-size:14px}
+.winTag{background:var(--gold);color:#5b3a1a;font-family:'Baloo 2';font-weight:800;padding:2px 10px;border-radius:999px;font-size:12px}
+.bigTrophy{width:84px;height:84px;filter:drop-shadow(0 5px 7px rgba(0,0,0,.25))}
+.confettiLayer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.confettiLayer i{position:absolute;top:-8%;display:block;animation:cfall linear infinite}
+@keyframes cfall{0%{transform:translateY(-10vh) rotate(0)}100%{transform:translateY(112vh) rotate(760deg)}}
+
+footer{text-align:center;font-size:12.5px;color:#a08755;padding:0 12px 26px;font-weight:700}
+@media (max-width:600px){
+  .cell .q{display:none}
+  .cell.spec .q{display:block;font-size:6.5px}
+  .optGrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="a">ULAR</span> <span class="b">TANGGA</span> <span class="c">GEOMETRI</span></h1>
+  <div class="tagline">Lines, Angles &amp; Triangles &bull; Part 1 (Easy) &ndash; Part 4 (HOTS)</div>
+</header>
+
+<main class="stage">
+  <section class="boardWrap">
+    <div class="board" id="board">
+      <div class="grid" id="grid"></div>
+      <svg id="overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="legend">
+      <span class="chip"><i style="background:#cfe8b8"></i>Part 1 &bull; Easy (kotak awal)</span>
+      <span class="chip"><i style="background:#f3e3ad"></i>Part 2 &bull; Medium (tengah)</span>
+      <span class="chip"><i style="background:#f5c4b4"></i>Part 3 &bull; Hard (atas)</span>
+      <span class="chip"><i style="background:#bde3ac"></i>Tangga = HOTS</span>
+      <span class="chip"><i style="background:#ffc4b0"></i>Ular = HOTS</span>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="card">
+      <div class="who">Giliran: <span id="turnName">&ndash;</span></div>
+      <div class="diceRow">
+        <div class="dice" id="dice"></div>
+        <div class="diceSide">
+          <button class="btn green" id="btnRoll" disabled>Lempar Dadu</button>
+          <div class="diceVal">Dadu: <b id="diceVal">&ndash;</b></div>
+          <div class="hintKbd">atau tekan tombol Spasi</div>
+        </div>
+      </div>
+      <div id="msg">Isi nama pemain untuk memulai petualangan!</div>
+    </div>
+    <div class="card playerCard" id="pc0"></div>
+    <div class="card playerCard" id="pc1"></div>
+    <div class="card">
+      <div class="cardTitle">Catatan Permainan</div>
+      <div class="logBox" id="log"></div>
+    </div>
+    <div class="tools">
+      <button class="btn ghost small" id="btnKey">Kunci Jawaban (Tutor)</button>
+      <button class="btn ghost small" id="btnSound">Suara: ON</button>
+      <button class="btn ghost small" id="btnHow">Cara Bermain</button>
+    </div>
+  </aside>
+</main>
+
+<footer>Dibuat untuk belajar Lines, Angles &amp; Triangles sambil bermain bersama tutor.</footer>
+
+<!-- ============ SETUP ============ -->
+<div class="ovl" id="setupOvl">
+  <div class="sheet">
+    <h2 class="center">Selamat Datang, Petualang Geometri!</h2>
+    <p class="center" style="font-weight:700;color:#8a6a3f">Masukkan nama 2 pemain untuk memulai.</p>
+    <div class="nameRow">
+      <label><span class="pdot" style="background:var(--p1)"></span>Pemain 1:</label>
+      <input type="text" id="inName1" maxlength="14" placeholder="Nama pemain pertama" autocomplete="off">
+    </div>
+    <div class="nameRow">
+      <label><span class="pdot" style="background:var(--p2)"></span>Pemain 2:</label>
+      <input type="text" id="inName2" maxlength="14" placeholder="Nama pemain kedua" autocomplete="off">
+    </div>
+    <div class="rules" id="setupRules"></div>
+    <div class="center"><button class="btn green" id="btnStart" style="font-size:19px;padding:13px 34px">Mulai Bermain!</button></div>
+  </div>
+</div>
+
+<!-- ============ MODAL SOAL ============ -->
+<div class="ovl top hidden" id="qOvl">
+  <div class="sheet">
+    <span class="badge p1" id="qBadge">SOAL</span>
+    <h2 id="qTitle" style="margin-top:8px">Kotak</h2>
+    <p id="qText"></p>
+    <div class="qFig hidden" id="qFigWrap"></div>
+    <div class="optGrid" id="opts"></div>
+    <div class="kbdHint">Tips: tekan tombol <b>A</b>&ndash;<b>D</b> (atau 1&ndash;4) di keyboard untuk memilih</div>
+    <div class="qFeedback" id="qFeedback"></div>
+    <div class="explain" id="qExplain"></div>
+    <div class="qactions">
+      <button class="btn ghost small" id="btnSkip">Lewati (putusan tutor)</button>
+      <button class="btn green hidden" id="btnNext">Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KUNCI JAWABAN ============ -->
+<div class="ovl top hidden" id="keyOvl">
+  <div class="sheet">
+    <h2>Kunci Jawaban &amp; Pembahasan <span style="font-size:13px;color:#a08755">(khusus tutor)</span></h2>
+    <div id="keyBody"></div>
+    <div class="center" style="margin-top:14px"><button class="btn" id="btnKeyClose">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ============ CARA BERMAIN ============ -->
+<div class="ovl top hidden" id="howOvl">
+  <div class="sheet">
+    <h2>Cara Bermain</h2>
+    <div id="howBody"></div>
+    <div class="center" style="margin-top:14px"><button class="btn" id="btnHowClose">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ============ PEMENANG ============ -->
+<div class="ovl hidden" id="winOvl">
+  <div class="confettiLayer" id="confetti"></div>
+  <div class="sheet center">
+    <svg class="bigTrophy" viewBox="0 0 24 24" fill="#e8b30f"><path d="M7 2h10v2h4v3a5 5 0 0 1-5 5h-.4a5.5 5.5 0 0 1-2.6 2.5V17h3v3H8v-3h3v-2.5A5.5 5.5 0 0 1 8.4 12H8a5 5 0 0 1-5-5V4h4V2zm-2 4v1a3 3 0 0 0 3 3V6H5zm14 0h-3v4a3 3 0 0 0 3-3V6z"/></svg>
+    <h2 style="font-size:30px">SELAMAT, <span id="winName"></span>!</h2>
+    <p style="font-weight:700;color:#8a6a3f;margin-bottom:10px">Kamu mencapai kotak 100 dan menjadi pemenangnya!</p>
+    <div id="winStats"></div>
+    <div class="center" style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn green" id="btnAgain">Main Lagi</button>
+      <button class="btn ghost" id="btnNew">Ganti Pemain</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ================= DATA PAPAN ================= */
+const LADDERS = {3:24, 9:31, 21:42, 36:55, 43:77, 62:81, 71:92, 80:99};
+const SNAKES  = {98:79, 97:64, 93:46, 89:53, 87:57, 74:39, 66:44, 33:13, 17:5};
+const PCOL = ['#e8590c','#0ca678'];
+const SNAKE_COLORS = [
+  {b:'#2f9e44',d:'#1b6e2c'},{b:'#e8590c',d:'#a83e07'},{b:'#1098ad',d:'#0b6f80'},
+  {b:'#d6336c',d:'#96204a'},{b:'#74b816',d:'#4f7d0e'}
+];
+
+/* ============ BANK SOAL GEOMETRI (sesuai dokumen assessment) ============ */
+/* n = nomor soal di dokumen, part = tingkat, t = label pendek, ans = indeks jawaban benar (0=A) */
+const QUESTIONS=[
+/* ---- PART 1 : EASY (Q1-30) -> kotak bagian awal ---- */
+{n:1,part:1,t:"Segment",q:"Which of the following has two endpoints and can be measured?",opts:["Line","Ray","Line Segment","Angle"],ans:2,ex:"A line segment has two distinct endpoints."},
+{n:2,part:1,t:"Line",q:"A straight path that goes on forever in both directions is called a:",opts:["Ray","Line Segment","Line","Point"],ans:2,ex:"A line extends infinitely in both directions."},
+{n:3,part:1,t:"Ray",q:"Which of these has exactly one endpoint and extends infinitely in one direction?",opts:["Ray","Line Segment","Angle","Line"],ans:0,ex:"A ray has one endpoint and goes forever in one direction."},
+{n:4,part:1,t:"Naming",q:"How do we properly name a line segment with endpoints A and B?",opts:["Ray AB","Line AB","Segment AB","Point AB"],ans:2,ex:"It is named Segment AB (or Line Segment AB)."},
+{n:5,part:1,t:"Parallel",q:"Two lines that never meet, no matter how far they are extended, are called:",opts:["Intersecting","Perpendicular","Parallel","Coinciding"],ans:2,ex:"Parallel lines remain the same distance apart forever."},
+{n:6,part:1,t:"Intersecting",q:"Lines that cross each other at a single point are called:",opts:["Parallel","Intersecting","Coinciding","Straight"],ans:1,ex:"Intersecting lines cross at one point."},
+{n:7,part:1,t:"Perpendicular",q:"When two intersecting lines form perfectly square corners (90\u00B0), they are:",opts:["Parallel","Perpendicular","Coinciding","Curved"],ans:1,ex:"Perpendicular lines cross to form right angles."},
+{n:8,part:1,t:"Coinciding",q:"If two lines lie perfectly on top of one another, they are known as:",opts:["Parallel","Perpendicular","Coinciding","Intersecting"],ans:2,ex:"Coinciding lines are essentially the same line on top of each other."},
+{n:9,part:1,t:"Right \u2220",q:"An angle that measures exactly 90\u00B0 is called a:",opts:["Acute angle","Right angle","Obtuse angle","Straight angle"],ans:1,ex:"A right angle is exactly 90 degrees."},
+{n:10,part:1,t:"Acute \u2220",q:"An angle that measures less than 90\u00B0 is called a:",opts:["Acute angle","Right angle","Obtuse angle","Reflex angle"],ans:0,ex:"Acute angles are sharp, less than 90\u00B0."},
+{n:11,part:1,t:"Obtuse \u2220",q:"An angle that measures more than 90\u00B0 but less than 180\u00B0 is a:",opts:["Acute angle","Right angle","Obtuse angle","Straight angle"],ans:2,ex:"Obtuse angles are wide, between 90\u00B0 and 180\u00B0."},
+{n:12,part:1,t:"Straight \u2220",q:"A straight angle measures exactly:",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:1,ex:"A straight angle is a straight line, 180\u00B0."},
+{n:13,part:1,t:"Reflex \u2220",q:"An angle that measures more than 180\u00B0 but less than 360\u00B0 is called a:",opts:["Acute angle","Right angle","Reflex angle","Straight angle"],ans:2,ex:"Reflex angles go beyond a straight line, up to 360\u00B0."},
+{n:14,part:1,t:"Full turn",q:"A complete circle or full turn measures exactly:",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:3,ex:"A full circle is 360 degrees."},
+{n:15,part:1,t:"Protractor",q:"What instrument do we use to measure angles?",opts:["Ruler","Compass","Protractor","Thermometer"],ans:2,ex:"A protractor measures angles in degrees."},
+{n:16,part:1,t:"Obtuse \u2220",q:"Which of these angle measurements is an obtuse angle?",opts:["45\u00B0","90\u00B0","120\u00B0","200\u00B0"],ans:2,ex:"120\u00B0 is between 90\u00B0 and 180\u00B0, making it obtuse."},
+{n:17,part:1,t:"Acute \u2220",q:"Which of these angle measurements is an acute angle?",opts:["89\u00B0","91\u00B0","180\u00B0","360\u00B0"],ans:0,ex:"89\u00B0 is less than 90\u00B0, making it acute."},
+{n:18,part:1,t:"Reflex \u2220",q:"Which of these angle measurements is a reflex angle?",opts:["150\u00B0","180\u00B0","250\u00B0","360\u00B0"],ans:2,ex:"250\u00B0 is between 180\u00B0 and 360\u00B0, making it reflex."},
+{n:19,part:1,t:"Equilateral",q:"A triangle with all three sides equal in length is called:",opts:["Scalene","Isosceles","Equilateral","Right-angled"],ans:2,ex:"Equilateral means all equal sides."},
+{n:20,part:1,t:"Isosceles",q:"A triangle with exactly two equal sides is called:",opts:["Scalene","Isosceles","Equilateral","Obtuse"],ans:1,ex:"Isosceles means two equal sides."},
+{n:21,part:1,t:"Scalene",q:"A triangle with no equal sides is called:",opts:["Scalene","Isosceles","Equilateral","Acute"],ans:0,ex:"Scalene means no equal sides."},
+{n:22,part:1,t:"\u2220 sum",q:"The sum of interior angles in any triangle is always:",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:1,ex:"The internal angles of any triangle always total 180\u00B0."},
+{n:23,part:1,t:"Right tri",q:"In a right-angled triangle, what is the measure of the largest angle?",opts:["45\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:2,ex:"The right angle (90\u00B0) is always the largest in a right-angled triangle."},
+{n:24,part:1,t:"Obtuse tri",q:"What type of triangle has one angle greater than 90\u00B0?",opts:["Acute triangle","Right triangle","Obtuse triangle","Equilateral triangle"],ans:2,ex:"An obtuse triangle has one obtuse angle."},
+{n:25,part:1,t:"Parallel mark",q:"If two lines are marked with little arrows pointing in the same direction, it means they are:",opts:["Perpendicular","Parallel","Intersecting","Segments"],ans:1,ex:"Arrows indicate parallel lines."},
+{n:26,part:1,t:"90\u00B0 symbol",q:"What does the small square symbol in the corner of two lines mean?",opts:["The lines are parallel","The lines are perpendicular (90\u00B0)","The angle is reflex","The lines intersect twice"],ans:1,ex:"The square symbol denotes perpendicular lines / 90\u00B0."},
+{n:27,part:1,t:"Real world",q:"Which real-world object represents a line segment?",opts:["Sunlight","A ruler","A laser pointer","The horizon"],ans:1,ex:"A ruler has a start and end, like a segment."},
+{n:28,part:1,t:"Complementary",q:"Two complementary angles add up to:",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:0,ex:"Complementary = 90\u00B0."},
+{n:29,part:1,t:"Supplementary",q:"Two supplementary angles add up to:",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:1,ex:"Supplementary = 180\u00B0."},
+{n:30,part:1,t:"Around point",q:"Angles around a single point add up to:",opts:["90\u00B0","180\u00B0","360\u00B0","400\u00B0"],ans:2,ex:"Angles around a point make a full circle (360\u00B0)."},
+/* ---- PART 2 : MEDIUM (Q31-55) -> kotak bagian tengah ---- */
+{n:31,part:2,t:"Complement",q:"What is the complement of a 40\u00B0 angle?",opts:["40\u00B0","50\u00B0","140\u00B0","320\u00B0"],ans:1,ex:"Complementary angles add to 90\u00B0. 90 - 40 = 50."},
+{n:32,part:2,t:"Supplement",q:"What is the supplement of a 110\u00B0 angle?",opts:["20\u00B0","70\u00B0","90\u00B0","250\u00B0"],ans:1,ex:"Supplementary angles add to 180\u00B0. 180 - 110 = 70."},
+{n:33,part:2,t:"Half straight",q:"If an angle is exactly half of a straight angle, what type of angle is it?",opts:["Acute","Right","Obtuse","Reflex"],ans:1,ex:"Straight is 180\u00B0, half is 90\u00B0 (Right)."},
+{n:34,part:2,t:"3rd angle",q:"A triangle has angles of 50\u00B0 and 60\u00B0. What is the measure of the third angle?",opts:["50\u00B0","60\u00B0","70\u00B0","80\u00B0"],ans:2,ex:"180 - (50 + 60) = 70."},
+{n:35,part:2,t:"Find x",q:"Find the value of x in the complementary angle shown below.",opts:["45\u00B0","55\u00B0","65\u00B0","145\u00B0"],ans:1,ex:"The square means 90\u00B0. 90 - 35 = 55.",fig:"comp35"},
+{n:36,part:2,t:"Supplementary",q:"Two angles are supplementary. If one is 85\u00B0, what is the other?",opts:["5\u00B0","85\u00B0","95\u00B0","105\u00B0"],ans:2,ex:"180 - 85 = 95."},
+{n:37,part:2,t:"Find y",q:"Find the value of y on the straight line below.",opts:["55\u00B0","65\u00B0","125\u00B0","235\u00B0"],ans:0,ex:"Angles on a line add to 180\u00B0. 180 - 125 = 55.",fig:"line37"},
+{n:38,part:2,t:"Equilateral",q:"An equilateral triangle has three equal angles. What is the size of each angle?",opts:["45\u00B0","60\u00B0","90\u00B0","180\u00B0"],ans:1,ex:"180 \u00F7 3 = 60\u00B0. All three angles of an equilateral triangle are equal."},
+{n:39,part:2,t:"3rd angle",q:"A right-angled triangle has one angle of 40\u00B0. What is the third angle?",opts:["40\u00B0","50\u00B0","90\u00B0","140\u00B0"],ans:1,ex:"180 - 90 - 40 = 50."},
+{n:40,part:2,t:"Full turn",q:"Find the missing angle z in a full turn.",opts:["50\u00B0","130\u00B0","140\u00B0","230\u00B0"],ans:2,ex:"A full turn is 360\u00B0. 360 - 90 - 130 = 140.",fig:"turn40"},
+{n:41,part:2,t:"Vertex \u2220",q:"An isosceles triangle has two base angles of 70\u00B0. What is the top (vertex) angle?",opts:["40\u00B0","70\u00B0","110\u00B0","140\u00B0"],ans:0,ex:"180 - 70 - 70 = 40."},
+{n:42,part:2,t:"Find x",q:"Find the missing angle x in the triangle below.",opts:["60\u00B0","70\u00B0","80\u00B0","90\u00B0"],ans:1,ex:"180 - 45 - 65 = 70.",fig:"tri42"},
+{n:43,part:2,t:"On a line",q:"Three angles on a straight line are 50\u00B0, 60\u00B0, and a. Find a.",opts:["50\u00B0","70\u00B0","80\u00B0","90\u00B0"],ans:1,ex:"180 - 50 - 60 = 70."},
+{n:44,part:2,t:"On a line",q:"A straight line is split into two angles. One is a right angle. What is the other?",opts:["45\u00B0","90\u00B0","180\u00B0","270\u00B0"],ans:1,ex:"180 - 90 = 90."},
+{n:45,part:2,t:"Equilateral",q:"If the perimeter of an equilateral triangle is 15 cm, what is the size of its angles?",opts:["5\u00B0","15\u00B0","60\u00B0","180\u00B0"],ans:2,ex:"Perimeter doesn't change angles. Equilateral angles are always 60\u00B0."},
+{n:46,part:2,t:"Isosceles",q:"Find angle b. The triangle is an isosceles triangle (indicated by marks).",opts:["40\u00B0","50\u00B0","80\u00B0","100\u00B0"],ans:0,ex:"Isosceles: (180 - 100) / 2 = 40.",fig:"iso46"},
+{n:47,part:2,t:"Around point",q:"The angles around a point are 100\u00B0, 150\u00B0, and x. What is x?",opts:["110\u00B0","120\u00B0","130\u00B0","250\u00B0"],ans:0,ex:"360 - 100 - 150 = 110."},
+{n:48,part:2,t:"Reflex",q:"A reflex angle is measured as 260\u00B0. What is the angle that completes the full turn?",opts:["60\u00B0","80\u00B0","100\u00B0","180\u00B0"],ans:2,ex:"360 - 260 = 100. (Note: 100\u00B0 is obtuse, but completes the turn.)"},
+{n:49,part:2,t:"Scalene",q:"In a scalene triangle, all angles are:",opts:["Equal","Less than 90\u00B0","Different","Greater than 90\u00B0"],ans:2,ex:"Scalene triangles have all different angles."},
+{n:50,part:2,t:"Find y",q:"Find the missing angle y in the diagram (angles on a line).",opts:["45\u00B0","55\u00B0","65\u00B0","145\u00B0"],ans:1,ex:"180 - 90 - 35 = 55.",fig:"line50"},
+{n:51,part:2,t:"Around point",q:"Four angles meet at a point. They are 90\u00B0, 90\u00B0, 120\u00B0, and x. Find x.",opts:["60\u00B0","90\u00B0","120\u00B0","360\u00B0"],ans:0,ex:"360 - 90 - 90 - 120 = 60."},
+{n:52,part:2,t:"Fraction turn",q:"If an angle is 3/4 of a full turn, what is its measurement?",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:2,ex:"3/4 of 360 = 270."},
+{n:53,part:2,t:"True/False",q:"True or False: An obtuse triangle can have two obtuse angles.",opts:["True","False"],ans:1,ex:"False. Triangle sum is 180\u00B0. Two obtuse (>90\u00B0) would exceed 180\u00B0."},
+{n:54,part:2,t:"Classify",q:"A triangle has angles 45\u00B0, 45\u00B0, and 90\u00B0. What specific type of triangle is this?",opts:["Equilateral","Isosceles Right","Scalene Obtuse","Isosceles Acute"],ans:1,ex:"Right angle (90\u00B0) + two equal angles (45\u00B0) = Isosceles Right."},
+{n:55,part:2,t:"Parallel",q:"Line AB is parallel to Line CD. Will they ever intersect?",opts:["Yes, eventually","No, never"],ans:1,ex:"Parallel lines never intersect."},
+/* ---- PART 3 : HARD (Q56-80) -> kotak bagian atas ---- */
+{n:56,part:3,t:"Ratio",q:"Two angles on a straight line are in the ratio 1:2. What is the size of the larger angle?",opts:["60\u00B0","90\u00B0","120\u00B0","180\u00B0"],ans:2,ex:"1x + 2x = 180. 3x = 180. x = 60. Larger is 120."},
+{n:57,part:3,t:"Around point",q:"Find x if the angles around a point are x, 2x, 3x, and 4x.",opts:["18\u00B0","36\u00B0","45\u00B0","72\u00B0"],ans:1,ex:"x + 2x + 3x + 4x = 10x. 10x = 360. x = 36."},
+{n:58,part:3,t:"Vert. opposite",q:"Look at the diagram below. Lines AB and CD intersect. Find angle z.",opts:["40\u00B0","70\u00B0","140\u00B0","180\u00B0"],ans:2,ex:"Vertically opposite angles are equal. z = 140.",fig:"cross58"},
+{n:59,part:3,t:"Adjacent",q:"In the same intersection (Question 58), what is the angle adjacent to 140\u00B0?",opts:["40\u00B0","50\u00B0","140\u00B0","220\u00B0"],ans:0,ex:"Angles on a straight line: 180 - 140 = 40."},
+{n:60,part:3,t:"Isosceles",q:"In an isosceles triangle, the vertex angle is 30\u00B0. What are the two base angles?",opts:["30\u00B0 & 30\u00B0","60\u00B0 & 60\u00B0","75\u00B0 & 75\u00B0","150\u00B0 & 150\u00B0"],ans:2,ex:"(180 - 30) / 2 = 75."},
+{n:61,part:3,t:"Exterior \u2220",q:"Find the exterior angle x of the triangle below.",opts:["60\u00B0","110\u00B0","120\u00B0","130\u00B0"],ans:2,ex:"Exterior angle = sum of opposite interiors. 50 + 70 = 120.",fig:"ext61"},
+{n:62,part:3,t:"Exterior \u2220",q:"The exterior angle of a triangle equals the sum of the two opposite interior angles. If the exterior angle is 150\u00B0 and one interior is 65\u00B0, find the other.",opts:["30\u00B0","85\u00B0","95\u00B0","115\u00B0"],ans:1,ex:"150 - 65 = 85."},
+{n:63,part:3,t:"Divide 180\u00B0",q:"A straight angle is divided into three equal parts. What is the size of each part?",opts:["30\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:1,ex:"Straight angle = 180. 180 / 3 = 60."},
+{n:64,part:3,t:"Right tri",q:"In a right-angled triangle, the other two angles are equal. What are they?",opts:["30\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:1,ex:"(180 - 90) / 2 = 45."},
+{n:65,part:3,t:"Find m",q:"Find angle m in the diagram (angles on a line).",opts:["30\u00B0","50\u00B0","60\u00B0","75\u00B0"],ans:1,ex:"m + 2m + 30 = 180. 3m = 150. m = 50.",fig:"alg65"},
+{n:66,part:3,t:"Divide 360\u00B0",q:"A full turn is divided into 5 equal angles. What is the measure of each?",opts:["50\u00B0","72\u00B0","90\u00B0","108\u00B0"],ans:1,ex:"360 / 5 = 72."},
+{n:67,part:3,t:"Complement",q:"If an angle is twice its complement, what is the angle?",opts:["30\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:2,ex:"x = 2(90 - x). 3x = 180. x = 60."},
+{n:68,part:3,t:"Supplement",q:"If an angle is five times its supplement, what is the angle?",opts:["30\u00B0","100\u00B0","120\u00B0","150\u00B0"],ans:3,ex:"x = 5(180 - x). 6x = 900. x = 150."},
+{n:69,part:3,t:"Algebra \u2220",q:"The angles of a triangle are x, x+20, and x+40. Find the smallest angle x.",opts:["20\u00B0","40\u00B0","60\u00B0","80\u00B0"],ans:1,ex:"x + (x+20) + (x+40) = 180. 3x + 60 = 180. 3x = 120. x = 40."},
+{n:70,part:3,t:"Isosceles",q:"An isosceles triangle has one angle of 100\u00B0. What are the other two?",opts:["40\u00B0 & 40\u00B0","50\u00B0 & 50\u00B0","80\u00B0 & 80\u00B0","100\u00B0 & 100\u00B0 (Impossible)"],ans:0,ex:"It must be the vertex angle, so base angles are (180 - 100) / 2 = 40."},
+{n:71,part:3,t:"Isosceles",q:"An isosceles triangle has one angle of 50\u00B0. Which of the following COULD be the other two?",opts:["50\u00B0 & 80\u00B0","65\u00B0 & 65\u00B0","Both A and B","Neither"],ans:2,ex:"If 50\u00B0 is vertex: 65\u00B0, 65\u00B0. If 50\u00B0 is base: 50\u00B0, 80\u00B0. Both work."},
+{n:72,part:3,t:"Exterior k",q:"Find angle k in the combined shapes below.",opts:["70\u00B0","110\u00B0","120\u00B0","130\u00B0"],ans:1,ex:"Triangle angles: 180 - 50 - 60 = 70. k is supplementary to 70: 180 - 70 = 110.",fig:"ext72"},
+{n:73,part:3,t:"Around point",q:"Three identical equilateral triangles meet at a point. What is the reflex angle completing the full turn?",opts:["120\u00B0","180\u00B0","240\u00B0","300\u00B0"],ans:1,ex:"Equilateral angles are 60\u00B0. Three meet = 180\u00B0. 360 - 180 = 180."},
+{n:74,part:3,t:"Parallel lines",q:"Two parallel lines are intersected by a straight line. If one acute angle is 40\u00B0, what is the corresponding obtuse angle?",opts:["40\u00B0","90\u00B0","140\u00B0","180\u00B0"],ans:2,ex:"Interior consecutive angles: 180 - 40 = 140."},
+{n:75,part:3,t:"Reflex sum",q:"The sum of two angles is a reflex angle of 200\u00B0. If one angle is 110\u00B0, what is the other?",opts:["90\u00B0","100\u00B0","110\u00B0","120\u00B0"],ans:0,ex:"200 - 110 = 90."},
+{n:76,part:3,t:"True/False",q:"True or False: A triangle can have sides measuring 3 cm, 4 cm, and 8 cm.",opts:["True","False"],ans:1,ex:"False. Triangle inequality theorem: 3 + 4 = 7, not greater than 8."},
+{n:77,part:3,t:"Algebra \u2220",q:"Find the value of p in the triangle if angles are p, 3p, and 5p.",opts:["10\u00B0","20\u00B0","30\u00B0","45\u00B0"],ans:1,ex:"p + 3p + 5p = 9p. 9p = 180. p = 20."},
+{n:78,part:3,t:"Vert. opposite",q:"What is the value of x if (2x + 10)\u00B0 and (3x - 20)\u00B0 are vertically opposite angles?",opts:["10","20","30","40"],ans:2,ex:"2x + 10 = 3x - 20. x = 30."},
+{n:79,part:3,t:"On a line",q:"Angles on a line are 90\u00B0, x, and x+10\u00B0. Find x.",opts:["30\u00B0","40\u00B0","50\u00B0","60\u00B0"],ans:1,ex:"90 + x + (x + 10) = 180. 2x = 80. x = 40."},
+{n:80,part:3,t:"Classify",q:"An isosceles right-angled triangle has angles of:",opts:["60\u00B0, 60\u00B0, 60\u00B0","45\u00B0, 45\u00B0, 90\u00B0","30\u00B0, 60\u00B0, 90\u00B0","40\u00B0, 40\u00B0, 100\u00B0"],ans:1,ex:"90\u00B0, and two 45\u00B0 angles."},
+/* ---- PART 4 : HOTS (Q81-100) -> kotak tangga & kepala ular ---- */
+{n:81,part:4,t:"Clock",q:"At 3:00, the hands of a clock form an angle. What is the size of this angle?",opts:["45\u00B0","90\u00B0","180\u00B0","360\u00B0"],ans:1,ex:"3 hours out of 12 is 1/4 of a circle. 360 / 4 = 90\u00B0."},
+{n:82,part:4,t:"Clock",q:"At 6:00, what angle do the hands of a clock form?",opts:["90\u00B0","120\u00B0","180\u00B0","360\u00B0"],ans:2,ex:"Hands point opposite directions, making a straight line (180\u00B0)."},
+{n:83,part:4,t:"Direction",q:"If you face North and turn clockwise to face East, how many degrees did you turn?",opts:["90\u00B0","180\u00B0","270\u00B0","360\u00B0"],ans:0,ex:"North to East is 1/4 turn, or 90\u00B0."},
+{n:84,part:4,t:"Direction",q:"Facing South, you turn 180\u00B0. Which direction are you facing now?",opts:["North","East","West","South"],ans:0,ex:"A 180\u00B0 turn faces you the exact opposite way (South to North)."},
+{n:85,part:4,t:"Pizza",q:"A pizza is cut into 8 equal slices. What is the angle at the tip of each slice?",opts:["30\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:1,ex:"360\u00B0 / 8 slices = 45\u00B0 per slice."},
+{n:86,part:4,t:"Ladder",q:"A ladder leans against a vertical wall, making an angle of 75\u00B0 with the flat ground. What angle does the ladder make with the wall?",opts:["15\u00B0","25\u00B0","75\u00B0","105\u00B0"],ans:0,ex:"The wall and ground form 90\u00B0. Triangle is 90\u00B0, 75\u00B0, x. 180 - 90 - 75 = 15\u00B0."},
+{n:87,part:4,t:"Roof",q:"A builder places a roof truss (an isosceles triangle). The top peak angle must be 120\u00B0. What must the two base angles be cut to?",opts:["20\u00B0 each","30\u00B0 each","60\u00B0 each","120\u00B0 each"],ans:1,ex:"Isosceles: (180 - 120) / 2 = 30\u00B0 each."},
+{n:88,part:4,t:"Bearing",q:"A car turns right exactly 90\u00B0, goes straight, then turns left 45\u00B0. If the original bearing was 000\u00B0 (North), what is the new bearing?",opts:["045\u00B0","090\u00B0","135\u00B0","315\u00B0"],ans:0,ex:"North (000\u00B0) + Right (90\u00B0) = 090\u00B0. Left (45\u00B0) = 090 - 45 = 045\u00B0."},
+{n:89,part:4,t:"Treasure map",q:"Two friends are drawing a treasure map. Path A and Path B are parallel. Path C intersects them both. If the acute angle at Path A is 55\u00B0, what is the obtuse angle at Path B?",opts:["55\u00B0","125\u00B0","145\u00B0","180\u00B0"],ans:1,ex:"Corresponding / interior angles principle: supplementary to 55\u00B0 is 180 - 55 = 125\u00B0."},
+{n:90,part:4,t:"Pool ball",q:"A pool ball hits the cushion at an angle of 40\u00B0 and bounces off at the exact same angle. What is the angle between the two paths of the ball?",opts:["40\u00B0","80\u00B0","100\u00B0","140\u00B0"],ans:2,ex:"Angles on the straight cushion: 40 + x + 40 = 180. x = 100\u00B0."},
+{n:91,part:4,t:"Clock",q:"On a clock face, each minute mark represents how many degrees of a turn?",opts:["1\u00B0","5\u00B0","6\u00B0","10\u00B0"],ans:2,ex:"360\u00B0 / 60 minutes = 6\u00B0 per minute mark."},
+{n:92,part:4,t:"Folding chair",q:"A folding chair's legs form an X. If the top angle of the X is 110\u00B0, what is the side angle?",opts:["70\u00B0","110\u00B0","250\u00B0","290\u00B0"],ans:0,ex:"Vertically opposite is 110\u00B0. Angles on the straight line: 180 - 110 = 70\u00B0."},
+{n:93,part:4,t:"Paper cut",q:"John cuts a rectangular paper diagonally to form two triangles. What type of triangles are they?",opts:["Isosceles acute","Scalene right-angled","Equilateral","Obtuse"],ans:1,ex:"Rectangle corners are 90\u00B0, so they are right-angled. Since length and width usually differ, they are scalene."},
+{n:94,part:4,t:"Spotlight",q:"A spotlight shines in a corner of a room, creating a cone of light. If the angle of the light beam is 35\u00B0, what is the unlit angle in that 90\u00B0 corner?",opts:["45\u00B0","55\u00B0","65\u00B0","145\u00B0"],ans:1,ex:"Corner is 90\u00B0. 90 - 35 = 55\u00B0."},
+{n:95,part:4,t:"Drone",q:"A drone flies North, turns 60\u00B0 East, flies 1 km, then turns 120\u00B0 East. What shape is its flight path starting to form?",opts:["Square","Equilateral Triangle","Hexagon","Circle"],ans:2,ex:"Turning 60\u00B0 repeatedly maps out a regular hexagon (exterior angle 60\u00B0)."},
+{n:96,part:4,t:"Circle",q:"You join three points on a circle's edge to form a triangle. One of the lines passes straight through the center point (the diameter). The angle opposite to this line is always:",opts:["45\u00B0","60\u00B0","90\u00B0","180\u00B0"],ans:2,ex:"Thales's Theorem: any angle inscribed in a semicircle is a right angle (90\u00B0)."},
+{n:97,part:4,t:"Ramp",q:"A ramp has an incline of 12\u00B0. To make it steeper by doubling the slope angle, what will the new interior angle at the top of the ramp be? (Assume a right triangle)",opts:["24\u00B0","66\u00B0","78\u00B0","156\u00B0"],ans:1,ex:"New slope = 24\u00B0. Top angle = 180 - 90 - 24 = 66\u00B0."},
+{n:98,part:4,t:"Pentagon",q:"An architect draws a pentagon. They split it into 3 triangles from one corner. What is the sum of interior angles of the pentagon?",opts:["180\u00B0","360\u00B0","540\u00B0","720\u00B0"],ans:2,ex:"3 triangles x 180\u00B0 = 540\u00B0."},
+{n:99,part:4,t:"Wire",q:"If you bend a straight 18 cm wire into an equilateral triangle, what are the angles?",opts:["45\u00B0","60\u00B0","90\u00B0","Cannot be determined"],ans:1,ex:"Side length (18/3 = 6 cm) does not change angles. Equilateral angles are always 60\u00B0."},
+{n:100,part:4,t:"Kite",q:"A kite has two pairs of equal adjacent sides. The top angle is 80\u00B0 and the bottom angle is 40\u00B0. What are the other two equal side angles?",opts:["60\u00B0","100\u00B0","120\u00B0","240\u00B0"],ans:2,ex:"Kite internal sum = 360\u00B0. 360 - 80 - 40 = 240. The remaining two are equal: 240 / 2 = 120\u00B0."}
+];
+
+/* ============ DIAGRAM SVG untuk soal bergambar ============ */
+const FIGS=(()=>{
+  const S=(x1,y1,x2,y2,d)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3d2c1e" stroke-width="3" stroke-linecap="round"${d?' stroke-dasharray="7 6"':''}/>`;
+  const T=(x,y,t,a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="15" font-weight="800" fill="#a03018" font-family="Nunito,Arial,sans-serif">${t}</text>`;
+  const R=(x,y)=>`<rect x="${x}" y="${y}" width="12" height="12" fill="none" stroke="#3d2c1e" stroke-width="2"/>`;
+  const C=(cx,cy,r)=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#b09a72" stroke-width="2" stroke-dasharray="6 7"/>`;
+  const TICK=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#a03018" stroke-width="2.5" stroke-linecap="round"/>`;
+  const W=(w,h,inner)=>`<svg viewBox="0 0 ${w} ${h}">${inner}</svg>`;
+  return{
+    comp35:()=>W(220,130, S(45,105,45,18)+S(45,105,205,105)+S(45,105,168,19)+R(45,93)+T(57,52,'x','start')+T(100,97,'35\u00B0')),
+    line37:()=>W(230,120, S(15,95,215,95)+S(110,95,170,9)+T(70,82,'125\u00B0')+T(146,79,'y')),
+    turn40:()=>W(210,170, C(75,85,58)+S(75,85,75,15)+S(75,85,150,85)+S(75,85,30,139)+R(75,73)+T(112,115,'130\u00B0')+T(34,66,'z')),
+    tri42:()=>W(210,140, S(105,14,25,120)+S(25,120,185,120)+S(185,120,105,14)+T(105,44,'x')+T(55,112,'45\u00B0')+T(155,112,'65\u00B0')),
+    iso46:()=>W(210,140, S(105,12,30,122)+S(30,122,180,122)+S(180,122,105,12)+TICK(62.5,63.6,72.5,70.4)+TICK(147.5,63.6,137.5,70.4)+T(105,40,'100\u00B0')+T(56,114,'b')),
+    line50:()=>W(230,125, S(15,98,215,98)+S(115,98,115,22)+S(115,98,170,20)+R(103,86)+T(128,66,'35\u00B0','start')+T(158,84,'y')),
+    cross58:()=>W(220,150, S(25,25,195,125)+S(25,125,195,25)+T(110,48,'140\u00B0')+T(110,114,'z')),
+    ext61:()=>W(230,140, S(80,14,22,118)+S(22,118,140,118)+S(140,118,80,14)+S(140,118,212,118,true)+T(80,42,'70\u00B0')+T(47,110,'50\u00B0')+T(164,110,'x')),
+    ext72:()=>W(230,140, S(80,14,22,118)+S(22,118,140,118)+S(140,118,80,14)+S(140,118,212,118,true)+T(80,42,'60\u00B0')+T(47,110,'50\u00B0')+T(164,110,'k')),
+    alg65:()=>W(230,130, S(12,102,218,102)+S(110,102,59,41)+S(110,102,179,62)+T(74,90,'m')+T(110,56,'2m')+T(158,94,'30\u00B0'))
+  };
+})();
+
+/* Ikon SVG */
+const LAD_MINI=`<svg class="mini" viewBox="0 0 24 24" fill="none" stroke="#2f7d3b" stroke-width="2.6" stroke-linecap="round"><path d="M8 3v18M16 3v18M8 8h8M8 13h8M8 18h8"/></svg>`;
+const SNK_MINI=`<svg class="mini" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round"><path d="M19 4c-9 0-9 6 0 6c9 0 9 7 0 7H5"/><circle cx="19.5" cy="4" r="2.4" fill="#c0392b" stroke="none"/></svg>`;
+const TROPHY_MINI=`<svg class="mini" viewBox="0 0 24 24" fill="#d4a017"><path d="M7 2h10v2h4v3a5 5 0 0 1-5 5h-.4a5.5 5.5 0 0 1-2.6 2.5V17h3v3H8v-3h3v-2.5A5.5 5.5 0 0 1 8.4 12H8a5 5 0 0 1-5-5V4h4V2zm-2 4v1a3 3 0 0 0 3 3V6H5zm14 0h-3v4a3 3 0 0 0 3-3V6z"/></svg>`;
+const STAR=`<svg class="st" viewBox="0 0 24 24" fill="#e8b30f"><path d="M12 2l2.9 6.2 6.8.9-5 4.7 1.3 6.7L12 17.2 6 20.5l1.3-6.7-5-4.7 6.8-.9z"/></svg>`;
+const STAR_BADGE=`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.8.9-5 4.7 1.3 6.7L12 17.2 6 20.5l1.3-6.7-5-4.7 6.8-.9z"/></svg>`;
+const OK_ICON=`<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="#2b8a3e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>`;
+const NO_ICON=`<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="#c92a2a" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+
+const RULES_HTML=`<ol>
+<li>Masukkan nama 2 pemain, lalu tekan <b>Mulai Bermain</b>. Keduanya bergiliran melempar dadu; pion berjalan <b>satu kotak demi satu kotak</b>.</li>
+<li><b>Kotak biasa:</b> berisi soal pilihan ganda Lines, Angles &amp; Triangles. Soal muncul di kotak tujuan &mdash; pion hanya boleh maju jika dijawab <b>benar</b>. Jika gagal, pion <b>tidak jadi maju</b> dan tetap di tempat.</li>
+<li><b>Tingkat kesulitan sesuai posisi kotak:</b> kotak awal = <b>Part 1 (Easy)</b>, kotak tengah = <b>Part 2 (Medium)</b>, kotak atas = <b>Part 3 (Hard)</b> &mdash; terlihat dari warna kotaknya.</li>
+<li><b>Kotak Tangga (hijau) &amp; Kepala Ular (merah):</b> berisi soal <b>Part 4 (HOTS)</b>. Tangga: benar &rarr; <b>naik tangga</b>. Ular: salah &rarr; <b>turun ke ekor</b>; benar &rarr; aman.</li>
+<li>Jawab dengan menekan pilihan <b>A, B, C, atau D</b> (bisa juga tombol keyboard A&ndash;D atau 1&ndash;4). Kotak biasa boleh mencoba 2 kali.</li>
+<li>Harus berhenti <b>tepat di kotak 100</b>. Jika angka dadu lebih, pion memantul mundur.</li>
+<li>Pemain yang pertama mencapai kotak 100 menjadi <b>pemenang</b>!</li>
+</ol>
+<div class="tips">Tips tutor: buka <b>Kunci Jawaban</b> untuk melihat seluruh soal (dikelompokkan per Part, lengkap dengan nomor soal di dokumen assessment) beserta pembahasannya. Gunakan tombol <b>Lewati</b> pada kotak soal jika diperlukan.</div>`;
+
+/* ================= UTIL ================= */
+const $=s=>document.querySelector(s);
+const NS='http://www.w3.org/2000/svg';
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function svgEl(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+const show=el=>el.classList.remove('hidden');
+const hide=el=>el.classList.add('hidden');
+const answerText=q=>`${'ABCD'[q.ans]}) ${q.opts[q.ans]}`;
+
+/* ================= SUARA (Web Audio) ================= */
+const sfx=(()=>{let ctx=null,muted=false;
+  function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+    if(ctx&&ctx.state==='suspended')ctx.resume();return ctx;}
+  function t(f,dur,type='sine',vol=.12,when=0,glide){const c=ac();if(!c||muted)return;
+    const o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+when;
+    o.type=type;o.frequency.setValueAtTime(f,t0);
+    if(glide)o.frequency.exponentialRampToValueAtTime(glide,t0+dur);
+    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+.015);
+    g.gain.exponentialRampToValueAtTime(.001,t0+dur);
+    o.connect(g).connect(c.destination);o.start(t0);o.stop(t0+dur+.05);}
+  return{
+    toggle(){muted=!muted;return muted;},
+    dice(){for(let i=0;i<6;i++)t(300+Math.random()*500,.05,'square',.05,i*.07);},
+    step(){t(620,.06,'triangle',.09);},
+    good(){t(523,.12,'triangle',.14);t(659,.12,'triangle',.14,.1);t(784,.22,'triangle',.14,.2);},
+    bad(){t(220,.32,'sawtooth',.1,0,130);},
+    climb(){t(300,.55,'sine',.12,0,900);t(400,.5,'sine',.07,.06,1200);},
+    slide(){t(720,.75,'sine',.12,0,130);},
+    win(){[523,659,784,1047,784,1319].forEach((f,i)=>t(f,.2,'triangle',.14,i*.13));}
+  };})();
+
+/* ================= REFERENSI DOM ================= */
+const board=$('#board'),grid=$('#grid'),overlay=$('#overlay');
+const turnName=$('#turnName'),btnRoll=$('#btnRoll'),msgEl=$('#msg'),logEl=$('#log');
+const diceEl=$('#dice'),diceVal=$('#diceVal');
+const pcs=[$('#pc0'),$('#pc1')];
+const setupOvl=$('#setupOvl'),qOvl=$('#qOvl'),winOvl=$('#winOvl'),keyOvl=$('#keyOvl'),howOvl=$('#howOvl');
+const qBadge=$('#qBadge'),qTitle=$('#qTitle'),qText=$('#qText'),qFigWrap=$('#qFigWrap'),optsEl=$('#opts');
+const btnSkip=$('#btnSkip'),btnNext=$('#btnNext');
+const qFeedback=$('#qFeedback'),qExplain=$('#qExplain');
+
+/* ================= STATE ================= */
+let players=[],pawnEls=[],current=0,busy=false,started=false,lastWinner=-1;
+let qMap={},snakePaths={},cellEls={},qCtx=null;
+
+/* ================= GEOMETRI PAPAN ================= */
+function cellCenter(n){const r=Math.floor((n-1)/10),c=(n-1)%10,col=r%2?9-c:c;
+  return{x:col*100+50,y:(9-r)*100+50};}
+function zoneOf(n){return n<=33?'p1':n<=66?'p2':'p3';}
+
+function buildCells(){
+  grid.innerHTML='';cellEls={};
+  const ladS=new Set(Object.keys(LADDERS).map(Number));
+  const snkH=new Set(Object.keys(SNAKES).map(Number));
+  for(let vr=0;vr<10;vr++){const r=9-vr;
+    for(let c=0;c<10;c++){
+      const n=r%2===0?r*10+c+1:r*10+(10-c);
+      const d=document.createElement('div');
+      d.className='cell'+(((r+c)%2)?' alt':'');
+      let inner=`<span class="num">${n}</span>`;
+      if(n===100){d.classList.add('finish','spec');inner+=TROPHY_MINI+`<span class="q">FINIS</span>`;}
+      else if(n===1){d.classList.add('start','spec');inner+=`<span class="q">MULAI</span>`;}
+      else if(ladS.has(n)){d.classList.add('lad','spec');inner+=LAD_MINI+`<span class="q">Tangga HOTS<br>ke ${LADDERS[n]}</span>`;}
+      else if(snkH.has(n)){d.classList.add('snk','spec');inner+=SNK_MINI+`<span class="q">Ular HOTS<br>ke ${SNAKES[n]}</span>`;}
+      else{d.classList.add(zoneOf(n));inner+=`<span class="q">${esc(qMap[n].t)}</span>`;}
+      d.innerHTML=inner;grid.appendChild(d);cellEls[n]=d;
+    }}
+}
+
+/* Menggambar tangga (membentang dari kotak awal ke kotak akhir) */
+function drawLadder(g,a,b){
+  const A=cellCenter(a),B=cellCenter(b);
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L,R=11;
+  svgEl('line',{x1:A.x+px*R,y1:A.y+py*R,x2:B.x+px*R,y2:B.y+py*R,class:'rail'},g);
+  svgEl('line',{x1:A.x-px*R,y1:A.y-py*R,x2:B.x-px*R,y2:B.y-py*R,class:'rail'},g);
+  const n=Math.max(3,Math.floor(L/34));
+  for(let i=1;i<=n;i++){const t=i/(n+1),cx=A.x+dx*t,cy=A.y+dy*t;
+    svgEl('line',{x1:cx+px*R,y1:cy+py*R,x2:cx-px*R,y2:cy-py*R,class:'rung'},g);}
+}
+/* Menggambar ular berkelok (kepala di kotak atas, ekor di kotak bawah) */
+function smoothPath(p){let d=`M ${p[0].x} ${p[0].y}`;
+  for(let i=1;i<p.length-1;i++){const mx=(p[i].x+p[i+1].x)/2,my=(p[i].y+p[i+1].y)/2;
+    d+=` Q ${p[i].x} ${p[i].y} ${mx} ${my}`;}
+  d+=` L ${p[p.length-1].x} ${p[p.length-1].y}`;return d;}
+
+function drawSnake(g,head,tail,ci){
+  const H=cellCenter(head),T=cellCenter(tail);
+  const dx=T.x-H.x,dy=T.y-H.y,L=Math.hypot(dx,dy);
+  const ux=dx/L,uy=dy/L,px=-uy,py=ux;
+  const waves=Math.max(1,Math.round(L/220)),amp=Math.min(34,L*.12);
+  const segs=Math.max(8,Math.round(L/60)),pts=[];
+  for(let i=0;i<=segs;i++){const t=i/segs,env=Math.sin(t*Math.PI);
+    const off=amp*Math.sin(t*Math.PI*2*waves)*env;
+    pts.push({x:H.x+dx*t+px*off,y:H.y+dy*t+py*off});}
+  const d=smoothPath(pts),col=SNAKE_COLORS[ci%SNAKE_COLORS.length];
+  svgEl('path',{d,fill:'none',stroke:col.d,'stroke-width':16.5,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+  const body=svgEl('path',{d,fill:'none',stroke:col.b,'stroke-width':13,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+  svgEl('path',{d,fill:'none',stroke:'rgba(255,255,255,.5)','stroke-width':4.5,'stroke-dasharray':'1 21','stroke-linecap':'round'},g);
+  const fx=-ux,fy=-uy,ang=Math.atan2(fy,fx)*180/Math.PI;
+  const cx0=H.x+fx*8,cy0=H.y+fy*8;
+  svgEl('ellipse',{cx:cx0,cy:cy0,rx:16.5,ry:12.5,fill:col.b,stroke:col.d,'stroke-width':2.5,transform:`rotate(${ang} ${cx0} ${cy0})`},g);
+  [1,-1].forEach(s=>{const ex=cx0+px*6.5*s+fx*4,ey=cy0+py*6.5*s+fy*4;
+    svgEl('circle',{cx:ex,cy:ey,r:4,fill:'#fff'},g);
+    svgEl('circle',{cx:ex+fx*1.6,cy:ey+fy*1.6,r:1.9,fill:'#26201a'},g);});
+  const mx=cx0+fx*16,my=cy0+fy*16,tx=cx0+fx*27,ty=cy0+fy*27;
+  svgEl('path',{d:`M ${mx} ${my} L ${tx} ${ty} M ${tx} ${ty} L ${tx+px*5} ${ty+py*5} M ${tx} ${ty} L ${tx-px*5} ${ty-py*5}`,
+    stroke:'#d6336c','stroke-width':2.4,fill:'none','stroke-linecap':'round'},g);
+  svgEl('circle',{cx:T.x,cy:T.y,r:5.5,fill:col.b,stroke:col.d,'stroke-width':2},g);
+  snakePaths[head]=body;
+}
+function drawOverlay(){
+  overlay.innerHTML='';snakePaths={};
+  const gl=svgEl('g',{},overlay),gs=svgEl('g',{},overlay);
+  for(const a in LADDERS)drawLadder(gl,+a,LADDERS[a]);
+  let ci=0;for(const h in SNAKES)drawSnake(gs,+h,SNAKES[h],ci++);
+}
+
+/* ============ PENEMPATAN SOAL SESUAI ZONA KESULITAN ============ */
+function buildQuestionMap(){
+  qMap={};
+  const easy=shuffle(QUESTIONS.filter(q=>q.part===1).map(q=>({...q})));
+  const med =shuffle(QUESTIONS.filter(q=>q.part===2).map(q=>({...q})));
+  const hard=shuffle(QUESTIONS.filter(q=>q.part===3).map(q=>({...q})));
+  const hots=shuffle(QUESTIONS.filter(q=>q.part===4).map(q=>({...q})));
+  const take=(...pools)=>{for(const p of pools){if(p.length)return p.pop();}return null;};
+
+  /* 1) Kotak tangga & kepala ular <- Part 4 (HOTS) */
+  const specials=shuffle([...Object.keys(LADDERS).map(Number),...Object.keys(SNAKES).map(Number)]);
+  specials.forEach(b=>{qMap[b]=hots.pop();});
+
+  /* 2) Zona kotak biasa: bawah (2-33) easy, tengah (34-66) medium, atas (67-99) hard */
+  const zE=[],zM=[],zH=[];
+  for(let n=2;n<=99;n++){
+    if(LADDERS[n]!==undefined||SNAKES[n]!==undefined)continue;
+    if(n<=33)zE.push(n);else if(n<=66)zM.push(n);else zH.push(n);
+  }
+  zE.forEach(b=>{qMap[b]=take(easy,med,hard);});           // 27 kotak awal <- Easy
+  for(let i=0;i<3&&easy.length;i++){qMap[zM.shift()]=easy.pop();} // sisa Easy menempel di awal zona tengah (transisi halus)
+  zM.forEach(b=>{qMap[b]=take(med,hard,hots);});           // zona tengah <- Medium
+  zH.forEach(b=>{qMap[b]=take(hard,med,hots);});           // zona atas <- Hard
+}
+
+/* ================= UI ================= */
+function setMsg(t){msgEl.textContent=t;}
+function log(t,pi){const d=document.createElement('div');d.textContent=t;if(pi===0)d.className='lp0';if(pi===1)d.className='lp1';
+  logEl.prepend(d);while(logEl.children.length>40)logEl.lastChild.remove();}
+function clearLog(){logEl.innerHTML='';}
+function setFace(f){const F={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  pipEls.forEach((p,i)=>p.classList.toggle('on',F[f].includes(i)));}
+const pipEls=[];for(let i=0;i<9;i++){const p=document.createElement('span');p.className='pip';diceEl.appendChild(p);pipEls.push(p);}
+
+function updateHUD(){
+  if(!players.length)return;
+  turnName.textContent=players[current].name;
+  turnName.style.color=PCOL[current];
+  players.forEach((p,i)=>{
+    pcs[i].classList.toggle('active',i===current);
+    pcs[i].innerHTML=`<span class="pdot" style="background:${PCOL[i]}"></span>
+      <div><div class="pname">${esc(p.name)}</div>
+      <div class="pstat">Kotak: <b>${p.pos}</b> &nbsp;\u2022&nbsp; Bintang: <b>${p.stars}</b> ${STAR} &nbsp;\u2022&nbsp; Benar: <b>${p.correct}</b> soal</div></div>`;
+  });
+  btnRoll.disabled=busy||!started;
+}
+function setPawnXY(i,x,y){const e=pawnEls[i];e.style.left=(x/10)+'%';e.style.top=(y/10)+'%';e.style.transform='translate(-50%,-52%)';}
+function refreshPawns(){
+  document.querySelectorAll('.cell.occ0,.cell.occ1').forEach(c=>c.classList.remove('occ0','occ1'));
+  players.forEach((p,i)=>{
+    const c=cellCenter(p.pos);let ox=0,oy=0;
+    if(players[1-i].pos===p.pos){ox=i?15:-15;oy=i?-11:11;}
+    const e=pawnEls[i];
+    e.style.left=(c.x/10)+'%';e.style.top=(c.y/10)+'%';
+    e.style.transform=`translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`;
+    if(cellEls[p.pos])cellEls[p.pos].classList.add('occ'+i);
+  });
+}
+
+/* ================= ALUR PERMAINAN ================= */
+async function walkSteps(steps){
+  const p=players[current];
+  for(const s of steps){p.pos=s;refreshPawns();sfx.step();await wait(330);}
+}
+
+async function doRoll(){
+  if(busy||!started)return;
+  busy=true;updateHUD();
+  sfx.dice();
+  const v=ri(1,6);
+  diceEl.classList.add('rolling');
+  for(let i=0;i<9;i++){setFace(ri(1,6));await wait(75);}
+  diceEl.classList.remove('rolling');setFace(v);diceVal.textContent=v;
+  const p=players[current];
+  // jalur langkah dengan pantulan di kotak 100
+  let cur=p.pos,dir=1;const steps=[];
+  for(let i=0;i<v;i++){if(cur===100)dir=-1;cur+=dir;steps.push(cur);}
+  const dest=steps[steps.length-1];
+  const isL=LADDERS[dest]!==undefined,isS=SNAKES[dest]!==undefined;
+
+  if(isL||isS){
+    setMsg(`${p.name} melempar angka ${v}. Bergerak satu kotak demi satu kotak...`);
+    log(`${p.name} melempar dadu: ${v}`,current);
+    await wait(300);
+    await walkSteps(steps);
+    setMsg(`${p.name} berhenti di kotak ${p.pos}. Jawab soal HOTS-nya!`);
+    await wait(250);
+    openQuestion(dest,null);
+  }else if(dest===100){
+    setMsg(`${p.name} melempar angka ${v} dan melangkah menuju kotak 100...`);
+    log(`${p.name} melempar dadu: ${v}`,current);
+    await wait(300);
+    await walkSteps(steps);
+    await wait(350);
+    return doWin();
+  }else{
+    setMsg(`${p.name} melempar angka ${v}. Jawab soal kotak ${dest} dengan benar agar pion boleh maju!`);
+    log(`${p.name} melempar dadu: ${v} (tujuan: kotak ${dest})`,current);
+    await wait(600);
+    openQuestion(dest,{steps,dest});
+  }
+}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+
+function renderOptions(q){
+  optsEl.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='optBtn';b.type='button';
+    b.innerHTML=`<span class="key">${'ABCD'[i]}</span><span>${esc(o)}</span>`;
+    b.addEventListener('click',()=>pickOption(i));
+    optsEl.appendChild(b);
+  });
+}
+
+function openQuestion(sq,moveCtx){
+  const isL=LADDERS[sq]!==undefined,isS=SNAKES[sq]!==undefined;
+  const q=qMap[sq];
+  qCtx={sq,kind:isL?'ladder':isS?'snake':'normal',q,attempts:0,correct:false,done:false,moveCtx:moveCtx||null};
+  if(isL){qBadge.className='badge hots';qBadge.innerHTML=STAR_BADGE+' PART 4 \u2022 HOTS \u2022 SOAL #'+q.n+' \u2022 KOTAK TANGGA';}
+  else if(isS){qBadge.className='badge hots';qBadge.innerHTML=STAR_BADGE+' PART 4 \u2022 HOTS \u2022 SOAL #'+q.n+' \u2022 KEPALA ULAR';}
+  else{qBadge.className='badge '+(q.part===1?'p1':q.part===2?'p2':'p3');
+    qBadge.textContent=`PART ${q.part} \u2022 ${['','EASY','MEDIUM','HARD'][q.part]} \u2022 SOAL #${q.n}`;}
+  qTitle.textContent='Kotak '+sq+
+    (isL?` \u2014 Tangga menuju ${LADDERS[sq]} (HOTS)`
+    :isS?` \u2014 Ular menuju ${SNAKES[sq]} (HOTS)`
+    :qCtx.moveCtx?` \u2014 jawab benar agar pion boleh maju ke sini!`:'');
+  qText.textContent=q.q;
+  if(q.fig&&FIGS[q.fig]){qFigWrap.innerHTML=FIGS[q.fig]();show(qFigWrap);}
+  else{qFigWrap.innerHTML='';hide(qFigWrap);}
+  renderOptions(q);
+  qFeedback.className='qFeedback';qFeedback.innerHTML='';
+  qExplain.className='explain';qExplain.innerHTML='';
+  btnNext.classList.add('hidden');btnSkip.classList.remove('hidden');
+  show(qOvl);
+}
+function finishQuestion(ok,feedText){
+  qCtx.done=true;qCtx.correct=ok;
+  [...optsEl.children].forEach(b=>b.disabled=true);
+  qFeedback.className='qFeedback show '+(ok?'good':'bad');
+  qFeedback.innerHTML=(ok?OK_ICON:NO_ICON)+`<span>${feedText}</span>`;
+  qExplain.innerHTML=`<b>Pembahasan:</b> ${esc(qCtx.q.ex)}`;qExplain.classList.add('show');
+  btnSkip.classList.add('hidden');
+  btnNext.classList.remove('hidden');
+}
+function pickOption(i){
+  if(!qCtx||qCtx.done)return;
+  const btns=[...optsEl.children],b=btns[i];
+  if(!b||b.disabled)return;
+  if(i===qCtx.q.ans){
+    b.classList.add('correct');sfx.good();
+    const feed=(qCtx.kind==='normal'&&qCtx.moveCtx)?'Benar! Pionmu boleh maju!':'Benar! Kerja bagus!';
+    finishQuestion(true,feed);
+  }else{
+    qCtx.attempts++;sfx.bad();
+    b.classList.add('wrong');b.disabled=true;
+    if(qCtx.kind!=='normal'||qCtx.attempts>=2){
+      btns[qCtx.q.ans].classList.add('reveal');
+      let feed=`Belum tepat. Jawaban yang benar: <b>${answerText(qCtx.q)}</b>`;
+      if(qCtx.kind==='normal'&&qCtx.moveCtx)feed='Pion gagal maju. '+feed;
+      finishQuestion(false,feed);
+    }else{
+      qFeedback.className='qFeedback show bad';
+      qFeedback.innerHTML=NO_ICON+'<span>Belum tepat \u2014 pilih jawaban lain!</span>';
+      optsEl.classList.add('shake');setTimeout(()=>optsEl.classList.remove('shake'),600);
+    }
+  }
+}
+btnSkip.addEventListener('click',()=>{
+  if(!qCtx||qCtx.done)return;
+  [...optsEl.children].forEach(x=>x.disabled=true);
+  optsEl.children[qCtx.q.ans].classList.add('reveal');
+  let feed=`Soal dilewati tutor. Jawaban: <b>${answerText(qCtx.q)}</b>`;
+  if(qCtx.kind==='normal'&&qCtx.moveCtx)feed='Pion gagal maju. '+feed;
+  finishQuestion(false,feed);
+});
+btnNext.addEventListener('click',()=>{
+  if(!qCtx)return;hide(qOvl);
+  const ctx=qCtx;qCtx=null;resolveTurn(ctx);
+});
+
+async function resolveTurn(ctx){
+  const p=players[current],sq=ctx.sq;
+  if(ctx.kind==='ladder'){
+    if(ctx.correct){
+      p.correct++;p.stars+=2;updateHUD();
+      log(`${p.name} menjawab HOTS dengan benar! Naik tangga...`,current);
+      await climbAnim(sq,LADDERS[sq]);
+      p.pos=LADDERS[sq];refreshPawns();sfx.step();
+      log(`${p.name} NAIK TANGGA dari ${sq} ke kotak ${p.pos}!`,current);
+    }else log(`${p.name} belum berhasil menjawab, peluang naik tangga lepas. Tetap di kotak ${sq}.`,current);
+  }else if(ctx.kind==='snake'){
+    if(ctx.correct){p.correct++;p.stars+=2;log(`${p.name} menjawab HOTS dengan benar! Aman dari ular, tidak turun.`,current);}
+    else{
+      log(`${p.name} gagal menjawab... Aduh, ada ular!`,current);
+      await slideAnim(sq);
+      p.pos=SNAKES[sq];refreshPawns();
+      log(`${p.name} TURUN dari kotak ${sq} ke kotak ${p.pos}.`,current);
+    }
+  }else{
+    if(ctx.correct&&ctx.moveCtx){
+      p.correct++;p.stars++;updateHUD();
+      log(`${p.name} menjawab benar! Pion berjalan maju...`,current);
+      await wait(250);
+      await walkSteps(ctx.moveCtx.steps);
+      log(`${p.name} berhasil maju ke kotak ${p.pos}. +1 bintang.`,current);
+    }else{
+      log(`${p.name} gagal menjawab \u2014 pion gagal maju, tetap di kotak ${p.pos}.`,current);
+    }
+  }
+  updateHUD();
+  if(p.pos===100)return doWin();
+  current=1-current;busy=false;updateHUD();
+  setMsg(`Giliran ${players[current].name} \u2014 lempar dadunya!`);
+}
+
+/* Animasi memanjat tangga (membentang dari awal ke akhir tangga) */
+function climbAnim(a,b){
+  const A=cellCenter(a),B=cellCenter(b),el=pawnEls[current];
+  el.classList.add('noTrans');sfx.climb();
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L;
+  const dur=980,t0=performance.now();
+  return new Promise(res=>{(function f(now){
+    const t=Math.min(1,(now-t0)/dur);
+    const bob=Math.sin(t*Math.PI*7)*7;
+    setPawnXY(current,A.x+dx*t+px*bob,A.y+dy*t+py*bob);
+    if(t<1)requestAnimationFrame(f);else{el.classList.remove('noTrans');res();}
+  })(t0);});
+}
+/* Animasi meluncur menyusuri badan ular dari kepala ke ekor */
+function slideAnim(head){
+  const path=snakePaths[head],el=pawnEls[current];
+  el.classList.add('noTrans');sfx.slide();
+  const len=path.getTotalLength(),dur=Math.min(1600,600+len*1.1),t0=performance.now();
+  return new Promise(res=>{(function f(now){
+    const t=Math.min(1,(now-t0)/dur),e=t*t;
+    const pt=path.getPointAtLength(e*len);
+    setPawnXY(current,pt.x,pt.y);
+    if(t<1)requestAnimationFrame(f);else{el.classList.remove('noTrans');res();}
+  })(t0);});
+}
+
+function doWin(){
+  busy=true;lastWinner=current;updateHUD();
+  const p=players[current];
+  sfx.win();
+  log(`${p.name} mencapai kotak 100 \u2014 PEMENANGNYA!`,current);
+  setMsg(`Permainan selesai. ${p.name} menang!`);
+  $('#winName').textContent=p.name;
+  $('#winStats').innerHTML=players.map((pl,i)=>
+    `<div class="wrow"><span class="pdot" style="background:${PCOL[i]}"></span><b>${esc(pl.name)}</b>
+     <span>\u2022 Kotak akhir: <b>${pl.pos}</b></span><span>\u2022 Bintang: <b>${pl.stars}</b></span>
+     <span>\u2022 Benar: <b>${pl.correct}</b> soal</span>${i===current?'<span class="winTag">JUARA</span>':''}</div>`).join('');
+  spawnConfetti();show(winOvl);
+}
+function spawnConfetti(){
+  const box=$('#confetti');box.innerHTML='';
+  const cols=['#e8590c','#0ca678','#ffd43b','#d6336c','#1098ad','#2f9e44'];
+  for(let i=0;i<90;i++){const s=document.createElement('i');
+    s.style.left=Math.random()*100+'%';
+    s.style.background=pick(cols);
+    s.style.width=(7+Math.random()*7)+'px';s.style.height=(10+Math.random()*8)+'px';
+    s.style.borderRadius=Math.random()<.4?'50%':'2px';
+    s.style.animationDuration=(2.6+Math.random()*2.6)+'s';
+    s.style.animationDelay=(Math.random()*1.6)+'s';
+    box.appendChild(s);}
+}
+
+/* ================= MULAI / ULANG ================= */
+function buildKey(){
+  const secName={1:'Part 1 \u2022 Easy \u2014 Kotak Awal',2:'Part 2 \u2022 Medium \u2014 Kotak Tengah',3:'Part 3 \u2022 Hard \u2014 Kotak Atas',4:'Part 4 \u2022 HOTS \u2014 Kotak Tangga & Kepala Ular'};
+  let h='';
+  [1,2,3,4].forEach(p=>{
+    const items=Object.keys(qMap).map(Number).filter(b=>qMap[b].part===p).sort((a,b)=>a-b);
+    h+=`<details${p===1?' open':''}><summary>${secName[p]} (${items.length} kotak)</summary>`;
+    items.forEach(b=>{const q=qMap[b];
+      h+=`<div class="kitem"><b>Kotak ${b}</b> \u2014 Soal #${q.n}: ${esc(q.q)}<br><b>Jawaban: ${esc(answerText(q))}</b> <i>${esc(q.ex)}</i></div>`;});
+    h+='</details>';
+  });
+  $('#keyBody').innerHTML=h;
+}
+function startGame(){
+  const n1=($('#inName1').value||'').trim()||'Pemain 1';
+  const n2=($('#inName2').value||'').trim()||'Pemain 2';
+  players=[{name:n1.slice(0,14),pos:1,stars:0,correct:0},{name:n2.slice(0,14),pos:1,stars:0,correct:0}];
+  current=0;busy=false;started=true;lastWinner=-1;
+  pawnEls.forEach(e=>e.remove());pawnEls=[];
+  players.forEach((p,i)=>{const e=document.createElement('div');
+    e.className='pawn x'+i;e.textContent=p.name[0].toUpperCase();
+    board.appendChild(e);pawnEls.push(e);});
+  buildQuestionMap();buildCells();drawOverlay();buildKey();
+  pawnEls.forEach(e=>e.classList.add('noTrans'));
+  refreshPawns();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>pawnEls.forEach(e=>e.classList.remove('noTrans'))));
+  updateHUD();hide(setupOvl);clearLog();
+  log(`Permainan dimulai! Semua pion berdiri di kotak 1. Semangat!`);
+  setMsg(`Giliran ${players[0].name} \u2014 lempar dadunya!`);
+}
+function resetGame(){
+  players.forEach(p=>{p.pos=1;p.stars=0;p.correct=0;});
+  current=lastWinner===1?0:1; // yang kalah jalan lebih dulu di ronde baru
+  buildQuestionMap();buildCells();drawOverlay();buildKey();
+  pawnEls.forEach(e=>e.classList.add('noTrans'));
+  refreshPawns();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>pawnEls.forEach(e=>e.classList.remove('noTrans'))));
+  busy=false;started=true;clearLog();updateHUD();
+  setMsg(`Ronde baru! Giliran ${players[current].name} \u2014 lempar dadunya!`);
+  log(`Ronde baru dimulai. ${players[current].name} jalan pertama.`);
+}
+
+/* ================= EVENT ================= */
+ $('#btnStart').addEventListener('click',startGame);
+[ $('#inName1'), $('#inName2') ].forEach(inp=>inp.addEventListener('keydown',e=>{if(e.key==='Enter')startGame();}));
+btnRoll.addEventListener('click',doRoll);
+ $('#btnAgain').addEventListener('click',()=>{hide(winOvl);resetGame();});
+ $('#btnNew').addEventListener('click',()=>{hide(winOvl);started=false;busy=false;show(setupOvl);});
+ $('#btnKey').addEventListener('click',()=>show(keyOvl));
+ $('#btnKeyClose').addEventListener('click',()=>hide(keyOvl));
+ $('#btnHow').addEventListener('click',()=>show(howOvl));
+ $('#btnHowClose').addEventListener('click',()=>hide(howOvl));
+ $('#btnSound').addEventListener('click',e=>{e.target.textContent='Suara: '+(sfx.toggle()?'OFF':'ON');});
+window.addEventListener('keydown',e=>{
+  if(!qOvl.classList.contains('hidden')&&qCtx&&!qCtx.done){
+    const map={a:0,b:1,c:2,d:3,'1':0,'2':1,'3':2,'4':3};
+    const k=e.key.toLowerCase();
+    if(k in map&&map[k]<qCtx.q.opts.length){e.preventDefault();pickOption(map[k]);return;}
+    if(e.key==='Enter'&&!btnNext.classList.contains('hidden')){e.preventDefault();btnNext.click();}
+    return;
+  }
+  if(e.code==='Space'&&started&&!busy&&!anyOvl()){e.preventDefault();doRoll();}
+});
+function anyOvl(){return[setupOvl,qOvl,winOvl,keyOvl,howOvl].some(o=>!o.classList.contains('hidden'));}
+
+/* ================= INISIALISASI ================= */
+ $('#setupRules').innerHTML=RULES_HTML;
+ $('#howBody').innerHTML='<div class="rules">'+RULES_HTML+'</div>';
+buildQuestionMap();buildCells();drawOverlay();setFace(5);diceVal.textContent='\u2013';
+</script>
+</body>
+</html>

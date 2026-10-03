@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menjelajah Geometri — Review Materi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7EFDD; --card:#FFFCF3; --ink:#262A3F; --soft:#5C6076;
+  --teal:#0E8F7E; --blue:#2D5D9F; --amber:#E39A1D; --coral:#E4572E;
+  --green:#5B8C3E; --rose:#C14E75; --accent:#E4572E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Nunito',sans-serif;color:var(--ink);overflow:hidden;
+  height:100dvh;display:flex;flex-direction:column;
+  background-color:var(--paper);
+  background-image:linear-gradient(rgba(45,93,159,.075) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(45,93,159,.075) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+svg text{font-family:'Nunito',sans-serif;font-weight:700;fill:var(--ink)}
+.fnum{font-family:'Fredoka',sans-serif;font-weight:700}
+.ic{width:1.15em;height:1.15em;flex:none;vertical-align:-0.18em}
+i[data-icon]{display:inline-flex}
+
+/* ---------- kerangka ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:10px clamp(14px,3vw,28px);border-bottom:2px solid var(--ink)}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Fredoka';font-weight:600;font-size:1.02rem}
+.brand small{display:block;font-family:'Nunito';font-weight:700;font-size:.68rem;color:var(--soft);letter-spacing:.08em;text-transform:uppercase}
+.chip-game{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:2.5px solid var(--ink);
+  border-radius:999px;background:var(--amber);color:var(--ink);text-decoration:none;
+  font-family:'Fredoka';font-weight:600;font-size:.88rem;box-shadow:3px 3px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.chip-game:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+.chip-game:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.progress{height:5px;background:rgba(38,42,63,.12)}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s ease,background .5s ease}
+
+.stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;display:flex;align-items:stretch;justify-content:center;
+  padding:clamp(10px,2.2vw,24px);opacity:0;pointer-events:none;
+  transform:translateX(70px);transition:opacity .45s ease,transform .55s cubic-bezier(.22,.75,.25,1)}
+.slide.is-before{transform:translateX(-70px)}
+.slide.active{opacity:1;transform:none;pointer-events:auto;z-index:2}
+.sheet{position:relative;width:100%;max-width:1120px;max-height:100%;overflow:auto;
+  background:var(--card);border:2.5px solid var(--ink);border-radius:20px;
+  box-shadow:7px 7px 0 rgba(38,42,63,.85);
+  padding:clamp(18px,3.2vw,38px) clamp(18px,4vw,48px);
+  background-image:linear-gradient(rgba(38,42,63,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(38,42,63,.045) 1px,transparent 1px);
+  background-size:22px 22px}
+.pg{position:absolute;right:22px;bottom:12px;font-family:'Fredoka';font-size:.8rem;color:var(--soft)}
+
+.kicker{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:2px solid var(--sc,var(--ink));
+  border-radius:999px;color:var(--sc,var(--ink));font-weight:800;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;width:fit-content}
+.kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sc,var(--ink))}
+h1{font-family:'Fredoka';font-weight:600;font-size:clamp(2.1rem,4.8vw,3.4rem);line-height:1.08;margin:16px 0 14px}
+h1 em{font-style:normal;color:var(--coral);border-bottom:.13em solid var(--amber)}
+h2{font-family:'Fredoka';font-weight:600;font-size:clamp(1.45rem,2.9vw,2.15rem);margin:14px 0 6px}
+.lead{color:var(--soft);max-width:62ch;line-height:1.55}
+.lead b,.duo b,.specs b{color:var(--ink)}
+.duo{display:grid;grid-template-columns:1.03fr .97fr;gap:clamp(18px,3vw,44px);align-items:center;margin-top:16px}
+.art svg{display:block;width:100%;height:auto;max-height:46vh;margin:0 auto}
+.note{display:flex;align-items:flex-start;gap:12px;margin-top:20px;padding:13px 18px;
+  border:2px dashed var(--sc,var(--ink));border-radius:14px;font-size:.95rem;line-height:1.5}
+.note .ic{margin-top:2px}
+
+/* animasi masuk */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.slide .rev{opacity:0}
+.slide.active .rev{animation:rise .6s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:var(--d,0s)}
+
+/* tombol */
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka';font-weight:600;font-size:.98rem;
+  padding:11px 20px;border:2.5px solid var(--ink);border-radius:14px;background:var(--card);color:var(--ink);
+  cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .15s,box-shadow .15s;text-decoration:none}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn-solid{background:var(--accent);color:#fff}
+.btn-ghost{background:var(--card)}
+
+/* ---------- sampul ---------- */
+.cover{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(16px,3vw,36px);align-items:center}
+.cover-meta{margin-top:20px;font-size:.85rem;font-weight:800;color:var(--soft);letter-spacing:.05em}
+.cover-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+.march{animation:march 7s linear infinite}
+@keyframes march{to{stroke-dashoffset:-72}}
+.pulse-dot{animation:pdot 2.4s ease-in-out infinite}
+@keyframes pdot{0%,100%{r:6}50%{r:8.5}}
+
+/* ---------- peta materi ---------- */
+.toc{margin-top:20px;display:flex;flex-direction:column}
+.toc-row{display:flex;align-items:center;gap:16px;padding:12px 8px;border:0;border-bottom:2px dashed rgba(38,42,63,.28);
+  background:none;cursor:pointer;text-align:left;font-family:'Nunito';transition:background .15s}
+.toc-row:hover{background:rgba(38,42,63,.05)}
+.toc-num{font-family:'Fredoka';font-weight:700;font-size:1.25rem;min-width:44px}
+.toc-body{display:flex;flex-direction:column;gap:1px}
+.toc-body b{font-family:'Fredoka';font-weight:600;font-size:1.08rem}
+.toc-body small{color:var(--soft);font-weight:600}
+.toc-lead{flex:1;border-bottom:2px dotted rgba(38,42,63,.4);min-width:24px;transform:translateY(6px)}
+.toc-page{font-weight:800;color:var(--soft);font-size:.83rem;white-space:nowrap}
+
+/* ---------- titik ---------- */
+.pt{transition:transform .25s;transform-box:fill-box;transform-origin:center;cursor:pointer}
+.pt:hover{transform:scale(1.55)}
+.blist{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.blist li{display:flex;gap:11px;align-items:flex-start;line-height:1.5}
+.blist .b{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none}
+
+/* ---------- garis: dua panel ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:18px}
+.split>div{padding:6px clamp(12px,2vw,28px)}
+.split>div:first-child{border-right:2px dashed rgba(38,42,63,.3);padding-left:0}
+.split>div:last-child{padding-right:0}
+.sh3{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:1.15rem;margin-bottom:8px}
+.swatch{width:26px;height:5px;border-radius:3px}
+.exlist{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:.93rem;color:var(--soft);font-weight:600}
+.exlist li::before{content:"— ";font-weight:800}
+
+/* ---------- baris spesimen garis/sinar/ruas ---------- */
+.specs{margin-top:8px}
+.spec{display:grid;grid-template-columns:minmax(200px,290px) 1fr;gap:clamp(12px,2.6vw,30px);align-items:center;
+  padding:15px 0;border-bottom:2px dashed rgba(38,42,63,.22)}
+.spec:last-child{border-bottom:0}
+.spec h3{font-family:'Fredoka';font-weight:600;font-size:1.12rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.spec p{color:var(--soft);line-height:1.5;font-size:.95rem;margin-top:3px}
+.sym{height:23px;width:auto;display:inline-block}
+.tag{font-size:.68rem;font-weight:800;letter-spacing:.06em;padding:3px 10px;border-radius:999px;border:2px solid currentColor}
+
+/* ---------- flip nama garis ---------- */
+.flipgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.6vw,34px);margin-top:16px}
+.flipbox{border:2.5px solid var(--ink);border-radius:16px;padding:16px 18px;background:#fff;box-shadow:5px 5px 0 rgba(38,42,63,.14)}
+.flipbox h3{font-family:'Fredoka';font-weight:600;margin-bottom:6px}
+.flipname{font-family:'Fredoka';font-weight:700;font-size:1.5rem;margin:6px 0 4px}
+.flipmsg{font-size:.88rem;font-weight:700;padding:8px 12px;border-radius:10px;line-height:1.4}
+.flipmsg.ok{background:rgba(91,140,62,.13);color:#3F6B2A}
+.flipmsg.no{background:rgba(228,87,46,.11);color:#A93A1C}
+.flipbox .btn{margin-top:12px;padding:8px 15px;font-size:.86rem}
+#raySvg .sx1,#raySvg .sx2{transition:opacity .45s}
+#raySvg .sx2{opacity:0}
+#raySvg.alt .sx1{opacity:0}
+#raySvg.alt .sx2{opacity:1}
+
+/* ---------- posisi dua garis ---------- */
+#posSvg .pl2{transition:transform .8s cubic-bezier(.6,0,.25,1);transform-box:fill-box;transform-origin:center}
+#posSvg.p-sejajar .pl2{transform:translateY(-84px)}
+#posSvg.p-berpotongan .pl2{transform:rotate(-24deg)}
+#posSvg.p-tegakurus .pl2{transform:rotate(90deg)}
+#posSvg .p-mark{opacity:0;transition:opacity .4s .3s}
+#posSvg.p-berpotongan .p-titik,#posSvg.p-tegakurus .p-titik{opacity:1}
+#posSvg.p-tegakurus .p-siku{opacity:1}
+#posSvg .pl2line{transition:stroke-dasharray .4s}
+#posSvg.p-berimpit .pl2line{stroke-dasharray:15 11}
+.pos-list{display:flex;flex-direction:column;gap:11px;margin-top:14px}
+.pos-btn{text-align:left;padding:10px 16px;border:2.5px solid var(--ink);border-radius:13px;background:var(--card);
+  cursor:pointer;font-family:'Nunito';box-shadow:3px 3px 0 var(--ink);transition:all .18s}
+.pos-btn b{font-family:'Fredoka';font-weight:600;font-size:1.02rem;display:block}
+.pos-btn small{color:var(--soft);font-weight:600;font-size:.84rem;line-height:1.35;display:block}
+.pos-btn:hover{transform:translate(-1px,-1px)}
+.pos-btn.on{background:var(--sc);color:#fff;box-shadow:1px 1px 0 var(--ink);transform:translate(2px,2px)}
+.pos-btn.on small{color:rgba(255,255,255,.85)}
+#posCap{margin-top:10px;font-family:'Fredoka';font-weight:600;font-size:1.02rem;color:var(--sc);min-height:1.4em}
+
+/* ---------- sudut ---------- */
+.alist{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.alist li{display:flex;gap:11px;line-height:1.5;align-items:flex-start}
+.alist .b{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none}
+#angSvg{cursor:crosshair;touch-action:none;user-select:none}
+#angSvg.dragging{cursor:grabbing}
+.a-panel{display:flex;flex-direction:column;gap:12px}
+#angVal{font-family:'Fredoka';font-weight:700;font-size:3.2rem;line-height:1}
+.a-badge{display:inline-block;width:fit-content;padding:7px 16px;border-radius:999px;color:#fff;
+  font-family:'Fredoka';font-weight:600;font-size:1rem;transition:background .25s}
+.a-desc{color:var(--soft);line-height:1.5;min-height:3em}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--card);
+  font-weight:800;font-family:'Fredoka';font-size:.88rem;cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--ink);color:#fff}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px;cursor:pointer}
+.a-hint{font-size:.85rem;color:var(--soft);font-weight:700}
+
+/* ---------- tabel jenis sudut ---------- */
+.kinds{margin-top:16px;display:flex;flex-direction:column}
+.kind{display:grid;grid-template-columns:118px minmax(150px,1fr) 1.4fr;gap:clamp(10px,2vw,26px);align-items:center;
+  padding:9px 0;border-bottom:2px dashed rgba(38,42,63,.22)}
+.kind:last-child{border-bottom:0}
+.kind .kn{font-family:'Fredoka';font-weight:600;font-size:1.05rem}
+.kind .kr{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;margin-top:3px}
+.kind .kex{color:var(--soft);font-size:.9rem;line-height:1.45;font-weight:600}
+.mini-ang{width:112px;height:auto;display:block}
+
+/* ---------- kuis ---------- */
+.q-wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,40px);margin-top:14px;align-items:start}
+.q-card{border:2.5px solid var(--ink);border-radius:16px;background:#fff;padding:16px;box-shadow:5px 5px 0 rgba(38,42,63,.14)}
+.q-card svg{width:100%;height:auto;max-height:34vh;display:block}
+.qshape polygon,.qshape rect,.qshape circle,.qshape path{fill:rgba(228,87,46,.09);stroke:var(--ink);stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
+.qshape path[fill="none"]{fill:none}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:800;color:var(--soft);font-size:.85rem}
+.q-dots{display:flex;gap:6px}
+.q-dots .d{width:10px;height:10px;border-radius:50%;border:2px solid var(--ink);transition:background .2s}
+.q-dots .d.cur{background:var(--ink);transform:scale(1.2)}
+.q-dots .d.done{background:var(--green);border-color:var(--green)}
+.q-side{display:flex;flex-direction:column;gap:13px}
+.q-btns{display:flex;gap:12px;flex-wrap:wrap}
+.q-btn{flex:1;justify-content:center;font-size:1rem}
+.q-btn.chosen{background:var(--ink);color:#fff}
+.q-feed{border-radius:13px;padding:13px 16px;border:2.5px solid transparent;line-height:1.5;min-height:76px;font-size:.95rem}
+.q-feed.idle{border-color:rgba(38,42,63,.25);color:var(--soft);font-weight:700}
+.q-feed.good{background:rgba(91,140,62,.12);border-color:var(--green)}
+.q-feed.bad{background:rgba(228,87,46,.1);border-color:var(--coral)}
+.q-res{display:flex;align-items:baseline;gap:8px;justify-content:center;padding:8px 0 2px}
+.q-big{font-family:'Fredoka';font-weight:700;font-size:3.4rem;color:var(--coral)}
+.q-of{font-weight:800;color:var(--soft)}
+.q-msg{text-align:center;font-weight:700;color:var(--soft);padding:0 8px 6px}
+
+/* ---------- beraturan ---------- */
+.pill{display:inline-block;padding:9px 18px;border-radius:999px;border:2.5px solid var(--ink);
+  background:rgba(91,140,62,.15);font-weight:800;font-size:.92rem;margin-top:12px;transition:all .3s}
+.pill.irr{background:rgba(228,87,46,.12)}
+.reg-btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+#regSvg .rticks{opacity:1;transition:opacity .4s}
+#regSvg:not(.regular) .rticks{opacity:0}
+
+/* ---------- nama poligon ---------- */
+#polyArt svg{width:100%;height:auto;max-height:42vh;display:block}
+#polyArt .ppoly{fill:rgba(228,87,46,.08);stroke:var(--ink);stroke-width:4;stroke-linejoin:round}
+#polyArt .pdots circle{fill:var(--amber);stroke:var(--ink);stroke-width:2}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+#polyArt.pop svg{animation:pop .45s cubic-bezier(.3,.8,.3,1.2);transform-box:fill-box;transform-origin:center}
+.poly-name{font-family:'Fredoka';font-weight:700;font-size:clamp(2rem,4vw,3rem);line-height:1.05}
+.poly-en{display:inline-block;margin-top:8px;padding:4px 14px;border-radius:999px;background:var(--ink);color:#fff;
+  font-family:'Fredoka';font-weight:600;font-size:.92rem;letter-spacing:.05em}
+.poly-info{margin-top:12px;font-weight:800;color:var(--soft)}
+.poly-list{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pl-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border:2px solid rgba(38,42,63,.28);border-radius:11px;
+  background:var(--card);cursor:pointer;font-family:'Nunito';font-size:.86rem;transition:all .15s}
+.pl-row b{font-family:'Fredoka';min-width:20px}
+.pl-row span{font-weight:800}
+.pl-row i{color:var(--soft);font-weight:600;font-style:italic}
+.pl-row.on{border-color:var(--coral);background:rgba(228,87,46,.1)}
+
+/* ---------- bangun datar ---------- */
+#qdSvg .qd-rect{fill:rgba(91,140,62,.07);stroke:var(--ink);stroke-width:4}
+#qdSvg #qdPts,#qdSvg #qdSides{opacity:0;transition:opacity .35s}
+#qdSvg.m-pts #qdPts{opacity:1}
+#qdSvg.m-sides #qdSides{opacity:1}
+#qdSvg #qdPts circle{fill:var(--coral);stroke:#fff;stroke-width:2.5;animation:pdot 1.6s ease-in-out infinite}
+#qdSvg #qdSides line{stroke:var(--green);stroke-width:8;stroke-linecap:round;opacity:.85}
+#qdSvg .side-lbl{font-size:15px;paint-order:stroke;stroke:#FFFCF3;stroke-width:7;font-family:'Fredoka'}
+.tog-row{display:flex;gap:11px;margin-top:16px;flex-wrap:wrap}
+.tog{display:inline-flex;align-items:center;gap:9px;padding:10px 17px;border:2.5px solid var(--ink);border-radius:13px;
+  background:var(--card);font-family:'Fredoka';font-weight:600;font-size:.92rem;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:all .18s}
+.tog.on{background:var(--sc);color:#fff;box-shadow:1px 1px 0 var(--ink);transform:translate(2px,2px)}
+.cnt{display:inline-block;margin-left:12px;padding:8px 15px;border-radius:999px;background:var(--sc);color:#fff;
+  font-family:'Fredoka';font-weight:600;font-size:.88rem;opacity:0;transform:translateY(4px);transition:all .3s}
+.cnt.show{opacity:1;transform:none}
+
+/* eksplorasi ciri */
+.sh-wrap{display:grid;grid-template-columns:230px 1fr;gap:clamp(16px,2.6vw,34px);margin-top:14px;align-items:start}
+.sh-tabs{display:flex;flex-direction:column;gap:8px}
+.sh-tab{text-align:left;padding:9px 15px;border:2.5px solid var(--ink);border-radius:12px;background:var(--card);
+  font-family:'Fredoka';font-weight:600;font-size:.94rem;cursor:pointer;transition:all .15s}
+.sh-tab.on{background:var(--sc);color:#fff;box-shadow:2px 2px 0 var(--ink)}
+.sh-panel{border:2.5px solid var(--ink);border-radius:16px;background:#fff;padding:clamp(14px,2vw,24px);box-shadow:5px 5px 0 rgba(38,42,63,.14)}
+#shArt svg{width:100%;height:auto;max-height:30vh;display:block}
+#shArt rect,#shArt polygon,#shArt circle{fill:rgba(91,140,62,.08);stroke:var(--ink);stroke-width:4;stroke-linejoin:round}
+#shArt .sdots circle{fill:var(--amber);stroke:var(--ink);stroke-width:2}
+#shArt .tick{stroke:var(--ink);stroke-width:3.5;fill:none}
+#shArt .chev{stroke:var(--amber);stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#shArt .rad{stroke:var(--amber);stroke-width:3;fill:none;stroke-dasharray:6 6}
+#shTraits{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:9px}
+#shTraits li{display:flex;gap:10px;line-height:1.45;font-weight:600}
+#shTraits .ic{color:var(--green);margin-top:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.sh-panel.anim>*{animation:fadeUp .4s ease both}
+.sh-panel.anim>*:nth-child(2){animation-delay:.06s}
+
+/* ---------- penutup ---------- */
+.sumlist{list-style:none;margin:16px 0 22px;display:flex;flex-direction:column;gap:11px;max-width:72ch}
+.sumlist li{display:flex;gap:11px;align-items:flex-start;line-height:1.5}
+.sumlist .ic{color:var(--green);margin-top:3px}
+.btn-game{display:flex;align-items:center;gap:18px;width:100%;max-width:640px;padding:18px 24px;border-radius:18px;
+  background:var(--coral);color:#fff;border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);
+  text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn-game:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--ink)}
+.btn-game:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.btn-game .ic{width:2em;height:2em}
+.btn-game b{font-family:'Fredoka';font-weight:600;font-size:clamp(1.05rem,2vw,1.3rem);display:block}
+.btn-game small{font-weight:700;opacity:.9}
+.btn-game .ic:last-child{margin-left:auto}
+.game-url{margin-top:10px;font-size:.78rem;color:var(--soft);font-weight:700;word-break:break-all;max-width:640px}
+
+/* ---------- dock ---------- */
+.dock{display:flex;align-items:center;justify-content:center;gap:20px;padding:10px 16px;border-top:2px solid var(--ink)}
+.nav-b{width:46px;height:46px;border-radius:50%;border:2.5px solid var(--ink);background:var(--card);color:var(--ink);
+  box-shadow:3px 3px 0 var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.nav-b:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.nav-b:disabled{opacity:.3;box-shadow:none;cursor:default}
+.nav-b .ic{width:1.4em;height:1.4em}
+.dock-info{min-width:130px;text-align:center}
+#dockNum{font-family:'Fredoka';font-weight:700}
+#dockName{display:block;font-size:.72rem;font-weight:800;color:var(--soft);letter-spacing:.05em;text-transform:uppercase}
+
+@media (max-width:860px){
+  .duo,.cover,.flipgrid,.split,.q-wrap,.sh-wrap{grid-template-columns:1fr}
+  .split>div:first-child{border-right:0;border-bottom:2px dashed rgba(38,42,63,.3);padding:0 0 14px}
+  .split>div:last-child{padding:14px 0 0}
+  .cover-art{order:-1}
+  .cover-art svg{max-height:30vh}
+  .spec{grid-template-columns:1fr}
+  .kind{grid-template-columns:92px 1fr}
+  .kind .kex{grid-column:1/-1}
+  .mini-ang{width:86px}
+  .toc-page{display:none}
+  .toc-lead{display:none}
+  .sh-wrap{grid-template-columns:1fr}
+  .sh-tabs{flex-direction:row;flex-wrap:wrap}
+  h1{font-size:clamp(1.9rem,8vw,2.6rem)}
+  #angVal{font-size:2.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- pustaka ujung panah (dipakai semua ilustrasi) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="mk-ink"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#262A3F"/></marker>
+  <marker id="mk-blue"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#2D5D9F"/></marker>
+  <marker id="mk-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#E4572E"/></marker>
+  <marker id="mk-teal"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#0E8F7E"/></marker>
+  <marker id="mk-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#E39A1D"/></marker>
+  <marker id="mk-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#5B8C3E"/></marker>
+  <marker id="mk-rose"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.4" markerHeight="4.4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#C14E75"/></marker>
+</defs></svg>
+
+<header class="topbar">
+  <div class="brand">
+    <svg width="36" height="36" viewBox="0 0 36 36"><polygon points="18,4 33,30 3,30" fill="none" stroke="#262A3F" stroke-width="2.6" stroke-linejoin="round"/><circle cx="18" cy="4" r="3" fill="#E4572E"/><circle cx="33" cy="30" r="3" fill="#0E8F7E"/><circle cx="3" cy="30" r="3" fill="#E39A1D"/></svg>
+    <span>Menjelajah Geometri<small>Review materi · matematika</small></span>
+  </div>
+  <a class="chip-game" href="https://nandarizky0407-bot.github.io/BANGUN-DATAR2/ulartanggageometri.html" target="_blank" rel="noopener"><i data-icon="dice"></i> Game Ular Tangga</a>
+</header>
+<div class="progress"><i id="progFill"></i></div>
+
+<main class="stage" id="stage">
+
+<!-- 1 ▸ SAMPUL -->
+<section class="slide" style="--sc:#E4572E" data-title="Sampul">
+  <div class="sheet cover">
+    <div class="cover-txt">
+      <div class="kicker rev" style="--d:.05s">Review Matematika · Geometri</div>
+      <h1 class="rev" style="--d:.12s">Menjelajah <em>Geometri</em></h1>
+      <p class="lead rev" style="--d:.2s">Titik, garis, sudut, poligon, dan bangun datar — semua yang perlu kamu ingat, dijelaskan lewat gambar yang bisa kamu <b>tarik, geser, dan uji</b> sendiri.</p>
+      <div class="cover-cta rev" style="--d:.3s">
+        <button class="btn btn-solid" data-go="1">Mulai Belajar <i data-icon="chev-r"></i></button>
+        <a class="btn btn-ghost" href="https://nandarizky0407-bot.github.io/BANGUN-DATAR2/ulartanggageometri.html" target="_blank" rel="noopener"><i data-icon="dice"></i> Langsung Main Game</a>
+      </div>
+      <div class="cover-meta rev" style="--d:.4s">17 HALAMAN · MAINAN INTERAKTIF · 1 KUIS · 1 GAME</div>
+    </div>
+    <div class="cover-art rev" style="--d:.22s">
+      <svg viewBox="0 0 560 440">
+        <g stroke="rgba(38,42,63,.4)" stroke-width="2" stroke-linecap="round">
+          <path d="M520 400h14M527 393v14"/><path d="M24 410h14M31 403v14"/><path d="M540 20h14M547 13v14"/>
+        </g>
+        <rect class="march" x="42" y="54" width="86" height="86" rx="12" fill="none" stroke="#0E8F7E" stroke-width="3.5" stroke-dasharray="10 8"/>
+        <circle class="march" cx="452" cy="64" r="34" fill="none" stroke="#E39A1D" stroke-width="3.5" stroke-dasharray="4 7"/>
+        <line x1="90" y1="240" x2="350" y2="240" stroke="#2D5D9F" stroke-width="4.5" marker-end="url(#mk-blue)"/>
+        <line x1="90" y1="240" x2="228" y2="46" stroke="#E4572E" stroke-width="4.5" marker-end="url(#mk-coral)"/>
+        <path d="M170 240 A80 80 0 0 0 135.9 174.5" stroke="#E39A1D" stroke-width="4" fill="none"/>
+        <circle class="pulse-dot" cx="90" cy="240" r="7" fill="#0E8F7E"/>
+        <text x="66" y="268" font-size="20" class="fnum">O</text>
+        <polygon points="380,150 530,150 530,285" fill="rgba(228,87,46,.08)" stroke="#E4572E" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="380" cy="150" r="5.5" fill="#E4572E"/><circle cx="530" cy="150" r="5.5" fill="#E4572E"/><circle cx="530" cy="285" r="5.5" fill="#E4572E"/>
+        <line x1="46" y1="380" x2="514" y2="380" stroke="#262A3F" stroke-width="4" marker-start="url(#mk-ink)" marker-end="url(#mk-ink)"/>
+        <circle cx="170" cy="380" r="6.5" fill="#E4572E"/><text x="162" y="412" font-size="20" class="fnum">A</text>
+        <circle cx="392" cy="380" r="6.5" fill="#E4572E"/><text x="384" y="412" font-size="20" class="fnum">B</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ▸ PETA MATERI -->
+<section class="slide" style="--sc:#262A3F" data-title="Peta Materi">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Peta Perjalanan</div>
+    <h2 class="rev" style="--d:.1s">Apa saja yang akan kita ulas?</h2>
+    <p class="lead rev" style="--d:.15s">Klik salah satu bab untuk melompat langsung ke halamannya.</p>
+    <div class="toc">
+      <button class="toc-row rev" data-go="2" style="--d:.2s"><span class="toc-num" style="color:#0E8F7E">01</span><span class="toc-body"><b>Titik</b><small>lokasi tanpa ukuran, dinamai huruf besar</small></span><span class="toc-lead"></span><span class="toc-page">hal. 3</span></button>
+      <button class="toc-row rev" data-go="3" style="--d:.26s"><span class="toc-num" style="color:#2D5D9F">02</span><span class="toc-body"><b>Garis</b><small>lurus & lengkung · garis, sinar, ruas garis · menamai · sejajar s.d. berimpit</small></span><span class="toc-lead"></span><span class="toc-page">hal. 4–7</span></button>
+      <button class="toc-row rev" data-go="7" style="--d:.32s"><span class="toc-num" style="color:#E39A1D">03</span><span class="toc-body"><b>Sudut</b><small>lancip, siku-siku, tumpul, lurus, refleks</small></span><span class="toc-lead"></span><span class="toc-page">hal. 8–10</span></button>
+      <button class="toc-row rev" data-go="10" style="--d:.38s"><span class="toc-num" style="color:#E4572E">04</span><span class="toc-body"><b>Poligon</b><small>definisi · beraturan & tidak · nama 3–10 sisi</small></span><span class="toc-lead"></span><span class="toc-page">hal. 11–14</span></button>
+      <button class="toc-row rev" data-go="14" style="--d:.44s"><span class="toc-num" style="color:#5B8C3E">05</span><span class="toc-body"><b>Bangun Datar</b><small>sisi, titik sudut, dan ciri-cirinya</small></span><span class="toc-lead"></span><span class="toc-page">hal. 15–16</span></button>
+    </div>
+    <div class="note rev" style="--d:.52s">
+      <i data-icon="dice"></i>
+      <span>Di ujung perjalanan menanti <b>Game Ular Tangga Geometri</b> — pelajari dulu, lalu buktikan pemahamanmu sambil bermain! <a href="https://nandarizky0407-bot.github.io/BANGUN-DATAR2/ulartanggageometri.html" target="_blank" rel="noopener">Buka gamenya</a></span>
+    </div>
+    <span class="pg">2</span>
+  </div>
+</section>
+
+<!-- 3 ▸ TITIK -->
+<section class="slide" style="--sc:#0E8F7E" data-title="Titik">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 1 · Titik</div>
+    <h2 class="rev" style="--d:.1s">Titik: posisi tanpa ukuran</h2>
+    <div class="duo">
+      <div>
+        <p class="lead rev" style="--d:.15s">Titik menunjukkan <b>lokasi</b> atau <b>posisi</b> di bidang. Titik tidak punya panjang dan lebar — jadi, titik <b>tidak berukuran</b>.</p>
+        <ul class="blist">
+          <li class="rev" style="--d:.22s"><span class="b" style="background:#0E8F7E"></span><span>Digambar sebagai <b>bulatan kecil</b> yang biasanya diwarnai.</span></li>
+          <li class="rev" style="--d:.28s"><span class="b" style="background:#E4572E"></span><span>Dinamai dengan <b>huruf besar</b>: titik A, titik B, titik C.</span></li>
+          <li class="rev" style="--d:.34s"><span class="b" style="background:#E39A1D"></span><span>Bayangkan seperti lencana di peta: yang penting <b>di mana</b> ia berada, bukan sebesar apa bentuknya.</span></li>
+        </ul>
+        <div class="note rev" style="--d:.42s"><i data-icon="check"></i><span>Rapat-rapat, titik-titik bisa menyusun <b>garis</b> — lihat di gambar!</span></div>
+      </div>
+      <div class="art rev" style="--d:.25s">
+        <svg viewBox="0 0 480 330">
+          <path d="M112 96 L172 130" stroke="rgba(38,42,63,.5)" stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+          <text x="178" y="135" font-size="15">ini titik A</text>
+          <circle class="pt" cx="100" cy="84" r="9" fill="#0E8F7E"/><text x="116" y="72" font-size="21" class="fnum">A</text>
+          <circle class="pt" cx="252" cy="150" r="9" fill="#E4572E"/><text x="268" y="140" font-size="21" class="fnum">B</text>
+          <circle class="pt" cx="392" cy="66" r="9" fill="#E39A1D"/><text x="406" y="56" font-size="21" class="fnum">C</text>
+          <text x="426" y="238" font-size="21" class="fnum">D</text>
+          <circle class="pt" cx="412" cy="228" r="9" fill="#C14E75"/>
+          <g id="dotsline" fill="#2D5D9F"></g>
+          <text x="60" y="316" font-size="14" fill="#5C6076">deretan titik yang tersusun rapat membentuk garis</text>
+        </svg>
+      </div>
+    </div>
+    <span class="pg">3</span>
+  </div>
+</section>
+
+<!-- 4 ▸ GARIS LURUS & LENGKUNG -->
+<section class="slide" style="--sc:#2D5D9F" data-title="Garis Lurus & Lengkung">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 2 · Garis</div>
+    <h2 class="rev" style="--d:.1s">Garis: lurus dan lengkung</h2>
+    <p class="lead rev" style="--d:.15s">Garis adalah kumpulan titik yang membentang. Menurut <b>bentuknya</b>, garis terbagi dua:</p>
+    <div class="split">
+      <div class="rev" style="--d:.22s">
+        <div class="sh3"><span class="swatch" style="background:#0E8F7E"></span> Garis Lurus</div>
+        <svg viewBox="0 0 320 190">
+          <line x1="40" y1="128" x2="280" y2="62" stroke="#0E8F7E" stroke-width="4.5"/>
+          <circle cx="40" cy="128" r="7" fill="#262A3F"/><text x="24" y="154" font-size="19" class="fnum">A</text>
+          <circle cx="280" cy="62" r="7" fill="#262A3F"/><text x="290" y="56" font-size="19" class="fnum">B</text>
+        </svg>
+        <p style="color:var(--soft);line-height:1.5">Selalu searah, tidak pernah berbelok. Dari titik A ke B, <b style="color:var(--ink)">jalan paling pendek</b> adalah lewat garis lurus.</p>
+        <ul class="exlist"><li>benang yang ditarik kencang</li><li>sisi penggaris</li><li>kabel listrik yang kencang</li></ul>
+      </div>
+      <div class="rev" style="--d:.3s">
+        <div class="sh3"><span class="swatch" style="background:#E4572E"></span> Garis Lengkung</div>
+        <svg viewBox="0 0 320 190">
+          <path d="M40 128 C 100 20, 210 185, 280 62" stroke="#E4572E" stroke-width="4.5" fill="none"/>
+          <circle cx="40" cy="128" r="7" fill="#262A3F"/><text x="24" y="154" font-size="19" class="fnum">A</text>
+          <circle cx="280" cy="62" r="7" fill="#262A3F"/><text x="290" y="56" font-size="19" class="fnum">B</text>
+        </svg>
+        <p style="color:var(--soft);line-height:1.5">Ber<b style="color:var(--ink)">kelok</b> dan terus berubah arah. Antara A dan B bisa ada banyak bentuk lengkung.</p>
+        <ul class="exlist"><li>benang yang lepas</li><li>jalan berkelok di pegunungan</li><li>aliran sungai</li></ul>
+      </div>
+    </div>
+    <div class="note rev" style="--d:.4s"><i data-icon="check"></i><span>Ada juga <b>garis putus-putus</b> (garis bantu) — sering muncul saat kita menggambar dan mengukur bangun.</span></div>
+    <span class="pg">4</span>
+  </div>
+</section>
+
+<!-- 5 ▸ GARIS, SINAR, RUAS -->
+<section class="slide" style="--sc:#2D5D9F" data-title="Garis, Sinar & Ruas Garis">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 2 · Garis</div>
+    <h2 class="rev" style="--d:.1s">Garis, sinar garis & ruas garis</h2>
+    <p class="lead rev" style="--d:.15s">Awas jangan tertukar! Bedanya ada di <b>ujungnya</b>: panah, satu panah, atau tanpa panah.</p>
+    <div class="specs">
+      <div class="spec rev" style="--d:.2s">
+        <svg viewBox="0 0 300 92">
+          <line x1="20" y1="46" x2="280" y2="46" stroke="#2D5D9F" stroke-width="4.5" marker-start="url(#mk-blue)" marker-end="url(#mk-blue)"/>
+          <circle cx="88" cy="46" r="6" fill="#262A3F"/><text x="81" y="28" font-size="18" class="fnum">A</text>
+          <circle cx="212" cy="46" r="6" fill="#262A3F"/><text x="205" y="28" font-size="18" class="fnum">B</text>
+        </svg>
+        <div>
+          <h3>Garis <svg class="sym" viewBox="0 0 64 22"><line x1="6" y1="4.5" x2="58" y2="4.5" stroke="#262A3F" stroke-width="2.4" marker-start="url(#mk-ink)" marker-end="url(#mk-ink)"/><text x="32" y="19" text-anchor="middle" font-style="italic" font-size="13">AB</text></svg> <span class="tag" style="color:#2D5D9F">tak bisa diukur</span></h3>
+          <p>Membentang ke <b>dua arah</b> terus-menerus — tidak punya ujung. Karena tak terbatas, panjangnya tidak bisa diukur.</p>
+        </div>
+      </div>
+      <div class="spec rev" style="--d:.28s">
+        <svg viewBox="0 0 300 92">
+          <circle cx="46" cy="46" r="7" fill="#262A3F"/><text x="38" y="26" font-size="18" class="fnum">X</text>
+          <circle cx="180" cy="46" r="5.5" fill="#FFFCF3" stroke="#262A3F" stroke-width="3"/><text x="173" y="26" font-size="18" class="fnum">Y</text>
+          <line x1="46" y1="46" x2="282" y2="46" stroke="#E4572E" stroke-width="4.5" marker-end="url(#mk-coral)"/>
+        </svg>
+        <div>
+          <h3>Sinar garis <svg class="sym" viewBox="0 0 64 22"><line x1="6" y1="4.5" x2="58" y2="4.5" stroke="#262A3F" stroke-width="2.4" marker-end="url(#mk-ink)"/><text x="32" y="19" text-anchor="middle" font-style="italic" font-size="13">XY</text></svg> <span class="tag" style="color:#E4572E">1 titik awal</span></h3>
+          <p>Berawal dari satu titik (titik awal), lalu memanjang terus di <b>satu arah</b>. Titik awal ditulis duluan: sinar <b>XY</b>.</p>
+        </div>
+      </div>
+      <div class="spec rev" style="--d:.36s">
+        <svg viewBox="0 0 300 108">
+          <circle cx="40" cy="46" r="7" fill="#262A3F"/><text x="32" y="26" font-size="18" class="fnum">P</text>
+          <circle cx="260" cy="46" r="7" fill="#262A3F"/><text x="252" y="26" font-size="18" class="fnum">Q</text>
+          <line x1="40" y1="46" x2="260" y2="46" stroke="#5B8C3E" stroke-width="4.5"/>
+          <line x1="40" y1="82" x2="260" y2="82" stroke="#262A3F" stroke-width="2.2" marker-start="url(#mk-ink)" marker-end="url(#mk-ink)"/>
+          <text x="150" y="102" text-anchor="middle" font-size="13" fill="#5C6076">panjangnya terukur</text>
+        </svg>
+        <div>
+          <h3>Ruas garis <svg class="sym" viewBox="0 0 64 22"><line x1="6" y1="4.5" x2="58" y2="4.5" stroke="#262A3F" stroke-width="2.4"/><text x="32" y="19" text-anchor="middle" font-style="italic" font-size="13">PQ</text></svg> <span class="tag" style="color:#5B8C3E">bisa diukur</span></h3>
+          <p>Punya <b>dua titik ujung</b>, jadi panjangnya bisa diukur dengan penggaris — seperti sisi bangun datar.</p>
+        </div>
+      </div>
+    </div>
+    <span class="pg">5</span>
+  </div>
+</section>
+
+<!-- 6 ▸ MENAMAI GARIS -->
+<section class="slide" style="--sc:#2D5D9F" data-title="Menamai Garis">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 2 · Garis</div>
+    <h2 class="rev" style="--d:.1s">Menamai garis & sinar</h2>
+    <p class="lead rev" style="--d:.15s">Nama garis diambil dari <b>dua titik yang dilaluinya</b> — atau diberi satu huruf kecil, misalnya garis <i>m</i>. Tapi aturannya beda untuk garis dan sinar. Coba tekan tombolnya!</p>
+    <div class="flipgrid">
+      <div class="flipbox rev" style="--d:.22s">
+        <h3 style="color:#2D5D9F">Garis</h3>
+        <svg viewBox="0 0 320 120">
+          <line x1="30" y1="60" x2="290" y2="60" stroke="#2D5D9F" stroke-width="4.5" marker-start="url(#mk-blue)" marker-end="url(#mk-blue)"/>
+          <circle cx="95" cy="60" r="7" fill="#262A3F"/><text x="88" y="38" font-size="19" class="fnum">A</text>
+          <circle cx="225" cy="60" r="7" fill="#262A3F"/><text x="218" y="38" font-size="19" class="fnum">B</text>
+        </svg>
+        <div class="flipname" id="linName">garis AB</div>
+        <div class="flipmsg ok">Sama saja! A dan B sama-sama di garis itu, urutannya bebas: <b>garis AB = garis BA</b>.</div>
+        <button class="btn" id="linBtn">Tulis sebagai garis BA</button>
+      </div>
+      <div class="flipbox rev" style="--d:.3s">
+        <h3 style="color:#E4572E">Sinar garis</h3>
+        <svg id="raySvg" viewBox="0 0 320 120">
+          <g class="sx1">
+            <circle cx="52" cy="60" r="8" fill="#262A3F"/><text x="42" y="38" font-size="19" class="fnum">X</text>
+            <circle cx="170" cy="60" r="6" fill="#FFFCF3" stroke="#262A3F" stroke-width="3"/><text x="162" y="38" font-size="19" class="fnum">Y</text>
+            <line x1="52" y1="60" x2="302" y2="60" stroke="#E4572E" stroke-width="4.5" marker-end="url(#mk-coral)"/>
+            <text x="150" y="100" font-size="13" fill="#5C6076">titik awal di X →</text>
+          </g>
+          <g class="sx2">
+            <circle cx="170" cy="60" r="8" fill="#262A3F"/><text x="162" y="38" font-size="19" class="fnum">Y</text>
+            <circle cx="52" cy="60" r="6" fill="#FFFCF3" stroke="#262A3F" stroke-width="3"/><text x="42" y="38" font-size="19" class="fnum">X</text>
+            <line x1="170" y1="60" x2="14" y2="60" stroke="#E4572E" stroke-width="4.5" marker-end="url(#mk-coral)"/>
+            <text x="96" y="100" font-size="13" fill="#5C6076">← titik awal di Y</text>
+          </g>
+        </svg>
+        <div class="flipname" id="rayName">sinar XY</div>
+        <div class="flipmsg no">Berbeda! Sinar XY berawal di X; sinar YX berawal di Y. <b>Titik awal selalu ditulis duluan.</b></div>
+        <button class="btn" id="rayBtn">Tulis sebagai sinar YX</button>
+      </div>
+    </div>
+    <div class="note rev" style="--d:.4s"><i data-icon="check"></i><span>Ruas garis juga bebas urutannya: <b>ruas garis PQ = ruas garis QP</b>, karena ujungnya jelas dua-duanya.</span></div>
+    <span class="pg">6</span>
+  </div>
+</section>
+
+<!-- 7 ▸ POSISI DUA GARIS -->
+<section class="slide" style="--sc:#2D5D9F" data-title="Posisi Dua Garis">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 2 · Garis</div>
+    <h2 class="rev" style="--d:.1s">Dua garis bisa bertemu… atau tidak</h2>
+    <div class="duo" style="align-items:start">
+      <div class="art rev" style="--d:.18s">
+        <svg id="posSvg" class="p-sejajar no-swipe" viewBox="0 0 560 340">
+          <g transform="translate(280,170)">
+            <g class="pl1">
+              <line x1="-235" y1="0" x2="235" y2="0" stroke="#2D5D9F" stroke-width="5" marker-start="url(#mk-blue)" marker-end="url(#mk-blue)"/>
+              <text x="248" y="-12" font-size="20" fill="#2D5D9F" class="fnum">g</text>
+            </g>
+            <g class="pl2">
+              <line class="pl2line" x1="-235" y1="0" x2="235" y2="0" stroke="#E4572E" stroke-width="5" marker-start="url(#mk-coral)" marker-end="url(#mk-coral)"/>
+              <text x="248" y="-12" font-size="20" fill="#E4572E" class="fnum">h</text>
+            </g>
+            <circle class="p-mark p-titik" r="7.5" fill="#E39A1D" stroke="#fff" stroke-width="3"/>
+            <path class="p-mark p-siku" d="M26 0 L26 -26 L0 -26" fill="none" stroke="#0E8F7E" stroke-width="3.5"/>
+          </g>
+        </svg>
+        <div id="posCap">SEJAJAR — jaraknya selalu sama, tak akan pernah bertemu</div>
+      </div>
+      <div>
+        <div class="pos-list rev" style="--d:.24s">
+          <button class="pos-btn on" data-pos="sejajar"><b>Sejajar</b><small>Jaraknya selalu sama — diteruskan sampai kapan pun tidak akan bertemu.</small></button>
+          <button class="pos-btn" data-pos="berpotongan"><b>Berpotongan</b><small>Bersilangan dan bertemu di satu <b>titik potong</b>.</small></button>
+          <button class="pos-btn" data-pos="tegakurus"><b>Tegak lurus</b><small>Berpotongan membentuk <b>sudut siku-siku (90°)</b> — ditandai kotak kecil.</small></button>
+          <button class="pos-btn" data-pos="berimpit"><b>Berimpit</b><small>Menempati tempat yang sama persis — semua titiknya bertumpuk.</small></button>
+        </div>
+      </div>
+    </div>
+    <span class="pg">7</span>
+  </div>
+</section>
+
+<!-- 8 ▸ APA ITU SUDUT -->
+<section class="slide" style="--sc:#E39A1D" data-title="Apa itu Sudut?">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 3 · Sudut</div>
+    <h2 class="rev" style="--d:.1s">Apa itu sudut?</h2>
+    <div class="duo">
+      <div>
+        <p class="lead rev" style="--d:.15s">Sudut terbentuk ketika <b>dua sinar garis</b> bertemu di satu titik. Bayangkan membuka gunting: makin lebar dibuka, makin besar sudutnya.</p>
+        <ul class="alist">
+          <li class="rev" style="--d:.22s"><span class="b" style="background:#2D5D9F"></span><span><b>Kaki sudut</b> — kedua sinar garis itu.</span></li>
+          <li class="rev" style="--d:.27s"><span class="b" style="background:#0E8F7E"></span><span><b>Titik sudut</b> — titik tempat kedua kaki bertemu.</span></li>
+          <li class="rev" style="--d:.32s"><span class="b" style="background:#E4572E"></span><span>Besarnya diukur dengan <b>busur derajat</b>, satuannya <b>derajat (°)</b>.</span></li>
+          <li class="rev" style="--d:.37s"><span class="b" style="background:#E39A1D"></span><span>Dinamai tiga huruf dengan titik sudut <b>di tengah</b>: <b>sudut ABC</b> — boleh disingkat <b>sudut B</b>.</span></li>
+        </ul>
+      </div>
+      <div class="art rev" style="--d:.25s">
+        <svg viewBox="0 0 460 330">
+          <line x1="80" y1="280" x2="430" y2="280" stroke="#2D5D9F" stroke-width="5" marker-end="url(#mk-blue)"/>
+          <line x1="80" y1="280" x2="312" y2="44" stroke="#E4572E" stroke-width="5" marker-end="url(#mk-coral)"/>
+          <path d="M158 280 A78 78 0 0 0 134.8 224.4" stroke="#E39A1D" stroke-width="4.5" fill="none"/>
+          <circle cx="80" cy="280" r="9" fill="#0E8F7E"/>
+          <text x="52" y="306" font-size="21" class="fnum">B</text>
+          <text x="424" y="308" font-size="21" class="fnum">A</text>
+          <text x="322" y="46" font-size="21" class="fnum">C</text>
+          <text x="140" y="212" font-size="22" fill="#E39A1D" class="fnum">sudut ABC</text>
+          <path d="M356 176 L302 278" stroke="rgba(38,42,63,.5)" stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+          <text x="330" y="164" font-size="14" fill="#5C6076">kaki sudut (sinar garis)</text>
+          <path d="M164 322 L92 292" stroke="rgba(38,42,63,.5)" stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+          <text x="140" y="336" font-size="14" fill="#5C6076">titik sudut</text>
+          <text x="216" y="250" font-size="13" fill="#5C6076">busur menandai sudutnya</text>
+        </svg>
+      </div>
+    </div>
+    <span class="pg">8</span>
+  </div>
+</section>
+
+<!-- 9 ▸ MAINKAN SUDUT -->
+<section class="slide" style="--sc:#E39A1D" data-title="Mainkan: Sudut">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 3 · Sudut</div>
+    <h2 class="rev" style="--d:.1s">Mainkan: berapa besar sudutnya?</h2>
+    <div class="duo" style="align-items:start">
+      <div class="rev" style="--d:.16s">
+        <svg id="angSvg" class="no-swipe" viewBox="0 0 520 400">
+          <g id="angTicks" stroke="rgba(38,42,63,.3)" stroke-width="2.5"></g>
+          <line x1="70" y1="330" x2="390" y2="330" stroke="#2D5D9F" stroke-width="5" marker-end="url(#mk-blue)"/>
+          <line id="angRay" x1="70" y1="330" x2="230" y2="53" stroke="#E4572E" stroke-width="5" marker-end="url(#mk-coral)"/>
+          <path id="angArc" fill="none" stroke-width="5"/>
+          <path id="angSq" d="M96 330 L96 304 L70 304" fill="none" stroke="#0E8F7E" stroke-width="3.5" opacity="0" style="transition:opacity .2s"/>
+          <text id="angDeg" text-anchor="middle" font-size="30"></text>
+          <circle cx="70" cy="330" r="8" fill="#262A3F"/>
+          <text x="44" y="354" font-size="19" class="fnum">O</text>
+          <circle id="angHandle" r="15" fill="#E4572E" stroke="#FFFCF3" stroke-width="4" style="cursor:grab"/>
+        </svg>
+        <input type="range" id="angRange" min="1" max="359" value="60" aria-label="Besarnya sudut dalam derajat">
+      </div>
+      <div class="a-panel rev" style="--d:.24s">
+        <div>
+          <div id="angVal">60°</div>
+          <span class="a-badge" id="angBadge">Sudut Lancip</span>
+        </div>
+        <p class="a-desc" id="angDesc">Lebih kecil dari 90° — tampak runcing.</p>
+        <div>
+          <div class="a-hint" style="margin-bottom:7px">Coba sudut spesial:</div>
+          <div class="chips">
+            <button class="chip ang-pre" data-ang="45">45°</button>
+            <button class="chip ang-pre" data-ang="90">90°</button>
+            <button class="chip ang-pre" data-ang="120">120°</button>
+            <button class="chip ang-pre" data-ang="180">180°</button>
+            <button class="chip ang-pre" data-ang="270">270°</button>
+          </div>
+        </div>
+        <p class="a-hint">Tarik titik koral di ujung sinar, atau tarik langsung di area gambar — nama sudutnya ikut berubah!</p>
+      </div>
+    </div>
+    <span class="pg">9</span>
+  </div>
+</section>
+
+<!-- 10 ▸ LIMA JENIS SUDUT -->
+<section class="slide" style="--sc:#E39A1D" data-title="Lima Jenis Sudut">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 3 · Sudut</div>
+    <h2 class="rev" style="--d:.1s">Lima jenis sudut</h2>
+    <p class="lead rev" style="--d:.15s">Simpan tabel ini di ingatan — besar sudut menentukan namanya.</p>
+    <div class="kinds" id="kindList"></div>
+    <span class="pg">10</span>
+  </div>
+</section>
+
+<!-- 11 ▸ POLIGON -->
+<section class="slide" style="--sc:#E4572E" data-title="Poligon">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 4 · Poligon</div>
+    <h2 class="rev" style="--d:.1s">Poligon: sisi lurus, tertutup</h2>
+    <div class="duo">
+      <div>
+        <p class="lead rev" style="--d:.15s">Poligon adalah bangun datar <b>tertutup</b> yang seluruh sisinya <b>ruas garis lurus</b>. Namanya dari bahasa Yunani: <i>poly</i> = banyak, <i>gon</i> = sudut.</p>
+        <ul class="blist">
+          <li class="rev" style="--d:.22s"><span class="b" style="background:#5B8C3E"></span><span><b>Semua sisinya lurus</b> — berupa ruas garis.</span></li>
+          <li class="rev" style="--d:.27s"><span class="b" style="background:#5B8C3E"></span><span><b>Tertutup rapat</b> — tidak ada celah; berkeliling kembali ke titik awal.</span></li>
+          <li class="rev" style="--d:.32s"><span class="b" style="background:#E4572E"></span><span>Ada sisi <b>lengkung</b> (misalnya lingkaran)? <b>Bukan poligon.</b></span></li>
+          <li class="rev" style="--d:.37s"><span class="b" style="background:#E4572E"></span><span>Bentuknya <b>terbuka</b> (belum menutup daerah)? <b>Bukan poligon.</b></span></li>
+        </ul>
+      </div>
+      <div class="art rev" style="--d:.25s">
+        <svg viewBox="0 0 460 340">
+          <polygon points="250,50 373.6,139.8 326.4,285.2 173.6,285.2 126.4,139.8" fill="rgba(228,87,46,.08)" stroke="#262A3F" stroke-width="4" stroke-linejoin="round"/>
+          <g fill="#0E8F7E"><circle cx="250" cy="50" r="7"/><circle cx="373.6" cy="139.8" r="7"/><circle cx="326.4" cy="285.2" r="7"/><circle cx="173.6" cy="285.2" r="7"/><circle cx="126.4" cy="139.8" r="7"/></g>
+        </svg>
+        <div class="chips" style="justify-content:center;margin-top:6px">
+          <span class="chip" style="cursor:default">5 sisi lurus</span>
+          <span class="chip" style="cursor:default">5 titik sudut</span>
+          <span class="chip" style="cursor:default">tertutup rapat</span>
+        </div>
+      </div>
+    </div>
+    <span class="pg">11</span>
+  </div>
+</section>
+
+<!-- 12 ▸ KUIS POLIGON -->
+<section class="slide" style="--sc:#E4572E" data-title="Kuis: Poligon?">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 4 · Poligon</div>
+    <h2 class="rev" style="--d:.1s">Kuis: poligon atau bukan?</h2>
+    <div class="q-wrap">
+      <div class="rev" style="--d:.16s">
+        <div class="q-card" id="qShape"></div>
+        <div class="q-meta"><span id="qMeta">Bentuk 1 dari 6</span><span class="q-dots" id="qDots"></span><span id="qScore">Skor 0</span></div>
+      </div>
+      <div class="q-side rev" style="--d:.24s">
+        <div class="q-btns" id="qBtns">
+          <button class="btn btn-solid q-btn" id="qYes"><i data-icon="check"></i> Poligon</button>
+          <button class="btn q-btn" id="qNo"><i data-icon="x"></i> Bukan Poligon</button>
+        </div>
+        <div class="q-feed idle" id="qFeed">Perhatikan bentuknya: apakah tertutup? apakah semua sisinya lurus?</div>
+        <button class="btn" id="qNext" hidden>Lanjut</button>
+      </div>
+    </div>
+    <span class="pg">12</span>
+  </div>
+</section>
+
+<!-- 13 ▸ BERATURAN / TIDAK -->
+<section class="slide" style="--sc:#E4572E" data-title="Beraturan & Tidak">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 4 · Poligon</div>
+    <h2 class="rev" style="--d:.1s">Beraturan atau tidak beraturan?</h2>
+    <div class="duo" style="align-items:start">
+      <div class="rev" style="--d:.16s">
+        <svg id="regSvg" class="regular no-swipe" viewBox="0 0 420 372" style="width:100%;height:auto;max-height:44vh;display:block">
+          <polygon id="regPoly" fill="rgba(228,87,46,.08)" stroke="#262A3F" stroke-width="4" stroke-linejoin="round"/>
+          <g id="regTicks" class="rticks" stroke="#262A3F" stroke-width="3"></g>
+          <g fill="#E39A1D" stroke="#262A3F" stroke-width="2" id="regDots"></g>
+        </svg>
+        <span class="pill" id="regStatus">Poligon Beraturan — semua sisi & sudut sama</span>
+        <div class="reg-btns">
+          <button class="btn btn-solid" id="btnShuffle"><i data-icon="shuffle"></i> Acak bentuknya!</button>
+          <button class="btn" id="btnFix"><i data-icon="refresh"></i> Rapikan kembali</button>
+        </div>
+      </div>
+      <div>
+        <p class="lead rev" style="--d:.2s">Poligon <b>beraturan</b>: semua sisi <b>sama panjang</b> dan semua sudut <b>sama besar</b> — seperti gambar di samping. Tanda garis kecil di tiap sisi menunjukkan bahwa sisinya sama.</p>
+        <p class="lead rev" style="--d:.26s" style="margin-top:10px">Poligon <b>tidak beraturan</b>: sisi atau sudutnya <b>tidak sama</b>. Tekan "Acak bentuknya!" dan lihat tanda itu menghilang.</p>
+        <ul class="blist">
+          <li class="rev" style="--d:.32s"><span class="b" style="background:#5B8C3E"></span><span>Persegi → <b>beraturan</b> (4 sisi sama panjang).</span></li>
+          <li class="rev" style="--d:.37s"><span class="b" style="background:#E4572E"></span><span>Persegi panjang → <b>tidak beraturan</b> — sudutnya sama, tapi sisinya tidak sama panjang.</span></li>
+          <li class="rev" style="--d:.42s"><span class="b" style="background:#5B8C3E"></span><span>Segitiga sama sisi → <b>beraturan</b>; segitiga sembarang → tidak.</span></li>
+        </ul>
+      </div>
+    </div>
+    <span class="pg">13</span>
+  </div>
+</section>
+
+<!-- 14 ▸ NAMA POLIGON -->
+<section class="slide" style="--sc:#E4572E" data-title="Nama-nama Poligon">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 4 · Poligon</div>
+    <h2 class="rev" style="--d:.1s">Nama-nama poligon: dari 3 sampai 10 sisi</h2>
+    <p class="lead rev" style="--d:.15s">Namanya mengikuti <b>jumlah sisinya</b>. Geser penggesernya!</p>
+    <div class="duo" style="align-items:start">
+      <div class="rev" style="--d:.2s">
+        <div id="polyArt"></div>
+        <input type="range" id="polyRange" min="3" max="10" value="6" aria-label="Jumlah sisi poligon">
+      </div>
+      <div>
+        <div class="rev" style="--d:.26s">
+          <div class="poly-name" id="polyName">Segienam</div>
+          <span class="poly-en" id="polyEn">Hexagon</span>
+          <div class="poly-info" id="polyInfo">6 sisi · 6 titik sudut · 6 sudut</div>
+        </div>
+        <div class="poly-list rev" id="polyList" style="--d:.32s"></div>
+      </div>
+    </div>
+    <span class="pg">14</span>
+  </div>
+</section>
+
+<!-- 15 ▸ SISI & TITIK SUDUT -->
+<section class="slide" style="--sc:#5B8C3E" data-title="Sisi & Titik Sudut">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 5 · Bangun Datar</div>
+    <h2 class="rev" style="--d:.1s">Sisi & titik sudut</h2>
+    <div class="duo">
+      <div>
+        <p class="lead rev" style="--d:.15s">Setiap bangun datar dibangun oleh dua hal: <b>sisi</b> dan <b>titik sudut</b>.</p>
+        <ul class="blist">
+          <li class="rev" style="--d:.2s"><span class="b" style="background:#5B8C3E"></span><span><b>Sisi</b> — ruas garis yang menjadi pembatas bagian dalam bangun.</span></li>
+          <li class="rev" style="--d:.25s"><span class="b" style="background:#E4572E"></span><span><b>Titik sudut</b> — titik tempat dua sisi bertemu.</span></li>
+          <li class="rev" style="--d:.3s"><span class="b" style="background:#E39A1D"></span><span>Nama bangun ditulis memakai huruf di titik sudutnya: persegi panjang <b>ABCD</b>.</span></li>
+        </ul>
+        <div class="tog-row rev" style="--d:.38s">
+          <button class="tog" id="btnPts"><i data-icon="check"></i> Tunjukkan titik sudut</button>
+          <button class="tog" id="btnSides"><i data-icon="check"></i> Tunjukkan sisi</button>
+        </div>
+        <div style="margin-top:12px">
+          <span class="cnt" id="chipPts">4 titik sudut</span>
+          <span class="cnt" id="chipSides">4 sisi</span>
+        </div>
+      </div>
+      <div class="art rev" style="--d:.22s">
+        <svg id="qdSvg" viewBox="0 0 460 300">
+          <rect class="qd-rect" x="70" y="55" width="330" height="190"/>
+          <g id="qdSides">
+            <line x1="70" y1="55" x2="400" y2="55"/><line x1="400" y1="55" x2="400" y2="245"/>
+            <line x1="400" y1="245" x2="70" y2="245"/><line x1="70" y1="245" x2="70" y2="55"/>
+            <text class="side-lbl" x="222" y="47">sisi AB</text>
+            <text class="side-lbl" x="412" y="154">sisi BC</text>
+            <text class="side-lbl" x="222" y="272">sisi CD</text>
+            <text class="side-lbl" x="2" y="154">sisi DA</text>
+          </g>
+          <g id="qdPts">
+            <circle cx="70" cy="55" r="9"/><circle cx="400" cy="55" r="9"/>
+            <circle cx="400" cy="245" r="9"/><circle cx="70" cy="245" r="9"/>
+          </g>
+          <g font-size="20" class="fnum">
+            <text x="48" y="42">A</text><text x="410" y="42">B</text>
+            <text x="410" y="272">C</text><text x="48" y="272">D</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <span class="pg">15</span>
+  </div>
+</section>
+
+<!-- 16 ▸ CIRI-CIRI BANGUN DATAR -->
+<section class="slide" style="--sc:#5B8C3E" data-title="Ciri-ciri Bangun Datar">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Bab 5 · Bangun Datar</div>
+    <h2 class="rev" style="--d:.1s">Ciri-ciri bangun datar</h2>
+    <p class="lead rev" style="--d:.15s">Pilih bangun di kiri, kenali sisi dan titik sudutnya.</p>
+    <div class="sh-wrap">
+      <div class="sh-tabs rev" id="shTabs" style="--d:.2s"></div>
+      <div class="sh-panel rev" id="shPanel" style="--d:.26s">
+        <div id="shArt"></div>
+        <ul id="shTraits"></ul>
+      </div>
+    </div>
+    <span class="pg">16</span>
+  </div>
+</section>
+
+<!-- 17 ▸ PENUTUP -->
+<section class="slide" style="--sc:#E4572E" data-title="Selesai & Game">
+  <div class="sheet">
+    <div class="kicker rev" style="--d:.05s">Selesai · Saatnya Bermain</div>
+    <h2 class="rev" style="--d:.1s">Kamu sudah mengulas semuanya!</h2>
+    <ul class="sumlist">
+      <li class="rev" style="--d:.16s"><i data-icon="check"></i><span><b>Titik</b> — tak berukuran, dinamai huruf besar.</span></li>
+      <li class="rev" style="--d:.21s"><i data-icon="check"></i><span><b>Garis</b> tak berujung dua arah; <b>sinar</b> satu titik awal; <b>ruas garis</b> dua ujung dan terukur.</span></li>
+      <li class="rev" style="--d:.26s"><i data-icon="check"></i><span><b>Sudut</b> — lancip, siku-siku, tumpul, lurus, dan refleks.</span></li>
+      <li class="rev" style="--d:.31s"><i data-icon="check"></i><span><b>Poligon</b> — tertutup & semua sisi lurus; namanya mengikuti jumlah sisi (triangle … decagon).</span></li>
+      <li class="rev" style="--d:.36s"><i data-icon="check"></i><span><b>Bangun datar</b> — kenali sisi dan titik sudutnya untuk menentukan cirinya.</span></li>
+    </ul>
+    <a class="btn-game rev" style="--d:.44s" href="https://nandarizky0407-bot.github.io/BANGUN-DATAR2/ulartanggageometri.html" target="_blank" rel="noopener">
+      <i data-icon="dice"></i>
+      <span><b>Mainkan Game Ular Tangga Geometri</b><small>uji pemahamanmu sambil bermain — klik untuk membuka game</small></span>
+      <i data-icon="ext"></i>
+    </a>
+    <div class="game-url rev" style="--d:.5s">nandarizky0407-bot.github.io/BANGUN-DATAR2/ulartanggageometri.html</div>
+    <div class="rev" style="--d:.56s;margin-top:20px">
+      <button class="btn btn-ghost" data-go="0"><i data-icon="refresh"></i> Ulangi dari awal</button>
+    </div>
+    <span class="pg">17</span>
+  </div>
+</section>
+
+</main>
+
+<footer class="dock">
+  <button class="nav-b" id="btnPrev" aria-label="Slide sebelumnya"><i data-icon="chev-l"></i></button>
+  <div class="dock-info"><span id="dockNum">01 / 17</span><span id="dockName">Sampul</span></div>
+  <button class="nav-b" id="btnNext" aria-label="Slide berikutnya"><i data-icon="chev-r"></i></button>
+</footer>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+/* ---------- ikon (set path ringan, tanpa CDN) ---------- */
+const ICONS={
+ 'chev-l':'<path d="m15 18-6-6 6-6"/>',
+ 'chev-r':'<path d="m9 18 6-6-6-6"/>',
+ 'check':'<path d="M20 6 9 17l-5-5"/>',
+ 'x':'<path d="M18 6 6 18M6 6l12 12"/>',
+ 'ext':'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+ 'refresh':'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+ 'shuffle':'<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.8-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.7 2.1l.4.5"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/>',
+ 'dice':'<rect x="3" y="3" width="18" height="18" rx="3.5"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/>'
+};
+function mountIcons(root=document){
+  root.querySelectorAll('[data-icon]').forEach(el=>{
+    el.innerHTML=`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[el.dataset.icon]||''}</svg>`;
+  });
+}
+
+/* ---------- manajemen slide ---------- */
+const slides=$$('.slide'), stage=$('#stage'),
+      progFill=$('#progFill'), btnPrev=$('#btnPrev'), btnNext=$('#btnNext'),
+      dockNum=$('#dockNum'), dockName=$('#dockName');
+let cur=0;
+
+function layout(){slides.forEach((s,i)=>{s.classList.toggle('is-before',i<cur);s.classList.toggle('is-after',i>cur);});}
+function updateChrome(){
+  const c=getComputedStyle(slides[cur]).getPropertyValue('--sc').trim()||'#E4572E';
+  document.documentElement.style.setProperty('--accent',c);
+  progFill.style.width=((cur+1)/slides.length*100)+'%';
+  dockNum.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  dockName.textContent=slides[cur].dataset.title||'';
+  btnPrev.disabled=cur===0; btnNext.disabled=cur===slides.length-1;
+}
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,idx)=>s.classList.toggle('active',idx===cur));
+  layout(); updateChrome();
+}
+btnPrev.addEventListener('click',()=>go(cur-1));
+btnNext.addEventListener('click',()=>go(cur+1));
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]'); if(g){go(+g.dataset.go);}
+});
+addEventListener('keydown',e=>{
+  const t=e.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA'||t==='BUTTON'||t==='A')return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(cur+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+  else if(e.key==='Home'){go(0);} else if(e.key==='End'){go(slides.length-1);}
+});
+let tx0=0,ty0=0,tgt=null;
+stage.addEventListener('touchstart',e=>{const t=e.touches[0];tx0=t.clientX;ty0=t.clientY;tgt=e.target;},{passive:true});
+stage.addEventListener('touchend',e=>{
+  const t=e.changedTouches[0],dx=t.clientX-tx0,dy=t.clientY-ty0;
+  if(Math.abs(dx)>80&&Math.abs(dy)<60&&tgt&&!tgt.closest('.no-swipe')){dx<0?go(cur+1):go(cur-1);}
+},{passive:true});
+
+/* ---------- titik: deretan titik membentuk garis ---------- */
+(function(){
+  const g=document.getElementById('dotsline'); if(!g)return;
+  let s=''; for(let i=0;i<25;i++) s+=`<circle cx="${60+i*15}" cy="286" r="3.4"/>`;
+  g.innerHTML=s;
+})();
+
+/* ---------- menamai garis: flip ---------- */
+(function(){
+  const lb=$('#linBtn'); if(!lb)return;
+  let lin=0;
+  lb.addEventListener('click',()=>{lin^=1;$('#linName').textContent=lin?'garis BA':'garis AB';
+    lb.childNodes[0].textContent=lin?'Tulis sebagai garis AB':'Tulis sebagai garis BA';});
+  const rb=$('#rayBtn'), rs=$('#raySvg'); let ray=0;
+  rb.addEventListener('click',()=>{ray^=1;rs.classList.toggle('alt',ray===1);
+    $('#rayName').textContent=ray?'sinar YX':'sinar XY';
+    rb.childNodes[0].textContent=ray?'Kembali ke sinar XY':'Tulis sebagai sinar YX';});
+})();
+
+/* ---------- posisi dua garis ---------- */
+(function(){
+  const svg=$('#posSvg'); if(!svg)return;
+  const CAP={sejajar:'SEJAJAR — jaraknya selalu sama, tak akan pernah bertemu',
+    berpotongan:'BERPOTONGAN — bertemu di satu titik potong',
+    tegakurus:'TEGAK LURUS — berpotongan membentuk sudut siku-siku 90°',
+    berimpit:'BERIMPIT — menempati tempat yang sama persis'};
+  const btns=$$('.pos-btn');
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    svg.className.baseVal='no-swipe p-'+b.dataset.pos;
+    $('#posCap').textContent=CAP[b.dataset.pos];
+  }));
+})();
+
+/* ---------- playground sudut ---------- */
+(function(){
+  const svg=$('#angSvg'); if(!svg)return;
+  const O={x:70,y:330},R=320,HR=186,AR=95;
+  const ray=$('#angRay'),arc=$('#angArc'),deg=$('#angDeg'),handle=$('#angHandle'),
+        sq=$('#angSq'),val=$('#angVal'),badge=$('#angBadge'),desc=$('#angDesc'),range=$('#angRange');
+  const K=[
+    {n:'Sudut Lancip',   c:'#E39A1D', d:'Lebih kecil dari 90° — tampak runcing.'},
+    {n:'Sudut Siku-siku',c:'#0E8F7E', d:'Tepat 90° — seperti pojok buku, ditandai kotak kecil.'},
+    {n:'Sudut Tumpul',   c:'#E4572E', d:'Antara 90° dan 180° — lebih terbuka dari siku-siku.'},
+    {n:'Sudut Lurus',    c:'#2D5D9F', d:'Tepat 180° — kedua kaki membentuk satu garis lurus.'},
+    {n:'Sudut Refleks',  c:'#C14E75', d:'Lebih besar dari 180° — memutar melewati garis lurus.'}
+  ];
+  const kind=a=>a<90?0:a===90?1:a<180?2:a===180?3:4;
+  const P=(a,r)=>({x:O.x+r*Math.cos(a*Math.PI/180),y:O.y-r*Math.sin(a*Math.PI/180)});
+  let ang=60,tw=null;
+  function paint(){
+    const a=ang,k=kind(a),c=K[k].c;
+    const t=P(a,R),h=P(a,HR),ap=P(a,AR);
+    ray.setAttribute('x2',t.x.toFixed(1)); ray.setAttribute('y2',t.y.toFixed(1));
+    arc.setAttribute('d',`M ${O.x+AR} ${O.y} A ${AR} ${AR} 0 ${a>180?1:0} 0 ${ap.x.toFixed(1)} ${ap.y.toFixed(1)}`);
+    arc.setAttribute('stroke',c);
+    const tp=P(a/2, a>180?58:AR+42);
+    const lx=Math.max(34,tp.x), ly=Math.max(26,Math.min(356,tp.y-8));
+    deg.textContent=Math.round(a)+'°';
+    deg.setAttribute('x',lx.toFixed(1)); deg.setAttribute('y',ly.toFixed(1)); deg.setAttribute('fill',c);
+    handle.setAttribute('cx',h.x.toFixed(1)); handle.setAttribute('cy',h.y.toFixed(1));
+    sq.style.opacity=a===90?1:0;
+    badge.textContent=K[k].n; badge.style.background=c;
+    desc.textContent=K[k].d;
+    val.textContent=Math.round(a)+'°'; val.style.color=c;
+    range.value=Math.round(a);
+  }
+  function set(v,animate){
+    v=Math.max(1,Math.min(359,Math.round(v)));
+    if(tw)cancelAnimationFrame(tw);
+    if(!animate){ang=v;paint();return;}
+    const from=ang,t0=performance.now(),dur=420;
+    (function st(t){const p=Math.min(1,(t-t0)/dur);ang=from+(v-from)*(1-Math.pow(1-p,3));paint();
+      if(p<1)tw=requestAnimationFrame(st);})(t0);
+  }
+  range.addEventListener('input',()=>set(+range.value,false));
+  $$('.ang-pre').forEach(b=>b.addEventListener('click',()=>set(+b.dataset.ang,true)));
+  function evAngle(e){
+    const r=svg.getBoundingClientRect();
+    const x=(e.clientX-r.left)*520/r.width, y=(e.clientY-r.top)*400/r.height;
+    let a=Math.atan2(O.y-y,x-O.x)*180/Math.PI; if(a<0)a+=360;
+    if(Math.abs(a-90)<5)a=90; if(Math.abs(a-180)<5)a=180;
+    return Math.max(1,Math.min(359,Math.round(a)));
+  }
+  let drag=false;
+  svg.addEventListener('pointerdown',e=>{drag=true;svg.setPointerCapture(e.pointerId);
+    svg.classList.add('dragging');set(evAngle(e),false);e.preventDefault();});
+  svg.addEventListener('pointermove',e=>{if(drag)set(evAngle(e),false);});
+  ['pointerup','pointercancel'].forEach(ev=>svg.addEventListener(ev,()=>{drag=false;svg.classList.remove('dragging');}));
+  const tg=$('#angTicks'); let th='';
+  for(let i=1;i<12;i++){const p1=P(i*30,246),p2=P(i*30,262);
+    th+=`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}"/>`;}
+  tg.innerHTML=th;
+  paint();
+})();
+
+/* ---------- tabel lima jenis sudut ---------- */
+(function(){
+  const box=$('#kindList'); if(!box)return;
+  const KINDS=[
+    {a:45, n:'Sudut Lancip',   rng:'0° – 90°',  c:'#E39A1D',mk:'mk-amber',ex:'Ujung gunting yang baru terbuka sedikit; jarum jam pukul 02.00.'},
+    {a:90, n:'Sudut Siku-siku',rng:'tepat 90°', c:'#0E8F7E',mk:'mk-teal', ex:'Pojok buku, pojok jendela, dan huruf L.'},
+    {a:130,n:'Sudut Tumpul',   rng:'90° – 180°',c:'#E4572E',mk:'mk-coral',ex:'Lebih terbuka dari siku-siku; jarum jam pukul 05.00 (150°).'},
+    {a:180,n:'Sudut Lurus',    rng:'tepat 180°',c:'#2D5D9F',mk:'mk-blue', ex:'Kedua kaki membentuk garis lurus; jarum jam pukul 06.00.'},
+    {a:240,n:'Sudut Refleks',  rng:'180° – 360°',c:'#C14E75',mk:'mk-rose',ex:'Lebih dari setengah putaran; jarum dari angka 12 ke angka 9 searah jarum jam (270°).'}
+  ];
+  function mini(a,c,mk){
+    const O={x:64,y:60},R=42,AR=21;
+    const P=(ang,r)=>({x:O.x+r*Math.cos(ang*Math.PI/180),y:O.y-r*Math.sin(ang*Math.PI/180)});
+    const t=P(a,R),ap=P(a,AR),tx=P(a/2,34);
+    return `<svg class="mini-ang" viewBox="0 0 128 118">
+      <line x1="${O.x}" y1="${O.y}" x2="${O.x+R}" y2="${O.y}" stroke="#2D5D9F" stroke-width="4" marker-end="url(#mk-blue)"/>
+      <line x1="${O.x}" y1="${O.y}" x2="${t.x.toFixed(1)}" y2="${t.y.toFixed(1)}" stroke="${c}" stroke-width="4" marker-end="url(#${mk})"/>
+      <path d="M${O.x+AR} ${O.y} A${AR} ${AR} 0 ${a>180?1:0} 0 ${ap.x.toFixed(1)} ${ap.y.toFixed(1)}" stroke="${c}" stroke-width="3.5" fill="none"/>
+      <circle cx="${O.x}" cy="${O.y}" r="4" fill="#262A3F"/>
+      <text x="${tx.x.toFixed(1)}" y="${tx.y.toFixed(1)}" text-anchor="middle" font-size="13" fill="${c}" class="fnum">${a}°</text></svg>`;
+  }
+  box.innerHTML=KINDS.map((k,i)=>`
+    <div class="kind rev" style="--d:${.18+i*.07}s">
+      <div>${mini(k.a,k.c,k.mk)}</div>
+      <div><div class="kn">${k.n}</div><span class="kr" style="background:${k.c}">${k.rng}</span></div>
+      <div class="kex">${k.ex}</div>
+    </div>`).join('');
+})();
+
+/* ---------- kuis poligon ---------- */
+(function(){
+  const shp=$('#qShape'); if(!shp)return;
+  const QUIZ=[
+    {draw:'<polygon points="100,16 186,132 14,132"/>',ok:true, why:'Tertutup rapat dan ketiga sisinya ruas garis lurus.'},
+    {draw:'<circle cx="100" cy="75" r="56"/>',ok:false,why:'Dibatasi garis lengkung — poligon harus dari ruas garis lurus.'},
+    {draw:'<rect x="38" y="23" width="124" height="104"/>',ok:true,why:'Tertutup rapat dan keempat sisinya ruas garis lurus.'},
+    {draw:'<path d="M22 118 66 38l44 80 44-80" fill="none"/>',ok:false,why:'Bentuknya terbuka — tidak mengelilingi suatu daerah.'},
+    {draw:'<path d="M30 112 a70 70 0 0 1 140 0 Z"/>',ok:false,why:'Bagian sisinya lengkung, bukan ruas garis lurus.'},
+    {draw:'<polygon points="100,15 152,45 152,105 100,135 48,105 48,45"/>',ok:true,why:'Enam ruas garis lurus yang saling menyambung dan menutup rapat.'}
+  ];
+  const meta=$('#qMeta'),dotsEl=$('#qDots'),yes=$('#qYes'),no=$('#qNo'),
+        feed=$('#qFeed'),next=$('#qNext'),scoreEl=$('#qScore');
+  let qi=0,score=0,answered=false,done=false;
+  dotsEl.innerHTML=QUIZ.map(()=>'<span class="d"></span>').join('');
+  function paintDots(){[...dotsEl.children].forEach((d,i)=>{d.classList.toggle('cur',i===qi);d.classList.toggle('done',i<qi);});}
+  function qRender(){
+    const it=QUIZ[qi];
+    shp.innerHTML=`<svg viewBox="0 0 200 150"><g class="qshape">${it.draw}</g></svg>`;
+    meta.textContent='Bentuk '+(qi+1)+' dari '+QUIZ.length;
+    feed.className='q-feed idle';
+    feed.textContent='Perhatikan bentuknya: apakah tertutup? apakah semua sisinya lurus?';
+    yes.disabled=no.disabled=false; yes.classList.remove('chosen'); no.classList.remove('chosen');
+    next.hidden=true; paintDots();
+  }
+  function qAns(v){
+    if(answered)return; answered=true;
+    const it=QUIZ[qi], good=(v===it.ok);
+    if(good)score++;
+    scoreEl.textContent='Skor '+score;
+    (v?yes:no).classList.add('chosen'); yes.disabled=no.disabled=true;
+    feed.className='q-feed '+(good?'good':'bad');
+    feed.innerHTML=`<b>${good?'Benar!':'Belum tepat.'}</b> ${it.why}`;
+    next.hidden=false;
+    next.textContent=qi<QUIZ.length-1?'Soal berikutnya →':'Lihat hasil';
+    paintDots();
+  }
+  function qResult(){
+    shp.innerHTML=`<div class="q-res"><span class="q-big">${score}</span><span class="q-of">/ ${QUIZ.length} benar</span></div>
+      <p class="q-msg">${score===QUIZ.length?'Sempurna! Kamu benar-benar paham poligon.':score>=4?'Hebat! Kamu siap lanjut ke materi berikutnya.':'Tidak apa-apa — buka lagi halaman poligon, baca sekali lagi, lalu ulangi kuisnya ya!'}</p>`;
+    meta.textContent='Kuis selesai';
+    feed.className='q-feed idle';
+    feed.textContent='Mantap, sudah berani mencoba. Ayo lanjut!';
+    yes.hidden=no.hidden=true; next.hidden=false; next.textContent='Ulangi kuis';
+    [...dotsEl.children].forEach(d=>d.classList.add('done'));
+  }
+  yes.addEventListener('click',()=>qAns(true));
+  no.addEventListener('click',()=>qAns(false));
+  next.addEventListener('click',()=>{
+    if(done){done=false;qi=0;score=0;scoreEl.textContent='Skor 0';yes.hidden=no.hidden=false;qRender();return;}
+    if(qi<QUIZ.length-1){qi++;answered=false;qRender();}else{done=true;qResult();}
+  });
+  qRender();
+})();
+
+/* ---------- beraturan / tidak beraturan ---------- */
+(function(){
+  const svg=$('#regSvg'); if(!svg)return;
+  const poly=$('#regPoly'),ticksG=$('#regTicks'),dotsG=$('#regDots'),
+        status=$('#regStatus'),C={x:210,y:186},R=128,N=6;
+  const reg=Array.from({length:N},(_,i)=>{const a=(-90+i*360/N)*Math.PI/180;
+    return{x:C.x+R*Math.cos(a),y:C.y+R*Math.sin(a)};});
+  let cur=reg.map(p=>({...p})),anim=null;
+  const pts=v=>v.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+  function draw(){
+    poly.setAttribute('points',pts(cur));
+    dotsG.innerHTML=cur.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="6.5"/>`).join('');
+    let s='';
+    for(let i=0;i<N;i++){
+      const a=cur[i],b=cur[(i+1)%N],mx=(a.x+b.x)/2,my=(a.y+b.y)/2,
+            an=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI+90;
+      s+=`<line x1="-9" y1="0" x2="9" y2="0" transform="translate(${mx.toFixed(1)} ${my.toFixed(1)}) rotate(${an.toFixed(1)})"/>`;
+    }
+    ticksG.innerHTML=s;
+  }
+  function setStatus(isReg){
+    status.textContent=isReg?'Poligon Beraturan — semua sisi & sudut sama':'Poligon Tidak Beraturan — sisi & sudutnya tidak sama';
+    status.classList.toggle('irr',!isReg);
+    svg.classList.toggle('regular',isReg);
+  }
+  function morph(target,isReg){
+    const from=cur.map(p=>({...p})),t0=performance.now(),dur=650;
+    setStatus(isReg);
+    if(anim)cancelAnimationFrame(anim);
+    (function st(t){
+      const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+      cur=from.map((f,i)=>({x:f.x+(target[i].x-f.x)*e,y:f.y+(target[i].y-f.y)*e}));
+      draw(); if(p<1)anim=requestAnimationFrame(st);
+    })(t0);
+  }
+  $('#btnShuffle').addEventListener('click',()=>{
+    const target=reg.map((p,i)=>{
+      const base=(-90+i*360/N)*Math.PI/180,
+            a=base+(Math.random()-.5)*.5,
+            r=R*(.72+Math.random()*.5);
+      return{x:C.x+r*Math.cos(a),y:C.y+r*Math.sin(a)};
+    });
+    morph(target,false);
+  });
+  $('#btnFix').addEventListener('click',()=>morph(reg.map(p=>({...p})),true));
+  draw(); setStatus(true);
+})();
+
+/* ---------- nama-nama poligon ---------- */
+(function(){
+  const range=$('#polyRange'); if(!range)return;
+  const POLY={3:['Segitiga','Triangle'],4:['Segiempat','Quadrilateral'],5:['Segilima','Pentagon'],
+    6:['Segienam','Hexagon'],7:['Segitujuh','Heptagon'],8:['Segidelapan','Octagon'],
+    9:['Segisembilan','Nonagon'],10:['Segisepuluh','Decagon']};
+  const art=$('#polyArt'),name=$('#polyName'),en=$('#polyEn'),info=$('#polyInfo'),list=$('#polyList');
+  list.innerHTML=Object.keys(POLY).map(n=>
+    `<button class="pl-row" data-n="${n}"><b>${n}</b><span>${POLY[n][0]}</span><i>${POLY[n][1]}</i></button>`).join('');
+  function render(){
+    const n=+range.value,pts=[];
+    for(let i=0;i<n;i++){const a=(-90+i*360/n)*Math.PI/180;
+      pts.push([(200+128*Math.cos(a)).toFixed(1),(182+128*Math.sin(a)).toFixed(1)]);}
+    art.innerHTML=`<svg viewBox="0 0 400 364">
+      <polygon class="ppoly" points="${pts.map(p=>p.join(',')).join(' ')}"/>
+      <g class="pdots">${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6"/>`).join('')}</g></svg>`;
+    name.textContent=POLY[n][0]; en.textContent=POLY[n][1];
+    info.textContent=`${n} sisi · ${n} titik sudut · ${n} sudut`;
+    $$('.pl-row').forEach(r=>r.classList.toggle('on',+r.dataset.n===n));
+    art.classList.remove('pop'); void art.offsetWidth; art.classList.add('pop');
+  }
+  range.addEventListener('input',render);
+  $$('.pl-row').forEach(r=>r.addEventListener('click',()=>{range.value=r.dataset.n;render();}));
+  render();
+})();
+
+/* ---------- sisi & titik sudut: toggle ---------- */
+(function(){
+  const svg=$('#qdSvg'); if(!svg)return;
+  const bp=$('#btnPts'),bs=$('#btnSides'),cp=$('#chipPts'),cs=$('#chipSides');
+  function mount(btn){btn.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML='');mountIcons(btn);}
+  bp.addEventListener('click',()=>{
+    const on=svg.classList.toggle('m-pts'); bp.classList.toggle('on',on);
+    cp.classList.toggle('show',on); mount(bp);
+  });
+  bs.addEventListener('click',()=>{
+    const on=svg.classList.toggle('m-sides'); bs.classList.toggle('on',on);
+    cs.classList.toggle('show',on); mount(bs);
+  });
+})();
+
+/* ---------- eksplorasi ciri bangun datar ---------- */
+(function(){
+  const tabs=$('#shTabs'); if(!tabs)return;
+  const dots=p=>'<g class="sdots">'+p.map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="5.5"/>`).join('')+'</g>';
+  const SHAPES=[
+    {n:'Persegi',draw:`<rect x="80" y="30" width="140" height="140"/>${dots([[80,30],[220,30],[220,170],[80,170]])}
+      <path class="tick" d="M144 30h12M144 170h12M80 94v12M220 94v12"/>`,
+     tr:['Punya 4 sisi yang sama panjang.','Punya 4 titik sudut.','Keempat sudutnya siku-siku (90°).','Sisi berhadapan saling sejajar.']},
+    {n:'Persegi Panjang',draw:`<rect x="40" y="45" width="220" height="120"/>${dots([[40,45],[260,45],[260,165],[40,165]])}
+      <path class="chev" d="M143 38l8 7-8 7M143 158l8 7-8 7"/><path class="tick" d="M34 99h12"/>`,
+     tr:['Punya 4 sisi; sisi berhadapan sama panjang.','Punya 4 titik sudut.','Keempat sudutnya siku-siku (90°).','Sisi berhadapan saling sejajar (ditandai panah).']},
+    {n:'Segitiga',draw:`<polygon points="150,22 276,188 24,188"/>${dots([[150,22],[276,188],[24,188]])}`,
+     tr:['Punya 3 sisi dan 3 titik sudut.','Jumlah ketiga sudutnya 180°.','Ada segitiga sama sisi, sama kaki, dan sembarang.']},
+    {n:'Lingkaran',draw:`<circle cx="150" cy="105" r="80"/><circle cx="150" cy="105" r="5" fill="#E39A1D"/>
+      <path class="rad" d="M150 105 H230" marker-end="url(#mk-amber)"/><text x="176" y="94" font-size="13" fill="#5C6076">jari-jari</text>`,
+     tr:['Dibatasi satu garis lengkung.','Tidak punya titik sudut.','Tidak punya sudut — karena itu bukan poligon.']},
+    {n:'Trapesium',draw:`<polygon points="75,40 225,40 262,172 38,172"/>${dots([[75,40],[225,40],[262,172],[38,172]])}
+      <path class="chev" d="M142 33l8 7-8 7M142 165l8 7-8 7"/>`,
+     tr:['Punya 4 sisi dan 4 titik sudut.','Memiliki sepasang sisi yang sejajar (ditandai panah).','Sepasang sisi sejajarnya tidak sama panjang.']},
+    {n:'Jajargenjang',draw:`<polygon points="88,40 258,40 212,172 42,172"/>${dots([[88,40],[258,40],[212,172],[42,172]])}
+      <path class="chev" d="M165 33l8 7-8 7M119 165l8 7-8 7"/>
+      <path class="tick" transform="translate(65,106) rotate(19)" d="M-8 0h16"/>
+      <path class="tick" transform="translate(235,106) rotate(19)" d="M-8 0h16"/>`,
+     tr:['Punya 4 sisi dan 4 titik sudut.','Dua pasang sisi berhadapan sejajar dan sama panjang.','Sudut berhadapan sama besar.']}
+  ];
+  const artEl=$('#shArt'),trEl=$('#shTraits'),panel=$('#shPanel');
+  function render(i){
+    $$('.sh-tab').forEach((t,j)=>t.classList.toggle('on',j===i));
+    artEl.innerHTML=`<svg viewBox="0 0 300 210">${SHAPES[i].draw}</svg>`;
+    trEl.innerHTML=SHAPES[i].tr.map(t=>`<li><i data-icon="check"></i><span>${t}</span></li>`).join('');
+    mountIcons(trEl);
+    panel.classList.remove('anim'); void panel.offsetWidth; panel.classList.add('anim');
+  }
+  tabs.innerHTML=SHAPES.map((s,i)=>`<button class="sh-tab${i===0?' on':''}" data-i="${i}">${s.n}</button>`).join('');
+  $$('.sh-tab').forEach(t=>t.addEventListener('click',()=>render(+t.dataset.i)));
+  render(0);
+})();
+
+/* ---------- mulai ---------- */
+mountIcons();
+go(0);
+</script>
+</body>
+</html>

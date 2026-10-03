@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sudut dalam Kehidupan Sehari-hari · Presentasi Interaktif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#FAF3E7; --paper2:#F1E6D2; --white:#FFFDF7;
+  --ink:#3A2A20; --ink-soft:#8A7362; --line:#E7D8C2; --line2:#D8C4A6;
+  --rose:#E0526E; --rose-deep:#C23855; --rose-soft:#FBE3E8;
+  --honey:#E9A03B; --honey-deep:#B97A1F; --honey-soft:#FBEED4;
+  --terra:#D96C47; --terra-deep:#B54E2B; --terra-soft:#FAE4D8;
+  --teal:#3E8E8C; --teal-deep:#2F6F6D; --teal-soft:#DCEDEA;
+  --plum:#9B5FA0; --plum-deep:#7C4580; --plum-soft:#F0E2F1;
+  --shadow:0 16px 40px rgba(58,42,32,.10);
+}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--paper);color:var(--ink);overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(58,42,32,.06) 1.2px,transparent 1.2px);background-size:24px 24px;pointer-events:none;z-index:0}
+[hidden]{display:none!important}
+button{font-family:inherit;cursor:pointer}
+i[data-lucide]{display:inline-block}
+svg.lucide{width:1.1em;height:1.1em;vertical-align:-0.18em}
+
+#confettiCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:300}
+.topbar{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(250,243,231,.86);backdrop-filter:blur(10px);border-bottom:1.5px solid var(--line);z-index:60}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:40px;height:40px;border-radius:12px;background:var(--rose);color:#FFF6EE;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:22px;font-weight:700;transform:rotate(-6deg)}
+.brand-txt b{font-family:'Fraunces',serif;font-size:17px;display:block;line-height:1.1}
+.brand-txt small{font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.top-right{display:flex;align-items:center;gap:12px}
+.namechip{display:flex;align-items:center;gap:7px;background:var(--white);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--rose-deep)}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--white);display:grid;place-items:center;color:var(--ink)}
+.iconbtn:hover{border-color:var(--rose);color:var(--rose)}
+.slide-count{font-size:12px;font-weight:700;color:var(--ink-soft);min-width:56px;text-align:right}
+.progressbar{position:fixed;top:64px;left:0;right:0;height:3.5px;background:var(--paper2);z-index:60}
+.progressbar span{display:block;height:100%;width:0;background:var(--rose);transition:width .4s ease}
+#stage{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:96px clamp(16px,4vw,52px) 130px;opacity:0;visibility:hidden;transform:translateY(26px);transition:opacity .4s ease,transform .4s ease,visibility 0s .4s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease .08s,transform .5s ease .08s}
+.slide-inner{max-width:1180px;margin:0 auto}
+.bottomnav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;background:var(--white);border:1.5px solid var(--line);border-radius:999px;padding:8px 12px;box-shadow:var(--shadow);z-index:60}
+.navbtn{display:flex;align-items:center;gap:6px;border:none;background:var(--ink);color:#FFF6EC;border-radius:999px;padding:10px 16px;font-weight:700;font-size:13.5px}
+.navbtn:hover{background:var(--rose)}
+.navbtn:disabled{opacity:.35;cursor:default}
+.navbtn:disabled:hover{background:var(--ink)}
+.dots{display:flex;gap:6px}
+.dots button{width:9px;height:9px;border-radius:99px;border:none;background:var(--line2);padding:0;transition:all .3s}
+.dots button.on{width:24px;background:var(--rose)}
+#toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#FFF6EC;padding:12px 22px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .35s ease;z-index:200;box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--rose-deep);margin-bottom:12px}
+.eyebrow::before{content:'';width:26px;height:2px;background:var(--rose)}
+.slide-title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,3.8vw,46px);line-height:1.08;letter-spacing:-.01em}
+.slide-title em{font-style:italic;color:var(--rose)}
+.h-block{margin-bottom:30px}
+.h-block p.sub{margin-top:12px;color:var(--ink-soft);font-size:15.5px;max-width:640px;line-height:1.6}
+.card{background:var(--white);border:1.5px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;gap:9px;border:none;border-radius:999px;padding:13px 24px;font-size:14.5px;font-weight:800;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(58,42,32,.18)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--rose);color:#FFF6EE}
+.btn-dark{background:var(--ink);color:#FFF6EC}
+.btn-ghost{background:transparent;border:1.5px solid var(--line2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn:disabled{opacity:.4;pointer-events:none}
+.two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:800;background:var(--ccs,var(--paper2));color:var(--ccd,var(--ink))}
+.c-lancip{--cc:#E0526E;--ccs:#FBE3E8;--ccd:#C23855}
+.c-siku{--cc:#E9A03B;--ccs:#FBEED4;--ccd:#B97A1F}
+.c-tumpul{--cc:#D96C47;--ccs:#FAE4D8;--ccd:#B54E2B}
+.c-lurus{--cc:#3E8E8C;--ccs:#DCEDEA;--ccd:#2F6F6D}
+.c-refleks{--cc:#9B5FA0;--ccs:#F0E2F1;--ccd:#7C4580}
+.c-penuh{--cc:#3A2A20;--ccs:#EFE6DA;--ccd:#3A2A20}
+.dragsvg{touch-action:none;user-select:none;-webkit-user-select:none}
+.grabme{cursor:grab}
+.hintchip{display:inline-flex;align-items:center;gap:8px;background:var(--honey-soft);color:var(--honey-deep);border:1.5px dashed var(--honey);border-radius:999px;padding:7px 15px;font-size:13px;font-weight:700}
+
+.active .rise{animation:rise .7s cubic-bezier(.2,.7,.3,1) both}
+.active .d1{animation-delay:.1s}.active .d2{animation-delay:.2s}.active .d3{animation-delay:.32s}.active .d4{animation-delay:.45s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+#s-cover .slide-inner{display:grid;grid-template-columns:1.05fr .9fr;gap:40px;align-items:center;min-height:calc(100vh - 240px)}
+.cover-badge{display:inline-flex;align-items:center;gap:9px;background:var(--white);border:1.5px solid var(--line);border-radius:999px;padding:8px 18px;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--rose-deep)}
+#s-cover h1{font-family:'Fraunces',serif;font-weight:640;font-size:clamp(42px,5.4vw,72px);line-height:1.02;letter-spacing:-.015em;margin:20px 0 18px}
+#s-cover h1 em{font-style:italic;color:var(--rose)}
+#s-cover .lead{font-size:16.5px;line-height:1.7;color:var(--ink-soft);max-width:520px}
+.namewrap{margin-top:30px;max-width:460px}
+.namewrap label{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.nameline{display:flex;gap:10px;margin-top:10px}
+#nameInput{flex:1;border:2px solid var(--line2);border-radius:16px;background:var(--white);padding:14px 18px;font-family:inherit;font-size:15.5px;font-weight:600;color:var(--ink);outline:none;transition:border .2s}
+#nameInput:focus{border-color:var(--rose)}
+#nameInput.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.cover-note{margin-top:18px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+.cover-ill{width:100%;max-width:520px;justify-self:center}
+
+.path{display:flex;flex-direction:column;gap:0;max-width:760px}
+.pnode{display:flex;gap:22px;align-items:flex-start;position:relative;padding-bottom:30px}
+.pnode:not(:last-child)::before{content:'';position:absolute;left:31px;top:62px;bottom:2px;width:2.5px;background:repeating-linear-gradient(to bottom,var(--line2) 0 7px,transparent 7px 14px)}
+.pnum{flex-shrink:0;width:62px;height:62px;border-radius:20px;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:26px;font-weight:700;border:2px solid var(--line2);background:var(--white);transform:rotate(-4deg)}
+.pnode:nth-child(2n) .pnum{transform:rotate(3deg)}
+.pnode b{font-family:'Fraunces',serif;font-size:20px;font-weight:640;display:block;margin:8px 0 4px}
+.pnode p{color:var(--ink-soft);font-size:14.5px;line-height:1.55;max-width:560px}
+.pnode .pill{margin-top:8px}
+
+.illwrap{position:relative}
+.illwrap svg{width:100%;height:auto;display:block}
+.svglbl{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;fill:var(--ink)}
+.svgsoft{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;fill:var(--ink-soft)}
+.svgdeg{font-family:'Fraunces',serif;font-weight:700;fill:var(--ink)}
+.anote{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;fill:var(--ink-soft)}
+
+.terms{display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.term{display:flex;gap:16px;align-items:flex-start;padding:18px 20px;border-radius:18px;border:1.5px solid var(--line);background:var(--white)}
+.term .tico{flex-shrink:0;width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.term b{font-family:'Fraunces',serif;font-size:18px}
+.term p{font-size:14px;color:var(--ink-soft);line-height:1.55;margin-top:3px}
+.defbox{font-family:'Fraunces',serif;font-size:clamp(19px,2vw,24px);line-height:1.45;font-weight:500;border-left:4px solid var(--rose);padding:6px 0 6px 22px}
+.defbox mark{background:var(--honey-soft);color:var(--honey-deep);padding:1px 7px;border-radius:7px;font-weight:640}
+
+.ntabs{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.ntab{text-align:left;border:2px solid var(--line);background:var(--white);border-radius:18px;padding:16px 18px;transition:all .25s;display:flex;gap:15px;align-items:center}
+.ntab:hover{border-color:var(--line2);transform:translateY(-1px)}
+.ntab.on{border-color:var(--rose);background:var(--rose-soft)}
+.ntab .nkey{flex-shrink:0;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:19px;font-weight:700;background:var(--paper2)}
+.ntab.on .nkey{background:var(--rose);color:#fff}
+.ntab b{display:block;font-size:15.5px}
+.ntab small{color:var(--ink-soft);font-size:13px;line-height:1.4;display:block;margin-top:2px}
+.notation{font-family:'Fraunces',serif;font-size:clamp(40px,4vw,58px);font-weight:700;color:var(--rose);line-height:1;margin:6px 0 8px}
+.nnote{font-size:13.5px;color:var(--ink-soft);line-height:1.6;min-height:44px}
+
+.deg-big{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(52px,6vw,84px);line-height:1;letter-spacing:-.02em}
+.deg-big span{color:var(--rose);font-size:.55em}
+.typelist{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.trow{display:flex;gap:13px;align-items:flex-start;border:1.5px solid var(--line);border-radius:16px;padding:11px 15px;background:var(--white);transition:all .25s;border-left-width:6px;border-left-color:var(--cc)}
+.trow:hover{transform:translateX(3px)}
+.trow.on{background:var(--ccs);border-color:var(--cc);transform:translateX(6px) scale(1.015);box-shadow:var(--shadow)}
+.tdot{flex-shrink:0;width:13px;height:13px;border-radius:99px;background:var(--cc);margin-top:5px}
+.thead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.thead b{font-family:'Fraunces',serif;font-size:16.5px;font-weight:640}
+.thead span{font-size:12px;font-weight:800;color:var(--ccd,var(--ink-soft));letter-spacing:.04em}
+.texp{font-size:12.8px;color:var(--ink-soft);line-height:1.45;max-height:0;overflow:hidden;transition:max-height .35s ease,margin .35s}
+.trow.on .texp{max-height:60px;margin-top:5px}
+.goals{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.goals span{font-size:12px;font-weight:800;border:1.5px solid var(--line2);border-radius:999px;padding:6px 13px;background:var(--white);transition:all .2s}
+.goals span:hover{background:var(--ink);color:#FFF6EC;border-color:var(--ink)}
+.typebox{margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+.clock-big{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(40px,4vw,56px);line-height:1}
+.clockrow{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:14.5px;color:var(--ink-soft);flex-wrap:wrap}
+.clockrow b{font-family:'Fraunces',serif;font-size:26px;color:var(--ink)}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.presets button{border:1.5px solid var(--line2);background:var(--white);border-radius:999px;padding:8px 16px;font-weight:800;font-size:13px;font-family:'Fraunces',serif;transition:all .2s}
+.presets button:hover{background:var(--teal);border-color:var(--teal);color:#fff}
+.fact{margin-top:20px;padding:15px 18px;border-radius:16px;background:var(--teal-soft);border:1.5px solid var(--teal);font-size:13.5px;line-height:1.6;color:var(--teal-deep)}
+.fact b{font-family:'Fraunces',serif;font-size:15px}
+
+.collage{position:relative;height:620px;margin-top:8px}
+.ccard{position:absolute;background:var(--white);border:1.5px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:12px 14px 13px;transform:rotate(var(--rot));transition:transform .3s,box-shadow .3s;z-index:1}
+.ccard:hover{transform:rotate(0) translateY(-8px) scale(1.04);z-index:10}
+.ccard svg{width:100%;height:auto;display:block}
+.ccard h4{font-family:'Fraunces',serif;font-size:15.5px;font-weight:640;margin:9px 0 7px}
+.crow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.crow small{font-size:12px;font-weight:800;color:var(--ink-soft)}
+.cc1{left:0;top:14px;width:272px;--rot:-3deg}
+.cc2{left:292px;top:0;width:246px;--rot:2deg}
+.cc3{left:560px;top:22px;width:256px;--rot:-2deg}
+.cc4{left:838px;top:6px;width:246px;--rot:3deg}
+.cc5{left:64px;top:302px;width:300px;--rot:2deg}
+.cc6{left:432px;top:296px;width:300px;--rot:-2deg}
+.cc7{left:762px;top:312px;width:322px;--rot:1.5deg}
+.ccfact{background:var(--honey-soft);border-color:var(--honey)}
+.ccfact h4{color:var(--honey-deep)}
+.ccfact p{font-size:13.5px;line-height:1.6;color:var(--ink)}
+.strip{margin-top:26px;padding:16px 22px;border-radius:18px;background:var(--ink);color:#F6EADB;font-size:14px;display:flex;gap:12px;align-items:center;line-height:1.55}
+.strip i{color:var(--honey);flex-shrink:0}
+.strip b{color:#F6C445}
+
+.tickets{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:900px;margin:0 auto}
+.ticket{padding:28px 26px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;position:relative;overflow:hidden;transition:transform .25s}
+.ticket:hover{transform:translateY(-5px) rotate(-.4deg)}
+.ticket::after{content:'∠';position:absolute;right:-14px;bottom:-38px;font-family:'Fraunces',serif;font-size:150px;font-weight:800;color:var(--paper2);z-index:0;transform:rotate(-12deg)}
+.ticket>*{position:relative;z-index:1}
+.tk-ico{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;color:#fff;transform:rotate(-5deg)}
+.ticket h3{font-family:'Fraunces',serif;font-size:26px;font-weight:640}
+.ticket p{font-size:14px;color:var(--ink-soft);line-height:1.6}
+.tk-meta{display:flex;gap:8px;flex-wrap:wrap}
+.tk-meta span{font-size:11.5px;font-weight:800;border:1.5px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--ink-soft);display:inline-flex;gap:6px;align-items:center}
+.tk-best{font-size:13px;color:var(--ink-soft)}
+.tk-best b{color:var(--rose-deep);font-family:'Fraunces',serif;font-size:15px}
+.ghead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.ghstats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.gstat{background:var(--white);border:1.5px solid var(--line);border-radius:14px;padding:8px 15px;font-size:13px;font-weight:800}
+.gstat b{font-family:'Fraunces',serif;font-size:17px;color:var(--rose-deep)}
+.gstat.gh{display:flex;gap:4px}
+.gstat.gh svg{width:20px;height:20px}
+.hfull svg{fill:var(--rose);color:var(--rose)}
+.hempty svg{color:var(--line2)}
+.tbar{height:9px;background:var(--paper2);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.tbar span{display:block;height:100%;width:0;background:var(--honey);border-radius:99px}
+.gstage{max-width:640px;margin:0 auto}
+.gfb{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px auto 0;max-width:520px;border-radius:16px;padding:13px 18px;font-weight:800;font-size:14.5px;opacity:0;transform:translateY(8px);transition:all .3s;text-align:center;pointer-events:none}
+.gfb.show{opacity:1;transform:none;pointer-events:auto}
+.gfb.ok{background:var(--teal-soft);color:var(--teal-deep);border:1.5px solid var(--teal)}
+.gfb.no{background:var(--rose-soft);color:var(--rose-deep);border:1.5px solid var(--rose)}
+.gopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.gopt{display:flex;align-items:center;justify-content:center;gap:9px;border:2px solid var(--line);background:var(--white);border-radius:16px;padding:14px 10px;font-weight:800;font-size:14.5px;transition:all .2s}
+.gopt .gdot{width:11px;height:11px;border-radius:99px;background:var(--cc)}
+.gopt:hover{border-color:var(--cc);transform:translateY(-2px);background:var(--ccs)}
+.gopt:disabled{opacity:.45}
+.gtarget{font-family:'Fraunces',serif;font-size:clamp(20px,2.4vw,30px);font-weight:700;text-align:center;margin-bottom:6px}
+.gtarget b{color:var(--plum-deep)}
+.gtarget small{display:block;font-family:'Plus Jakarta Sans';font-size:12.5px;font-weight:700;color:var(--ink-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.spinctrl{display:flex;gap:9px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.btn-mini{width:52px;height:46px;border-radius:14px;border:2px solid var(--line2);background:var(--white);font-weight:800;font-size:14px;font-family:'Fraunces',serif;transition:all .15s}
+.btn-mini:hover{border-color:var(--ink);background:var(--paper2)}
+.btn-lock{border:none;border-radius:999px;padding:13px 30px;background:var(--plum);color:#fff;font-weight:800;font-size:14.5px;transition:all .2s}
+.btn-lock:hover{background:var(--plum-deep);transform:translateY(-2px)}
+.gover-card{max-width:480px;margin:0 auto;text-align:center;padding:38px 34px}
+.gostars{display:flex;gap:8px;justify-content:center;margin:16px 0 6px}
+.gostars svg{width:42px;height:42px}
+.star-on svg{fill:#F2C14E;color:#D99A1B}
+.star-off svg{color:var(--line2)}
+.goscore{font-family:'Fraunces',serif;font-weight:800;font-size:64px;line-height:1;margin:8px 0 4px}
+.godetail{color:var(--ink-soft);font-weight:700;font-size:14px}
+.gomsg{margin:12px 0 22px;font-size:15px;line-height:1.6}
+.gobtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.qintro-card{max-width:600px;margin:0 auto;text-align:center;padding:44px 38px}
+.qintro-card .big-ico{width:74px;height:74px;border-radius:24px;background:var(--rose);color:#fff;display:grid;place-items:center;margin:0 auto 18px;transform:rotate(-5deg)}
+.qintro-card .big-ico svg{width:36px;height:36px}
+.qmeta-list{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 26px}
+.qwrap{max-width:780px;margin:0 auto}
+.qtop{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.qbar{flex:1;height:9px;background:var(--paper2);border-radius:99px;overflow:hidden}
+.qbar span{display:block;height:100%;width:0;background:var(--rose);border-radius:99px;transition:width .4s ease}
+.qcount{font-weight:800;font-size:13px;color:var(--ink-soft)}
+.qcard{padding:34px clamp(20px,4vw,44px)}
+.qmeta{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.qnum{font-family:'Fraunces',serif;font-weight:800;font-size:34px;color:var(--rose);line-height:1}
+.qcard h3{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(19px,2.2vw,25px);line-height:1.4;margin-bottom:22px}
+.qopts{display:flex;flex-direction:column;gap:11px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;border:2px solid var(--line);background:var(--white);border-radius:15px;padding:13px 17px;font-size:15px;font-weight:600;color:var(--ink);transition:all .18s}
+.opt:hover{border-color:var(--line2);transform:translateX(4px)}
+.opt.sel{border-color:var(--rose);background:var(--rose-soft)}
+.opt-key{flex-shrink:0;width:29px;height:29px;border-radius:99px;background:var(--paper2);display:grid;place-items:center;font-size:13px;font-weight:800}
+.opt.sel .opt-key{background:var(--rose);color:#fff}
+.qnav{display:flex;justify-content:space-between;margin-top:26px;gap:12px}
+
+.rempty{max-width:520px;margin:0 auto;text-align:center;padding:44px 36px}
+.rempty .big-ico{width:70px;height:70px;border-radius:22px;background:var(--paper2);display:grid;place-items:center;margin:0 auto 16px;color:var(--ink-soft)}
+.res-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:start}
+.res-left{padding:32px;text-align:center}
+.ringwrap{position:relative;width:190px;margin:14px auto 6px}
+.ringwrap svg{width:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--paper2);stroke-width:13}
+.ring-fg{fill:none;stroke:var(--rose);stroke-width:13;stroke-linecap:round;stroke-dasharray:364.4;stroke-dashoffset:364.4;transition:stroke-dashoffset 1.2s cubic-bezier(.3,.7,.3,1)}
+.ringtxt{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ringtxt b{font-family:'Fraunces',serif;font-size:46px;font-weight:800;line-height:1}
+.ringtxt span{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.12em;text-transform:uppercase}
+#rMsg{font-size:14.5px;line-height:1.65;color:var(--ink-soft);margin:14px 0 22px}
+.res-right{padding:30px}
+.res-right h3{font-family:'Fraunces',serif;font-size:22px;font-weight:640}
+.res-right>p{font-size:13px;color:var(--ink-soft);margin:5px 0 16px}
+.rgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.rgrid button{height:44px;border-radius:13px;border:none;font-family:'Fraunces',serif;font-weight:700;font-size:16px;transition:transform .15s;display:grid;place-items:center;color:#fff}
+.rgrid button:hover{transform:translateY(-3px) scale(1.05)}
+.rgrid .benar{background:var(--teal)}
+.rgrid .salah{background:var(--rose)}
+.rdetail{margin-top:18px;border-top:2px dashed var(--line2);padding-top:16px}
+.rd-q{font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;line-height:1.45;margin-bottom:12px}
+.rd-opt{display:flex;align-items:center;gap:9px;font-size:13.8px;padding:6px 0}
+.rd-opt.key{color:var(--teal-deep);font-weight:800}
+.rd-opt.mine{color:var(--rose-deep);font-weight:800}
+.rd-dot{width:16px;height:16px;border-radius:99px;border:2px solid var(--line2);flex-shrink:0}
+.rd-exp{margin-top:10px;font-size:13px;color:var(--ink-soft);background:var(--paper);border-radius:12px;padding:10px 14px;line-height:1.55}
+.rankpill{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px}
+.resbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+
+.kpoin{display:flex;gap:18px;align-items:flex-start;padding:15px 0;border-bottom:1.5px dashed var(--line)}
+.kpoin:last-child{border-bottom:none}
+.kpoin .knum{font-family:'Fraunces',serif;font-weight:800;font-size:30px;color:var(--rose);line-height:1;min-width:44px}
+.kpoin b{font-family:'Fraunces',serif;font-size:16.5px;font-weight:640;display:block;margin-bottom:3px}
+.kpoin p{font-size:14px;color:var(--ink-soft);line-height:1.55}
+
+.refcard{max-width:660px;margin:0 auto;padding:36px clamp(22px,4vw,42px);text-align:center}
+.stars{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.star{background:none;border:none;padding:4px;transition:transform .15s}
+.star:hover{transform:scale(1.2) rotate(-8deg)}
+.star svg{width:40px;height:40px;color:var(--line2)}
+.star.on svg{fill:#F2C14E;color:#D99A1B}
+.refhint{font-size:13.5px;color:var(--ink-soft);margin-bottom:22px}
+#refText{width:100%;border:2px solid var(--line2);border-radius:16px;background:var(--paper);padding:16px 18px;font-family:inherit;font-size:14.5px;line-height:1.6;color:var(--ink);resize:vertical;min-height:110px;outline:none}
+#refText:focus{border-color:var(--rose)}
+.refq{text-align:left;margin:0 0 18px;display:flex;flex-direction:column;gap:8px}
+.refq span{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink-soft)}
+.refq i{color:var(--rose)}
+
+#s-thanks .slide-inner{min-height:calc(100vh - 250px);display:grid;place-content:center;text-align:center}
+.thx-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(46px,7vw,88px);line-height:1.02;letter-spacing:-.02em;margin:16px 0 20px}
+.thx-title em{font-style:italic;color:var(--rose)}
+.thx-sub{font-size:16.5px;color:var(--ink-soft);line-height:1.7;max-width:560px;margin:0 auto 30px}
+.thx-sub b{color:var(--rose-deep)}
+
+@media(max-width:1000px){
+  .two-col,#s-cover .slide-inner,.res-grid,.tickets{grid-template-columns:1fr}
+  .collage{position:static;height:auto;display:flex;flex-wrap:wrap;gap:16px}
+  .ccard{position:static;width:calc(50% - 8px)!important;transform:rotate(0)}
+  .ccard:nth-child(odd){transform:rotate(-1.4deg)}
+  .ccard:nth-child(even){transform:rotate(1.4deg)}
+  .brand-txt small{display:none}
+  .gopts{grid-template-columns:repeat(2,1fr)}
+  .dots{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">∠</span>
+    <div class="brand-txt"><b>Sudut &amp; Kehidupan</b><small>Matematika · Geometri</small></div>
+  </div>
+  <div class="top-right">
+    <div class="namechip" id="nameChip" hidden><i data-lucide="user"></i><span id="nameChipText"></span></div>
+    <button class="iconbtn" id="sndBtn" title="Suara nyala/mati"><i data-lucide="volume-2"></i></button>
+    <span class="slide-count" id="slideCount">1 / 13</span>
+  </div>
+</header>
+<div class="progressbar"><span id="progIn"></span></div>
+
+<main id="stage">
+
+<!-- ============ SLIDE 0 · COVER ============ -->
+<section class="slide" id="s-cover">
+  <div class="slide-inner">
+    <div>
+      <span class="cover-badge rise"><i data-lucide="sparkles"></i> Presentasi Interaktif Matematika</span>
+      <h1 class="rise d1">Sudut Ada<br>di <em>Mana-mana!</em></h1>
+      <p class="lead rise d2">Petualangan seru mengenal <b>jenis-jenis sudut</b> — dari lancip sampai satu putaran penuh — lalu menemukannya di jam, gunung, gunting, dan segala penjuru kehidupan sehari-hari. Di akhir perjalanan, ada <b>game</b> dan <b>kuis 20 soal</b> menantimu!</p>
+      <div class="namewrap rise d3">
+        <label for="nameInput">Siapa yang mau belajar hari ini?</label>
+        <div class="nameline">
+          <input id="nameInput" type="text" maxlength="24" placeholder="Tulis namamu di sini…" autocomplete="off"/>
+          <button class="btn btn-primary" id="startBtn" disabled>Mulai <i data-lucide="arrow-right"></i></button>
+        </div>
+        <p class="cover-note"><i data-lucide="keyboard"></i> Tips: gunakan tombol ← → di keyboard untuk berpindah slide.</p>
+      </div>
+    </div>
+    <svg class="cover-ill rise d2" viewBox="0 0 520 520" aria-hidden="true">
+      <circle cx="262" cy="286" r="206" fill="none" stroke="#D8C4A6" stroke-width="2.5" stroke-dasharray="3 10"/>
+      <line x1="262" y1="286" x2="466" y2="286" stroke="#3A2A20" stroke-width="7" stroke-linecap="round"/>
+      <line x1="262" y1="286" x2="380" y2="120" stroke="#E0526E" stroke-width="7" stroke-linecap="round"/>
+      <path d="M 382 286 A 120 120 0 0 0 331 188" fill="none" stroke="#E9A03B" stroke-width="5"/>
+      <text x="404" y="216" class="svgdeg" font-size="30" fill="#B97A1F">55°</text>
+      <circle cx="262" cy="286" r="11" fill="#3A2A20"/>
+      <circle cx="466" cy="286" r="8" fill="#E9A03B"/>
+      <circle cx="380" cy="120" r="8" fill="#E0526E"/>
+      <text x="238" y="322" class="svglbl" font-size="19">O</text>
+      <path d="M0-13L3-3L13 0L3 3L0 13L-3 3L-13 0L-3-3Z" transform="translate(120,96)" fill="#F2C14E"/>
+      <path d="M0-9L2.2-2.2L9 0L2.2 2.2L0 9L-2.2 2.2L-9 0L-2.2-2.2Z" transform="translate(452,398)" fill="#E0526E"/>
+      <path d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(96,392)" fill="#3E8E8C"/>
+      <g transform="translate(408,436)">
+        <circle r="52" fill="#FFFDF7" stroke="#3A2A20" stroke-width="4"/>
+        <line x1="0" y1="0" x2="0" y2="-38" stroke="#3A2A20" stroke-width="5" stroke-linecap="round"/>
+        <line x1="0" y1="0" x2="38" y2="0" stroke="#E0526E" stroke-width="4" stroke-linecap="round"/>
+        <circle r="5" fill="#E9A03B"/>
+        <text x="-16" y="86" class="svgdeg" font-size="26" fill="#2F6F6D">90°</text>
+      </g>
+      <text x="30" y="470" class="svgdeg" font-size="44" fill="#C23855" font-style="italic">∠ 360°</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ SLIDE 1 · PETA ============ -->
+<section class="slide" id="s-peta">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Rencana Petualangan</span>
+      <h2 class="slide-title">Peta Perjalanan <em>Hari Ini</em></h2>
+      <p class="sub">Enam babak singkat, penuh sentuhan dan permainan. Siapkan jari-jarimu ya!</p>
+    </div>
+    <div class="path">
+      <div class="pnode rise"><span class="pnum c-lancip" style="color:var(--ccd)">1</span><div><b>Mengenal Sudut</b><p>Apa itu sudut? Kenali <i>titik sudut</i> dan <i>kaki sudut</i> lewat gambar yang bisa kamu sentuh.</p><span class="pill c-lancip">Konsep Dasar</span></div></div>
+      <div class="pnode rise d1"><span class="pnum c-siku" style="color:var(--ccd)">2</span><div><b>Cara Menamai Sudut</b><p>Tiga cara penamaan: tiga huruf, satu huruf, dan angka atau huruf Yunani.</p><span class="pill c-siku">Penamaan</span></div></div>
+      <div class="pnode rise d1"><span class="pnum c-tumpul" style="color:var(--ccd)">3</span><div><b>Enam Jenis Sudut</b><p>Lancip, siku-siku, tumpul, lurus, refleks, dan satu putaran penuh — putar sendiri jarumnya!</p><span class="pill c-tumpul">Jenis-jenis</span></div></div>
+      <div class="pnode rise d2"><span class="pnum c-lurus" style="color:var(--ccd)">4</span><div><b>Sudut pada Jam</b><p>Seret jarum jam dan temukan berapa derajat sudutnya di setiap waktu.</p><span class="pill c-lurus">Sudut Jam</span></div></div>
+      <div class="pnode rise d2"><span class="pnum c-refleks" style="color:var(--ccd)">5</span><div><b>Sudut di Sekitar Kita</b><p>Gunung, jendela, gunting, sampai roda ferris — semuanya menyimpan sudut.</p><span class="pill c-refleks">Dunia Nyata</span></div></div>
+      <div class="pnode rise d3"><span class="pnum c-penuh" style="color:var(--ccd)">6</span><div><b>Game &amp; Kuis 20 Soal</b><p>Dua mini-game seru, lalu buktikan pemahamanmu di kuis akhir!</p><span class="pill c-penuh">Level Akhir</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 · MENGENAL SUDUT ============ -->
+<section class="slide" id="s-kenal">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 01 · Konsep Dasar</span>
+      <h2 class="slide-title">Apa Itu <em>Sudut?</em></h2>
+    </div>
+    <div class="two-col">
+      <div>
+        <p class="defbox rise">Sudut adalah <mark>bangun datar</mark> yang terbentuk oleh <mark>dua sinar</mark> yang bertemu di satu titik.</p>
+        <div class="terms">
+          <div class="term rise d1"><span class="tico" style="background:var(--rose-soft);color:var(--rose-deep)"><i data-lucide="crosshair"></i></span><div><b>Titik Sudut</b><p>Titik pertemuan kedua kaki sudut. Pada gambar, titik sudutnya adalah <b>titik O</b>.</p></div></div>
+          <div class="term rise d2"><span class="tico" style="background:var(--honey-soft);color:var(--honey-deep)"><i data-lucide="ruler"></i></span><div><b>Kaki Sudut</b><p>Dua sinar (garis) yang membentuk sudut. Pada gambar, kakinya adalah <b>sinar OA dan OB</b>.</p></div></div>
+          <div class="term rise d3"><span class="tico" style="background:var(--teal-soft);color:var(--teal-deep)"><i data-lucide="gauge"></i></span><div><b>Besar Sudut</b><p>Diukur dalam derajat (°) dengan alat bernama <b>busur derajat</b>. Satu putaran penuh = 360°.</p></div></div>
+        </div>
+      </div>
+      <div class="illwrap rise d1">
+        <span class="hintchip" style="position:absolute;top:-8px;right:6px;z-index:2"><i data-lucide="move"></i> Seret di dalam gambar!</span>
+        <svg id="svgIntro" class="dragsvg" viewBox="0 0 540 430">
+          <line x1="205" y1="345" x2="495" y2="345" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <line id="inLineB" x1="205" y1="345" x2="353" y2="137" stroke="#E0526E" stroke-width="6" stroke-linecap="round"/>
+          <path id="inArc" d="" fill="none" stroke="#E9A03B" stroke-width="4.5"/>
+          <text id="inDegT" class="svgdeg" font-size="27" text-anchor="middle" fill="#B97A1F">52°</text>
+          <circle cx="205" cy="345" r="8" fill="#3A2A20"/>
+          <circle cx="495" cy="345" r="7" fill="#E9A03B"/>
+          <circle id="inDotB" cx="353" cy="137" r="7.5" fill="#E0526E"/>
+          <circle id="inGrab" class="grabme" cx="353" cy="137" r="26" fill="rgba(224,82,110,.14)" stroke="#E0526E" stroke-width="2" stroke-dasharray="4 5"/>
+          <text x="186" y="374" class="svglbl" font-size="17">O</text>
+          <text x="493" y="374" class="svglbl" font-size="17">A</text>
+          <text id="inLblB" class="svglbl" font-size="17" text-anchor="middle" fill="#C23855">B</text>
+          <text x="300" y="392" class="anote" text-anchor="middle">kaki sudut OA</text>
+          <text x="96" y="240" class="anote" text-anchor="middle">titik<tspan x="96" dy="14">sudut</tspan></text>
+          <path d="M112 254 Q140 300 194 338" fill="none" stroke="#8A7362" stroke-width="1.8" stroke-dasharray="3 4"/>
+          <path d="M188 330 L196 340 L184 340" fill="#8A7362"/>
+        </svg>
+        <div style="text-align:center;margin-top:12px"><button class="btn btn-ghost" id="inRandom"><i data-lucide="dices"></i> Putar Acak</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 · PENAMAAN ============ -->
+<section class="slide" id="s-nama">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 02 · Penamaan</span>
+      <h2 class="slide-title">Cara <em>Menamai</em> Sudut</h2>
+      <p class="sub">Simbol sudut ditulis <b>∠</b>. Klik tiap cara penamaan dan lihat perubahannya pada gambar — titik-titiknya juga bisa kamu seret!</p>
+    </div>
+    <div class="two-col">
+      <div class="illwrap rise d1">
+        <svg id="svgNama" class="dragsvg" viewBox="0 0 520 400">
+          <line x1="300" y1="320" x2="68" y2="320" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <line id="nmLineC" x1="300" y1="320" x2="427" y2="116" stroke="#E0526E" stroke-width="6" stroke-linecap="round"/>
+          <path id="nmArc" d="" fill="none" stroke="#E9A03B" stroke-width="4.5"/>
+          <text id="nmArcLbl" class="svgdeg" font-size="26" text-anchor="middle" fill="#B97A1F">B</text>
+          <circle cx="300" cy="320" r="8" fill="#3A2A20"/>
+          <circle cx="68" cy="320" r="7" fill="#E9A03B"/>
+          <circle id="nmDotC" cx="427" cy="116" r="7.5" fill="#E0526E"/>
+          <circle id="nmGrab" class="grabme" cx="427" cy="116" r="24" fill="rgba(224,82,110,.14)" stroke="#E0526E" stroke-width="2" stroke-dasharray="4 5"/>
+          <text x="308" y="348" class="svglbl" font-size="17">B</text>
+          <text x="58" y="348" class="svglbl" font-size="17">A</text>
+          <text id="nmLblC" class="svglbl" font-size="17" text-anchor="middle" fill="#C23855">C</text>
+          <text x="300" y="238" class="anote" text-anchor="middle">titik sudut = B</text>
+        </svg>
+      </div>
+      <div>
+        <div class="notation rise" id="nmNotation">∠ABC</div>
+        <p class="nnote rise d1" id="nmNote">Titik sudut (B) <b>selalu ditulis di tengah</b>. Jadi ∠ABC sama saja dengan ∠CBA.</p>
+        <div class="ntabs rise d2">
+          <button class="ntab on" data-mode="0"><span class="nkey">∠ABC</span><span><b>Tiga Huruf</b><small>Nama lengkap: titik kaki – titik sudut – titik kaki. Titik sudut di tengah.</small></span></button>
+          <button class="ntab" data-mode="1"><span class="nkey">∠B</span><span><b>Satu Huruf</b><small>Cukup nama titik sudutnya saja — dipakai jika di titik itu hanya ada satu sudut.</small></span></button>
+          <button class="ntab" data-mode="2"><span class="nkey">∠1</span><span><b>Angka / Huruf Yunani</b><small>Dinamai ∠1, ∠2, atau ∠α, ∠β — praktis jika di satu titik ada banyak sudut.</small></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 · JENIS SUDUT ============ -->
+<section class="slide" id="s-jenis">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 03 · Jenis-jenis</span>
+      <h2 class="slide-title">Enam Wajah <em>Sudut</em></h2>
+      <p class="sub">Putar jarumnya perlahan dan amati: warna, nama, dan contohnya ikut berubah. Bisakah kamu menemukan keenamnya?</p>
+    </div>
+    <div class="two-col">
+      <div class="rise d1">
+        <svg id="svgJenis" class="dragsvg" viewBox="0 0 470 470" style="max-width:430px">
+          <g id="jTicks"></g>
+          <circle cx="235" cy="252" r="178" fill="none" stroke="#D8C4A6" stroke-width="2" stroke-dasharray="3 9"/>
+          <line x1="235" y1="252" x2="413" y2="252" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <path id="jArc" d="" fill="none" stroke="#E0526E" stroke-width="7" opacity=".9"/>
+          <line id="jNeedle" x1="235" y1="252" x2="381" y2="106" stroke="#E0526E" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="235" cy="252" r="9" fill="#3A2A20"/>
+          <circle id="jGrab" class="grabme" cx="381" cy="106" r="24" fill="rgba(224,82,110,.12)"/>
+        </svg>
+        <div class="typebox">
+          <div class="deg-big"><span id="typeDeg">55</span><span>°</span></div>
+          <span class="pill c-lancip" id="typeName" style="font-size:14px;padding:8px 18px">Sudut Lancip</span>
+        </div>
+        <div class="goals">
+          <span data-a="45">Capai 45°</span><span data-a="90">Capai 90°</span><span data-a="125">Capai 125°</span><span data-a="180">Capai 180°</span><span data-a="270">Capai 270°</span><span data-a="360">Capai 360°</span>
+        </div>
+      </div>
+      <div class="typelist rise d2">
+        <div class="trow c-lancip" data-cat="lancip"><span class="tdot"></span><div><div class="thead"><b>Sudut Lancip</b><span>0° &lt; x &lt; 90°</span></div><p class="texp">Kecil dan runcing. Contoh: ujung potongan pizza, puncak gunung runcing, jepit rambut terbuka sedikit.</p></div></div>
+        <div class="trow c-siku" data-cat="siku"><span class="tdot"></span><div><div class="thead"><b>Sudut Siku-siku</b><span>tepat 90°</span></div><p class="texp">Sudut "tegak" — setengah dari seperempat putaran. Contoh: sudut buku, jendela, dan meja.</p></div></div>
+        <div class="trow c-tumpul" data-cat="tumpul"><span class="tdot"></span><div><div class="thead"><b>Sudut Tumpul</b><span>90° &lt; x &lt; 180°</span></div><p class="texp">Lebar dari siku-siku tapi belum setengah putaran. Contoh: gunting terbuka lebar, atap rumah landai.</p></div></div>
+        <div class="trow c-lurus" data-cat="lurus"><span class="tdot"></span><div><div class="thead"><b>Sudut Lurus</b><span>tepat 180°</span></div><p class="texp">Tampak seperti garis lurus. Contoh: buku terbuka rata, jalan lurus tanpa belokan.</p></div></div>
+        <div class="trow c-refleks" data-cat="refleks"><span class="tdot"></span><div><div class="thead"><b>Sudut Refleks</b><span>180° &lt; x &lt; 360°</span></div><p class="texp">Lebih dari setengah putaran. Contoh: pintu terbuka sangat lebar, roda ferris yang hampir sekali putaran.</p></div></div>
+        <div class="trow c-penuh" data-cat="penuh"><span class="tdot"></span><div><div class="thead"><b>Satu Putaran Penuh</b><span>tepat 360°</span></div><p class="texp">Kembali tepat ke posisi semula. Contoh: jarum menit kembali ke angka 12, roda berputar sekali penuh.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 · JAM ============ -->
+<section class="slide" id="s-jam">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 04 · Waktu</span>
+      <h2 class="slide-title">Sudut pada <em>Jarum Jam</em></h2>
+      <p class="sub">Jam adalah mesin sudut yang berdetak setiap detik! Seret ujung jarum untuk mengubah waktu, lalu amati sudutnya.</p>
+    </div>
+    <div class="two-col">
+      <div class="illwrap rise d1" style="max-width:470px">
+        <span class="hintchip" style="position:absolute;top:-6px;right:0;z-index:2"><i data-lucide="move"></i> Seret jarumnya!</span>
+        <svg id="svgJam" class="dragsvg" viewBox="0 0 460 460">
+          <circle cx="230" cy="230" r="206" fill="#FFFDF7" stroke="#3A2A20" stroke-width="5"/>
+          <g id="clkTicks"></g>
+          <path id="clkArcRef" d="" fill="none" stroke="#C9B69A" stroke-width="4" stroke-dasharray="5 7"/>
+          <path id="clkArcSmall" d="" fill="none" stroke="#E0526E" stroke-width="7"/>
+          <text id="clkLbl" class="svgdeg" font-size="26" text-anchor="middle" fill="#C23855">90°</text>
+          <line id="clkHour" x1="230" y1="230" x2="230" y2="130" stroke="#3A2A20" stroke-width="11" stroke-linecap="round"/>
+          <line id="clkMin" x1="230" y1="230" x2="230" y2="80" stroke="#E0526E" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="230" cy="230" r="10" fill="#E9A03B" stroke="#3A2A20" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="rise d2">
+        <div class="clock-big" id="clkTime">03.00</div>
+        <div class="clockrow">Sudut kecil <b id="clkSmall">90°</b> <span class="pill c-siku" id="clkBadge">SIKU-SIKU</span></div>
+        <div class="clockrow">Sudut besar (refleks) <b id="clkRef">270°</b></div>
+        <div class="presets" id="clkPresets"></div>
+        <div class="fact"><i data-lucide="lightbulb"></i> Dari satu angka ke angka berikutnya jarum berputar <b>360° ÷ 12 = 30°</b>. Maka pukul 03.00 sudutnya 2 × 30° = <b>90°</b>, dan satu putaran penuh jarum menit = <b>60 menit = 360°</b>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 · KEHIDUPAN ============ -->
+<section class="slide" id="s-hidup">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 05 · Dunia Nyata</span>
+      <h2 class="slide-title">Sudut di <em>Sekitar Kita</em></h2>
+      <p class="sub">Dekorasi dinding ini penuh sudut! Arahkan kursor ke tiap kartu untuk melihatnya lebih dekat.</p>
+    </div>
+    <div class="collage rise d1">
+      <div class="ccard cc1">
+        <svg viewBox="0 0 220 150"><circle cx="186" cy="30" r="14" fill="#F2C14E"/><path d="M8 118 L82 28 L156 118 Z" fill="#7FA98F" stroke="#3A2A20" stroke-width="3" stroke-linejoin="round"/><path d="M116 118 L166 58 L214 118 Z" fill="#A9C3B2" stroke="#3A2A20" stroke-width="3" stroke-linejoin="round"/><path d="M68 44 A 22 22 0 0 0 96 44" fill="none" stroke="#E0526E" stroke-width="3.5"/><circle cx="82" cy="28" r="3.5" fill="#E0526E"/></svg>
+        <h4>Puncak Gunung</h4>
+        <div class="crow"><span class="pill c-lancip">Lancip</span><small>± 45°</small></div>
+      </div>
+      <div class="ccard cc2">
+        <svg viewBox="0 0 220 150"><rect x="46" y="18" width="128" height="114" rx="7" fill="#DCEDEA" stroke="#3A2A20" stroke-width="3.5"/><line x1="110" y1="18" x2="110" y2="132" stroke="#3A2A20" stroke-width="3"/><line x1="46" y1="75" x2="174" y2="75" stroke="#3A2A20" stroke-width="3"/><path d="M70 132 A 24 24 0 0 0 46 108" fill="none" stroke="#E0526E" stroke-width="3.5"/><circle cx="46" cy="132" r="3.5" fill="#E0526E"/></svg>
+        <h4>Jendela &amp; Pintu</h4>
+        <div class="crow"><span class="pill c-siku">Siku-siku</span><small>90°</small></div>
+      </div>
+      <div class="ccard cc3">
+        <svg viewBox="0 0 220 150"><line x1="105" y1="75" x2="172" y2="49" stroke="#3A2A20" stroke-width="11" stroke-linecap="round"/><line x1="105" y1="75" x2="94" y2="146" stroke="#3A2A20" stroke-width="11" stroke-linecap="round"/><line x1="105" y1="75" x2="66" y2="94" stroke="#C23855" stroke-width="6" stroke-linecap="round"/><line x1="105" y1="75" x2="112" y2="34" stroke="#C23855" stroke-width="6" stroke-linecap="round"/><circle cx="59" cy="99" r="13" fill="none" stroke="#C23855" stroke-width="5"/><circle cx="113" cy="26" r="13" fill="none" stroke="#C23855" stroke-width="5"/><path d="M 133 64 A 30 30 0 0 1 100 105" fill="none" stroke="#E9A03B" stroke-width="4"/><circle cx="105" cy="75" r="7" fill="#E9A03B" stroke="#3A2A20" stroke-width="3"/></svg>
+        <h4>Gunting Terbuka</h4>
+        <div class="crow"><span class="pill c-tumpul">Tumpul</span><small>± 120°</small></div>
+      </div>
+      <div class="ccard cc4">
+        <svg viewBox="0 0 220 150"><rect x="26" y="52" width="80" height="27" rx="6" fill="#FFFDF7" stroke="#3A2A20" stroke-width="3"/><rect x="114" y="52" width="80" height="27" rx="6" fill="#FFFDF7" stroke="#3A2A20" stroke-width="3"/><line x1="12" y1="66" x2="208" y2="66" stroke="#3E8E8C" stroke-width="3.5"/><circle cx="110" cy="66" r="5" fill="#3E8E8C"/><path d="M 68 66 A 42 42 0 0 1 152 66" fill="none" stroke="#3E8E8C" stroke-width="3" stroke-dasharray="4 5"/></svg>
+        <h4>Buku Terbuka Rata</h4>
+        <div class="crow"><span class="pill c-lurus">Lurus</span><small>180°</small></div>
+      </div>
+      <div class="ccard cc5">
+        <svg viewBox="0 0 220 150"><circle cx="110" cy="76" r="50" fill="none" stroke="#3A2A20" stroke-width="3"/><line x1="110" y1="76" x2="160" y2="76" stroke="#3A2A20" stroke-width="2.5"/><line x1="110" y1="76" x2="135" y2="119" stroke="#3A2A20" stroke-width="2.5"/><line x1="110" y1="76" x2="85" y2="119" stroke="#3A2A20" stroke-width="2.5"/><line x1="110" y1="76" x2="60" y2="76" stroke="#3A2A20" stroke-width="2.5"/><line x1="110" y1="76" x2="85" y2="33" stroke="#3A2A20" stroke-width="2.5"/><line x1="110" y1="76" x2="135" y2="33" stroke="#3A2A20" stroke-width="2.5"/><rect x="154" y="84" width="13" height="13" rx="3" fill="#E9A03B" stroke="#3A2A20" stroke-width="2.5"/><path d="M 160 76 A 50 50 0 1 1 93 33" fill="none" stroke="#E0526E" stroke-width="4.5"/><circle cx="110" cy="76" r="5" fill="#3A2A20"/></svg>
+        <h4>Roda Ferris</h4>
+        <div class="crow"><span class="pill c-refleks">Refleks</span><small>± 250°</small></div>
+      </div>
+      <div class="ccard cc6">
+        <svg viewBox="0 0 220 150"><line x1="110" y1="75" x2="110" y2="30" stroke="#3E8E8C" stroke-width="15" stroke-linecap="round"/><line x1="110" y1="75" x2="70" y2="100" stroke="#3E8E8C" stroke-width="15" stroke-linecap="round"/><line x1="110" y1="75" x2="150" y2="100" stroke="#3E8E8C" stroke-width="15" stroke-linecap="round"/><circle cx="110" cy="75" r="9" fill="#F2C14E" stroke="#3A2A20" stroke-width="3"/><circle cx="110" cy="75" r="56" fill="none" stroke="#9B5FA0" stroke-width="3" stroke-dasharray="7 7"/><path d="M 100 13 L 114 19 L 100 26" fill="none" stroke="#9B5FA0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h4>Baling-baling Mainan</h4>
+        <div class="crow"><span class="pill c-penuh">Putaran Penuh</span><small>360°</small></div>
+      </div>
+      <div class="ccard cc7 ccfact">
+        <h4><i data-lucide="lightbulb"></i> Tahukah kamu?</h4>
+        <p>Sudut siku-siku adalah sudut paling "jujur" — tukang bangunan dan arsitek memakainya setiap hari supaya dinding dan jendela berdiri tegak lurus sempurna. Coba periksa sudut buku pelajaranmu sekarang!</p>
+      </div>
+    </div>
+    <div class="strip rise d2"><i data-lucide="search"></i><span>Misi kecil: hari ini, temukan <b>3 benda</b> di rumahmu yang membentuk sudut lancip, siku-siku, dan tumpul. Jam dinding, gunting, kacamata… semuanya mengintip!</span></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 · GAME ============ -->
+<section class="slide" id="s-game">
+  <div class="slide-inner">
+    <div class="h-block rise" style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">Babak 06 · Main Waktu</span>
+      <h2 class="slide-title">Saatnya <em>Bermain!</em></h2>
+      <p class="sub" style="margin-inline:auto">Dua tantangan menanti. Kumpulkan poin setinggi mungkin dan pecahkan rekormu sendiri!</p>
+    </div>
+
+    <div id="gMenu" class="g-phase rise d1">
+      <div class="tickets">
+        <div class="ticket card">
+          <div class="tk-ico" style="background:var(--rose)"><i data-lucide="zap"></i></div>
+          <h3>Tebak Cepat!</h3>
+          <p>Lihat sudut yang muncul, lalu tebak jenisnya sebelum waktunya habis. Jaga 3 hatimu tetap utuh!</p>
+          <div class="tk-meta"><span><i data-lucide="timer"></i>12 dtk / ronde</span><span><i data-lucide="heart"></i>3 nyawa</span><span><i data-lucide="flag"></i>10 ronde</span></div>
+          <div class="tk-best">Rekor kamu: <b id="bestGuess">0</b> poin</div>
+          <button class="btn btn-primary" id="tkGuess" type="button">Mainkan <i data-lucide="gamepad-2"></i></button>
+        </div>
+        <div class="ticket card">
+          <div class="tk-ico" style="background:var(--plum)"><i data-lucide="rotate-cw"></i></div>
+          <h3>Putar Pas!</h3>
+          <p>Putar jarum hingga tepat pada sudut target — tanpa melihat angkanya! Makin teliti, makin besar poinnya.</p>
+          <div class="tk-meta"><span><i data-lucide="timer"></i>15 dtk / ronde</span><span><i data-lucide="target"></i>5 ronde</span><span><i data-lucide="crown"></i>bonus sempurna</span></div>
+          <div class="tk-best">Rekor kamu: <b id="bestSpin">0</b> poin</div>
+          <button class="btn btn-primary" id="tkSpin" type="button" style="background:var(--plum)">Mainkan <i data-lucide="gamepad-2"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gGuess" class="g-phase gstage" hidden>
+      <div class="ghead">
+        <div class="ghstats">
+          <span class="gstat" id="ggRound">Ronde 1/10</span>
+          <span class="gstat">Poin <b id="ggScore">0</b></span>
+          <span class="gstat gh" id="ggHearts"></span>
+        </div>
+        <span class="hintchip"><i data-lucide="eye"></i> Perhatikan bentuk sudutnya!</span>
+      </div>
+      <div class="tbar"><span id="ggTimerIn"></span></div>
+      <div class="card" style="padding:16px 10px 10px">
+        <svg id="ggSvg" viewBox="0 0 380 400" style="width:100%;max-width:380px;display:block;margin:0 auto">
+          <line x1="190" y1="215" x2="360" y2="215" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <path id="ggArc" d="" fill="none" stroke="#3A2A20" stroke-width="7" opacity=".85"/>
+          <line id="ggNeedle" x1="190" y1="215" x2="305" y2="68" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="190" cy="215" r="9" fill="#E0526E"/>
+        </svg>
+      </div>
+      <div class="gfb" id="ggFb"></div>
+      <div class="gopts" id="ggOpts"></div>
+    </div>
+
+    <div id="gSpin" class="g-phase gstage" hidden>
+      <div class="ghead">
+        <div class="ghstats">
+          <span class="gstat" id="gsRound">Ronde 1/5</span>
+          <span class="gstat">Poin <b id="gsScore">0</b></span>
+        </div>
+        <span class="hintchip"><i data-lucide="move"></i> Seret jarum atau pakai tombol</span>
+      </div>
+      <div class="gtarget">Putar jarum ke: <b id="gsTarget">135°</b><small id="gsTargetCat">sudut tumpul</small></div>
+      <div class="tbar"><span id="gsTimerIn"></span></div>
+      <div class="card" style="padding:16px 10px 10px">
+        <svg id="gsSvg" class="dragsvg" viewBox="0 0 380 400" style="width:100%;max-width:380px;display:block;margin:0 auto">
+          <g id="gsTicks"></g>
+          <circle cx="190" cy="215" r="168" fill="none" stroke="#D8C4A6" stroke-width="2" stroke-dasharray="3 9"/>
+          <line x1="190" y1="215" x2="360" y2="215" stroke="#3A2A20" stroke-width="6" stroke-linecap="round"/>
+          <path id="gsArc" d="" fill="none" stroke="#9B5FA0" stroke-width="7" opacity=".85"/>
+          <line id="gsNeedle" x1="190" y1="215" x2="292" y2="90" stroke="#9B5FA0" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="190" cy="215" r="9" fill="#3A2A20"/>
+          <text id="gsShow" class="svgdeg" font-size="24" text-anchor="middle" fill="#7C4580"></text>
+        </svg>
+      </div>
+      <div class="spinctrl">
+        <button class="btn-mini" id="gsM10" type="button">−10</button>
+        <button class="btn-mini" id="gsM1" type="button">−1</button>
+        <button class="btn-mini" id="gsP1" type="button">+1</button>
+        <button class="btn-mini" id="gsP10" type="button">+10</button>
+        <button class="btn-lock" id="gsLock" type="button">Kunci Jawaban!</button>
+      </div>
+      <div class="gfb" id="gsFb"></div>
+    </div>
+
+    <div id="gOver" class="g-phase" hidden>
+      <div class="gover-card card">
+        <span class="eyebrow" style="justify-content:center" id="goMode">TEBAK CEPAT</span>
+        <div class="gostars" id="goStars"></div>
+        <div class="goscore" id="goScore">0</div>
+        <p class="godetail" id="goDetail"></p>
+        <p class="gomsg" id="goMsg"></p>
+        <div class="gobtns">
+          <button class="btn btn-dark" id="goAgain" type="button"><i data-lucide="refresh-cw"></i> Main Lagi</button>
+          <button class="btn btn-ghost" id="goMenu" type="button">Ganti Mode</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 · KUIS ============ -->
+<section class="slide" id="s-quiz">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Babak 07 · Uji Pemahaman</span>
+      <h2 class="slide-title">Kuis <em>20 Soal</em></h2>
+    </div>
+    <div id="qIntro" class="qintro-card card rise d1">
+      <div class="big-ico"><i data-lucide="list-checks"></i></div>
+      <h3 style="font-family:'Fraunces',serif;font-size:26px;font-weight:640">Siap membuktikan dirimu?</h3>
+      <p style="color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin-top:8px">Kerjakan dengan jujur dan santai — ini bukan lomba lari, ini petualangan sudut!</p>
+      <div class="qmeta-list">
+        <span class="pill c-lancip">20 pilihan ganda</span>
+        <span class="pill c-siku">Semua materi hari ini</span>
+        <span class="pill c-lurus">Boleh diperbaiki sebelum lanjut</span>
+      </div>
+      <button class="btn btn-primary" id="qStart" type="button" style="font-size:16px;padding:15px 34px">Mulai Kuis <i data-lucide="flag"></i></button>
+    </div>
+    <div id="qPlay" class="qwrap" hidden>
+      <div class="qtop"><div class="qbar"><span id="qBarIn"></span></div><span class="qcount" id="qCount">1/20</span></div>
+      <div class="qcard card">
+        <div class="qmeta"><span class="qnum" id="qNum">1</span><span class="pill" id="qCat">Istilah</span></div>
+        <h3 id="qText"></h3>
+        <div class="qopts" id="qOpts"></div>
+        <div class="qnav">
+          <button class="btn btn-ghost" id="qPrev" type="button"><i data-lucide="chevron-left"></i> Sebelumnya</button>
+          <button class="btn btn-primary" id="qNext" type="button">Lanjut <i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 · HASIL ============ -->
+<section class="slide" id="s-hasil">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Laporan Petualangan</span>
+      <h2 class="slide-title">Hasil Kuis <em>Kamu</em></h2>
+    </div>
+    <div id="rEmpty" class="rempty card rise d1">
+      <div class="big-ico"><i data-lucide="clipboard-list"></i></div>
+      <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:640">Belum ada hasil</h3>
+      <p style="color:var(--ink-soft);font-size:14px;margin:8px 0 20px;line-height:1.6">Kerjakan dulu kuis 20 soalnya, lalu skor kamu akan muncul di sini lengkap dengan pembahasannya.</p>
+      <button class="btn btn-primary" id="rGoQuiz" type="button">Ke Kuis <i data-lucide="arrow-right"></i></button>
+    </div>
+    <div id="rDone" hidden>
+      <div class="res-grid">
+        <div class="res-left card rise d1">
+          <span class="eyebrow" style="justify-content:center">Skor Akhir</span>
+          <div class="ringwrap">
+            <svg viewBox="0 0 140 140"><circle class="ring-bg" cx="70" cy="70" r="58"/><circle class="ring-fg" id="rRingFg" cx="70" cy="70" r="58"/></svg>
+            <div class="ringtxt"><b id="rPct">0</b><span>dari 100</span></div>
+          </div>
+          <div style="font-family:'Fraunces',serif;font-size:19px;font-weight:700" id="rFrac">0 / 20 benar</div>
+          <span class="pill rankpill" id="rRank">KERJA BAGUS</span>
+          <p id="rMsg"></p>
+          <div class="resbtns">
+            <button class="btn btn-ghost" id="rRetry" type="button"><i data-lucide="refresh-cw"></i> Ulangi Kuis</button>
+            <button class="btn btn-primary" id="rNext" type="button">Lanjut ke Kesimpulan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+        <div class="res-right card rise d2">
+          <h3>Rincian Jawaban</h3>
+          <p>Klik nomor untuk melihat soal dan pembahasannya.</p>
+          <div class="rgrid" id="rGrid"></div>
+          <div class="rdetail" id="rDetail" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 · KESIMPULAN ============ -->
+<section class="slide" id="s-simpul">
+  <div class="slide-inner">
+    <div class="h-block rise">
+      <span class="eyebrow">Penutup Materi</span>
+      <h2 class="slide-title">Kesimpulan <em>Hari Ini</em></h2>
+    </div>
+    <div class="two-col">
+      <div class="rise d1">
+        <svg viewBox="0 0 560 230" style="width:100%;max-width:560px">
+          <rect x="42" y="138" width="114" height="24" rx="7" fill="#FBE3E8"/>
+          <rect x="162" y="138" width="114" height="24" rx="7" fill="#FAE4D8"/>
+          <rect x="282" y="138" width="236" height="24" rx="7" fill="#F0E2F1"/>
+          <text x="100" y="155" class="svglbl" font-size="11.5" text-anchor="middle" fill="#C23855">LANCIP</text>
+          <text x="220" y="155" class="svglbl" font-size="11.5" text-anchor="middle" fill="#B54E2B">TUMPUL</text>
+          <text x="400" y="155" class="svglbl" font-size="11.5" text-anchor="middle" fill="#7C4580">REFLEKS</text>
+          <line x1="40" y1="150" x2="520" y2="150" stroke="#3A2A20" stroke-width="3.5"/>
+          <line x1="160" y1="126" x2="160" y2="174" stroke="#E9A03B" stroke-width="5" stroke-linecap="round"/>
+          <line x1="280" y1="126" x2="280" y2="174" stroke="#3E8E8C" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="40" cy="150" r="8" fill="#3A2A20"/><circle cx="520" cy="150" r="8" fill="#3A2A20"/>
+          <text x="40" y="114" class="svgdeg" font-size="21" text-anchor="middle">0°</text>
+          <text x="160" y="114" class="svgdeg" font-size="21" text-anchor="middle" fill="#B97A1F">90°</text>
+          <text x="280" y="114" class="svgdeg" font-size="21" text-anchor="middle" fill="#2F6F6D">180°</text>
+          <text x="520" y="114" class="svgdeg" font-size="21" text-anchor="middle">360°</text>
+          <text x="160" y="198" class="anote" text-anchor="middle">siku-siku</text>
+          <text x="280" y="198" class="anote" text-anchor="middle">lurus</text>
+          <text x="518" y="198" class="anote" text-anchor="end">satu putaran penuh</text>
+        </svg>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:10px;text-align:center">Peta derajat: dari 0° sampai satu putaran penuh 360°.</p>
+      </div>
+      <div class="rise d2">
+        <div class="kpoin"><span class="knum">1</span><div><b>Sudut itu dua kaki, satu titik</b><p>Dua kaki sudut bertemu di titik sudut — itulah resep paling dasar sebuah sudut.</p></div></div>
+        <div class="kpoin"><span class="knum">2</span><div><b>Enam jenis, satu peta derajat</b><p>Lancip (&lt;90°), siku-siku (90°), tumpul (90°–180°), lurus (180°), refleks (180°–360°), dan satu putaran penuh (360°).</p></div></div>
+        <div class="kpoin"><span class="knum">3</span><div><b>Titik sudut selalu di tengah</b><p>∠ABC berarti titik sudutnya B. Bisa juga ∠B, ∠1, atau ∠α.</p></div></div>
+        <div class="kpoin"><span class="knum">4</span><div><b>Jam = mesin sudut</b><p>Tiap angka berjarak 30°, jadi pukul 03.00 = 90° dan pukul 06.00 = 180°.</p></div></div>
+        <div class="kpoin"><span class="knum">5</span><div><b>Sudut ada di mana-mana</b><p>Gunung, jendela, gunting, roda ferris — sekarang matamu sudah punya "kacamata sudut"!</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 · REFLEKSI ============ -->
+<section class="slide" id="s-refleksi">
+  <div class="slide-inner">
+    <div class="h-block rise" style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">Sebelum Pulang</span>
+      <h2 class="slide-title">Refleksi <em>Hari Ini</em></h2>
+    </div>
+    <div class="two-col" style="align-items:start;max-width:1000px;margin:0 auto">
+      <div class="rise d1">
+        <p style="font-family:'Fraunces',serif;font-size:20px;line-height:1.5;font-weight:500">Refleksi membuat pembelajaran hari ini <em style="color:var(--rose)">menempel di ingatan</em>. Tidak ada jawaban benar atau salah — tulis saja apa yang kamu rasakan.</p>
+        <div class="refq" style="margin-top:22px">
+          <span><i data-lucide="star"></i> Bagian mana yang paling seru atau menarik?</span>
+          <span><i data-lucide="cloud"></i> Ada materi yang masih terasa membingungkan?</span>
+          <span><i data-lucide="sparkles"></i> Sudut apa yang mengejutkanmu hari ini?</span>
+        </div>
+      </div>
+      <div class="refcard card rise d2">
+        <div class="stars" id="stars"></div>
+        <p class="refhint">Seberapa paham materi sudut hari ini? (1–5 bintang)</p>
+        <textarea id="refText" rows="4" placeholder="Hal baru yang aku pelajari hari ini…"></textarea>
+        <div style="margin-top:16px"><button class="btn btn-primary" id="refSend" type="button"><i data-lucide="send"></i> Kirim Refleksiku</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 · THANKS ============ -->
+<section class="slide" id="s-thanks">
+  <div class="slide-inner">
+    <svg viewBox="0 0 120 40" style="width:120px;margin:0 auto;display:block"><path d="M0-9L2.2-2.2L9 0L2.2 2.2L0 9L-2.2 2.2L-9 0L-2.2-2.2Z" transform="translate(20,20)" fill="#F2C14E"/><path d="M0-13L3-3L13 0L3 3L0 13L-3 3L-13 0L-3-3Z" transform="translate(60,18)" fill="#E0526E"/><path d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(98,22)" fill="#3E8E8C"/></svg>
+    <h2 class="thx-title rise">Thank You<br><em>for Today!</em></h2>
+    <p class="thx-sub rise d1">Kamu sudah menyelesaikan seluruh petualangan sudut, <b id="thanksName">Sahabat Sudut</b>! Dari titik sudut kecil sampai putaran penuh 360° — semoga dari sekarang setiap kamu melihat jam, gunting, atau roda ferris, kamu tersenyum dan berbisik: <i>"aku tahu sudutmu!"</i></p>
+    <div class="rise d2">
+      <button class="btn btn-dark" id="restartBtn" type="button" style="font-size:15px;padding:15px 30px"><i data-lucide="rotate-ccw"></i> Ulangi Petualangan</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="bottomnav">
+  <button class="navbtn" id="prevBtn" type="button" title="Slide sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="navbtn" id="nextBtn" type="button"><span>Lanjut</span><i data-lucide="chevron-right"></i></button>
+</nav>
+<div id="toast"></div>
+
+<script>
+/* ================= UTIL ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const norm360=a=>{a=((a%360)+360)%360;return a};
+function pt(cx,cy,r,a){const rad=a*Math.PI/180;return[cx+r*Math.cos(rad),cy-r*Math.sin(rad)]}
+function ptClock(cx,cy,r,a){const rad=a*Math.PI/180;return[cx+r*Math.sin(rad),cy-r*Math.cos(rad)]}
+function svgPoint(svg,e){const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return[(e.clientX-r.left)*vb.width/r.width,(e.clientY-r.top)*vb.height/r.height]}
+function angleMathAt(svg,e,cx,cy){const p=svgPoint(svg,e);return norm360(Math.atan2(cy-p[1],p[0]-cx)*180/Math.PI)}
+function angleClockAt(svg,e,cx,cy){return norm360(90-angleMathAt(svg,e,cx,cy))}
+function dist2(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}
+function arcMath(cx,cy,r,a0,a1){
+  let sw=a1-a0; if(sw<=0)sw+=360; if(sw>360)sw-=360;
+  if(sw<0.6)return'';
+  if(sw>359.4)return`M ${cx-r} ${cy} A ${r} ${r} 0 1 0 ${cx+r} ${cy} A ${r} ${r} 0 1 0 ${cx-r} ${cy}`;
+  const[x0,y0]=pt(cx,cy,r,a0),[x1,y1]=pt(cx,cy,r,a1);
+  return`M ${x0} ${y0} A ${r} ${r} 0 ${sw>180?1:0} 0 ${x1} ${y1}`;
+}
+function arcClockPath(cx,cy,r,a0,sw){
+  if(sw<0.6)return'';
+  if(sw>359.4)return`M ${cx} ${cy-r} A ${r} ${r} 0 1 1 ${cx} ${cy+r} A ${r} ${r} 0 1 1 ${cx} ${cy-r}`;
+  const[x0,y0]=ptClock(cx,cy,r,a0),[x1,y1]=ptClock(cx,cy,r,a0+sw);
+  return`M ${x0} ${y0} A ${r} ${r} 0 ${sw>180?1:0} 1 ${x1} ${y1}`;
+}
+function catOf(a){a=norm360(a);
+  if(a<=0.6||a>=359.4)return'penuh';
+  if(Math.abs(a-90)<0.6)return'siku';
+  if(Math.abs(a-180)<0.6)return'lurus';
+  if(a<90)return'lancip'; if(a<180)return'tumpul'; return'refleks';
+}
+const CATNAME={lancip:'Sudut Lancip',siku:'Sudut Siku-siku',tumpul:'Sudut Tumpul',lurus:'Sudut Lurus',refleks:'Sudut Refleks',penuh:'Satu Putaran Penuh'};
+const CATCOL={lancip:'#E0526E',siku:'#E9A03B',tumpul:'#D96C47',lurus:'#3E8E8C',refleks:'#9B5FA0',penuh:'#3A2A20'};
+function refreshIcons(){if(window.lucide){try{lucide.createIcons()}catch(e){}}}
+function dragify(svg,{start,move,end}){
+  svg.addEventListener('pointerdown',e=>{
+    if(!start(e))return;
+    try{svg.setPointerCapture(e.pointerId)}catch(err){}
+    e.preventDefault();
+    const mv=ev=>move(ev);
+    const up=ev=>{svg.removeEventListener('pointermove',mv);svg.removeEventListener('pointerup',up);svg.removeEventListener('pointercancel',up);if(end)end(ev)};
+    svg.addEventListener('pointermove',mv);svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+  });
+}
+let animStops={};
+function animateAngle(key,from,to,dur,set){
+  if(animStops[key])animStops[key]();
+  let delta=((to-from+540)%360)-180; const t0=performance.now(); let stop=false;
+  (function f(t){ if(stop)return;
+    let k=Math.min(1,(t-t0)/dur); k=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+    set(norm360(from+delta*k));
+    if(k<1)requestAnimationFrame(f);
+  })(t0);
+  animStops[key]=()=>{stop=true};
+}
+/* penyimpanan aman — tidak akan error walau localStorage diblokir browser */
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v===null?d:+v}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,String(v))}catch(e){}}
+};
+/* setiap modul di-init dengan pengaman: error satu fitur tidak menjatuhkan fitur lain */
+function safe(label,fn){try{fn()}catch(e){console.warn('Modul "'+label+'" gagal dimuat:',e)}}
+
+/* ================= SUARA ================= */
+let actx=null,muted=false;
+function tone(f,d=.09,type='sine',v=.12,when=0){
+  if(muted)return;
+  try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+    const t=actx.currentTime+when,o=actx.createOscillator(),g=actx.createGain();
+    o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.03);
+  }catch(e){}
+}
+const sfx={
+  click:()=>tone(540,.05,'triangle',.06),
+  pop:()=>tone(760,.06,'triangle',.09),
+  ok:()=>{tone(660,.09);tone(880,.13,'sine',.12,.09)},
+  no:()=>tone(215,.2,'sawtooth',.07),
+  win:()=>{[523,659,784,1046].forEach((f,i)=>tone(f,.14,'triangle',.11,i*.11))}
+};
+safe('suara',()=>{
+  $('#sndBtn').addEventListener('click',()=>{
+    muted=!muted;
+    $('#sndBtn').innerHTML=`<i data-lucide="${muted?'volume-x':'volume-2'}"></i>`;
+    refreshIcons(); if(!muted)sfx.click();
+  });
+});
+
+/* ================= KONFETI ================= */
+const confetti=(()=>{
+  const cv=$('#confettiCanvas'),ctx=cv.getContext('2d');
+  let parts=[],running=false,W,H;
+  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+  addEventListener('resize',size);size();
+  const COL=['#E0526E','#E9A03B','#3E8E8C','#9B5FA0','#D96C47','#F6C445'];
+  function spawn(x,y,vx,vy){parts.push({x,y,vx,vy,rot:Math.random()*6.28,vr:(Math.random()-.5)*.28,c:COL[Math.random()*COL.length|0],s:4.5+Math.random()*5.5,life:1,dec:.007+Math.random()*.008,sh:Math.random()<.38?'h':(Math.random()<.5?'c':'r')})}
+  function burst(x,y,n=80){for(let i=0;i<n;i++){const a=(-90+(Math.random()-.5)*130)*Math.PI/180,sp=3.5+Math.random()*8;spawn(x,y,Math.cos(a)*sp,Math.sin(a)*sp)}start()}
+  function rain(ms=2400){const t0=performance.now();(function r(){if(performance.now()-t0>ms)return;for(let i=0;i<4;i++)spawn(Math.random()*W,-14,(Math.random()-.5)*1.6,2+Math.random()*3);start();requestAnimationFrame(r)})()}
+  function heart(c,s){c.beginPath();c.moveTo(0,s*.32);c.bezierCurveTo(s*.5,-s*.34,s*1.15,s*.32,0,s);c.bezierCurveTo(-s*1.15,s*.32,-s*.5,-s*.34,0,s*.32);c.fill()}
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    parts=parts.filter(p=>p.life>0&&p.y<H+30);
+    for(const p of parts){
+      p.vy+=.13;p.vx*=.992;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life-=p.dec;
+      ctx.save();ctx.globalAlpha=Math.min(1,p.life*1.6);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;
+      if(p.sh==='h')heart(ctx,p.s);
+      else if(p.sh==='c'){ctx.beginPath();ctx.arc(0,0,p.s*.55,0,6.28);ctx.fill()}
+      else ctx.fillRect(-p.s*.6,-p.s*.28,p.s*1.2,p.s*.56);
+      ctx.restore();
+    }
+    if(parts.length)requestAnimationFrame(loop);else{running=false;ctx.clearRect(0,0,W,H)}
+  }
+  function start(){if(!running){running=true;requestAnimationFrame(loop)}}
+  return{burst,rain};
+})();
+
+/* ================= TOAST ================= */
+let toastT=0;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ================= NAVIGASI SLIDE ================= */
+const slides=$$('.slide');let cur=0;const STUDENT={name:''};
+let gameStopHook=null; // game mendaftarkan diri agar timer berhenti saat keluar slide
+const dotsBox=$('#dots');
+slides.forEach((_,i)=>{const b=document.createElement('button');b.type='button';b.title='Slide '+(i+1);b.addEventListener('click',()=>{sfx.click();go(i)});dotsBox.appendChild(b)});
+function go(i){
+  i=Math.max(0,Math.min(slides.length-1,i));
+  if(cur!==7&&gameStopHook){try{gameStopHook()}catch(e){}}
+  slides[cur].classList.remove('active');
+  cur=i; slides[cur].classList.add('active');
+  slides[cur].scrollTop=0;
+  $$('#dots button').forEach((d,j)=>d.classList.toggle('on',j===cur));
+  $('#slideCount').textContent=(cur+1)+' / '+slides.length;
+  $('#progIn').style.width=((cur+1)/slides.length*100)+'%';
+  $('#prevBtn').disabled=cur===0; $('#nextBtn').disabled=cur===slides.length-1;
+  if(cur===12){$('#thanksName').textContent=STUDENT.name||'Sahabat Sudut';confetti.rain(2600);sfx.win()}
+}
+ $('#prevBtn').addEventListener('click',()=>{sfx.click();go(cur-1)});
+ $('#nextBtn').addEventListener('click',()=>{sfx.click();go(cur+1)});
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+
+/* ================= COVER ================= */
+safe('cover',()=>{
+  const nameInput=$('#nameInput'),startBtn=$('#startBtn');
+  nameInput.addEventListener('input',()=>startBtn.disabled=!nameInput.value.trim());
+  nameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!startBtn.disabled)startBtn.click()});
+  startBtn.addEventListener('click',()=>{
+    STUDENT.name=nameInput.value.trim();
+    $('#nameChipText').textContent=STUDENT.name;
+    $('#nameChip').hidden=false;
+    sfx.pop();
+    const r=startBtn.getBoundingClientRect();
+    confetti.burst(r.left+r.width/2,r.top,60);
+    toast('Selamat datang, '+STUDENT.name+'! Selamat menjelajah sudut.');
+    setTimeout(()=>go(1),350);
+  });
+});
+
+/* ================= SLIDE: MENGENAL SUDUT ================= */
+safe('mengenal',(()=>{
+  const svg=$('#svgIntro'),CX=205,CY=345,RB=258;let ang=52;
+  function update(){
+    const b=pt(CX,CY,RB,ang);
+    $('#inLineB').setAttribute('x2',b[0]);$('#inLineB').setAttribute('y2',b[1]);
+    ['#inDotB','#inGrab'].forEach(id=>{$(id).setAttribute('cx',b[0]);$(id).setAttribute('cy',b[1])});
+    const l=pt(CX,CY,RB+42,ang);
+    $('#inLblB').setAttribute('x',l[0]);$('#inLblB').setAttribute('y',l[1]+6);
+    $('#inArc').setAttribute('d',arcMath(CX,CY,86,0,ang));
+    const d=pt(CX,CY,130,ang/2);
+    $('#inDegT').setAttribute('x',d[0]);$('#inDegT').setAttribute('y',d[1]+9);
+    $('#inDegT').textContent=Math.round(ang)+'°';
+  }
+  dragify(svg,{
+    start:e=>{if(animStops.intro)animStops.intro();return dist2(svgPoint(svg,e),[CX,CY])>28},
+    move:e=>{ang=angleMathAt(svg,e,CX,CY);update()}
+  });
+  $('#inRandom').addEventListener('click',()=>{
+    sfx.click();
+    animateAngle('intro',ang,Math.random()*360,750,v=>{ang=v;update()});
+  });
+  update();
+  return null;
+})());
+
+/* ================= SLIDE: PENAMAAN ================= */
+safe('penamaan',(()=>{
+  const svg=$('#svgNama'),BX=300,BY=320,RC=240;let th=58,mode=0;
+  const NOTATION=['∠ABC','∠B','∠1'],ARCLBL=['B','B','1'];
+  const NOTES=[
+    'Titik sudut (B) <b>selalu ditulis di tengah</b>. Jadi ∠ABC sama saja dengan ∠CBA.',
+    'Boleh memakai <b>satu huruf</b> (∠B) jika di titik B hanya ada <b>satu sudut</b>.',
+    'Jika di satu titik ada <b>banyak sudut</b>, beri nama angka (∠1) atau huruf Yunani (∠α, ∠β).'
+  ];
+  function update(){
+    const c=pt(BX,BY,RC,th);
+    $('#nmLineC').setAttribute('x2',c[0]);$('#nmLineC').setAttribute('y2',c[1]);
+    ['#nmDotC','#nmGrab'].forEach(id=>{$(id).setAttribute('cx',c[0]);$(id).setAttribute('cy',c[1])});
+    const l=pt(BX,BY,RC+40,th);
+    $('#nmLblC').setAttribute('x',l[0]);$('#nmLblC').setAttribute('y',l[1]+6);
+    $('#nmArc').setAttribute('d',arcMath(BX,BY,52,th,180));
+    const m=pt(BX,BY,84,(180+th)/2);
+    $('#nmArcLbl').setAttribute('x',m[0]);$('#nmArcLbl').setAttribute('y',m[1]+9);
+    $('#nmArcLbl').textContent=ARCLBL[mode];
+    $('#nmNotation').textContent=NOTATION[mode];
+    $('#nmNote').innerHTML=NOTES[mode];
+  }
+  $$('.ntab').forEach(t=>t.addEventListener('click',()=>{
+    sfx.click();$$('.ntab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');mode=+t.dataset.mode;update();
+  }));
+  dragify(svg,{
+    start:e=>{if(animStops.nama)animStops.nama();return dist2(svgPoint(svg,e),[BX,BY])>28},
+    move:e=>{th=Math.max(12,Math.min(168,angleMathAt(svg,e,BX,BY)));update()}
+  });
+  update();
+  return null;
+})());
+
+/* ================= SLIDE: JENIS SUDUT ================= */
+safe('jenis',(()=>{
+  const svg=$('#svgJenis'),CX=235,CY=252,R=178;let ang=55;
+  let g='';
+  for(let a=0;a<360;a+=15){
+    const[x1,y1]=pt(CX,CY,R-6,a),[x2,y2]=pt(CX,CY,R+6,a);
+    g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#C9B69A" stroke-width="2"/>`;
+  }
+  [[0,'0°'],[90,'90°'],[180,'180°'],[270,'270°'],[360,'360°']].forEach(([a,t])=>{
+    const[x,y]=pt(CX,CY,R+34,a);
+    g+=`<text x="${x}" y="${y+7}" text-anchor="middle" class="svgsoft" font-size="15">${t}</text>`;
+  });
+  $('#jTicks').innerHTML=g;
+  function update(){
+    const tip=pt(CX,CY,R-8,ang);
+    $('#jNeedle').setAttribute('x2',tip[0]);$('#jNeedle').setAttribute('y2',tip[1]);
+    $('#jGrab').setAttribute('cx',tip[0]);$('#jGrab').setAttribute('cy',tip[1]);
+    $('#jArc').setAttribute('d',arcMath(CX,CY,92,0,ang));
+    const cat=catOf(ang);
+    $('#jArc').setAttribute('stroke',CATCOL[cat]);
+    $('#jNeedle').setAttribute('stroke',CATCOL[cat]);
+    $('#typeDeg').textContent=Math.round(ang);
+    const tn=$('#typeName');
+    tn.textContent=CATNAME[cat];
+    tn.className='pill c-'+cat;
+    tn.style.fontSize='14px';tn.style.padding='8px 18px';
+    $$('.trow').forEach(r=>r.classList.toggle('on',r.dataset.cat===cat));
+  }
+  $$('.goals span').forEach(b=>b.addEventListener('click',()=>{
+    sfx.click();
+    animateAngle('jenis',ang,+b.dataset.a,800,v=>{ang=v;update()});
+  }));
+  dragify(svg,{
+    start:e=>{if(animStops.jenis)animStops.jenis();return dist2(svgPoint(svg,e),[CX,CY])>30},
+    move:e=>{ang=angleMathAt(svg,e,CX,CY);update()}
+  });
+  update();
+  return null;
+})());
+
+/* ================= SLIDE: JAM ================= */
+safe('jam',(()=>{
+  const svg=$('#svgJam'),CX=230,CY=230;let hAng=90,mAng=0;
+  let g='';
+  for(let i=0;i<60;i++){
+    const a=i*6,maj=i%5===0,[x1,y1]=ptClock(CX,CY,maj?176:186,a),[x2,y2]=ptClock(CX,CY,198,a);
+    g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${maj?'#3A2A20':'#C9B69A'}" stroke-width="${maj?3:2}"/>`;
+  }
+  for(let n=1;n<=12;n++){
+    const[x,y]=ptClock(CX,CY,146,n*30);
+    g+=`<text x="${x}" y="${y+8}" text-anchor="middle" class="svglbl" font-size="23" font-family="Fraunces, serif">${n}</text>`;
+  }
+  $('#clkTicks').innerHTML=g;
+  const PRESETS=[['01.00',30,0],['03.00',90,0],['04.00',120,0],['06.00',180,0],['07.30',225,180],['12.00',360,0]];
+  PRESETS.forEach(([t,h,m])=>{
+    const b=document.createElement('button');b.type='button';b.textContent='Pukul '+t;
+    b.addEventListener('click',()=>{sfx.click();
+      animateAngle('jamH',hAng,h,700,v=>{hAng=v;update()});
+      animateAngle('jamM',mAng,m,700,v=>{mAng=v;update()});
+    });
+    $('#clkPresets').appendChild(b);
+  });
+  function update(){
+    const h1=ptClock(CX,CY,102,hAng),m1=ptClock(CX,CY,156,mAng);
+    $('#clkHour').setAttribute('x2',h1[0]);$('#clkHour').setAttribute('y2',h1[1]);
+    $('#clkMin').setAttribute('x2',m1[0]);$('#clkMin').setAttribute('y2',m1[1]);
+    const d=norm360(mAng-hAng);
+    let sStart,sSweep;
+    if(d<=180){sStart=hAng;sSweep=d}else{sStart=mAng;sSweep=360-d}
+    $('#clkArcSmall').setAttribute('d',arcClockPath(CX,CY,58,sStart,sSweep));
+    $('#clkArcRef').setAttribute('d',arcClockPath(CX,CY,84,sStart+sSweep,360-sSweep));
+    const lbl=ptClock(CX,CY,108,sStart+sSweep/2);
+    $('#clkLbl').setAttribute('x',lbl[0]);$('#clkLbl').setAttribute('y',lbl[1]+9);
+    const small=Math.round(sSweep);
+    $('#clkLbl').textContent=small+'°';
+    const hh=Math.floor(hAng/30)%12||12, mm=Math.round(mAng/6)%60;
+    $('#clkTime').textContent=String(hh).padStart(2,'0')+'.'+String(mm).padStart(2,'0');
+    $('#clkSmall').textContent=small+'°';
+    $('#clkRef').textContent=(360-small)+'°';
+    const cat=catOf(sSweep),badge=$('#clkBadge');
+    badge.textContent=CATNAME[cat].toUpperCase();badge.className='pill c-'+cat;
+  }
+  dragify(svg,{
+    start:e=>{
+      if(animStops.jamH)animStops.jamH();if(animStops.jamM)animStops.jamM();
+      const p=svgPoint(svg,e),r=Math.hypot(p[0]-CX,p[1]-CY);
+      if(r<44)return false;
+      const a=angleClockAt(svg,e,CX,CY);
+      const dh=Math.min(Math.abs(a-hAng),360-Math.abs(a-hAng));
+      const dm=Math.min(Math.abs(a-mAng),360-Math.abs(a-mAng));
+      svg._hand=dm<dh?'m':'h';return true;
+    },
+    move:e=>{const a=angleClockAt(svg,e,CX,CY);if(svg._hand==='m')mAng=a;else hAng=a;update()}
+  });
+  update();
+  return null;
+})());
+
+/* ================= GAME ================= */
+safe('game',(()=>{
+  const phases={menu:$('#gMenu'),guess:$('#gGuess'),spin:$('#gSpin'),over:$('#gOver')};
+  const S={mode:null,round:0,rounds:10,score:0,streak:0,lives:3,correct:0,ang:0,target:0,answered:false,tLeft:0,
+           best:{guess:store.get('best_guess',0),spin:store.get('best_spin',0)}};
+  let raf=0,endAt=0;
+  function show(p){Object.keys(phases).forEach(k=>{if(phases[k])phases[k].hidden=(k!==p)})}
+  function updBest(){$('#bestGuess').textContent=S.best.guess;$('#bestSpin').textContent=S.best.spin}
+  updBest();
+  function stopTimer(){if(raf){cancelAnimationFrame(raf);raf=0}}
+  function startTimer(bar,ms,onEnd){
+    stopTimer();endAt=performance.now()+ms;
+    (function f(){
+      const left=endAt-performance.now();
+      S.tLeft=Math.max(0,left/1000);
+      const k=Math.min(1,Math.max(0,1-left/ms));
+      bar.style.width=(k*100)+'%';
+      bar.style.background=k>.75?'#C23855':(k>.5?'#E9A03B':'#7bb661');
+      if(left<=0){raf=0;onEnd()}else raf=requestAnimationFrame(f);
+    })();
+  }
+  // keluar slide game → hentikan timer & kembalikan ke menu jika ronde belum selesai
+  gameStopHook=()=>{stopTimer();if(S.mode&&!S.answered){S.mode=null;show('menu')}};
+  function fbMsg(el,msg,ok){el.className='gfb show '+(ok?'ok':'no');el.innerHTML=`<i data-lucide="${ok?'check-circle-2':'x-circle'}"></i><span>${msg}</span>`;refreshIcons()}
+  function fbHide(el){el.className='gfb';el.innerHTML=''}
+
+  /* ---- TEBAK CEPAT ---- */
+  const POOL=[25,40,55,70,80,90,105,120,135,150,180,200,225,250,270,300,330,360];
+  function renderHearts(){
+    $('#ggHearts').innerHTML=[0,1,2].map(i=>`<span class="${i<S.lives?'hfull':'hempty'}"><i data-lucide="heart"></i></span>`).join('');
+    refreshIcons();
+  }
+  function drawGuess(ang,col){
+    const tip=pt(190,215,165,ang);
+    $('#ggNeedle').setAttribute('x2',tip[0]);$('#ggNeedle').setAttribute('y2',tip[1]);
+    const arc=$('#ggArc');arc.setAttribute('d',arcMath(190,215,95,0,ang));arc.setAttribute('stroke',col);
+  }
+  (function buildOpts(){
+    $('#ggOpts').innerHTML=Object.keys(CATNAME).map(c=>
+      `<button class="gopt c-${c}" type="button" data-cat="${c}"><span class="gdot"></span>${CATNAME[c].replace('Sudut ','')}</button>`).join('');
+    $$('#ggOpts .gopt').forEach(b=>b.addEventListener('click',()=>resolveGuess(b.dataset.cat)));
+  })();
+  function startGuess(){
+    S.mode='guess';S.round=0;S.score=0;S.streak=0;S.lives=3;S.correct=0;S.rounds=10;
+    show('guess');renderHearts();nextGuess();
+  }
+  function nextGuess(){
+    S.round++;
+    if(S.round>S.rounds||S.lives<=0){endGame();return}
+    $('#ggRound').textContent=`Ronde ${S.round}/${S.rounds}`;
+    $('#ggScore').textContent=S.score;
+    S.ang=POOL[Math.floor(Math.random()*POOL.length)];S.answered=false;
+    drawGuess(S.ang,'#3A2A20');fbHide($('#ggFb'));
+    $$('#ggOpts .gopt').forEach(b=>{b.disabled=false;b.style.borderColor=''});
+    startTimer($('#ggTimerIn'),12000,()=>resolveGuess(null));
+  }
+  function resolveGuess(pick){
+    if(S.mode!=='guess'||S.answered)return;
+    S.answered=true;stopTimer();
+    const cat=catOf(S.ang),ok=pick===cat;
+    drawGuess(S.ang,CATCOL[cat]);
+    $$('#ggOpts .gopt').forEach(b=>{b.disabled=true;if(b.dataset.cat===cat)b.style.borderColor=CATCOL[cat]});
+    if(ok){
+      S.streak++;S.correct++;
+      const pts=100+Math.round(S.tLeft)*5+S.streak*20;S.score+=pts;
+      fbMsg($('#ggFb'),`Benar! Ini ${CATNAME[cat].toLowerCase()} (${S.ang}°) · +${pts} poin`,true);
+      sfx.ok();confetti.burst(innerWidth/2,innerHeight/2,50);
+    }else{
+      S.lives--;S.streak=0;
+      fbMsg($('#ggFb'),pick===null?`Waktu habis! Ini ${CATNAME[cat].toLowerCase()} (${S.ang}°)`:`Bukan! Itu ${CATNAME[cat].toLowerCase()} (${S.ang}°)`,false);
+      sfx.no();
+    }
+    renderHearts();$('#ggScore').textContent=S.score;
+    setTimeout(()=>{if(S.mode!=='guess')return;(S.lives<=0||S.round>=S.rounds)?endGame():nextGuess()},1500);
+  }
+
+  /* ---- PUTAR PAS ---- */
+  (function buildTicks(){
+    let g='';
+    [[0,'0°'],[90,'90°'],[180,'180°'],[270,'270°']].forEach(([a,t])=>{
+      const[x,y]=pt(190,215,182,a);
+      g+=`<text x="${x}" y="${y+5}" text-anchor="middle" class="svgsoft" font-size="13">${t}</text>`;
+    });
+    $('#gsTicks').innerHTML=g;
+  })();
+  function drawSpin(col){
+    const tip=pt(190,215,162,S.ang);
+    $('#gsNeedle').setAttribute('x2',tip[0]);$('#gsNeedle').setAttribute('y2',tip[1]);
+    const arc=$('#gsArc');arc.setAttribute('d',arcMath(190,215,88,0,S.ang));arc.setAttribute('stroke',col||'#9B5FA0');
+  }
+  function startSpin(){S.mode='spin';S.round=0;S.score=0;S.rounds=5;show('spin');nextSpin()}
+  function nextSpin(){
+    S.round++;
+    if(S.round>S.rounds){endGame();return}
+    $('#gsRound').textContent=`Ronde ${S.round}/${S.rounds}`;
+    $('#gsScore').textContent=S.score;
+    const T=[30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+    S.target=T[Math.floor(Math.random()*T.length)];
+    S.ang=Math.floor(Math.random()*360);S.answered=false;
+    $('#gsTarget').textContent=S.target+'°';
+    $('#gsTargetCat').textContent=CATNAME[catOf(S.target)].toLowerCase();
+    $('#gsShow').textContent='';
+    drawSpin();fbHide($('#gsFb'));
+    startTimer($('#gsTimerIn'),15000,lockSpin);
+  }
+  function setSpin(a){if(S.answered)return;S.ang=norm360(Math.round(a));drawSpin()}
+  $('#gsM10').addEventListener('click',()=>{sfx.click();setSpin(S.ang-10)});
+  $('#gsM1').addEventListener('click',()=>{sfx.click();setSpin(S.ang-1)});
+  $('#gsP1').addEventListener('click',()=>{sfx.click();setSpin(S.ang+1)});
+  $('#gsP10').addEventListener('click',()=>{sfx.click();setSpin(S.ang+10)});
+  $('#gsLock').addEventListener('click',lockSpin);
+  dragify($('#gsSvg'),{
+    start:()=>!S.answered&&S.mode==='spin',
+    move:e=>setSpin(angleMathAt($('#gsSvg'),e,190,215))
+  });
+  function lockSpin(){
+    if(S.mode!=='spin'||S.answered)return;
+    S.answered=true;stopTimer();
+    let diff=Math.round(Math.abs(S.ang-S.target));diff=Math.min(diff,360-diff);
+    let pts=Math.max(0,100-diff*4),ok=true,msg;
+    const shown=pt(190,215,128,S.ang),sh=$('#gsShow');
+    sh.setAttribute('x',shown[0]);sh.setAttribute('y',shown[1]+8);
+    sh.textContent=Math.round(S.ang)+'°';
+    if(diff===0){pts+=50;msg=`SEMPURNA! Tepat di target! +${pts} poin`;drawSpin('#3E8E8C');confetti.burst(innerWidth/2,innerHeight/2,100);sfx.win()}
+    else if(diff<=3){pts+=25;msg=`Luar biasa, meleset ${diff}° saja! +${pts} poin`;drawSpin('#3E8E8C');sfx.ok()}
+    else if(diff<=10){msg=`Bagus! Meleset ${diff}°. +${pts} poin`;sfx.ok()}
+    else{ok=false;msg=`Meleset ${diff}° — jarummu di ${Math.round(S.ang)}°, target ${S.target}°. +${pts} poin`;drawSpin('#E0526E');sfx.no()}
+    S.score+=pts;$('#gsScore').textContent=S.score;
+    fbMsg($('#gsFb'),msg,ok);
+    setTimeout(()=>{if(S.mode!=='spin')return;(S.round>=S.rounds)?endGame():nextSpin()},1800);
+  }
+
+  /* ---- SELESAI ---- */
+  function endGame(){
+    stopTimer();show('over');
+    $('#goMode').textContent=S.mode==='guess'?'TEBAK CEPAT':'PUTAR PAS';
+    let stars,detail;
+    if(S.mode==='guess'){stars=S.correct>=9?3:S.correct>=6?2:S.correct>=3?1:0;detail=`Kamu menjawab benar ${S.correct} dari ${S.rounds} ronde.`}
+    else{const avg=Math.round(S.score/Math.max(1,S.round));stars=avg>=90?3:avg>=65?2:avg>=40?1:0;detail=`Rata-rata akurasimu ${avg} poin per ronde.`}
+    $('#goStars').innerHTML=[0,1,2].map(i=>`<span class="${i<stars?'star-on':'star-off'}"><i data-lucide="star"></i></span>`).join('');
+    $('#goScore').textContent=S.score;
+    $('#goDetail').textContent=detail;
+    $('#goMsg').textContent=['Tidak apa-apa — baca lagi materinya, lalu kalahkan rekormu sendiri!','Bagus! Sedikit latihan lagi biar makin jago.','Hebat! Kamu hampir mencapai kesempurnaan sudut.','Luar biasa! Kamu detektif sudut sejati!'][stars];
+    if(S.score>(S.best[S.mode]||0)){S.best[S.mode]=S.score;store.set('best_'+S.mode,S.score);updBest()}
+    refreshIcons();
+    if(stars>=2){confetti.rain(2200);sfx.win()}
+  }
+  $('#tkGuess').addEventListener('click',()=>{sfx.click();startGuess()});
+  $('#tkSpin').addEventListener('click',()=>{sfx.click();startSpin()});
+  $('#goAgain').addEventListener('click',()=>{sfx.click();S.mode==='guess'?startGuess():startSpin()});
+  $('#goMenu').addEventListener('click',()=>{sfx.click();S.mode=null;show('menu')});
+  return null;
+})());
+
+/* ================= DATA KUIS (20 SOAL) ================= */
+const QUIZ=[
+  {c:'Istilah',q:'Bagian sudut yang merupakan titik pertemuan dua kaki sudut disebut…',o:['Kaki sudut','Titik sudut','Busur sudut','Garis tinggi'],a:1,e:'Titik sudut (vertex) adalah tempat bertemunya kedua kaki sudut.'},
+  {c:'Istilah',q:'Dua sinar garis yang membentuk sebuah sudut disebut…',o:['Titik sudut','Diagonal','Kaki sudut','Sisi miring'],a:2,e:'Kaki sudut adalah dua sinar pembentuk sudut.'},
+  {c:'Jenis',q:'Sudut yang besarnya kurang dari 90° disebut sudut…',o:['Tumpul','Lancip','Siku-siku','Refleks'],a:1,e:'Lancip = runcing, kurang dari 90°.'},
+  {c:'Jenis',q:'Sudut yang besarnya tepat 90° disebut sudut…',o:['Lancip','Lurus','Siku-siku','Tumpul'],a:2,e:'Siku-siku = tepat 90°, juga disebut sudut tegak.'},
+  {c:'Jenis',q:'Sudut yang besarnya lebih dari 90° tetapi kurang dari 180° disebut sudut…',o:['Lancip','Tumpul','Refleks','Lurus'],a:1,e:'Tumpul berada di antara 90° dan 180°.'},
+  {c:'Jenis',q:'Sudut yang besarnya tepat 180° disebut sudut…',o:['Lurus','Siku-siku','Tumpul','Refleks'],a:0,e:'Sudut lurus tampak seperti garis lurus.'},
+  {c:'Jenis',q:'Sudut yang besarnya lebih dari 180° tetapi kurang dari 360° disebut sudut…',o:['Tumpul','Lurus','Refleks','Lancip'],a:2,e:'Refleks = lebih dari setengah putaran.'},
+  {c:'Jenis',q:'Besar sudut satu putaran penuh adalah…',o:['90°','180°','270°','360°'],a:3,e:'Satu putaran penuh = 360°.'},
+  {c:'Jenis',q:'Nama lain untuk sudut siku-siku adalah…',o:['Sudut tegak','Sudut datar','Sudut pusat','Sudut dalam'],a:0,e:'Sudut siku-siku juga disebut sudut tegak (tegak lurus).'},
+  {c:'Penamaan',q:'Sebuah sudut memiliki titik sudut A, dengan kaki sudut melewati titik B dan C. Penulisan yang benar adalah…',o:['∠ABC','∠BAC','∠ACB','∠CBA'],a:1,e:'Titik sudut (A) harus ditulis di tengah: ∠BAC.'},
+  {c:'Penamaan',q:'Pada penamaan ∠PQR, titik sudutnya adalah…',o:['P','Q','R','P dan Q'],a:1,e:'Huruf tengah selalu menjadi titik sudut, yaitu Q.'},
+  {c:'Penamaan',q:'Selain dengan huruf, sudut juga dapat dinamai dengan…',o:['Nama warna','Angka atau huruf Yunani, seperti ∠1 dan ∠α','Simbol bintang','Huruf kapital ganda'],a:1,e:'∠1, ∠2, ∠α, ∠β praktis dipakai saat satu titik punya banyak sudut.'},
+  {c:'Sudut Jam',q:'Sudut yang terbentuk oleh kedua jarum jam pada pukul 03.00 adalah…',o:['30°','60°','90°','180°'],a:2,e:'Dua angka berjarak × 30° = 2 × 30° = 90°.'},
+  {c:'Sudut Jam',q:'Sudut yang terbentuk pada pukul 06.00 adalah…',o:['90°','120°','180°','270°'],a:2,e:'6 angka × 30° = 180° — sudut lurus.'},
+  {c:'Sudut Jam',q:'Jarum menit bergerak dari angka 12 ke angka 1. Besar putarannya adalah…',o:['6°','15°','30°','60°'],a:2,e:'360° ÷ 12 angka = 30° per angka.'},
+  {c:'Kehidupan',q:'Contoh sudut siku-siku yang kita temui sehari-hari adalah…',o:['Puncak gunung yang runcing','Sudut jendela dan pintu','Jarum jam pukul 01.00','Kipas berputar satu putaran'],a:1,e:'Jendela dan pintu dibuat tegak lurus: 90°.'},
+  {c:'Kehidupan',q:'Gunung yang puncaknya runcing biasanya membentuk sudut…',o:['Lancip','Tumpul','Lurus','Refleks'],a:0,e:'Bentuk runcing dan sempit adalah ciri sudut lancip.'},
+  {c:'Jenis',q:'Sebuah gunting terbuka membentuk sudut 120°. Sudut tersebut termasuk sudut…',o:['Lancip','Siku-siku','Tumpul','Refleks'],a:2,e:'120° berada di antara 90° dan 180° → tumpul.'},
+  {c:'Alat Ukur',q:'Alat yang digunakan untuk mengukur besar sudut adalah…',o:['Penggaris','Jangka','Busur derajat','Timbangan'],a:2,e:'Busur derajat (dalam bahasa Inggris: protractor).'},
+  {c:'Sudut Jam',q:'Pada pukul 09.00, kedua jarum jam membentuk sudut sebesar…',o:['30°','60°','90°','180°'],a:2,e:'Jarum menit di 12 dan jarum jam di 9 → 3 angka × 30° = 90°.'}
+];
+const qst={i:0,ans:Array(QUIZ.length).fill(null),done:false};
+const QCAT={'Istilah':'c-lancip','Jenis':'c-siku','Penamaan':'c-tumpul','Sudut Jam':'c-lurus','Kehidupan':'c-refleks','Alat Ukur':'c-penuh'};
+
+/* ================= KUIS ================= */
+safe('kuis',(()=>{
+  function renderQ(){
+    const q=QUIZ[qst.i];
+    $('#qNum').textContent=qst.i+1;
+    $('#qCount').textContent=(qst.i+1)+'/'+QUIZ.length;
+    $('#qBarIn').style.width=(qst.i/QUIZ.length*100)+'%';
+    const catPill=$('#qCat');
+    catPill.textContent=q.c;
+    catPill.className='pill '+QCAT[q.c];
+    $('#qText').textContent=q.q;
+    $('#qOpts').innerHTML=q.o.map((o,j)=>
+      `<button class="opt ${qst.ans[qst.i]===j?'sel':''}" type="button" data-j="${j}"><span class="opt-key">${'ABCD'[j]}</span><span>${o}</span></button>`).join('');
+    $$('#qOpts .opt').forEach(b=>b.addEventListener('click',()=>{
+      sfx.pop();qst.ans[qst.i]=+b.dataset.j;
+      $$('#qOpts .opt').forEach(x=>x.classList.toggle('sel',+x.dataset.j===qst.ans[qst.i]));
+      $('#qNext').disabled=false;
+    }));
+    $('#qPrev').disabled=qst.i===0;
+    $('#qNext').disabled=qst.ans[qst.i]===null;
+    $('#qNext').innerHTML=qst.i===QUIZ.length-1?'Lihat Hasil <i data-lucide="award"></i>':'Lanjut <i data-lucide="chevron-right"></i>';
+    refreshIcons();
+  }
+  function quizReset(){
+    qst.i=0;qst.ans.fill(null);qst.done=false;
+    $('#qPlay').hidden=true;$('#qIntro').hidden=false;
+  }
+  $('#qStart').addEventListener('click',()=>{
+    sfx.click();quizReset();
+    $('#qIntro').hidden=true;$('#qPlay').hidden=false;renderQ();
+  });
+  $('#qPrev').addEventListener('click',()=>{sfx.click();if(qst.i>0){qst.i--;renderQ()}});
+  $('#qNext').addEventListener('click',()=>{
+    if(qst.ans[qst.i]===null)return;sfx.click();
+    if(qst.i<QUIZ.length-1){qst.i++;renderQ()}
+    else{qst.done=true;renderResult();go(9)}
+  });
+  return null;
+})());
+
+/* ================= HASIL KUIS ================= */
+function renderResult(){
+  const done=qst.done;
+  $('#rEmpty').hidden=done;$('#rDone').hidden=!done;
+  if(!done)return;
+  const correct=qst.ans.filter((a,i)=>a===QUIZ[i].a).length;
+  const pct=Math.round(correct/QUIZ.length*100);
+  const nm=STUDENT.name||'Sahabat Sudut';
+  const rank=pct>=90?['MASTER SUDUT','c-penuh']:pct>=75?['HEBAT SEKALI','c-lurus']:pct>=60?['KERJA BAGUS','c-siku']:['AYO LATIHAN LAGI','c-lancip'];
+  $('#rPct').textContent=pct;
+  $('#rFrac').textContent=correct+' / 20 benar';
+  const rp=$('#rRank');rp.textContent=rank[0];rp.className='pill rankpill '+rank[1];
+  $('#rMsg').textContent=pct>=90
+    ?`Luar biasa, ${nm}! Kamu benar-benar menguasai sudut. Jarum jam pun menyerah padamu!`
+    :pct>=75?`Hebat, ${nm}! Pemahamanmu sudah kuat. Cek lagi soal yang keliru, ya.`
+    :pct>=60?`Kerja bagus, ${nm}! Sedikit lagi sempurna — pelajari pembahasannya di samping.`
+    :`Tidak apa-apa, ${nm}! Buka lagi slide materinya, lalu coba kuisnya sekali lagi. Kamu pasti bisa!`;
+  const fg=$('#rRingFg');
+  fg.style.strokeDashoffset=364.4;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{fg.style.strokeDashoffset=364.4*(1-pct/100)}));
+  $('#rGrid').innerHTML=QUIZ.map((q,i)=>{
+    const ok=qst.ans[i]===q.a;
+    return`<button class="${ok?'benar':'salah'}" type="button" data-i="${i}" title="Soal ${i+1}">${i+1}</button>`;
+  }).join('');
+  $$('#rGrid button').forEach(b=>b.addEventListener('click',()=>{sfx.pop();showDetail(+b.dataset.i)}));
+  $('#rDetail').hidden=true;
+  if(pct>=60){confetti.rain(2200);sfx.win()}
+}
+function showDetail(i){
+  const q=QUIZ[i],mine=qst.ans[i];
+  $('#rDetail').innerHTML=`
+    <div class="rd-q">Soal ${i+1} — ${q.q}</div>
+    ${q.o.map((o,j)=>{
+      const key=j===q.a,isMine=j===mine;
+      return`<div class="rd-opt ${key?'key':''} ${isMine&&!key?'mine':''}">
+        ${key?'<i data-lucide="check-circle-2"></i>':isMine?'<i data-lucide="x-circle"></i>':'<span class="rd-dot"></span>'}
+        <span>${'ABCD'[j]}. ${o}${isMine?' — jawabanmu':''}</span></div>`;
+    }).join('')}
+    <p class="rd-exp"><b>Pembahasan:</b> ${q.e}</p>`;
+  $('#rDetail').hidden=false;refreshIcons();
+}
+safe('hasil',(()=>{
+  $('#rGoQuiz').addEventListener('click',()=>{sfx.click();go(8)});
+  $('#rRetry').addEventListener('click',()=>{
+    sfx.click();
+    qst.i=0;qst.ans.fill(null);qst.done=false;
+    $('#qPlay').hidden=true;$('#qIntro').hidden=false;
+    go(8);
+  });
+  $('#rNext').addEventListener('click',()=>{sfx.click();go(10)});
+  return null;
+})());
+
+/* ================= REFLEKSI ================= */
+safe('refleksi',(()=>{
+  let rating=0;
+  const box=$('#stars');
+  for(let i=1;i<=5;i++){
+    const b=document.createElement('button');b.type='button';b.className='star';
+    b.innerHTML='<i data-lucide="star"></i>';
+    b.addEventListener('click',()=>{rating=i;paint(rating);sfx.pop()});
+    b.addEventListener('mouseenter',()=>paint(i));
+    box.appendChild(b);
+  }
+  box.addEventListener('mouseleave',()=>paint(rating));
+  function paint(n){$$('#stars .star').forEach((s,j)=>s.classList.toggle('on',j<n))}
+  paint(0);refreshIcons();
+  $('#refSend').addEventListener('click',()=>{
+    if(!rating){toast('Pilih bintangnya dulu ya, dari 1 sampai 5!');return}
+    store.set('refleksi_sudut',JSON.stringify({name:STUDENT.name,rating,text:$('#refText').value,date:new Date().toISOString()}));
+    sfx.win();
+    const r=$('#refSend').getBoundingClientRect();
+    confetti.burst(r.left+r.width/2,r.top,70);
+    toast('Refleksimu tersimpan. Terima kasih, '+(STUDENT.name||'Sahabat Sudut')+'!');
+  });
+  return null;
+})());
+
+/* ================= PENUTUP ================= */
+safe('restart',()=>{ $('#restartBtn').addEventListener('click',()=>location.reload()) });
+
+/* ================= INIT ================= */
+refreshIcons();
+go(0);
+</script>
+</body>
+</html>

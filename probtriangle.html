@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triangle Adventure | Cambridge Grade 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--primary:#FF6B9D;--primary-dark:#E91E63;--secondary:#4ECDC4;--secondary-dark:#26A69A;
+--accent:#FFD93D;--accent-dark:#FBC02D;--success:#66BB6A;--error:#FF6B6B;
+--purple:#9C27B0;--dark:#2C3E50;--cream:#FFF8F0;
+--soft-pink:#FFE5EC;--soft-mint:#E0F8F4;--soft-yellow:#FFF9C4;
+--grad1:linear-gradient(135deg,#FF6B9D,#FF8FAB);
+--grad2:linear-gradient(135deg,#4ECDC4,#44A3AA);
+--grad3:linear-gradient(135deg,#FFD93D,#FFB300);
+--gradR:linear-gradient(135deg,#FF6B9D 0%,#FFD93D 50%,#4ECDC4 100%);
+}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#FFE5EC 0%,#FFF8F0 50%,#E0F8F4 100%);color:var(--dark);min-height:100vh;overflow-x:hidden;position:relative}
+.bg-shapes{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;overflow:hidden}
+.bg-shape{position:absolute;opacity:.08;animation:floatBg 30s infinite linear}
+.bg-shape:nth-child(1){width:0;height:0;border-style:solid;border-width:0 50px 87px 50px;border-color:transparent transparent var(--primary) transparent;left:10%;animation-duration:35s}
+.bg-shape:nth-child(2){width:0;height:0;border-style:solid;border-width:0 40px 70px 40px;border-color:transparent transparent var(--secondary) transparent;left:35%;animation-duration:40s;animation-delay:-8s}
+.bg-shape:nth-child(3){width:0;height:0;border-style:solid;border-width:0 60px 100px 60px;border-color:transparent transparent var(--accent) transparent;left:60%;animation-duration:32s;animation-delay:-15s}
+.bg-shape:nth-child(4){width:0;height:0;border-style:solid;border-width:0 45px 80px 45px;border-color:transparent transparent var(--purple) transparent;left:85%;animation-duration:38s;animation-delay:-20s}
+@keyframes floatBg{0%{transform:translateY(110vh) rotate(0)}100%{transform:translateY(-110vh) rotate(360deg)}}
+.translate-btn{position:fixed;top:20px;right:20px;z-index:1000;background:#fff;border:2px solid var(--primary);padding:10px 18px;border-radius:25px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;color:var(--primary);transition:.3s;box-shadow:0 4px 15px rgba(255,107,157,.2);display:flex;align-items:center;gap:6px}
+.translate-btn:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
+.slide{min-height:100vh;padding:70px 40px 120px;display:none;flex-direction:column;justify-content:center;align-items:center;position:relative;max-width:1200px;margin:0 auto}
+.slide.active{display:flex;animation:slideIn .7s cubic-bezier(.16,1,.3,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.nav-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;gap:8px;align-items:center;background:#fff;padding:10px 16px;border-radius:50px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+.nav-btn{background:var(--grad1);color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;transition:.3s;display:flex;align-items:center;gap:6px}
+.nav-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,157,.4)}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-indicator{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--dark);font-size:14px;padding:0 12px;min-width:60px;text-align:center}
+h1,h2,h3{font-family:'Fredoka',sans-serif;color:var(--dark);line-height:1.2}
+.slide-title{font-size:2.5rem;font-weight:700;margin-bottom:16px;text-align:center}
+.slide-title .hl{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.slide-subtitle{font-size:1.1rem;color:#666;margin-bottom:30px;text-align:center;max-width:700px}
+.cover-content{text-align:center;max-width:700px;width:100%}
+.cover-icon{font-size:5rem;color:var(--primary);margin-bottom:20px;animation:bounce 2s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.cover-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:3.8rem;background:var(--gradR);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;line-height:1.1}
+.cover-subtitle{font-size:1.3rem;color:#555;margin-bottom:8px;font-weight:600}
+.cover-meta{font-size:1rem;color:#888;margin-bottom:40px}
+.name-input-card{background:#fff;padding:30px;border-radius:25px;box-shadow:0 15px 50px rgba(0,0,0,.08);margin-bottom:24px;border:3px solid transparent;transition:.3s}
+.name-input-card:focus-within{border-color:var(--primary);transform:translateY(-3px)}
+.name-label{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.1rem;color:var(--dark);margin-bottom:12px;display:block;text-align:left}
+.name-input{width:100%;padding:15px 20px;border:2px solid var(--soft-pink);border-radius:15px;font-size:1.2rem;font-family:'Nunito',sans-serif;font-weight:600;color:var(--dark);transition:.3s}
+.name-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(255,107,157,.15)}
+.start-btn{background:var(--grad1);color:#fff;border:none;padding:18px 50px;border-radius:30px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.2rem;transition:.3s;box-shadow:0 10px 30px rgba(255,107,157,.4);display:inline-flex;align-items:center;gap:10px}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(255,107,157,.5)}
+.card{background:#fff;border-radius:25px;padding:35px;box-shadow:0 10px 40px rgba(0,0,0,.06);width:100%;max-width:900px;margin-bottom:20px}
+.real-life-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:30px;width:100%;max-width:1000px}
+.real-life-card{background:#fff;border-radius:20px;padding:25px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.06);transition:.3s;border-top:5px solid var(--primary)}
+.real-life-card:nth-child(2){border-top-color:var(--secondary)}
+.real-life-card:nth-child(3){border-top-color:var(--accent)}
+.real-life-card:nth-child(4){border-top-color:var(--purple)}
+.real-life-card:hover{transform:translateY(-8px);box-shadow:0 15px 35px rgba(0,0,0,.12)}
+.real-life-icon{font-size:2.5rem;margin-bottom:12px;color:var(--primary)}
+.real-life-card:nth-child(2) .real-life-icon{color:var(--secondary)}
+.real-life-card:nth-child(3) .real-life-icon{color:var(--accent-dark)}
+.real-life-card:nth-child(4) .real-life-icon{color:var(--purple)}
+.real-life-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.1rem;margin-bottom:8px;color:var(--dark)}
+.real-life-desc{font-size:.95rem;color:#666;line-height:1.4}
+.objectives-list{list-style:none;padding:0;margin:20px 0;width:100%;max-width:800px}
+.objective-item{background:#fff;padding:18px 25px;border-radius:15px;margin-bottom:12px;display:flex;align-items:center;gap:15px;box-shadow:0 4px 15px rgba(0,0,0,.04);transition:.3s;border-left:5px solid var(--secondary)}
+.objective-item:hover{transform:translateX(8px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.objective-number{background:var(--grad2);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;flex-shrink:0}
+.objective-text{font-weight:600;font-size:1.05rem;color:var(--dark)}
+.problem-statement{background:var(--soft-yellow);padding:25px;border-radius:20px;border-left:6px solid var(--accent-dark);margin:20px 0;font-size:1.1rem;line-height:1.6}
+.problem-statement strong{color:var(--primary-dark)}
+.solution-step{background:#fff;padding:25px;border-radius:20px;box-shadow:0 6px 20px rgba(0,0,0,.05);border-left:6px solid var(--primary);margin:20px 0}
+.solution-step:nth-child(odd){border-left-color:var(--secondary)}
+.step-label{display:inline-block;background:var(--grad1);color:#fff;padding:5px 15px;border-radius:15px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.solution-step:nth-child(odd) .step-label{background:var(--grad2)}
+.step-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.3rem;margin-bottom:10px;color:var(--dark)}
+.step-content{font-size:1rem;line-height:1.6;color:#555}
+.formula{background:var(--soft-mint);padding:12px 20px;border-radius:12px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.1rem;color:var(--secondary-dark);margin:10px 0;display:inline-block}
+.answer-box{background:var(--grad1);color:#fff;padding:20px 30px;border-radius:20px;text-align:center;margin-top:20px;box-shadow:0 10px 30px rgba(255,107,157,.3)}
+.answer-label{font-size:.95rem;opacity:.9;margin-bottom:6px}
+.answer-value{font-family:'Fredoka',sans-serif;font-weight:700;font-size:2.5rem}
+.figure-container{background:#fff;padding:25px;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.06);margin:20px 0;text-align:center}
+.figure-caption{font-size:.95rem;color:#666;margin-top:10px;font-style:italic}
+.figure-img{max-width:100%;height:auto;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,.1);margin:15px 0}
+.practice-card{background:#fff;border-radius:25px;padding:35px;box-shadow:0 10px 40px rgba(0,0,0,.06);max-width:900px;width:100%}
+.practice-header{display:flex;align-items:center;gap:15px;margin-bottom:20px}
+.practice-number{background:var(--grad2);color:#fff;width:50px;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;flex-shrink:0}
+.practice-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.4rem;color:var(--dark)}
+.practice-content{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:start}
+@media(max-width:768px){.practice-content{grid-template-columns:1fr}}
+.practice-figure{background:var(--soft-mint);padding:20px;border-radius:15px;text-align:center}
+.practice-solution{background:var(--soft-pink);padding:20px;border-radius:15px}
+.solution-label{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--primary-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.solution-step-mini{background:#fff;padding:10px 15px;border-radius:10px;margin-bottom:8px;font-size:.95rem;border-left:3px solid var(--primary)}
+.solution-step-mini strong{color:var(--primary-dark)}
+.quiz-container{width:100%;max-width:900px}
+.quiz-header{background:var(--grad1);color:#fff;padding:30px;border-radius:20px 20px 0 0;text-align:center}
+.quiz-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.8rem;margin-bottom:8px}
+.quiz-instruction{font-size:1rem;opacity:.95}
+.quiz-question{background:#fff;padding:25px;margin-bottom:15px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,.05);border-left:5px solid var(--secondary)}
+.question-header{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.question-number{background:var(--secondary);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;flex-shrink:0}
+.question-text{font-weight:700;font-size:1.05rem;color:var(--dark);flex:1}
+.question-figure{background:var(--soft-mint);padding:15px;border-radius:12px;margin:12px 0;text-align:center}
+.options-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+@media(max-width:600px){.options-list{grid-template-columns:1fr}}
+.option-label{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--cream);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.3s;font-weight:600}
+.option-label:hover{background:var(--soft-pink);border-color:var(--primary)}
+.option-label input[type=radio]{display:none}
+.option-letter{background:#fff;color:var(--dark);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:.9rem;flex-shrink:0;border:2px solid #ddd;transition:.3s}
+.option-label.selected .option-letter{background:var(--primary);color:#fff;border-color:var(--primary)}
+.option-label.selected{background:var(--soft-pink);border-color:var(--primary)}
+.option-label.correct{background:#C8E6C9!important;border-color:var(--success)!important}
+.option-label.correct .option-letter{background:var(--success);color:#fff;border-color:var(--success)}
+.option-label.incorrect{background:#FFCDD2!important;border-color:var(--error)!important}
+.option-label.incorrect .option-letter{background:var(--error);color:#fff;border-color:var(--error)}
+.quiz-actions{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
+.check-btn{background:var(--grad2);color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.9rem;transition:.3s;display:flex;align-items:center;gap:6px}
+.check-btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(78,205,196,.4)}
+.explanation-box{background:var(--soft-yellow);padding:15px 20px;border-radius:12px;margin-top:12px;border-left:4px solid var(--accent-dark);display:none;font-size:.95rem;line-height:1.5;animation:fadeIn .4s ease}
+.explanation-box.show{display:block}
+.explanation-title{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--accent-dark);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.results-card{background:#fff;border-radius:30px;padding:50px 40px;box-shadow:0 20px 60px rgba(0,0,0,.1);text-align:center;max-width:700px;width:100%;position:relative;overflow:hidden}
+.results-content{position:relative;z-index:1}
+.results-icon{font-size:4rem;margin-bottom:20px;color:var(--accent)}
+.results-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:2.2rem;margin-bottom:10px;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.results-score{font-family:'Fredoka',sans-serif;font-weight:700;font-size:4rem;color:var(--primary);margin:20px 0}
+.results-score .total{color:#999;font-size:2rem}
+.results-message{font-size:1.1rem;color:#555;margin-bottom:25px;line-height:1.5}
+.results-stats{display:flex;justify-content:center;gap:30px;margin:25px 0;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-value{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.8rem}
+.stat-value.correct{color:var(--success)}
+.stat-value.incorrect{color:var(--error)}
+.stat-label{font-size:.85rem;color:#777;margin-top:4px}
+.game-container{background:#fff;border-radius:30px;padding:30px;box-shadow:0 15px 50px rgba(0,0,0,.08);max-width:800px;width:100%}
+.game-header{text-align:center;margin-bottom:25px}
+.game-stats{display:flex;justify-content:center;gap:15px;margin-bottom:20px;flex-wrap:wrap}
+.game-stat{background:var(--soft-pink);padding:10px 20px;border-radius:20px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--primary-dark)}
+.game-stat i{margin-right:6px;color:var(--primary)}
+.game-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+@media(max-width:600px){.game-grid{grid-template-columns:repeat(3,1fr)}}
+.game-card{aspect-ratio:1;perspective:800px;cursor:pointer}
+.game-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s}
+.game-card.flipped .game-card-inner{transform:rotateY(180deg)}
+.game-card-back,.game-card-front{position:absolute;inset:0;backface-visibility:hidden;border-radius:15px;display:flex;align-items:center;justify-content:center}
+.game-card-back{background:var(--grad1);color:#fff;font-size:2.5rem;box-shadow:0 4px 15px rgba(255,107,157,.3)}
+.game-card-front{background:#fff;transform:rotateY(180deg);border:3px solid var(--primary);flex-direction:column;padding:8px}
+.game-card.matched .game-card-front{background:var(--soft-mint);border-color:var(--success);animation:matchPulse .5s ease}
+@keyframes matchPulse{0%,100%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.1)}}
+.game-card-name{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.7rem;color:var(--dark);text-align:center}
+.game-controls{display:flex;justify-content:center;gap:12px;margin-top:20px}
+.game-btn{background:var(--grad2);color:#fff;border:none;padding:12px 25px;border-radius:25px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;transition:.3s;display:flex;align-items:center;gap:8px}
+.game-btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(78,205,196,.4)}
+.game-message{text-align:center;margin-top:15px;font-weight:700;color:var(--primary-dark);min-height:24px}
+.reflection-card{background:#fff;border-radius:25px;padding:35px;box-shadow:0 10px 40px rgba(0,0,0,.06);width:100%;max-width:800px}
+.reflection-prompt{background:var(--soft-pink);padding:20px;border-radius:15px;margin-bottom:20px;font-weight:600;color:var(--primary-dark)}
+.reflection-input{width:100%;padding:15px;border:2px solid var(--soft-pink);border-radius:15px;font-family:'Nunito',sans-serif;font-size:1rem;color:var(--dark);min-height:120px;resize:vertical}
+.reflection-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(255,107,157,.15)}
+.conclusion-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:30px;width:100%;max-width:1000px}
+.conclusion-card{background:#fff;border-radius:20px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.06);transition:.3s;text-align:center;border-top:5px solid var(--primary)}
+.conclusion-card:nth-child(2){border-top-color:var(--secondary)}
+.conclusion-card:nth-child(3){border-top-color:var(--accent)}
+.conclusion-card:hover{transform:translateY(-5px)}
+.conclusion-icon{font-size:2.5rem;color:var(--primary);margin-bottom:12px}
+.conclusion-card:nth-child(2) .conclusion-icon{color:var(--secondary)}
+.conclusion-card:nth-child(3) .conclusion-icon{color:var(--accent-dark)}
+.conclusion-text{font-size:.95rem;color:#555;line-height:1.5}
+.thank-content{text-align:center;max-width:800px;width:100%}
+.thank-icon{font-size:5rem;color:var(--primary);margin-bottom:30px;animation:bounce 2s ease infinite}
+.thank-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:3.5rem;background:var(--gradR);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:20px;line-height:1.1}
+.thank-message{font-size:1.2rem;color:#555;margin-bottom:30px;line-height:1.6}
+.thank-signature{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.1rem;color:var(--primary);margin-top:30px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--soft-mint);color:var(--secondary-dark);padding:6px 14px;border-radius:20px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;margin-bottom:15px}
+.comparison-table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+.comparison-table th{background:var(--grad2);color:#fff;padding:12px;text-align:left;font-family:'Fredoka',sans-serif;font-weight:600}
+.comparison-table td{padding:12px;border-bottom:1px solid #eee}
+.comparison-table tr:last-child td{border-bottom:none}
+.svg-figure{max-width:350px;width:100%;height:auto}
+.two-column{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:start;margin:20px 0}
+@media(max-width:768px){.two-column{grid-template-columns:1fr}}
+.figure-box{background:var(--soft-mint);padding:20px;border-radius:15px;text-align:center}
+.figure-box img{max-width:100%;height:auto;border-radius:10px}
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+<div class="bg-shape"></div>
+<div class="bg-shape"></div>
+<div class="bg-shape"></div>
+<div class="bg-shape"></div>
+</div>
+
+<button class="translate-btn" id="translateBtn" onclick="toggleTranslate()">
+<i class="fas fa-language"></i><span id="translateText">Translate to Indonesian</span>
+</button>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide active" id="slide1">
+<div class="cover-content">
+<div class="cover-icon"><i class="fas fa-shapes"></i></div>
+<h1 class="cover-title">Triangle Adventure</h1>
+<p class="cover-subtitle" data-en="Problem Solving with Triangles" data-id="Pemecahan Masalah dengan Segitiga">Problem Solving with Triangles</p>
+<p class="cover-meta" data-en="Cambridge Primary Mathematics · Grade 5" data-id="Matematika Cambridge Primary · Kelas 5">Cambridge Primary Mathematics · Grade 5</p>
+<div class="name-input-card">
+<label class="name-label" data-en="🎓 Student's Name" data-id="🎓 Nama Siswa">🎓 Student's Name</label>
+<input type="text" class="name-input" id="studentName" placeholder="Type your name here..." oninput="updateName()">
+</div>
+<button class="start-btn" onclick="goToSlide(2)">
+<span data-en="Start My Journey" data-id="Mulai Petualangan">Start My Journey</span>
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+</div>
+
+<!-- SLIDE 2: WHY IT MATTERS -->
+<div class="slide" id="slide2">
+<h2 class="slide-title"><span class="hl" data-en="Why Triangles Matter" data-id="Mengapa Segitiga Penting">Why Triangles Matter</span></h2>
+<p class="slide-subtitle" data-en="Triangles are everywhere around us! Let's explore why learning about them is so important." data-id="Segitiga ada di mana-mana! Mari kita jelajahi mengapa mempelajarinya sangat penting.">Triangles are everywhere around us! Let's explore why learning about them is so important.</p>
+<div class="real-life-grid">
+<div class="real-life-card">
+<div class="real-life-icon"><i class="fas fa-home"></i></div>
+<h3 class="real-life-title" data-en="Architecture & Buildings" data-id="Arsitektur & Bangunan">Architecture & Buildings</h3>
+<p class="real-life-desc" data-en="Roofs, bridges, and towers use triangles because they are the strongest, most stable shape." data-id="Atap, jembatan, dan menara menggunakan segitiga karena bentuk yang paling kuat dan stabil.">Roofs, bridges, and towers use triangles because they are the strongest, most stable shape.</p>
+</div>
+<div class="real-life-card">
+<div class="real-life-icon"><i class="fas fa-archway"></i></div>
+<h3 class="real-life-title" data-en="Engineering & Bridges" data-id="Teknik & Jembatan">Engineering & Bridges</h3>
+<p class="real-life-desc" data-en="Engineers use triangle frames (trusses) to build strong bridges that don't wobble or collapse." data-id="Insinyur menggunakan rangka segitiga untuk membangun jembatan kuat yang tidak goyah atau runtuh.">Engineers use triangle frames (trusses) to build strong bridges that don't wobble or collapse.</p>
+</div>
+<div class="real-life-card">
+<div class="real-life-icon"><i class="fas fa-mountain"></i></div>
+<h3 class="real-life-title" data-en="Navigation & Maps" data-id="Navigasi & Peta">Navigation & Maps</h3>
+<p class="real-life-desc" data-en="Surveyors measure triangle angles to find distances and create accurate maps of the land." data-id="Surveyor mengukur sudut segitiga untuk menemukan jarak dan membuat peta yang akurat.">Surveyors measure triangle angles to find distances and create accurate maps of the land.</p>
+</div>
+<div class="real-life-card">
+<div class="real-life-icon"><i class="fas fa-palette"></i></div>
+<h3 class="real-life-title" data-en="Art & Design" data-id="Seni & Desain">Art & Design</h3>
+<p class="real-life-desc" data-en="Artists and designers use triangles to create balanced, dynamic, and beautiful compositions." data-id="Seniman dan desainer menggunakan segitiga untuk menciptakan komposisi yang seimbang dan dinamis.">Artists and designers use triangles to create balanced, dynamic, and beautiful compositions.</p>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 3: LEARNING OBJECTIVES -->
+<div class="slide" id="slide3">
+<h2 class="slide-title"><span class="hl" data-en="Today's Learning Goals" data-id="Tujuan Pembelajaran Hari Ini">Today's Learning Goals</span></h2>
+<p class="slide-subtitle" data-en="By the end of this lesson, you will be able to:" data-id="Pada akhir pelajaran ini, kamu akan mampu:">By the end of this lesson, you will be able to:</p>
+<ul class="objectives-list">
+<li class="objective-item"><div class="objective-number">1</div><span class="objective-text" data-en="Understand that the sum of angles in any triangle is 180°" data-id="Memahami bahwa jumlah sudut dalam segitiga adalah 180°">Understand that the sum of angles in any triangle is 180°</span></li>
+<li class="objective-item"><div class="objective-number">2</div><span class="objective-text" data-en="Solve non-routine problems involving triangles" data-id="Memecahkan masalah non-rutin yang melibatkan segitiga">Solve non-routine problems involving triangles</span></li>
+<li class="objective-item"><div class="objective-number">3</div><span class="objective-text" data-en="Use the angle sum property to find unknown angles" data-id="Menggunakan sifat jumlah sudut untuk menemukan sudut yang belum diketahui">Use the angle sum property to find unknown angles</span></li>
+<li class="objective-item"><div class="objective-number">4</div><span class="objective-text" data-en="Apply triangle properties to real-world problems" data-id="Menerapkan sifat segitiga pada masalah dunia nyata">Apply triangle properties to real-world problems</span></li>
+<li class="objective-item"><div class="objective-number">5</div><span class="objective-text" data-en="Compare different methods to solve angle problems" data-id="Membandingkan berbagai metode untuk menyelesaikan masalah sudut">Compare different methods to solve angle problems</span></li>
+</ul>
+</div>
+
+<!-- SLIDE 4: MIND STRETCHER (Main Problem from Image 1) -->
+<div class="slide" id="slide4">
+<div class="card">
+<span class="badge"><i class="fas fa-star"></i> <span data-en="Unit 2 · Problem Solving · 2.1 Mind Stretcher" data-id="Unit 2 · Pemecahan Masalah · 2.1 Pemanasan Pikiran">Unit 2 · Problem Solving · 2.1 Mind Stretcher</span></span>
+<h2 class="slide-title" style="font-size:2rem"><span class="hl" data-en="The Mystery of 7 Angles" data-id="Misteri 7 Sudut">The Mystery of 7 Angles</span></h2>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="A quadrilateral AE... is made up of four triangles. We know that m∠w + m∠x + m∠y + m∠z = 120°. Find the sum of the seven unknown angles m∠a + m∠b + m∠c + m∠d + m∠e + m∠f + m∠g." data-id="Sebuah segi empat AE... terdiri dari empat segitiga. Diketahui m∠w + m∠x + m∠y + m∠z = 120°. Tentukan jumlah dari tujuh sudut yang belum diketahui m∠a + m∠b + m∠c + m∠d + m∠e + m∠f + m∠g.">A quadrilateral AE... is made up of four triangles. We know that m∠w + m∠x + m∠y + m∠z = 120°. Find the sum of the seven unknown angles m∠a + m∠b + m∠c + m∠d + m∠e + m∠f + m∠g.</span>
+</div>
+
+<!-- ADDED IMAGE HERE -->
+<div class="figure-container">
+<p style="margin-bottom:10px;font-weight:600;color:var(--dark)"><i class="fas fa-image" style="color:var(--primary)"></i> <span data-en="Look at the figure below:" data-id="Lihat gambar di bawah ini:">Look at the figure below:</span></p>
+<img src="https://z-cdn-media.chatglm.cn/files/50097876-62a7-414e-a37d-1251d93a9578.png?auth_key=1891391074-bcda7cd9b1ff411aa63ffe6403033ec2-0-e59dbe81dddb09bee548d2ff927feb42" 
+     alt="Four triangles meeting at point O with angles a-g and w,x,y,z" 
+     class="figure-img"
+     style="max-width:400px;border:3px solid var(--soft-pink);border-radius:15px"
+     onerror="this.style.display='none'; document.getElementById('svgFallback').style.display='block'">
+<div id="svgFallback" style="display:none">
+<svg class="svg-figure" viewBox="0 0 400 300" style="max-width:400px">
+<polygon points="200,150 100,50 50,150" fill="#FFE5EC" stroke="#FF6B9D" stroke-width="2"/>
+<polygon points="200,150 300,50 350,150" fill="#E0F8F4" stroke="#4ECDC4" stroke-width="2"/>
+<polygon points="200,150 100,250 50,150" fill="#FFF9C4" stroke="#FBC02D" stroke-width="2"/>
+<polygon points="200,150 300,250 350,150" fill="#F3E5F5" stroke="#9C27B0" stroke-width="2"/>
+<text x="195" y="145" fill="#2C3E50" font-family="Fredoka" font-size="14" font-weight="bold">O</text>
+<text x="70" y="40" fill="#E91E63" font-family="Fredoka" font-size="14">w</text>
+<text x="310" y="40" fill="#26A69A" font-family="Fredoka" font-size="14">x</text>
+<text x="70" y="270" fill="#FBC02D" font-family="Fredoka" font-size="14">y</text>
+<text x="310" y="270" fill="#9C27B0" font-family="Fredoka" font-size="14">z</text>
+</svg>
+</div>
+<p class="figure-caption" data-en="Four triangles meet at point O. Angles w, x, y, z are outer angles. Angles a-g are inside the shape." data-id="Empat segitiga bertemu di titik O. Sudut w, x, y, z adalah sudut luar. Sudut a-g berada di dalam bangun.">Four triangles meet at point O. Angles w, x, y, z are outer angles. Angles a-g are inside the shape.</p>
+</div>
+
+<div class="two-column">
+<div>
+<div class="solution-step">
+<span class="step-label" data-en="Step 1 · Understand" data-id="Langkah 1 · Pahami">Step 1 · Understand</span>
+<h3 class="step-title" data-en="What do we know?" data-id="Apa yang kita ketahui?">What do we know?</h3>
+<p class="step-content" data-en="The shape has 4 triangles meeting at point O. Each triangle has angles summing to 180°. The 4 outer angles (w, x, y, z) sum to 120°. We need to find the sum of the 7 unknown angles." data-id="Bangun tersebut memiliki 4 segitiga yang bertemu di titik O. Setiap segitiga memiliki sudut berjumlah 180°. 4 sudut luar (w, x, y, z) berjumlah 120°. Kita perlu mencari jumlah 7 sudut yang belum diketahui.">The shape has 4 triangles meeting at point O. Each triangle has angles summing to 180°. The 4 outer angles (w, x, y, z) sum to 120°. We need to find the sum of the 7 unknown angles.</p>
+</div>
+<div class="solution-step">
+<span class="step-label" data-en="Step 2 · Plan" data-id="Langkah 2 · Rencana">Step 2 · Plan</span>
+<h3 class="step-title" data-en="What's our strategy?" data-id="Apa strategi kita?">What's our strategy?</h3>
+<p class="step-content" data-en="1) Find total angle sum of all 4 triangles. 2) Subtract the known angles (w+x+y+z = 120°). 3) Subtract the angles around point O (360°)." data-id="1) Cari total sudut dari 4 segitiga. 2) Kurangi sudut yang diketahui (w+x+y+z = 120°). 3) Kurangi sudut di sekitar titik O (360°).">1) Find total angle sum of all 4 triangles. 2) Subtract the known angles (w+x+y+z = 120°). 3) Subtract the angles around point O (360°).</p>
+</div>
+</div>
+<div>
+<div class="solution-step">
+<span class="step-label" data-en="Step 3 · Solve" data-id="Langkah 3 · Selesaikan">Step 3 · Solve</span>
+<h3 class="step-title" data-en="Let's calculate!" data-id="Mari kita hitung!">Let's calculate!</h3>
+<p class="step-content">
+<span data-en="Total of 4 triangles:" data-id="Total 4 segitiga:">Total of 4 triangles:</span><br>
+<span class="formula">4 × 180° = 720°</span><br>
+<span data-en="Subtract outer angles:" data-id="Kurangi sudut luar:">Subtract outer angles:</span><br>
+<span class="formula">720° − 120° = 600°</span><br>
+<span data-en="Subtract angles around point O:" data-id="Kurangi sudut di sekitar titik O:">Subtract angles around point O:</span><br>
+<span class="formula">600° − 360° = 240°</span>
+</p>
+</div>
+<div class="answer-box">
+<div class="answer-label" data-en="The sum of the seven angles is:" data-id="Jumlah dari tujuh sudut adalah:">The sum of the seven angles is:</div>
+<div class="answer-value">240°</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 5: VERIFYING WITH ANOTHER METHOD (Image 2) -->
+<div class="slide" id="slide5">
+<div class="card">
+<span class="badge"><i class="fas fa-check-double"></i> <span data-en="Problem 4 · Check the Answer" data-id="Masalah 4 · Periksa Jawaban">Problem 4 · Check the Answer</span></span>
+<h2 class="slide-title" style="font-size:2rem"><span class="hl" data-en="Checking Our Work" data-id="Memeriksa Pekerjaan Kita">Checking Our Work</span></h2>
+<p class="slide-subtitle" data-en="Let's verify the answer 240° using a different method." data-id="Mari kita verifikasi jawaban 240° dengan metode yang berbeda.">Let's verify the answer 240° using a different method.</p>
+
+<div class="figure-container">
+<img src="https://z-cdn-media.chatglm.cn/files/50097876-62a7-414e-a37d-1251d93a9578.png?auth_key=1891391074-bcda7cd9b1ff411aa63ffe6403033ec2-0-e59dbe81dddb09bee548d2ff927feb42" 
+     alt="Star figure with triangles" 
+     class="figure-img"
+     style="max-width:300px;border:3px solid var(--soft-mint);border-radius:15px"
+     onerror="this.style.display='none'">
+<p class="figure-caption" data-en="The same figure viewed differently: four triangles inside a shape." data-id="Bangun yang sama dilihat dari sudut pandang berbeda: empat segitiga di dalam sebuah bentuk.">The same figure viewed differently: four triangles inside a shape.</p>
+</div>
+
+<div class="solution-step">
+<h3 class="step-title" data-en="Method: Sum of all four triangles" data-id="Metode: Jumlah keempat segitiga">Method: Sum of all four triangles</h3>
+<p class="step-content">
+<span data-en="Each triangle has an angle sum of 180°. With 4 triangles:" data-id="Setiap segitiga memiliki jumlah sudut 180°. Dengan 4 segitiga:">Each triangle has an angle sum of 180°. With 4 triangles:</span>
+<span class="formula">4 × 180° = 720°</span><br>
+<span data-en="The 720° includes: (1) the 4 outer angles w+x+y+z = 120°, (2) the 4 angles around point O = 360°, (3) the 7 unknown angles we want." data-id="720° mencakup: (1) 4 sudut luar w+x+y+z = 120°, (2) 4 sudut di sekitar titik O = 360°, (3) 7 sudut yang belum diketahui.">The 720° includes: (1) the 4 outer angles w+x+y+z = 120°, (2) the 4 angles around point O = 360°, (3) the 7 unknown angles we want.</span><br>
+<span class="formula">720° − 120° − 360° = 240° ✓</span><br>
+<span data-en="Our answer is correct!" data-id="Jawaban kita benar!">Our answer is correct!</span>
+</p>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 6: COMPARING METHODS (Image 3) -->
+<div class="slide" id="slide6">
+<div class="card">
+<span class="badge"><i class="fas fa-balance-scale"></i> <span data-en="Problem 5 · Another Method" data-id="Masalah 5 · Metode Lain">Problem 5 · Another Method</span></span>
+<h2 class="slide-title" style="font-size:2rem"><span class="hl" data-en="Comparing Two Methods" data-id="Membandingkan Dua Metode">Comparing Two Methods</span></h2>
+<p class="slide-subtitle" data-en="There's often more than one way to solve a problem! Let's compare." data-id="Seringkali ada lebih dari satu cara untuk menyelesaikan masalah! Mari kita bandingkan.">There's often more than one way to solve a problem! Let's compare.</p>
+
+<div class="figure-container">
+<img src="https://z-cdn-media.chatglm.cn/files/50097876-62a7-414e-a37d-1251d93a9578.png?auth_key=1891391074-bcda7cd9b1ff411aa63ffe6403033ec2-0-e59dbe81dddb09bee548d2ff927feb42" 
+     alt="Vertically opposite angles" 
+     class="figure-img"
+     style="max-width:300px;border:3px solid var(--soft-yellow);border-radius:15px"
+     onerror="this.style.display='none'">
+<p class="figure-caption" data-en="Vertically opposite angles are equal when two lines cross." data-id="Sudut bertolak belakang adalah sama ketika dua garis berpotongan.">Vertically opposite angles are equal when two lines cross.</p>
+</div>
+
+<table class="comparison-table">
+<tr>
+<th data-en="Method" data-id="Metode">Method</th>
+<th data-en="What we use" data-id="Yang kita gunakan">What we use</th>
+<th data-en="Steps" data-id="Langkah">Steps</th>
+<th data-en="Result" data-id="Hasil">Result</th>
+</tr>
+<tr>
+<td data-en="Method A" data-id="Metode A">Method A</td>
+<td data-en="4 triangles + outer + center" data-id="4 segitiga + luar + tengah">4 triangles + outer + center</td>
+<td data-en="720° − 120° − 360°" data-id="720° − 120° − 360°">720° − 120° − 360°</td>
+<td><strong>240°</strong></td>
+</tr>
+<tr>
+<td data-en="Method B" data-id="Metode B">Method B</td>
+<td data-en="Vertically opposite angles" data-id="Sudut bertolak belakang">Vertically opposite angles</td>
+<td data-en="2 × 180° = 360°, then subtract" data-id="2 × 180° = 360°, lalu kurangi">2 × 180° = 360°, then subtract</td>
+<td><strong>240°</strong></td>
+</tr>
+</table>
+<div class="solution-step" style="margin-top:25px">
+<span class="step-label" data-en="Reflection" data-id="Refleksi">Reflection</span>
+<h3 class="step-title" data-en="Which method do you prefer? Why?" data-id="Metode mana yang kamu sukai? Mengapa?">Which method do you prefer? Why?</h3>
+<p class="step-content" data-en="Both methods give the same answer: 240°. Some people prefer Method A because it's straightforward. Others prefer Method B because it uses fewer steps. Mathematicians love having multiple ways to check their work!" data-id="Kedua metode memberikan jawaban yang sama: 240°. Beberapa orang lebih suka Metode A karena langsung. Yang lain lebih suka Metode B karena lebih sedikit langkah. Matematikawan suka memiliki banyak cara untuk memeriksa pekerjaan mereka!">Both methods give the same answer: 240°. Some people prefer Method A because it's straightforward. Others prefer Method B because it uses fewer steps. Mathematicians love having multiple ways to check their work!</p>
+</div>
+<div class="answer-box">
+<div class="answer-label" data-en="I have learned to solve a non-routine problem involving triangles!" data-id="Saya telah belajar menyelesaikan masalah non-rutin yang melibatkan segitiga!">I have learned to solve a non-routine problem involving triangles!</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 7: PRACTICE PROBLEM 1 -->
+<div class="slide" id="slide7">
+<div class="practice-card">
+<div class="practice-header">
+<div class="practice-number">1</div>
+<h3 class="practice-title" data-en="Find the Missing Angle" data-id="Temukan Sudut yang Hilang">Find the Missing Angle</h3>
+</div>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="In a triangle, two angles measure 65° and 45°. What is the measure of the third angle?" data-id="Dalam sebuah segitiga, dua sudut berukuran 65° dan 45°. Berapakah ukuran sudut ketiga?">In a triangle, two angles measure 65° and 45°. What is the measure of the third angle?</span>
+</div>
+<div class="practice-content">
+<div class="practice-figure">
+<svg class="svg-figure" viewBox="0 0 300 200">
+<polygon points="150,30 50,170 250,170" fill="#FFE5EC" stroke="#FF6B9D" stroke-width="3"/>
+<text x="160" y="60" fill="#E91E63" font-family="Fredoka" font-size="16">?</text>
+<text x="40" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">45°</text>
+<text x="235" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">65°</text>
+</svg>
+</div>
+<div class="practice-solution">
+<div class="solution-label"><i class="fas fa-lightbulb"></i> <span data-en="Solution" data-id="Pembahasan">Solution</span></div>
+<div class="solution-step-mini"><strong data-en="Step 1:" data-id="Langkah 1:">Step 1:</strong> <span data-en="Angle sum in a triangle = 180°" data-id="Jumlah sudut dalam segitiga = 180°">Angle sum in a triangle = 180°</span></div>
+<div class="solution-step-mini"><strong>Step 2:</strong> <span data-en="Sum of two known angles:" data-id="Jumlah dua sudut yang diketahui:">Sum of two known angles:</span> <strong>65° + 45° = 110°</strong></div>
+<div class="solution-step-mini"><strong>Step 3:</strong> <span data-en="Third angle:" data-id="Sudut ketiga:">Third angle:</span> <strong>180° − 110° = 70°</strong></div>
+<div class="answer-box" style="padding:12px 20px;margin-top:10px">
+<div class="answer-value" style="font-size:1.6rem">70°</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 8: PRACTICE PROBLEM 2 -->
+<div class="slide" id="slide8">
+<div class="practice-card">
+<div class="practice-header">
+<div class="practice-number">2</div>
+<h3 class="practice-title" data-en="Isosceles Triangle Mystery" data-id="Misteri Segitiga Sama Kaki">Isosceles Triangle Mystery</h3>
+</div>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="An isosceles triangle has a vertex (top) angle of 50°. What is the measure of each base angle?" data-id="Segitiga sama kaki memiliki sudut puncak 50°. Berapakah ukuran setiap sudut alasnya?">An isosceles triangle has a vertex (top) angle of 50°. What is the measure of each base angle?</span>
+</div>
+<div class="practice-content">
+<div class="practice-figure">
+<svg class="svg-figure" viewBox="0 0 300 200">
+<polygon points="150,30 50,170 250,170" fill="#E0F8F4" stroke="#4ECDC4" stroke-width="3"/>
+<text x="140" y="60" fill="#26A69A" font-family="Fredoka" font-size="16">50°</text>
+<text x="35" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">?</text>
+<text x="240" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">?</text>
+</svg>
+</div>
+<div class="practice-solution">
+<div class="solution-label"><i class="fas fa-lightbulb"></i> <span data-en="Solution" data-id="Pembahasan">Solution</span></div>
+<div class="solution-step-mini"><strong>Step 1:</strong> <span data-en="Isosceles triangle has 2 equal base angles." data-id="Segitiga sama kaki memiliki 2 sudut alas yang sama.">Isosceles triangle has 2 equal base angles.</span></div>
+<div class="solution-step-mini"><strong>Step 2:</strong> <span data-en="Remaining angle sum:" data-id="Sisa jumlah sudut:">Remaining angle sum:</span> <strong>180° − 50° = 130°</strong></div>
+<div class="solution-step-mini"><strong>Step 3:</strong> <span data-en="Each base angle:" data-id="Setiap sudut alas:">Each base angle:</span> <strong>130° ÷ 2 = 65°</strong></div>
+<div class="answer-box" style="padding:12px 20px;margin-top:10px">
+<div class="answer-value" style="font-size:1.6rem">65° each</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 9: PRACTICE PROBLEM 3 -->
+<div class="slide" id="slide9">
+<div class="practice-card">
+<div class="practice-header">
+<div class="practice-number">3</div>
+<h3 class="practice-title" data-en="Right-Angled Triangle Puzzle" data-id="Teka-teki Segitiga Siku-siku">Right-Angled Triangle Puzzle</h3>
+</div>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="In a right-angled triangle, one acute angle is 35°. Find the other acute angle." data-id="Dalam segitiga siku-siku, satu sudut lancip adalah 35°. Tentukan sudut lancip lainnya.">In a right-angled triangle, one acute angle is 35°. Find the other acute angle.</span>
+</div>
+<div class="practice-content">
+<div class="practice-figure">
+<svg class="svg-figure" viewBox="0 0 300 200">
+<polygon points="60,30 60,170 250,170" fill="#FFF9C4" stroke="#FBC02D" stroke-width="3"/>
+<rect x="60" y="155" width="15" height="15" fill="none" stroke="#FBC02D" stroke-width="2"/>
+<text x="80" y="100" fill="#2C3E50" font-family="Fredoka" font-size="14">?</text>
+<text x="180" y="190" fill="#2C3E50" font-family="Fredoka" font-size="14">35°</text>
+</svg>
+</div>
+<div class="practice-solution">
+<div class="solution-label"><i class="fas fa-lightbulb"></i> <span data-en="Solution" data-id="Pembahasan">Solution</span></div>
+<div class="solution-step-mini"><strong>Step 1:</strong> <span data-en="Right angle = 90°" data-id="Sudut siku-siku = 90°">Right angle = 90°</span></div>
+<div class="solution-step-mini"><strong>Step 2:</strong> <span data-en="Total of 3 angles = 180°" data-id="Total 3 sudut = 180°">Total of 3 angles = 180°</span></div>
+<div class="solution-step-mini"><strong>Step 3:</strong> <span data-en="Sum of two acute angles:" data-id="Jumlah dua sudut lancip:">Sum of two acute angles:</span> <strong>180° − 90° = 90°</strong></div>
+<div class="solution-step-mini"><strong>Step 4:</strong> <span data-en="Other acute angle:" data-id="Sudut lancip lainnya:">Other acute angle:</span> <strong>90° − 35° = 55°</strong></div>
+<div class="answer-box" style="padding:12px 20px;margin-top:10px">
+<div class="answer-value" style="font-size:1.6rem">55°</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 10: PRACTICE PROBLEM 4 -->
+<div class="slide" id="slide10">
+<div class="practice-card">
+<div class="practice-header">
+<div class="practice-number">4</div>
+<h3 class="practice-title" data-en="Equilateral Triangle Magic" data-id="Keajaiban Segitiga Sama Sisi">Equilateral Triangle Magic</h3>
+</div>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="An equilateral triangle has all three sides equal. What is the measure of each angle?" data-id="Segitiga sama sisi memiliki ketiga sisi sama panjang. Berapakah ukuran setiap sudutnya?">An equilateral triangle has all three sides equal. What is the measure of each angle?</span>
+</div>
+<div class="practice-content">
+<div class="practice-figure">
+<svg class="svg-figure" viewBox="0 0 300 200">
+<polygon points="150,30 50,170 250,170" fill="#F3E5F5" stroke="#9C27B0" stroke-width="3"/>
+<text x="140" y="100" fill="#9C27B0" font-family="Fredoka" font-size="14">?</text>
+<text x="35" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">?</text>
+<text x="240" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">?</text>
+</svg>
+</div>
+<div class="practice-solution">
+<div class="solution-label"><i class="fas fa-lightbulb"></i> <span data-en="Solution" data-id="Pembahasan">Solution</span></div>
+<div class="solution-step-mini"><strong>Step 1:</strong> <span data-en="All angles in equilateral triangle are equal." data-id="Semua sudut dalam segitiga sama sisi adalah sama.">All angles in equilateral triangle are equal.</span></div>
+<div class="solution-step-mini"><strong>Step 2:</strong> <span data-en="Total = 180°" data-id="Total = 180°">Total = 180°</span></div>
+<div class="solution-step-mini"><strong>Step 3:</strong> <span data-en="Each angle:" data-id="Setiap sudut:">Each angle:</span> <strong>180° ÷ 3 = 60°</strong></div>
+<div class="answer-box" style="padding:12px 20px;margin-top:10px">
+<div class="answer-value" style="font-size:1.6rem">60° each</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 11: PRACTICE PROBLEM 5 -->
+<div class="slide" id="slide11">
+<div class="practice-card">
+<div class="practice-header">
+<div class="practice-number">5</div>
+<h3 class="practice-title" data-en="Angle Ratio Challenge" data-id="Tantangan Rasio Sudut">Angle Ratio Challenge</h3>
+</div>
+<div class="problem-statement">
+<strong data-en="Problem:" data-id="Masalah:">Problem:</strong> <span data-en="The angles of a triangle are in the ratio 1 : 2 : 3. Find the measure of each angle." data-id="Sudut-sudut sebuah segitiga memiliki perbandingan 1 : 2 : 3. Tentukan ukuran setiap sudut.">The angles of a triangle are in the ratio 1 : 2 : 3. Find the measure of each angle.</span>
+</div>
+<div class="practice-content">
+<div class="practice-figure">
+<svg class="svg-figure" viewBox="0 0 300 200">
+<polygon points="150,30 50,170 250,170" fill="#FFE5EC" stroke="#FF6B9D" stroke-width="3"/>
+<text x="140" y="100" fill="#E91E63" font-family="Fredoka" font-size="14">3x</text>
+<text x="35" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">2x</text>
+<text x="240" y="185" fill="#2C3E50" font-family="Fredoka" font-size="14">x</text>
+</svg>
+</div>
+<div class="practice-solution">
+<div class="solution-label"><i class="fas fa-lightbulb"></i> <span data-en="Solution" data-id="Pembahasan">Solution</span></div>
+<div class="solution-step-mini"><strong>Step 1:</strong> <span data-en="Let angles be x, 2x, 3x" data-id="Misal sudut-sudutnya x, 2x, 3x">Let angles be x, 2x, 3x</span></div>
+<div class="solution-step-mini"><strong>Step 2:</strong> <span data-en="Sum equation:" data-id="Persamaan jumlah:">Sum equation:</span> <strong>x + 2x + 3x = 6x</strong></div>
+<div class="solution-step-mini"><strong>Step 3:</strong> <span data-en="6x = 180°, so x = 30°" data-id="6x = 180°, jadi x = 30°">6x = 180°, so x = 30°</span></div>
+<div class="solution-step-mini"><strong>Step 4:</strong> <span data-en="Angles:" data-id="Sudut-sudut:">Angles:</span> <strong>30°, 60°, 90°</strong></div>
+<div class="answer-box" style="padding:12px 20px;margin-top:10px">
+<div class="answer-value" style="font-size:1.4rem">30°, 60°, 90°</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 12: EXIT TICKET QUIZ -->
+<div class="slide" id="slide12">
+<div class="quiz-container">
+<div class="quiz-header">
+<h2 class="quiz-title"><i class="fas fa-ticket-alt"></i> <span data-en="Exit Ticket Quiz" data-id="Kuis Tiket Keluar">Exit Ticket Quiz</span></h2>
+<p class="quiz-instruction" data-en="Find the unknown angle in each triangle. Choose the correct answer, then check!" data-id="Temukan sudut yang belum diketahui pada setiap segitiga. Pilih jawaban yang benar, lalu periksa!">Find the unknown angle in each triangle. Choose the correct answer, then check!</p>
+</div>
+<div id="quizQuestions"></div>
+</div>
+</div>
+
+<!-- SLIDE 13: RESULTS -->
+<div class="slide" id="slide13">
+<div class="results-card">
+<div class="results-content">
+<div class="results-icon"><i class="fas fa-trophy" id="resultsIcon"></i></div>
+<h2 class="results-title" data-en="Quiz Results" data-id="Hasil Kuis">Quiz Results</h2>
+<p id="resultsStudentName" style="font-size:1.2rem;font-weight:700;color:var(--primary)"></p>
+<div class="results-score"><span id="resultsScore">0</span><span class="total">/10</span></div>
+<p class="results-message" id="resultsMessage"></p>
+<div class="results-stats">
+<div class="stat-item">
+<div class="stat-value correct" id="correctCount">0</div>
+<div class="stat-label" data-en="Correct" data-id="Benar">Correct</div>
+</div>
+<div class="stat-item">
+<div class="stat-value incorrect" id="incorrectCount">0</div>
+<div class="stat-label" data-en="Need Review" data-id="Perlu Ditinjau">Need Review</div>
+</div>
+</div>
+<button class="start-btn" onclick="goToSlide(14)" style="font-size:1rem;padding:12px 30px">
+<span data-en="Continue to Game" data-id="Lanjut ke Permainan">Continue to Game</span>
+<i class="fas fa-gamepad"></i>
+</button>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 14: GAME -->
+<div class="slide" id="slide14">
+<div class="game-container">
+<div class="game-header">
+<h2 class="slide-title" style="font-size:2rem"><span class="hl" data-en="Triangle Match Magic" data-id="Keajaiban Mencocokkan Segitiga">Triangle Match Magic</span></h2>
+<p class="slide-subtitle" data-en="Flip cards to match triangle types with their angle properties!" data-id="Balik kartu untuk mencocokkan jenis segitiga dengan sifat sudutnya!">Flip cards to match triangle types with their angle properties!</p>
+</div>
+<div class="game-stats">
+<div class="game-stat"><i class="fas fa-hand-pointer"></i><span data-en="Moves:" data-id="Langkah:">Moves:</span> <span id="gameMoves">0</span></div>
+<div class="game-stat"><i class="fas fa-check-circle"></i><span data-en="Matched:" data-id="Cocok:">Matched:</span> <span id="gameMatched">0</span>/6</div>
+<div class="game-stat"><i class="fas fa-stopwatch"></i><span data-en="Time:" data-id="Waktu:">Time:</span> <span id="gameTime">0s</span></div>
+</div>
+<div class="game-grid" id="gameGrid"></div>
+<div class="game-message" id="gameMessage"></div>
+<div class="game-controls">
+<button class="game-btn" onclick="resetGame()"><i class="fas fa-redo"></i> <span data-en="New Game" data-id="Permainan Baru">New Game</span></button>
+<button class="game-btn" onclick="goToSlide(15)" style="background:var(--grad1)"><i class="fas fa-arrow-right"></i> <span data-en="Continue" data-id="Lanjut">Continue</span></button>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 15: CONCLUSION -->
+<div class="slide" id="slide15">
+<h2 class="slide-title"><span class="hl" data-en="What We Learned Today" data-id="Yang Kita Pelajari Hari Ini">What We Learned Today</span></h2>
+<p class="slide-subtitle" data-en="Let's recap the big ideas from our triangle adventure!" data-id="Mari kita ingat kembali ide-ide penting dari petualangan segitiga kita!">Let's recap the big ideas from our triangle adventure!</p>
+<div class="conclusion-grid">
+<div class="conclusion-card">
+<div class="conclusion-icon"><i class="fas fa-calculator"></i></div>
+<h3 data-en="Angle Sum Property" data-id="Sifat Jumlah Sudut">Angle Sum Property</h3>
+<p class="conclusion-text" data-en="The sum of angles in any triangle is always 180°, no matter the shape or size." data-id="Jumlah sudut dalam segitiga mana pun selalu 180°, terlepas dari bentuk atau ukurannya.">The sum of angles in any triangle is always 180°, no matter the shape or size.</p>
+</div>
+<div class="conclusion-card">
+<div class="conclusion-icon"><i class="fas fa-puzzle-piece"></i></div>
+<h3 data-en="Non-Routine Problems" data-id="Masalah Non-Rutin">Non-Routine Problems</h3>
+<p class="conclusion-text" data-en="We can break complex problems into smaller steps: Understand → Plan → Solve → Check." data-id="Kita dapat memecah masalah kompleks menjadi langkah kecil: Pahami → Rencanakan → Selesaikan → Periksa.">We can break complex problems into smaller steps: Understand → Plan → Solve → Check.</p>
+</div>
+<div class="conclusion-card">
+<div class="conclusion-icon"><i class="fas fa-route"></i></div>
+<h3 data-en="Many Paths, One Answer" data-id="Banyak Jalan, Satu Jawaban">Many Paths, One Answer</h3>
+<p class="conclusion-text" data-en="There's often more than one way to solve a problem. Comparing methods helps us understand better." data-id="Seringkali ada lebih dari satu cara untuk menyelesaikan masalah. Membandingkan metode membantu kita memahami lebih baik.">There's often more than one way to solve a problem. Comparing methods helps us understand better.</p>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 16: REFLECTION -->
+<div class="slide" id="slide16">
+<div class="reflection-card">
+<h2 class="slide-title" style="font-size:2rem"><span class="hl" data-en="Reflection Time" data-id="Waktu Refleksi">Reflection Time</span></h2>
+<p class="slide-subtitle" data-en="Think about your learning today and write your reflections." data-id="Pikirkan pembelajaranmu hari ini dan tulis refleksimu.">Think about your learning today and write your reflections.</p>
+<div class="reflection-prompt">
+<i class="fas fa-star"></i> <span data-en="1. What was the most interesting thing you learned about triangles today?" data-id="1. Apa hal paling menarik yang kamu pelajari tentang segitiga hari ini?">1. What was the most interesting thing you learned about triangles today?</span>
+</div>
+<textarea class="reflection-input" id="reflection1" placeholder="Type your thoughts here..."></textarea>
+<div class="reflection-prompt" style="margin-top:20px">
+<i class="fas fa-question-circle"></i> <span data-en="2. Which part was challenging? How did you overcome it?" data-id="2. Bagian mana yang menantang? Bagaimana kamu mengatasinya?">2. Which part was challenging? How did you overcome it?</span>
+</div>
+<textarea class="reflection-input" id="reflection2" placeholder="Type your thoughts here..." style="margin-top:10px"></textarea>
+<div class="reflection-prompt" style="margin-top:20px">
+<i class="fas fa-heart"></i> <span data-en="3. How will you use triangle knowledge in real life?" data-id="3. Bagaimana kamu akan menggunakan pengetahuan segitiga dalam kehidupan nyata?">3. How will you use triangle knowledge in real life?</span>
+</div>
+<textarea class="reflection-input" id="reflection3" placeholder="Type your thoughts here..." style="margin-top:10px"></textarea>
+<div style="text-align:center;margin-top:25px">
+<button class="start-btn" onclick="goToSlide(17)" style="font-size:1rem;padding:12px 30px">
+<span data-en="Finish Lesson" data-id="Selesaikan Pelajaran">Finish Lesson</span>
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 17: THANK YOU -->
+<div class="slide" id="slide17">
+<div class="thank-content">
+<div class="thank-icon"><i class="fas fa-heart"></i></div>
+<h1 class="thank-title" data-en="Thank You for Today!" data-id="Terima Kasih untuk Hari Ini!">Thank You for Today!</h1>
+<p class="thank-message" data-en="You did an amazing job exploring the wonderful world of triangles! Remember: every big problem can be broken into smaller steps, just like we did today. Keep questioning, keep exploring, and keep loving math!" data-id="Kerja bagus menjelajahi dunia segitiga yang luar biasa! Ingat: setiap masalah besar dapat dipecah menjadi langkah-langkah kecil, seperti yang kita lakukan hari ini. Terus bertanya, terus menjelajah, dan terus mencintai matematika!">You did an amazing job exploring the wonderful world of triangles! Remember: every big problem can be broken into smaller steps, just like we did today. Keep questioning, keep exploring, and keep loving math!</p>
+<div class="thank-signature" id="thankYouName"></div>
+<p style="margin-top:20px;color:#888;font-size:.95rem" data-en="Cambridge Primary Mathematics · Grade 5 · Problem Solving with Triangles" data-id="Matematika Cambridge Primary · Kelas 5 · Pemecahan Masalah dengan Segitiga">Cambridge Primary Mathematics · Grade 5 · Problem Solving with Triangles</p>
+</div>
+</div>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+<button class="nav-btn" onclick="prevSlide()" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+<span class="page-indicator" id="pageIndicator">1 / 17</span>
+<button class="nav-btn" onclick="nextSlide()" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<script>
+// ===== TRANSLATION =====
+let currentLang = 'en';
+function toggleTranslate() {
+  currentLang = (currentLang === 'en') ? 'id' : 'en';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + currentLang);
+  });
+  document.getElementById('translateText').textContent = (currentLang === 'en') ? 'Translate to Indonesian' : 'Translate to English';
+  renderQuiz();
+}
+
+function updateName() {
+  const name = document.getElementById('studentName').value;
+  document.getElementById('resultsStudentName').textContent = name ? name + '!' : '';
+  document.getElementById('thankYouName').textContent = name ? '🌟 ' + name + ' 🌟' : '';
+}
+
+// ===== NAVIGATION =====
+let currentSlide = 1;
+const totalSlides = 17;
+
+function goToSlide(n) {
+  document.getElementById('slide' + currentSlide).classList.remove('active');
+  document.getElementById('slide' + n).classList.add('active');
+  currentSlide = n;
+  updateNav();
+  window.scrollTo(0, 0);
+  if (n === 14) initGame();
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides) {
+    if (currentSlide === 1 && !document.getElementById('studentName').value.trim()) {
+      alert(currentLang === 'en' ? 'Please enter your name first!' : 'Silakan masukkan namamu terlebih dahulu!');
+      return;
+    }
+    goToSlide(currentSlide + 1);
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 1) goToSlide(currentSlide - 1);
+}
+
+function updateNav() {
+  document.getElementById('pageIndicator').textContent = currentSlide + ' / ' + totalSlides;
+  document.getElementById('prevBtn').disabled = (currentSlide === 1);
+  document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+}
+
+// ===== QUIZ DATA =====
+const quizData = [
+  {
+    question: { en: "Two angles of a triangle are 50° and 70°. Find the third angle.", id: "Dua sudut segitiga adalah 50° dan 70°. Tentukan sudut ketiga." },
+    options: ["50°", "60°", "70°", "80°"],
+    correct: 1,
+    explanation: { en: "Sum of two angles = 50° + 70° = 120°. Third angle = 180° − 120° = 60°.", id: "Jumlah dua sudut = 50° + 70° = 120°. Sudut ketiga = 180° − 120° = 60°." }
+  },
+  {
+    question: { en: "An isosceles triangle has a vertex angle of 80°. What is each base angle?", id: "Segitiga sama kaki memiliki sudut puncak 80°. Berapa sudut alasnya?" },
+    options: ["40°", "50°", "60°", "100°"],
+    correct: 1,
+    explanation: { en: "180° − 80° = 100° remaining. Each base angle = 100° ÷ 2 = 50°.", id: "180° − 80° = 100° tersisa. Setiap sudut alas = 100° ÷ 2 = 50°." }
+  },
+  {
+    question: { en: "Two angles of a triangle are 35° and 65°. Find the third angle.", id: "Dua sudut segitiga adalah 35° dan 65°. Tentukan sudut ketiga." },
+    options: ["70°", "80°", "90°", "100°"],
+    correct: 1,
+    explanation: { en: "35° + 65° = 100°. Third angle = 180° − 100° = 80°.", id: "35° + 65° = 100°. Sudut ketiga = 180° − 100° = 80°." }
+  },
+  {
+    question: { en: "In a right triangle, one acute angle is 25°. Find the other acute angle.", id: "Dalam segitiga siku-siku, satu sudut lancip adalah 25°. Tentukan sudut lancip lainnya." },
+    options: ["55°", "65°", "75°", "90°"],
+    correct: 1,
+    explanation: { en: "Two acute angles in a right triangle sum to 90°. Other angle = 90° − 25° = 65°.", id: "Dua sudut lancip dalam segitiga siku-siku berjumlah 90°. Sudut lain = 90° − 25° = 65°." }
+  },
+  {
+    question: { en: "Two angles of a triangle are 55° and 55°. What is the third angle?", id: "Dua sudut segitiga adalah 55° dan 55°. Berapa sudut ketiganya?" },
+    options: ["60°", "70°", "80°", "90°"],
+    correct: 1,
+    explanation: { en: "55° + 55° = 110°. Third angle = 180° − 110° = 70°.", id: "55° + 55° = 110°. Sudut ketiga = 180° − 110° = 70°." }
+  },
+  {
+    question: { en: "An equilateral triangle has angles in ratio 1:1:1. What is each angle?", id: "Segitiga sama sisi memiliki sudut dengan perbandingan 1:1:1. Berapa setiap sudutnya?" },
+    options: ["45°", "60°", "90°", "120°"],
+    correct: 1,
+    explanation: { en: "180° ÷ 3 = 60°. Each angle of an equilateral triangle is 60°.", id: "180° ÷ 3 = 60°. Setiap sudut segitiga sama sisi adalah 60°." }
+  },
+  {
+    question: { en: "Two angles of a triangle are 40° and 60°. Find the third angle.", id: "Dua sudut segitiga adalah 40° dan 60°. Tentukan sudut ketiga." },
+    options: ["70°", "80°", "90°", "100°"],
+    correct: 1,
+    explanation: { en: "40° + 60° = 100°. Third angle = 180° − 100° = 80°.", id: "40° + 60° = 100°. Sudut ketiga = 180° − 100° = 80°." }
+  },
+  {
+    question: { en: "A triangle has angles 100° and 30°. Find the third angle.", id: "Sebuah segitiga memiliki sudut 100° dan 30°. Tentukan sudut ketiga." },
+    options: ["40°", "50°", "60°", "70°"],
+    correct: 1,
+    explanation: { en: "100° + 30° = 130°. Third angle = 180° − 130° = 50°.", id: "100° + 30° = 130°. Sudut ketiga = 180° − 130° = 50°." }
+  },
+  {
+    question: { en: "In a triangle, one angle is 90° and another is 45°. Find the third angle.", id: "Dalam segitiga, satu sudut 90° dan yang lain 45°. Tentukan sudut ketiga." },
+    options: ["35°", "45°", "55°", "65°"],
+    correct: 1,
+    explanation: { en: "90° + 45° = 135°. Third angle = 180° − 135° = 45°. This is an isosceles right triangle!", id: "90° + 45° = 135°. Sudut ketiga = 180° − 135° = 45°. Ini segitiga siku-siku sama kaki!" }
+  },
+  {
+    question: { en: "The angles of a triangle are in ratio 2:3:4. What is the largest angle?", id: "Sudut segitiga memiliki perbandingan 2:3:4. Berapa sudut terbesarnya?" },
+    options: ["60°", "70°", "80°", "90°"],
+    correct: 2,
+    explanation: { en: "Total parts = 9. Each part = 180° ÷ 9 = 20°. Largest = 4 × 20° = 80°.", id: "Total bagian = 9. Setiap bagian = 180° ÷ 9 = 20°. Terbesar = 4 × 20° = 80°." }
+  }
+];
+
+function renderQuiz() {
+  const container = document.getElementById('quizQuestions');
+  container.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-question';
+    let optionsHTML = '';
+    q.options.forEach((opt, j) => {
+      optionsHTML += `<label class="option-label" data-q="${i}" data-opt="${j}" onclick="selectOption(${i},${j})">
+        <span class="option-letter">${String.fromCharCode(65+j)}</span>
+        <span>${opt}</span>
+      </label>`;
+    });
+    qDiv.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">${i+1}</div>
+        <div class="question-text">${q.question[currentLang]}</div>
+      </div>
+      <div class="options-list">${optionsHTML}</div>
+      <div class="quiz-actions">
+        <button class="check-btn" onclick="checkAnswer(${i})"><i class="fas fa-check"></i> <span data-en="Check Answer" data-id="Periksa Jawaban">${currentLang==='en'?'Check Answer':'Periksa Jawaban'}</span></button>
+      </div>
+      <div class="explanation-box" id="explain-${i}">
+        <div class="explanation-title"><i class="fas fa-info-circle"></i> <span data-en="Explanation" data-id="Pembahasan">${currentLang==='en'?'Explanation':'Pembahasan'}</span></div>
+        <span id="explain-text-${i}"></span>
+      </div>
+    `;
+    container.appendChild(qDiv);
+  });
+}
+
+const userAnswers = new Array(10).fill(null);
+const checkedAnswers = new Array(10).fill(false);
+
+function selectOption(qIdx, optIdx) {
+  if (checkedAnswers[qIdx]) return;
+  userAnswers[qIdx] = optIdx;
+  document.querySelectorAll(`.option-label[data-q="${qIdx}"]`).forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.option-label[data-q="${qIdx}"][data-opt="${optIdx}"]`).classList.add('selected');
+}
+
+function checkAnswer(qIdx) {
+  if (userAnswers[qIdx] === null) {
+    alert(currentLang === 'en' ? 'Please select an answer first!' : 'Silakan pilih jawaban dulu!');
+    return;
+  }
+  checkedAnswers[qIdx] = true;
+  const correct = quizData[qIdx].correct;
+  document.querySelectorAll(`.option-label[data-q="${qIdx}"]`).forEach((el, j) => {
+    el.classList.remove('selected');
+    el.style.pointerEvents = 'none';
+    if (j === correct) el.classList.add('correct');
+    else if (j === userAnswers[qIdx]) el.classList.add('incorrect');
+  });
+  document.getElementById('explain-text-' + qIdx).textContent = quizData[qIdx].explanation[currentLang];
+  document.getElementById('explain-' + qIdx).classList.add('show');
+  updateResults();
+}
+
+function updateResults() {
+  let correct = 0;
+  checkedAnswers.forEach((c, i) => {
+    if (c && userAnswers[i] === quizData[i].correct) correct++;
+  });
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('incorrectCount').textContent = checkedAnswers.filter(c => c).length - correct;
+  document.getElementById('resultsScore').textContent = correct;
+  let msg = '';
+  let icon = 'fa-trophy';
+  if (correct === 10) { msg = currentLang==='en' ? 'Perfect! You are a Triangle Champion!' : 'Sempurna! Kamu Juara Segitiga!'; icon='fa-crown'; }
+  else if (correct >= 7) { msg = currentLang==='en' ? 'Great job! You really understand triangles!' : 'Kerja bagus! Kamu benar-benar memahami segitiga!'; icon='fa-star'; }
+  else if (correct >= 5) { msg = currentLang==='en' ? 'Good effort! Keep practicing!' : 'Usaha yang baik! Terus berlatih!'; icon='fa-thumbs-up'; }
+  else { msg = currentLang==='en' ? 'Review the lesson and try again!' : 'Tinjau pelajaran dan coba lagi!'; icon='fa-heart'; }
+  document.getElementById('resultsMessage').textContent = msg;
+  document.getElementById('resultsIcon').className = 'fas ' + icon;
+}
+
+// ===== MEMORY GAME =====
+const triangleTypes = [
+  { name: { en: 'Equilateral', id: 'Sama Sisi' }, desc: { en: 'All sides equal', id: 'Semua sisi sama' }, color: '#FF6B9D', icon: 'fa-circle' },
+  { name: { en: 'Isosceles', id: 'Sama Kaki' }, desc: { en: 'Two sides equal', id: 'Dua sisi sama' }, color: '#4ECDC4', icon: 'fa-play' },
+  { name: { en: 'Scalene', id: 'Sembarang' }, desc: { en: 'No equal sides', id: 'Tidak ada sisi sama' }, color: '#FFD93D', icon: 'fa-shapes' },
+  { name: { en: 'Right', id: 'Siku-siku' }, desc: { en: 'One 90° angle', id: 'Satu sudut 90°' }, color: '#9C27B0', icon: 'fa-square' },
+  { name: { en: 'Acute', id: 'Lancip' }, desc: { en: 'All angles < 90°', id: 'Semua sudut < 90°' }, color: '#66BB6A', icon: 'fa-angle-up' },
+  { name: { en: 'Obtuse', id: 'Tumpul' }, desc: { en: 'One angle > 90°', id: 'Satu sudut > 90°' }, color: '#FF8C42', icon: 'fa-angle-down' }
+];
+
+let gameCards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+let moves = 0;
+let gameTimer = null;
+let gameStartTime = null;
+let gameActive = false;
+
+function initGame() {
+  const pairs = [];
+  triangleTypes.forEach((t, i) => {
+    pairs.push({ id: i, type: 'name', content: t.name[currentLang], color: t.color, icon: t.icon });
+    pairs.push({ id: i, type: 'desc', content: t.desc[currentLang], color: t.color, icon: t.icon });
+  });
+  gameCards = pairs.sort(() => Math.random() - 0.5);
+  renderGame();
+  matchedPairs = 0;
+  moves = 0;
+  document.getElementById('gameMoves').textContent = '0';
+  document.getElementById('gameMatched').textContent = '0';
+  document.getElementById('gameTime').textContent = '0s';
+  document.getElementById('gameMessage').textContent = '';
+  flippedCards = [];
+  gameActive = true;
+  gameStartTime = Date.now();
+  if (gameTimer) clearInterval(gameTimer);
+  gameTimer = setInterval(() => {
+    if (gameActive) {
+      const sec = Math.floor((Date.now() - gameStartTime) / 1000);
+      document.getElementById('gameTime').textContent = sec + 's';
+    }
+  }, 1000);
+}
+
+function renderGame() {
+  const grid = document.getElementById('gameGrid');
+  grid.innerHTML = '';
+  gameCards.forEach((card, idx) => {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'game-card';
+    cardEl.dataset.idx = idx;
+    cardEl.onclick = () => flipCard(idx);
+    cardEl.innerHTML = `
+      <div class="game-card-inner">
+        <div class="game-card-back"><i class="fas fa-question"></i></div>
+        <div class="game-card-front">
+          <i class="fas ${card.icon}" style="color:${card.color};font-size:1.8rem"></i>
+          <div class="game-card-name">${card.content}</div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(cardEl);
+  });
+}
+
+function flipCard(idx) {
+  if (!gameActive) return;
+  if (flippedCards.length >= 2) return;
+  const cardEl = document.querySelector(`.game-card[data-idx="${idx}"]`);
+  if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched')) return;
+  cardEl.classList.add('flipped');
+  flippedCards.push(idx);
+  if (flippedCards.length === 2) {
+    moves++;
+    document.getElementById('gameMoves').textContent = moves;
+    setTimeout(checkMatch, 800);
+  }
+}
+
+function checkMatch() {
+  const [a, b] = flippedCards;
+  const cardA = gameCards[a];
+  const cardB = gameCards[b];
+  const elA = document.querySelector(`.game-card[data-idx="${a}"]`);
+  const elB = document.querySelector(`.game-card[data-idx="${b}"]`);
+  if (cardA.id === cardB.id && cardA.type !== cardB.type) {
+    elA.classList.add('matched');
+    elB.classList.add('matched');
+    matchedPairs++;
+    document.getElementById('gameMatched').textContent = matchedPairs;
+    document.getElementById('gameMessage').textContent = currentLang==='en' ? '✨ Great match!' : '✨ Cocok bagus!';
+    if (matchedPairs === 6) {
+      gameActive = false;
+      clearInterval(gameTimer);
+      const time = Math.floor((Date.now() - gameStartTime) / 1000);
+      document.getElementById('gameMessage').textContent = currentLang==='en' ? `🎉 You won in ${moves} moves and ${time} seconds!` : `🎉 Kamu menang dalam ${moves} langkah dan ${time} detik!`;
+    }
+  } else {
+    elA.classList.remove('flipped');
+    elB.classList.remove('flipped');
+    document.getElementById('gameMessage').textContent = currentLang==='en' ? 'Try again!' : 'Coba lagi!';
+  }
+  flippedCards = [];
+}
+
+function resetGame() {
+  initGame();
+}
+
+// ===== INIT =====
+window.onload = function() {
+  renderQuiz();
+  updateNav();
+};
+</script>
+</body>
+</html>

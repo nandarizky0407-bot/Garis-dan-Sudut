@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ular Tangga Sudut &amp; Garis — Modul 100 Soal HOTS</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f7eeda;--ink:#3d2c1e;--wood:#7a4a22;--wood2:#5b3a1a;--cream:#fffaf0;--cream2:#f4e8cd;--green:#2f9e44;--greenD:#256b33;--red:#d9480f;--p1:#e8590c;--p2:#0ca678;--gold:#e8b30f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;color:var(--ink);min-height:100vh;background-color:var(--paper);background-image:radial-gradient(rgba(122,74,34,.10) 1.2px,transparent 1.3px);background-size:26px 26px}
+header{text-align:center;padding:18px 12px 4px}
+h1{font-family:'Baloo 2',cursive;font-size:clamp(26px,5vw,44px);color:var(--wood2);line-height:1.05}
+h1 .a{color:#c92a2a}h1 .b{color:var(--greenD)}h1 .c{color:#1971c2}
+.tagline{font-weight:700;color:#8a6a3f;margin-top:2px;font-size:clamp(12px,2vw,16px)}
+.stage{display:flex;gap:22px;justify-content:center;align-items:flex-start;flex-wrap:wrap;padding:14px 16px 40px;max-width:1120px;margin:0 auto}
+.boardWrap{width:min(94vw,620px)}
+.board{position:relative;aspect-ratio:1;border:10px solid var(--wood);border-radius:16px;overflow:hidden;background:var(--cream);box-shadow:0 12px 26px rgba(91,58,26,.28),inset 0 0 0 3px rgba(255,255,255,.35)}
+.grid{position:absolute;inset:0;z-index:1;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr)}
+.cell{position:relative;background:var(--cream);border:.5px solid rgba(122,74,34,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1px;overflow:hidden;text-align:center}
+.cell.alt{background:var(--cream2)}
+.cell.p1{background:#eef7e2}.cell.p1.alt{background:#e4f0d3}
+.cell.p2{background:#fdeed9}.cell.p2.alt{background:#f8e6c6}
+.cell .num{position:absolute;top:1px;left:3px;font-family:'Baloo 2';font-weight:800;font-size:clamp(7px,1.6vw,12px);color:#9a6a33}
+.cell .q{font-size:clamp(6px,1.3vw,10.5px);line-height:1.08;font-weight:800;color:#5a4527;margin-top:9px;word-break:break-word}
+.cell.lad{background:linear-gradient(180deg,#e6f6dd,#d0efc0)}.cell.lad .q{color:var(--greenD)}
+.cell.snk{background:linear-gradient(180deg,#ffe8e0,#ffd4c8)}.cell.snk .q{color:var(--redD)}
+.cell.start{background:#ffedb0}
+.cell.finish{background:radial-gradient(circle at 50% 42%,#ffe9a0,#ffd43b)}
+.cell .mini{width:36%;max-width:24px;aspect-ratio:1;margin-top:7px}
+.cell.occ0{box-shadow:inset 0 0 0 3px rgba(232,89,12,.65)}
+.cell.occ1{box-shadow:inset 0 0 0 3px rgba(12,166,120,.65)}
+#overlay{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.rail{stroke:#8a5a2b;stroke-width:7;stroke-linecap:round}
+.rung{stroke:#c98d4f;stroke-width:5;stroke-linecap:round}
+.pawn{position:absolute;z-index:10;width:6.2%;aspect-ratio:1;border-radius:50%;border:2.5px solid #fff;box-shadow:0 3px 7px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Baloo 2';font-weight:800;font-size:clamp(10px,2.4vw,17px);transition:left .3s ease,top .3s ease}
+.pawn.x0{background:radial-gradient(circle at 32% 28%,#ffa94d,var(--p1) 55%,#a83c04)}
+.pawn.x1{background:radial-gradient(circle at 32% 28%,#4fd8b0,var(--p2) 55%,#057a5b)}
+.pawn.noTrans{transition:none}
+.legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#fffdf6;border:1.5px solid #e5d5b0;border-radius:999px;padding:3px 10px;font-weight:700}
+.chip i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.panel{width:min(94vw,340px);display:flex;flex-direction:column;gap:12px}
+.card{background:#fffdf6;border:2px solid #e5d5b0;border-radius:14px;padding:14px;box-shadow:0 4px 10px rgba(91,58,26,.08)}
+.cardTitle{font-family:'Baloo 2';font-weight:800;font-size:15px;color:#8a6a3f;margin-bottom:6px}
+.who{font-family:'Baloo 2';font-weight:800;font-size:20px}
+.diceRow{display:flex;align-items:center;gap:16px;margin-top:10px}
+.dice{width:64px;height:64px;flex:none;background:#fff;border:2px solid #d9c79b;border-radius:12px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:9px;gap:2px;box-shadow:0 4px 0 #d9c79b}
+.dice.rolling{animation:droll .12s linear infinite}
+@keyframes droll{50%{transform:rotate(7deg) scale(1.05)}}
+.pip{width:9px;height:9px;border-radius:50%;background:#3d2c1e;place-self:center;visibility:hidden}
+.pip.on{visibility:visible}
+.diceSide{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.hintKbd{font-size:11.5px;color:#a08755;font-weight:700}
+.diceVal{font-size:13px;font-weight:800;color:#8a6a3f}
+#msg{min-height:46px;font-weight:700;color:#5b4632;background:#fbf3df;border:1.5px dashed #dcc794;border-radius:10px;padding:8px 10px;margin-top:12px;font-size:14px}
+.playerCard{display:flex;align-items:center;gap:11px;transition:transform .15s}
+.playerCard.active{outline:3px solid #f1d38a;transform:translateY(-1px)}
+.pdot{width:18px;height:18px;border-radius:50%;flex:none;box-shadow:inset -2px -3px 4px rgba(0,0,0,.25)}
+.pname{font-family:'Baloo 2';font-weight:800;font-size:17px}
+.pstat{font-size:13px;color:#6b5335;font-weight:700}
+.st{width:13px;height:13px;vertical-align:-2px}
+.logBox{max-height:150px;overflow:auto;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.logBox div{background:#faf4e4;border-radius:8px;padding:4px 8px;border-left:4px solid #e3d2a8}
+.logBox div.lp0{border-left-color:var(--p1)}
+.logBox div.lp1{border-left-color:var(--p2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font-family:'Baloo 2';font-weight:700;border:none;border-radius:12px;padding:11px 20px;font-size:16px;cursor:pointer;background:var(--red);color:#fff;box-shadow:0 4px 0 #a63c05;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a63c05}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.green{background:var(--green);box-shadow:0 4px 0 #1b6e2c}
+.btn.green:active{box-shadow:0 1px 0 #1b6e2c}
+.btn.ghost{background:#fff;color:#6b4f23;border:2px solid #d9c79b;box-shadow:0 3px 0 #d9c79b}
+.btn.small{padding:7px 12px;font-size:13px}
+.ovl{position:fixed;inset:0;background:rgba(59,42,22,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.ovl.top{z-index:60}
+.hidden{display:none!important}
+.sheet{background:#fffdf6;border-radius:18px;padding:22px;max-width:540px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);border:3px solid var(--wood)}
+.sheet h2{font-family:'Baloo 2';color:var(--wood2);font-size:24px;margin-bottom:6px}
+.nameRow{display:flex;align-items:center;gap:10px;margin:10px 0}
+.nameRow label{font-weight:800;width:118px;font-size:14px;display:flex;align-items:center;gap:7px}
+.nameRow .pdot{width:14px;height:14px}
+input[type=text]{padding:10px 12px;border:2px solid #d9c79b;border-radius:10px;font:inherit;font-weight:700;background:#fff}
+input[type=text]:focus{outline:none;border-color:var(--green)}
+.rules{background:#f6efdb;border-radius:12px;padding:12px 14px;font-size:13.5px;margin:12px 0}
+.rules ol{margin-left:18px}
+.rules li{margin:5px 0}
+.tips{margin-top:8px;background:#fdf6d8;border:1.5px dashed #dcb95c;border-radius:8px;padding:8px 10px;font-size:12.5px}
+.center{text-align:center}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:800;font-size:12.5px;padding:4px 12px;border-radius:999px}
+.badge svg{width:14px;height:14px}
+.badge.p1{background:#d7efc0;color:#256b33}
+.badge.p2{background:#fbdca8;color:#8a5a10}
+.badge.hots{background:#ffe9ae;color:#8a6400}
+#qText{font-size:16.5px;font-weight:700;margin:12px 0 4px;line-height:1.6}
+.optGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.optBtn{display:flex;align-items:center;gap:9px;text-align:left;padding:10px 12px;border:2px solid #d9c79b;border-radius:11px;background:#fff;cursor:pointer;font:inherit;font-weight:700;color:#3d2c1e;transition:.12s}
+.optBtn:hover:not(:disabled){border-color:#b08d3e;background:#fdf6e0;transform:translateY(-1px)}
+.optBtn .key{flex:none;width:26px;height:26px;border-radius:8px;background:#f1e4c3;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;color:#6b4f23}
+.optBtn.correct{border-color:#2f9e44;background:#e3f5e1}
+.optBtn.correct .key{background:#2f9e44;color:#fff}
+.optBtn.wrong{border-color:#d64545;background:#fdeaea;opacity:.75}
+.optBtn.wrong .key{background:#d64545;color:#fff}
+.optBtn.reveal{border-color:#2f9e44;box-shadow:0 0 0 2px rgba(47,158,68,.35)}
+.optBtn:disabled{cursor:default}
+.kbdHint{font-size:11.5px;color:#a08755;font-weight:700;margin-top:9px;text-align:center}
+.qFeedback{margin-top:12px;font-weight:800;display:none;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4}
+.qFeedback.show{display:flex}
+.qFeedback.good{color:#2b8a3e}
+.qFeedback.bad{color:#c92a2a}
+.fi{width:20px;height:20px;flex:none;margin-top:1px}
+.explain{margin-top:10px;background:#f6efdb;border-left:4px solid #b08d3e;padding:9px 11px;font-size:13.5px;border-radius:0 8px 8px 0;line-height:1.55;display:none}
+.explain.show{display:block}
+.qactions{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.shake{animation:shake .28s 2}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+details{margin:4px 0;border:1.5px solid #efe3c4;border-radius:10px;padding:4px 12px;background:#fdf9ef}
+summary{font-family:'Baloo 2';color:var(--wood2);font-size:15px;padding:7px 0;cursor:pointer;list-style-position:inside}
+.kitem{font-size:13px;line-height:1.55;padding:8px 0;border-bottom:1px solid #efe3c4}
+.kitem i{color:#7a6134}
+.wrow{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;background:#faf4e4;border-radius:10px;padding:8px 12px;margin:6px 0;font-size:14px}
+.winTag{background:var(--gold);color:#5b3a1a;font-family:'Baloo 2';font-weight:800;padding:2px 10px;border-radius:999px;font-size:12px}
+.bigTrophy{width:84px;height:84px;filter:drop-shadow(0 5px 7px rgba(0,0,0,.25))}
+.confettiLayer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.confettiLayer i{position:absolute;top:-8%;display:block;animation:cfall linear infinite}
+@keyframes cfall{0%{transform:translateY(-10vh) rotate(0)}100%{transform:translateY(112vh) rotate(760deg)}}
+footer{text-align:center;font-size:12.5px;color:#a08755;padding:0 12px 26px;font-weight:700}
+@media (max-width:600px){.cell .q{display:none}.cell.spec .q{display:block;font-size:6.5px}.optGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="a">ULAR</span> <span class="b">TANGGA</span> <span class="c">SUDUT</span></h1>
+  <div class="tagline">Garis, Sudut &amp; Segitiga &bull; Modul 100 Soal HOTS (Aljabar) &bull; Cambridge Primary Grade 5</div>
+</header>
+
+<main class="stage">
+  <section class="boardWrap">
+    <div class="board" id="board">
+      <div class="grid" id="grid"></div>
+      <svg id="overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="legend">
+      <span class="chip"><i style="background:#d9ecbf"></i>Kotak 2&ndash;50 &bull; SEDANG (Bagian 1&ndash;2)</span>
+      <span class="chip"><i style="background:#f5ddb2"></i>Kotak 51&ndash;99 &bull; SULIT (Bagian 3)</span>
+      <span class="chip"><i style="background:#bde3ac"></i>Tangga = HOTS (Bagian 4)</span>
+      <span class="chip"><i style="background:#ffc4b0"></i>Ular = HOTS (Bagian 4)</span>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="card">
+      <div class="who">Giliran: <span id="turnName">&ndash;</span></div>
+      <div class="diceRow">
+        <div class="dice" id="dice"></div>
+        <div class="diceSide">
+          <button class="btn green" id="btnRoll" disabled>Lempar Dadu</button>
+          <div class="diceVal">Dadu: <b id="diceVal">&ndash;</b></div>
+          <div class="hintKbd">atau tekan tombol Spasi</div>
+        </div>
+      </div>
+      <div id="msg">Isi nama pemain untuk memulai petualangan!</div>
+    </div>
+    <div class="card playerCard" id="pc0"></div>
+    <div class="card playerCard" id="pc1"></div>
+    <div class="card">
+      <div class="cardTitle">Catatan Permainan</div>
+      <div class="logBox" id="log"></div>
+    </div>
+    <div class="tools">
+      <button class="btn ghost small" id="btnKey">Kunci Jawaban (Tutor)</button>
+      <button class="btn ghost small" id="btnSound">Suara: ON</button>
+      <button class="btn ghost small" id="btnHow">Cara Bermain</button>
+    </div>
+  </aside>
+</main>
+
+<footer>Dibuat untuk belajar Garis, Sudut &amp; Segitiga (Modul 100 Soal HOTS) sambil bermain bersama tutor.</footer>
+
+<!-- ============ SETUP ============ -->
+<div class="ovl" id="setupOvl">
+  <div class="sheet">
+    <h2 class="center">Selamat Datang, Petualang Sudut!</h2>
+    <p class="center" style="font-weight:700;color:#8a6a3f">Masukkan nama 2 pemain untuk memulai.</p>
+    <div class="nameRow">
+      <label><span class="pdot" style="background:var(--p1)"></span>Pemain 1:</label>
+      <input type="text" id="inName1" maxlength="14" placeholder="Nama pemain pertama" autocomplete="off">
+    </div>
+    <div class="nameRow">
+      <label><span class="pdot" style="background:var(--p2)"></span>Pemain 2:</label>
+      <input type="text" id="inName2" maxlength="14" placeholder="Nama pemain kedua" autocomplete="off">
+    </div>
+    <div class="rules" id="setupRules"></div>
+    <div class="center"><button class="btn green" id="btnStart" onclick="startGame()" style="font-size:19px;padding:13px 34px">Mulai Bermain!</button></div>
+  </div>
+</div>
+
+<!-- ============ MODAL SOAL ============ -->
+<div class="ovl top hidden" id="qOvl">
+  <div class="sheet">
+    <span class="badge p1" id="qBadge">SOAL</span>
+    <h2 id="qTitle" style="margin-top:8px">Kotak</h2>
+    <p id="qText"></p>
+    <div class="optGrid" id="opts"></div>
+    <div class="kbdHint">Tips: tekan tombol <b>A</b>&ndash;<b>D</b> (atau 1&ndash;4) di keyboard untuk memilih</div>
+    <div class="qFeedback" id="qFeedback"></div>
+    <div class="explain" id="qExplain"></div>
+    <div class="qactions">
+      <button class="btn ghost small" id="btnSkip">Lewati (putusan tutor)</button>
+      <button class="btn green hidden" id="btnNext">Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KUNCI JAWABAN ============ -->
+<div class="ovl top hidden" id="keyOvl">
+  <div class="sheet">
+    <h2>Kunci Jawaban &amp; Pembahasan <span style="font-size:13px;color:#a08755">(khusus tutor)</span></h2>
+    <div id="keyBody"></div>
+    <div class="center" style="margin-top:14px"><button class="btn" id="btnKeyClose">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ============ CARA BERMAIN ============ -->
+<div class="ovl top hidden" id="howOvl">
+  <div class="sheet">
+    <h2>Cara Bermain</h2>
+    <div id="howBody"></div>
+    <div class="center" style="margin-top:14px"><button class="btn" id="btnHowClose">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ============ PEMENANG ============ -->
+<div class="ovl hidden" id="winOvl">
+  <div class="confettiLayer" id="confetti"></div>
+  <div class="sheet center">
+    <svg class="bigTrophy" viewBox="0 0 24 24" fill="#e8b30f"><path d="M7 2h10v2h4v3a5 5 0 0 1-5 5h-.4a5.5 5.5 0 0 1-2.6 2.5V17h3v3H8v-3h3v-2.5A5.5 5.5 0 0 1 8.4 12H8a5 5 0 0 1-5-5V4h4V2zm-2 4v1a3 3 0 0 0 3 3V6H5zm14 0h-3v4a3 3 0 0 0 3-3V6z"/></svg>
+    <h2 style="font-size:30px">SELAMAT, <span id="winName"></span>!</h2>
+    <p style="font-weight:700;color:#8a6a3f;margin-bottom:10px">Kamu mencapai kotak 100 dan menjadi pemenangnya!</p>
+    <div id="winStats"></div>
+    <div class="center" style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn green" id="btnAgain">Main Lagi</button>
+      <button class="btn ghost" id="btnNew">Ganti Pemain</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* Pelapor galat: bila ada skrip yang gagal, tampilkan di kotak pesan agar terlihat */
+window.addEventListener('error',function(e){var m=document.getElementById('msg');if(m)m.textContent='Terjadi galat skrip: '+((e&&e.message)||e);});
+
+/* ================= DATA PAPAN ================= */
+var LADDERS={3:24,9:31,21:42,36:55,43:77,62:81,71:92,80:99};
+var SNAKES={98:79,97:64,93:46,89:53,87:57,74:39,66:44,33:13,17:5};
+var PCOL=['#e8590c','#0ca678'];
+var SNAKE_COLORS=[
+ {b:'#2f9e44',d:'#1b6e2c'},{b:'#e8590c',d:'#a83e07'},{b:'#1098ad',d:'#0b6f80'},
+ {b:'#d6336c',d:'#96204a'},{b:'#74b816',d:'#4f7d0e'}
+];
+
+/* ============ BANK SOAL: SUDUT & GARIS (Modul 100 Soal HOTS) ============
+   part: 1 = SEDANG (Bagian 1-2, soal 1-50)  -> kotak 2-50
+         2 = SULIT  (Bagian 3,   soal 51-75) -> kotak 51-99
+         3 = HOTS   (Bagian 4,   soal 76-100) -> kotak tangga & kepala ular
+   Semua jawaban diverifikasi ulang secara matematis. */
+var QUESTIONS=[
+{n:1,part:1,t:"Penyiku",q:"Besar sudut 3x dan 2x + 10\u00B0 saling berpenyiku. Nilai x adalah...",opts:["14\u00B0","16\u00B0","18\u00B0","20\u00B0"],ans:1,ex:"3x + (2x + 10) = 90 \u2192 5x = 80 \u2192 x = 16."},
+{n:2,part:1,t:"Berpelurus",q:"Dua sudut berpelurus besarnya 4p dan 5p. Besar sudut terkecil adalah...",opts:["60\u00B0","80\u00B0","100\u00B0","120\u00B0"],ans:1,ex:"4p + 5p = 180 \u2192 9p = 180 \u2192 p = 20. Terkecil = 4(20) = 80\u00B0."},
+{n:3,part:1,t:"Penyiku",q:"Sudut A = (2a + 5)\u00B0 dan B = (3a \u2212 10)\u00B0 berpenyiku. Besar sudut A...",opts:["35\u00B0","43\u00B0","45\u00B0","55\u00B0"],ans:1,ex:"(2a+5) + (3a\u221210) = 90 \u2192 5a = 95 \u2192 a = 19. Sudut A = 2(19) + 5 = 43\u00B0."},
+{n:4,part:1,t:"Berpelurus",q:"Sudut pelurus dari (5y \u2212 20)\u00B0 adalah (3y + 40)\u00B0. Nilai y adalah...",opts:["20","25","30","35"],ans:1,ex:"5y \u2212 20 + 3y + 40 = 180 \u2192 8y + 20 = 180 \u2192 8y = 160 \u2192 y = 25."},
+{n:5,part:1,t:"Penyiku",q:"Sudut K adalah 2 kali penyikunya. Besar sudut K...",opts:["30\u00B0","45\u00B0","60\u00B0","75\u00B0"],ans:2,ex:"K = 2(90 \u2212 K) \u2192 3K = 180 \u2192 K = 60\u00B0."},
+{n:6,part:1,t:"Berpelurus",q:"Sudut M adalah 4 kali pelurusnya. Besar sudut M...",opts:["120\u00B0","135\u00B0","144\u00B0","150\u00B0"],ans:2,ex:"M = 4(180 \u2212 M) \u2192 5M = 720 \u2192 M = 144\u00B0."},
+{n:7,part:1,t:"Penyiku",q:"Jika x + 15\u00B0 dan 2x \u2212 30\u00B0 berpenyiku, nilai 3x...",opts:["75\u00B0","90\u00B0","105\u00B0","120\u00B0"],ans:2,ex:"(x+15) + (2x\u221230) = 90 \u2192 3x \u2212 15 = 90 \u2192 3x = 105."},
+{n:8,part:1,t:"Berpelurus",q:"Sudut berpelurus 7k dan 3k + 20\u00B0. Besar sudut terbesar...",opts:["112\u00B0","126\u00B0","130\u00B0","140\u00B0"],ans:0,ex:"7k + 3k + 20 = 180 \u2192 10k = 160 \u2192 k = 16. Terbesar = 7(16) = 112\u00B0."},
+{n:9,part:1,t:"Perbandingan",q:"Perbandingan sudut berpenyiku 2 : 3. Besar sudut terbesar...",opts:["36\u00B0","45\u00B0","54\u00B0","60\u00B0"],ans:2,ex:"90 \u00F7 5 = 18. Terbesar = 3 \u00D7 18 = 54\u00B0."},
+{n:10,part:1,t:"Perbandingan",q:"Perbandingan sudut berpelurus 1 : 4. Besar sudut terkecil...",opts:["18\u00B0","36\u00B0","45\u00B0","72\u00B0"],ans:1,ex:"180 \u00F7 5 = 36. Terkecil = 1 \u00D7 36 = 36\u00B0."},
+{n:11,part:1,t:"Penyiku",q:"Sudut 5n \u2212 10\u00B0 dan 3n + 20\u00B0 berpenyiku. Nilai n...",opts:["8","10","12","15"],ans:1,ex:"(5n\u221210) + (3n+20) = 90 \u2192 8n + 10 = 90 \u2192 8n = 80 \u2192 n = 10."},
+{n:12,part:1,t:"Berpelurus",q:"Pelurus dari sudut 4z + 10\u00B0 adalah 3z \u2212 5\u00B0. Nilai z...",opts:["25","30","35","40"],ans:0,ex:"(4z+10) + (3z\u22125) = 180 \u2192 7z + 5 = 180 \u2192 7z = 175 \u2192 z = 25."},
+{n:13,part:1,t:"Penyiku",q:"Penyiku dari (x + 25)\u00B0 adalah (2x \u2212 10)\u00B0. Besar x...",opts:["22\u00B0","25\u00B0","30\u00B0","35\u00B0"],ans:1,ex:"(x+25) + (2x\u221210) = 90 \u2192 3x + 15 = 90 \u2192 3x = 75 \u2192 x = 25."},
+{n:14,part:1,t:"Penyiku",q:"Tiga sudut berpenyiku berurutan x, 2x, 3x. Nilai x...",opts:["10\u00B0","15\u00B0","20\u00B0","30\u00B0"],ans:1,ex:"x + 2x + 3x = 90 \u2192 6x = 90 \u2192 x = 15\u00B0."},
+{n:15,part:1,t:"Penyiku",q:"Sudut P besarnya tiga kali penyikunya. Besar P...",opts:["45\u00B0","60\u00B0","67,5\u00B0","135\u00B0"],ans:2,ex:"P = 3(90 \u2212 P) \u2192 4P = 270 \u2192 P = 67,5\u00B0."},
+{n:16,part:1,t:"Berpelurus",q:"Dua kali pelurus suatu sudut ditambah 30\u00B0 sama dengan sudut itu. Besar sudut...",opts:["110\u00B0","120\u00B0","130\u00B0","140\u00B0"],ans:2,ex:"2(180 \u2212 x) + 30 = x \u2192 390 \u2212 2x = x \u2192 3x = 390 \u2192 x = 130\u00B0."},
+{n:17,part:1,t:"Penyiku",q:"Sudut \u03B1 = (6a \u2212 15)\u00B0 dan penyikunya (3a + 15)\u00B0. Nilai a...",opts:["10","12","15","18"],ans:0,ex:"(6a\u221215) + (3a+15) = 90 \u2192 9a = 90 \u2192 a = 10."},
+{n:18,part:1,t:"Berpelurus",q:"Jumlah sudut berpelurus 3x + 10\u00B0 dan 2x + 20\u00B0 adalah 180\u00B0. Nilai x...",opts:["28","30","32","35"],ans:1,ex:"(3x+10) + (2x+20) = 180 \u2192 5x + 30 = 180 \u2192 5x = 150 \u2192 x = 30."},
+{n:19,part:1,t:"Berpelurus",q:"Sudut Q besarnya setengah dari pelurusnya. Besar Q...",opts:["45\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:1,ex:"Q = \u00BD(180 \u2212 Q) \u2192 2Q = 180 \u2212 Q \u2192 3Q = 180 \u2192 Q = 60\u00B0."},
+{n:20,part:1,t:"Berpelurus",q:"Selisih sudut berpelurus 4x dan 2x adalah...",opts:["30\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:2,ex:"4x + 2x = 180 \u2192 6x = 180 \u2192 x = 30. Selisih = 4(30) \u2212 2(30) = 60\u00B0."},
+{n:21,part:1,t:"Penyiku",q:"Sudut P dan Q berpenyiku dengan P = 3y dan Q = 2y. Nilai P...",opts:["36\u00B0","45\u00B0","54\u00B0","72\u00B0"],ans:2,ex:"3y + 2y = 90 \u2192 5y = 90 \u2192 y = 18. P = 3(18) = 54\u00B0."},
+{n:22,part:1,t:"Gabungan",q:"Pelurus sudut x adalah 4 kali penyikunya. Besar x...",opts:["30\u00B0","45\u00B0","60\u00B0","75\u00B0"],ans:2,ex:"180 \u2212 x = 4(90 \u2212 x) \u2192 180 \u2212 x = 360 \u2212 4x \u2192 3x = 180 \u2192 x = 60\u00B0."},
+{n:23,part:1,t:"Berpelurus",q:"Jika 5a adalah pelurus dari 4a + 18\u00B0, nilai a...",opts:["18","20","22","25"],ans:0,ex:"5a + 4a + 18 = 180 \u2192 9a = 162 \u2192 a = 18."},
+{n:24,part:1,t:"Penyiku",q:"Sudut 2k + 10\u00B0 dan k + 20\u00B0 berpenyiku. Nilai 2k...",opts:["40\u00B0","50\u00B0","60\u00B0","80\u00B0"],ans:0,ex:"(2k+10) + (k+20) = 90 \u2192 3k + 30 = 90 \u2192 k = 20. Jadi 2k = 40\u00B0."},
+{n:25,part:1,t:"Segitiga",q:"Sudut segitiga x, 2x, 3x. Besar sudut terbesar...",opts:["30\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:2,ex:"x + 2x + 3x = 180 \u2192 6x = 180 \u2192 x = 30. Terbesar = 3(30) = 90\u00B0."},
+{n:26,part:1,t:"Segitiga",q:"Segitiga dengan sudut p + 10\u00B0, 2p, 3p \u2212 10\u00B0. Nilai p...",opts:["25\u00B0","30\u00B0","35\u00B0","40\u00B0"],ans:1,ex:"(p+10) + 2p + (3p\u221210) = 180 \u2192 6p = 180 \u2192 p = 30\u00B0."},
+{n:27,part:1,t:"Sama kaki",q:"Segitiga sama kaki dengan sudut puncak 4a dan sudut alas 3a \u2212 10\u00B0. Besar sudut puncak...",opts:["70\u00B0","80\u00B0","90\u00B0","100\u00B0"],ans:1,ex:"4a + 2(3a \u2212 10) = 180 \u2192 10a \u2212 20 = 180 \u2192 a = 20. Puncak = 4(20) = 80\u00B0."},
+{n:28,part:1,t:"Siku-siku",q:"Segitiga siku-siku dengan sudut lancip 2x dan 3x. Besar sudut terkecil...",opts:["18\u00B0","36\u00B0","54\u00B0","72\u00B0"],ans:1,ex:"2x + 3x = 90 \u2192 5x = 90 \u2192 x = 18. Terkecil = 2(18) = 36\u00B0."},
+{n:29,part:1,t:"Perbandingan",q:"Perbandingan sudut segitiga 2 : 3 : 4. Besar sudut terkecil...",opts:["30\u00B0","40\u00B0","50\u00B0","60\u00B0"],ans:1,ex:"180 \u00F7 9 = 20. Terkecil = 2 \u00D7 20 = 40\u00B0."},
+{n:30,part:1,t:"Segitiga",q:"Sudut segitiga 5y, 3y + 10\u00B0, 2y + 20\u00B0. Nilai y...",opts:["12","15","18","20"],ans:1,ex:"5y + 3y + 10 + 2y + 20 = 180 \u2192 10y + 30 = 180 \u2192 10y = 150 \u2192 y = 15."},
+{n:31,part:1,t:"Sama sisi",q:"Segitiga sama sisi memiliki ekspresi sudut 5x \u2212 15\u00B0. Nilai x...",opts:["15","20","25","30"],ans:0,ex:"Sudut sama sisi = 60\u00B0. 5x \u2212 15 = 60 \u2192 5x = 75 \u2192 x = 15."},
+{n:32,part:1,t:"Konsep",q:"Sudut luar segitiga sama dengan jumlah dua sudut dalam yang...",opts:["Berpelurus","Berseberangan","Tidak bersisian","Sama besar"],ans:2,ex:"Sudut luar segitiga = jumlah dua sudut dalam yang tidak bersisian."},
+{n:33,part:1,t:"Sudut luar",q:"Sudut luar segitiga 120\u00B0. Jika dua sudut dalam non-bersisian adalah 3x dan 5x, nilai x...",opts:["12","15","18","20"],ans:1,ex:"3x + 5x = 120 \u2192 8x = 120 \u2192 x = 15."},
+{n:34,part:1,t:"Siku-siku",q:"Segitiga siku-siku sama kaki memiliki sudut lancip 2k. Nilai k...",opts:["22,5\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:0,ex:"Siku-siku sama kaki: sudut lancipnya 45\u00B0. 2k = 45 \u2192 k = 22,5\u00B0."},
+{n:35,part:1,t:"Segitiga",q:"Sudut segitiga x + 20\u00B0, x + 40\u00B0, x. Besar sudut terbesar...",opts:["60\u00B0","80\u00B0","100\u00B0","120\u00B0"],ans:2,ex:"(x+20) + (x+40) + x = 180 \u2192 3x + 60 = 180 \u2192 x = 40. Terbesar = 40 + 60 = 100\u00B0."},
+{n:36,part:1,t:"Segitiga",q:"Segitiga dengan sudut 3a, 3a, 4a. Besar sudut 4a...",opts:["36\u00B0","54\u00B0","72\u00B0","90\u00B0"],ans:2,ex:"3a + 3a + 4a = 180 \u2192 10a = 180 \u2192 a = 18. Sudut 4a = 72\u00B0."},
+{n:37,part:1,t:"Segitiga",q:"Dalam segitiga ABC, sudut A = 2x, B = 3x, C = 4x. Nilai B...",opts:["40\u00B0","60\u00B0","80\u00B0","100\u00B0"],ans:1,ex:"2x + 3x + 4x = 180 \u2192 9x = 180 \u2192 x = 20. B = 3(20) = 60\u00B0."},
+{n:38,part:1,t:"Segitiga",q:"Sudut segitiga p, p + 20\u00B0, p + 40\u00B0. Nilai p...",opts:["30\u00B0","40\u00B0","50\u00B0","60\u00B0"],ans:1,ex:"p + (p+20) + (p+40) = 180 \u2192 3p + 60 = 180 \u2192 3p = 120 \u2192 p = 40\u00B0."},
+{n:39,part:1,t:"Tumpul",q:"Segitiga tumpul memiliki sudut 95\u00B0 dan dua sudut lainnya 2x dan 3x. Nilai x...",opts:["15\u00B0","17\u00B0","20\u00B0","25\u00B0"],ans:1,ex:"95 + 2x + 3x = 180 \u2192 5x = 85 \u2192 x = 17\u00B0."},
+{n:40,part:1,t:"Sama kaki",q:"Jika sudut alas segitiga sama kaki adalah 4m + 10\u00B0 dan sudut puncak 2m, nilai m...",opts:["15","16","18","20"],ans:1,ex:"2m + 2(4m + 10) = 180 \u2192 10m + 20 = 180 \u2192 10m = 160 \u2192 m = 16."},
+{n:41,part:1,t:"Sudut luar",q:"Sudut luar segitiga bernilai 5x. Sudut dalam yang bersisian dengannya adalah (x + 30)\u00B0. Nilai x...",opts:["20","25","30","35"],ans:1,ex:"Sudut luar dan sudut dalam bersisian berpelurus: 5x + (x + 30) = 180 \u2192 6x = 150 \u2192 x = 25."},
+{n:42,part:1,t:"Klasifikasi",q:"Perbandingan sudut segitiga 1 : 2 : 3. Jenis segitiga tersebut...",opts:["Lancip","Siku-siku","Tumpul","Sama kaki"],ans:1,ex:"Terbesar = 3/6 \u00D7 180 = 90\u00B0 \u2192 segitiga siku-siku."},
+{n:43,part:1,t:"Segitiga",q:"Segitiga XYZ dengan X = y, Y = 2y, Z = 3y. Besar sudut Z...",opts:["30\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:2,ex:"y + 2y + 3y = 180 \u2192 6y = 180 \u2192 y = 30. Z = 3(30) = 90\u00B0."},
+{n:44,part:1,t:"Segitiga",q:"Sudut segitiga 3n, 4n \u2212 10\u00B0, 2n + 10\u00B0. Nilai n...",opts:["15","20","22","25"],ans:1,ex:"3n + 4n \u2212 10 + 2n + 10 = 180 \u2192 9n = 180 \u2192 n = 20."},
+{n:45,part:1,t:"Siku-siku",q:"Segitiga siku-siku dengan salah satu sudut lancip 4z dan sudut lainnya 5z. Nilai z...",opts:["8","10","12","15"],ans:1,ex:"4z + 5z = 90 \u2192 9z = 90 \u2192 z = 10."},
+{n:46,part:1,t:"Segitiga",q:"Sudut segitiga a, a + 30\u00B0, a + 60\u00B0. Besar sudut terkecil...",opts:["20\u00B0","30\u00B0","40\u00B0","50\u00B0"],ans:1,ex:"a + (a+30) + (a+60) = 180 \u2192 3a + 90 = 180 \u2192 a = 30. Terkecil = 30\u00B0."},
+{n:47,part:1,t:"Sama kaki",q:"Segitiga sama kaki dengan sudut puncak 60\u00B0. Sudut alasnya...",opts:["45\u00B0","60\u00B0","75\u00B0","90\u00B0"],ans:1,ex:"(180 \u2212 60) \u00F7 2 = 60\u00B0 (menjadi segitiga sama sisi)."},
+{n:48,part:1,t:"Sudut luar",q:"Sudut luar segitiga 110\u00B0. Sudut dalam non-bersisian 40\u00B0 dan 7x. Nilai x...",opts:["10","12","15","20"],ans:0,ex:"40 + 7x = 110 \u2192 7x = 70 \u2192 x = 10."},
+{n:49,part:1,t:"Segitiga",q:"Tiga sudut segitiga adalah 2x + 10\u00B0, 3x \u2212 20\u00B0, 4x + 10\u00B0. Nilai x...",opts:["16","18","20","22"],ans:2,ex:"(2x+10) + (3x\u221220) + (4x+10) = 180 \u2192 9x = 180 \u2192 x = 20."},
+{n:50,part:1,t:"Perbandingan",q:"Segitiga dengan perbandingan sudut 3 : 4 : 5. Besar sudut terbesar...",opts:["60\u00B0","75\u00B0","90\u00B0","105\u00B0"],ans:1,ex:"180 \u00F7 12 = 15. Terbesar = 5 \u00D7 15 = 75\u00B0."},
+{n:51,part:2,t:"Bertolak belakang",q:"Dua sudut bertolak belakang besarnya 3x + 15\u00B0 dan 5x \u2212 25\u00B0. Besar sudut tersebut...",opts:["65\u00B0","75\u00B0","85\u00B0","95\u00B0"],ans:1,ex:"3x + 15 = 5x \u2212 25 \u2192 2x = 40 \u2192 x = 20. Sudut = 3(20) + 15 = 75\u00B0."},
+{n:52,part:2,t:"Bertolak belakang",q:"Sudut bertolak belakang 4p \u2212 10\u00B0 dan 2p + 30\u00B0. Nilai p...",opts:["15","20","25","30"],ans:1,ex:"4p \u2212 10 = 2p + 30 \u2192 2p = 40 \u2192 p = 20."},
+{n:53,part:2,t:"Sehadap",q:"Garis sejajar dipotong garis lain. Sudut sehadap bernilai 2x + 30\u00B0 dan 3x \u2212 10\u00B0. Nilai x...",opts:["30","35","40","45"],ans:2,ex:"2x + 30 = 3x \u2212 10 \u2192 x = 40."},
+{n:54,part:2,t:"Sehadap",q:"Sudut sehadap bernilai 5y dan 3y + 40\u00B0. Besar sudut sehadap...",opts:["80\u00B0","90\u00B0","100\u00B0","110\u00B0"],ans:2,ex:"5y = 3y + 40 \u2192 2y = 40 \u2192 y = 20. Sudut = 5(20) = 100\u00B0."},
+{n:55,part:2,t:"Sepihak",q:"Sudut dalam sepihak bernilai 2a dan 3a. Besar sudut terkecil...",opts:["36\u00B0","54\u00B0","72\u00B0","108\u00B0"],ans:2,ex:"2a + 3a = 180 \u2192 5a = 180 \u2192 a = 36. Terkecil = 2(36) = 72\u00B0."},
+{n:56,part:2,t:"Berseberangan",q:"Sudut dalam berseberangan 4k \u2212 20\u00B0 dan 2k + 40\u00B0. Besar sudut...",opts:["80\u00B0","90\u00B0","100\u00B0","110\u00B0"],ans:2,ex:"4k \u2212 20 = 2k + 40 \u2192 2k = 60 \u2192 k = 30. Sudut = 4(30) \u2212 20 = 100\u00B0."},
+{n:57,part:2,t:"Sepihak",q:"Dua sudut dalam sepihak adalah x + 15\u00B0 dan 2x + 15\u00B0. Nilai x...",opts:["40","45","50","55"],ans:2,ex:"(x+15) + (2x+15) = 180 \u2192 3x + 30 = 180 \u2192 3x = 150 \u2192 x = 50."},
+{n:58,part:2,t:"Berseberangan",q:"Sudut luar berseberangan 3n + 10\u00B0 dan 5n \u2212 30\u00B0. Nilai n...",opts:["15","18","20","22"],ans:2,ex:"3n + 10 = 5n \u2212 30 \u2192 2n = 40 \u2192 n = 20."},
+{n:59,part:2,t:"Sepihak",q:"Garis sejajar dipotong transversal. Sudut luar sepihak x dan 2x. Nilai x...",opts:["45\u00B0","60\u00B0","90\u00B0","120\u00B0"],ans:1,ex:"x + 2x = 180 \u2192 3x = 180 \u2192 x = 60\u00B0."},
+{n:60,part:2,t:"Bertolak belakang",q:"Sudut bertolak belakang 7z \u2212 20\u00B0 dan 3z + 60\u00B0. Nilai z...",opts:["15","18","20","25"],ans:2,ex:"7z \u2212 20 = 3z + 60 \u2192 4z = 80 \u2192 z = 20."},
+{n:61,part:2,t:"Sehadap",q:"Sudut sehadap 6m dan 4m + 50\u00B0. Besar sudut...",opts:["100\u00B0","120\u00B0","135\u00B0","150\u00B0"],ans:3,ex:"6m = 4m + 50 \u2192 2m = 50 \u2192 m = 25. Sudut = 6(25) = 150\u00B0."},
+{n:62,part:2,t:"Berseberangan",q:"Sudut dalam berseberangan 3a + 15\u00B0 dan 5a \u2212 25\u00B0. Besar sudut...",opts:["70\u00B0","75\u00B0","80\u00B0","85\u00B0"],ans:1,ex:"3a + 15 = 5a \u2212 25 \u2192 2a = 40 \u2192 a = 20. Sudut = 3(20) + 15 = 75\u00B0."},
+{n:63,part:2,t:"Sepihak",q:"Sudut dalam sepihak 4p dan 5p. Besar sudut terbesar...",opts:["80\u00B0","90\u00B0","100\u00B0","110\u00B0"],ans:2,ex:"4p + 5p = 180 \u2192 9p = 180 \u2192 p = 20. Terbesar = 5(20) = 100\u00B0."},
+{n:64,part:2,t:"Konsep",q:"Sudut berpelurus dan bertolak belakang: jika satu sudut 4x, sudut bertolak belakang dengannya...",opts:["4x","180 \u2212 4x","90 \u2212 4x","4x \u2212 90"],ans:0,ex:"Sudut bertolak belakang besarnya sama persis: 4x."},
+{n:65,part:2,t:"Sehadap",q:"Sudut sehadap bernilai x + 40\u00B0 dan 2x \u2212 10\u00B0. Nilai x...",opts:["40","45","50","55"],ans:2,ex:"x + 40 = 2x \u2212 10 \u2192 x = 50."},
+{n:66,part:2,t:"Sepihak",q:"Sudut luar sepihak bernilai 3x \u2212 10\u00B0 dan 2x + 20\u00B0. Jumlah keduanya...",opts:["90\u00B0","120\u00B0","150\u00B0","180\u00B0"],ans:3,ex:"Sudut luar sepihak pada garis sejajar selalu berjumlah 180\u00B0."},
+{n:67,part:2,t:"Berseberangan",q:"Sudut dalam berseberangan 5x dan 3x + 40\u00B0. Nilai x...",opts:["15","18","20","25"],ans:2,ex:"5x = 3x + 40 \u2192 2x = 40 \u2192 x = 20."},
+{n:68,part:2,t:"Sehadap",q:"Garis sejajar dipotong garis lain membentuk sudut 2y dan y + 50\u00B0 (sehadap). Nilai y...",opts:["40","45","50","55"],ans:2,ex:"2y = y + 50 \u2192 y = 50."},
+{n:69,part:2,t:"Bertolak belakang",q:"Sudut bertolak belakang 9m \u2212 30\u00B0 dan 5m + 50\u00B0. Nilai m...",opts:["15","18","20","22"],ans:2,ex:"9m \u2212 30 = 5m + 50 \u2192 4m = 80 \u2192 m = 20."},
+{n:70,part:2,t:"Sepihak",q:"Sudut dalam sepihak x + 20\u00B0 dan 2x + 10\u00B0. Nilai x...",opts:["50","55","60","65"],ans:0,ex:"(x+20) + (2x+10) = 180 \u2192 3x + 30 = 180 \u2192 3x = 150 \u2192 x = 50."},
+{n:71,part:2,t:"Sehadap",q:"Sudut sehadap 7k \u2212 10\u00B0 dan 4k + 35\u00B0. Besar sudut...",opts:["85\u00B0","95\u00B0","105\u00B0","115\u00B0"],ans:1,ex:"7k \u2212 10 = 4k + 35 \u2192 3k = 45 \u2192 k = 15. Sudut = 7(15) \u2212 10 = 95\u00B0."},
+{n:72,part:2,t:"Berseberangan",q:"Sudut luar berseberangan 3z + 20\u00B0 dan 5z \u2212 20\u00B0. Nilai z...",opts:["15","18","20","25"],ans:2,ex:"3z + 20 = 5z \u2212 20 \u2192 2z = 40 \u2192 z = 20."},
+{n:73,part:2,t:"Berseberangan",q:"Sudut dalam berseberangan 2p + 40\u00B0 dan 4p \u2212 20\u00B0. Nilai p...",opts:["25","30","35","40"],ans:1,ex:"2p + 40 = 4p \u2212 20 \u2192 2p = 60 \u2192 p = 30."},
+{n:74,part:2,t:"Sepihak",q:"Sudut dalam sepihak 3a dan 2a + 30\u00B0. Besar sudut terkecil...",opts:["60\u00B0","72\u00B0","90\u00B0","108\u00B0"],ans:2,ex:"3a + (2a+30) = 180 \u2192 5a = 150 \u2192 a = 30. Terkecil = 3(30) = 90\u00B0."},
+{n:75,part:2,t:"Bertolak belakang",q:"Sudut bertolak belakang 8x \u2212 40\u00B0 dan 3x + 60\u00B0. Nilai x...",opts:["15","18","20","25"],ans:2,ex:"8x \u2212 40 = 3x + 60 \u2192 5x = 100 \u2192 x = 20."},
+{n:76,part:3,t:"Kombinasi",q:"Segitiga dengan sudut 2x, 3x, dan 4x. Nilai x adalah...",opts:["15\u00B0","18\u00B0","20\u00B0","25\u00B0"],ans:2,ex:"2x + 3x + 4x = 180 \u2192 9x = 180 \u2192 x = 20\u00B0."},
+{n:77,part:3,t:"Kombinasi",q:"Sudut A dan B berpenyiku. Jika A = 3x \u2212 5\u00B0 dan B = 2x + 10\u00B0, nilai x...",opts:["15","17","19","21"],ans:1,ex:"(3x\u22125) + (2x+10) = 90 \u2192 5x + 5 = 90 \u2192 5x = 85 \u2192 x = 17."},
+{n:78,part:3,t:"Kombinasi",q:"Pelurus dari 5x adalah 3x + 20\u00B0. Nilai x...",opts:["15","20","25","30"],ans:1,ex:"5x + 3x + 20 = 180 \u2192 8x = 160 \u2192 x = 20."},
+{n:79,part:3,t:"Kombinasi",q:"Segitiga siku-siku memiliki sudut lancip 4k + 10\u00B0 dan 3k + 10\u00B0. Nilai k...",opts:["10","11","12","15"],ans:0,ex:"(4k+10) + (3k+10) = 90 \u2192 7k + 20 = 90 \u2192 7k = 70 \u2192 k = 10."},
+{n:80,part:3,t:"Kombinasi",q:"Sudut dalam sepihak 5p \u2212 10\u00B0 dan 3p + 30\u00B0. Besar sudut terbesar...",opts:["90\u00B0","100\u00B0","105\u00B0","110\u00B0"],ans:0,ex:"(5p\u221210) + (3p+30) = 180 \u2192 8p + 20 = 180 \u2192 p = 20. Terbesar = 5(20) \u2212 10 = 90\u00B0."},
+{n:81,part:3,t:"Kombinasi",q:"Tiga sudut pada garis lurus adalah x, 2x, dan 3x. Besar sudut terbesar...",opts:["60\u00B0","90\u00B0","120\u00B0","135\u00B0"],ans:1,ex:"x + 2x + 3x = 180 \u2192 6x = 180 \u2192 x = 30. Terbesar = 3(30) = 90\u00B0."},
+{n:82,part:3,t:"Kombinasi",q:"Sudut P adalah 5 kali penyikunya. Besar sudut P...",opts:["60\u00B0","75\u00B0","80\u00B0","85\u00B0"],ans:1,ex:"P = 5(90 \u2212 P) \u2192 6P = 450 \u2192 P = 75\u00B0."},
+{n:83,part:3,t:"Kombinasi",q:"Sudut luar segitiga 130\u00B0. Sudut dalam non-bersisian 2x dan 3x. Nilai x...",opts:["20","24","26","30"],ans:2,ex:"2x + 3x = 130 \u2192 5x = 130 \u2192 x = 26."},
+{n:84,part:3,t:"Kombinasi",q:"Sudut bertolak belakang 6y \u2212 12\u00B0 dan 4y + 28\u00B0. Nilai y...",opts:["15","18","20","22"],ans:2,ex:"6y \u2212 12 = 4y + 28 \u2192 2y = 40 \u2192 y = 20."},
+{n:85,part:3,t:"Kombinasi",q:"Segitiga sama kaki dengan sudut alas 5a dan sudut puncak 8a. Nilai a...",opts:["10","15","18","20"],ans:0,ex:"5a + 5a + 8a = 180 \u2192 18a = 180 \u2192 a = 10."},
+{n:86,part:3,t:"Kombinasi",q:"Pelurus sudut x sama dengan 2 kali penyiku sudut tersebut. Besar x...",opts:["0\u00B0 (Tidak ada)","45\u00B0","90\u00B0","180\u00B0"],ans:0,ex:"180 \u2212 x = 2(90 \u2212 x) \u2192 180 \u2212 x = 180 \u2212 2x \u2192 x = 0. Tidak ada sudut yang memenuhi."},
+{n:87,part:3,t:"Kombinasi",q:"Sudut sehadap 8z \u2212 20\u00B0 dan 5z + 40\u00B0. Nilai z...",opts:["15","18","20","25"],ans:2,ex:"8z \u2212 20 = 5z + 40 \u2192 3z = 60 \u2192 z = 20."},
+{n:88,part:3,t:"Kombinasi",q:"Sudut segitiga 3n + 5\u00B0, 2n + 15\u00B0, 4n \u2212 20\u00B0. Nilai n...",opts:["16","18","20","22"],ans:2,ex:"(3n+5) + (2n+15) + (4n\u221220) = 180 \u2192 9n = 180 \u2192 n = 20."},
+{n:89,part:3,t:"Kombinasi",q:"Dua sudut berpenyiku berbanding 4 : 5. Besar sudut terkecil...",opts:["36\u00B0","40\u00B0","45\u00B0","50\u00B0"],ans:1,ex:"90 \u00F7 9 = 10. Terkecil = 4 \u00D7 10 = 40\u00B0."},
+{n:90,part:3,t:"Kombinasi",q:"Sudut dalam sepihak 4x + 10\u00B0 dan 2x + 50\u00B0. Nilai x...",opts:["20","22","25","30"],ans:0,ex:"(4x+10) + (2x+50) = 180 \u2192 6x + 60 = 180 \u2192 6x = 120 \u2192 x = 20."},
+{n:91,part:3,t:"Kombinasi",q:"Segitiga dengan sudut p, 2p + 10\u00B0, 3p \u2212 10\u00B0. Besar sudut terbesar...",opts:["80\u00B0","90\u00B0","100\u00B0","110\u00B0"],ans:0,ex:"p + (2p+10) + (3p\u221210) = 180 \u2192 6p = 180 \u2192 p = 30. Terbesar = 3(30) \u2212 10 = 80\u00B0."},
+{n:92,part:3,t:"Kombinasi",q:"Sudut bertolak belakang 5k + 20\u00B0 dan 7k \u2212 20\u00B0. Nilai k...",opts:["15","18","20","22"],ans:2,ex:"5k + 20 = 7k \u2212 20 \u2192 2k = 40 \u2192 k = 20."},
+{n:93,part:3,t:"Kombinasi",q:"Pelurus dari sudut 3m adalah 2m + 30\u00B0. Nilai m...",opts:["25","30","35","40"],ans:1,ex:"3m + 2m + 30 = 180 \u2192 5m = 150 \u2192 m = 30."},
+{n:94,part:3,t:"Kombinasi",q:"Sudut sehadap 3y + 25\u00B0 dan 5y \u2212 15\u00B0. Besar sudut...",opts:["75\u00B0","80\u00B0","85\u00B0","90\u00B0"],ans:2,ex:"3y + 25 = 5y \u2212 15 \u2192 2y = 40 \u2192 y = 20. Sudut = 3(20) + 25 = 85\u00B0."},
+{n:95,part:3,t:"Kombinasi",q:"Segitiga sama kaki dengan sudut puncak 5x dan sudut alas 2x. Nilai x...",opts:["15","18","20","22"],ans:2,ex:"5x + 2(2x) = 180 \u2192 9x = 180 \u2192 x = 20."},
+{n:96,part:3,t:"Kombinasi",q:"Sudut dalam berseberangan 4a \u2212 10\u00B0 dan 2a + 30\u00B0. Besar sudut...",opts:["65\u00B0","70\u00B0","75\u00B0","80\u00B0"],ans:1,ex:"4a \u2212 10 = 2a + 30 \u2192 2a = 40 \u2192 a = 20. Sudut = 4(20) \u2212 10 = 70\u00B0."},
+{n:97,part:3,t:"Kombinasi",q:"Tiga sudut pada garis lurus 2x, 3x, 4x. Nilai x...",opts:["15\u00B0","18\u00B0","20\u00B0","25\u00B0"],ans:2,ex:"2x + 3x + 4x = 180 \u2192 9x = 180 \u2192 x = 20\u00B0."},
+{n:98,part:3,t:"Kombinasi",q:"Sudut X adalah 3 kali pelurusnya. Besar X...",opts:["120\u00B0","135\u00B0","144\u00B0","150\u00B0"],ans:1,ex:"X = 3(180 \u2212 X) \u2192 X = 540 \u2212 3X \u2192 4X = 540 \u2192 X = 135\u00B0."},
+{n:99,part:3,t:"Kombinasi",q:"Sudut luar segitiga 140\u00B0. Sudut dalam non-bersisian 3x dan 4x. Nilai x...",opts:["15","18","20","25"],ans:2,ex:"3x + 4x = 140 \u2192 7x = 140 \u2192 x = 20."},
+{n:100,part:3,t:"Kombinasi",q:"Sudut dalam sepihak 6n dan 4n. Besar sudut terkecil...",opts:["60\u00B0","72\u00B0","90\u00B0","108\u00B0"],ans:1,ex:"6n + 4n = 180 \u2192 10n = 180 \u2192 n = 18. Terkecil = 4(18) = 72\u00B0."}
+];
+
+/* Soal tambahan gaya Bagian 3 (memastikan semua kotak zona SULIT terisi) */
+var EXTRA_HARD=[
+ {n:"B+",part:2,extra:true,t:"Bertolak belakang",q:"Sudut bertolak belakang 6x \u2212 20\u00B0 dan 4x + 40\u00B0. Nilai x...",opts:["25","28","30","35"],ans:2,ex:"6x \u2212 20 = 4x + 40 \u2192 2x = 60 \u2192 x = 30."},
+ {n:"B+",part:2,extra:true,t:"Sehadap",q:"Sudut sehadap 9a dan 5a + 60\u00B0. Besar sudut...",opts:["120\u00B0","125\u00B0","135\u00B0","145\u00B0"],ans:2,ex:"9a = 5a + 60 \u2192 4a = 60 \u2192 a = 15. Sudut = 9(15) = 135\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Sepihak",q:"Sudut dalam sepihak 7b dan 3b + 20\u00B0. Besar sudut terbesar...",opts:["100\u00B0","108\u00B0","112\u00B0","120\u00B0"],ans:2,ex:"7b + 3b + 20 = 180 \u2192 10b = 160 \u2192 b = 16. Terbesar = 7(16) = 112\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Berseberangan",q:"Sudut luar berseberangan 4c + 15\u00B0 dan 6c \u2212 25\u00B0. Nilai c...",opts:["15","18","20","24"],ans:2,ex:"4c + 15 = 6c \u2212 25 \u2192 2c = 40 \u2192 c = 20."},
+ {n:"B+",part:2,extra:true,t:"Sehadap",q:"Sudut sehadap 8d dan 3d + 45\u00B0. Besar sudut...",opts:["60\u00B0","66\u00B0","72\u00B0","78\u00B0"],ans:2,ex:"8d = 3d + 45 \u2192 5d = 45 \u2192 d = 9. Sudut = 8(9) = 72\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Sepihak",q:"Sudut dalam sepihak 6e dan 4e. Besar sudut terkecil...",opts:["60\u00B0","66\u00B0","72\u00B0","84\u00B0"],ans:2,ex:"6e + 4e = 180 \u2192 10e = 180 \u2192 e = 18. Terkecil = 4(18) = 72\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Bertolak belakang",q:"Sudut bertolak belakang 7f \u2212 35\u00B0 dan 2f + 40\u00B0. Besar sudut...",opts:["60\u00B0","65\u00B0","70\u00B0","75\u00B0"],ans:2,ex:"7f \u2212 35 = 2f + 40 \u2192 5f = 75 \u2192 f = 15. Sudut = 7(15) \u2212 35 = 70\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Berseberangan",q:"Sudut dalam berseberangan 3g + 20\u00B0 dan 7g \u2212 40\u00B0. Besar sudut...",opts:["55\u00B0","60\u00B0","65\u00B0","70\u00B0"],ans:2,ex:"3g + 20 = 7g \u2212 40 \u2192 4g = 60 \u2192 g = 15. Sudut = 3(15) + 20 = 65\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Sepihak",q:"Sudut luar sepihak bernilai x dan 3x. Nilai x...",opts:["30\u00B0","45\u00B0","60\u00B0","90\u00B0"],ans:1,ex:"x + 3x = 180 \u2192 4x = 180 \u2192 x = 45\u00B0."},
+ {n:"B+",part:2,extra:true,t:"Berseberangan",q:"Sudut dalam berseberangan 9i \u2212 30\u00B0 dan 4i + 20\u00B0. Besar sudut...",opts:["50\u00B0","55\u00B0","60\u00B0","65\u00B0"],ans:2,ex:"9i \u2212 30 = 4i + 20 \u2192 5i = 50 \u2192 i = 10. Sudut = 9(10) \u2212 30 = 60\u00B0."}
+];
+
+/* Ikon SVG */
+var LAD_MINI='<svg class="mini" viewBox="0 0 24 24" fill="none" stroke="#2f7d3b" stroke-width="2.6" stroke-linecap="round"><path d="M8 3v18M16 3v18M8 8h8M8 13h8M8 18h8"/></svg>';
+var SNK_MINI='<svg class="mini" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round"><path d="M19 4c-9 0-9 6 0 6c9 0 9 7 0 7H5"/><circle cx="19.5" cy="4" r="2.4" fill="#c0392b" stroke="none"/></svg>';
+var TROPHY_MINI='<svg class="mini" viewBox="0 0 24 24" fill="#d4a017"><path d="M7 2h10v2h4v3a5 5 0 0 1-5 5h-.4a5.5 5.5 0 0 1-2.6 2.5V17h3v3H8v-3h3v-2.5A5.5 5.5 0 0 1 8.4 12H8a5 5 0 0 1-5-5V4h4V2zm-2 4v1a3 3 0 0 0 3 3V6H5zm14 0h-3v4a3 3 0 0 0 3-3V6z"/></svg>';
+var STAR='<svg class="st" viewBox="0 0 24 24" fill="#e8b30f"><path d="M12 2l2.9 6.2 6.8.9-5 4.7 1.3 6.7L12 17.2 6 20.5l1.3-6.7-5-4.7 6.8-.9z"/></svg>';
+var STAR_BADGE='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.8.9-5 4.7 1.3 6.7L12 17.2 6 20.5l1.3-6.7-5-4.7 6.8-.9z"/></svg>';
+var OK_ICON='<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="#2b8a3e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+var NO_ICON='<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="#c92a2a" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+var RULES_HTML='<ol>'
+ +'<li>Masukkan nama 2 pemain, lalu tekan <b>Mulai Bermain</b>. Keduanya bergiliran melempar dadu; pion berjalan <b>satu kotak demi satu kotak</b>.</li>'
+ +'<li><b>Kotak biasa:</b> berisi soal pilihan ganda Garis, Sudut &amp; Segitiga. Soal muncul di kotak tujuan &mdash; pion hanya boleh maju jika dijawab <b>benar</b>. Jika gagal (2 kesempatan), pion <b>tetap di tempat</b>.</li>'
+ +'<li><b>Zona kesulitan:</b> kotak 2&ndash;50 = <b>SEDANG</b> (Bagian 1&ndash;2: sudut berpenyiku/berpelurus &amp; segitiga), kotak 51&ndash;99 = <b>SULIT</b> (Bagian 3: bertolak belakang &amp; garis sejajar) &mdash; terlihat dari warna kotaknya.</li>'
+ +'<li><b>Kotak Tangga (hijau) &amp; Kepala Ular (merah):</b> berisi soal <b>HOTS</b> (Bagian 4: kombinasi kompleks). Tangga: benar &rarr; <b>naik tangga</b>. Ular: salah &rarr; <b>turun ke ekor</b>; benar &rarr; aman.</li>'
+ +'<li>Jawab dengan menekan pilihan <b>A, B, C, atau D</b> (bisa juga tombol keyboard A&ndash;D atau 1&ndash;4).</li>'
+ +'<li>Harus berhenti <b>tepat di kotak 100</b>. Jika angka dadu lebih, pion memantul mundur. Pemain pertama yang mencapai kotak 100 <b>menang</b>!</li>'
+ +'</ol><div class="tips">Tips tutor: buka <b>Kunci Jawaban</b> untuk melihat seluruh soal per bagian (SEDANG / SULIT / HOTS, lengkap dengan nomor soal di modul) beserta pembahasannya. Gunakan tombol <b>Lewati</b> pada kotak soal jika diperlukan.</div>';
+
+/* ================= UTIL ================= */
+function $(s){return document.querySelector(s);}
+var NS='http://www.w3.org/2000/svg';
+function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function svgEl(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function show(el){el.classList.remove('hidden');}
+function hide(el){el.classList.add('hidden');}
+function answerText(q){return 'ABCD'[q.ans]+') '+q.opts[q.ans];}
+
+/* ================= SUARA (Web Audio) ================= */
+var sfx=(function(){
+ var ctx=null,muted=false;
+ function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(ctx&&ctx.state==='suspended')ctx.resume();return ctx;}
+ function t(f,dur,type,vol,when,glide){var c=ac();if(!c||muted)return;
+  var o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(when||0);
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t0);
+  if(glide)o.frequency.exponentialRampToValueAtTime(glide,t0+dur);
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol||.12,t0+.015);
+  g.gain.exponentialRampToValueAtTime(.001,t0+dur);
+  o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+dur+.05);}
+ return{
+  toggle:function(){muted=!muted;return muted;},
+  dice:function(){for(var i=0;i<6;i++)t(300+Math.random()*500,.05,'square',.05,i*.07);},
+  step:function(){t(620,.06,'triangle',.09);},
+  good:function(){t(523,.12,'triangle',.14);t(659,.12,'triangle',.14,.1);t(784,.22,'triangle',.14,.2);},
+  bad:function(){t(220,.32,'sawtooth',.1,0,130);},
+  climb:function(){t(300,.55,'sine',.12,0,900);t(400,.5,'sine',.07,.06,1200);},
+  slide:function(){t(720,.75,'sine',.12,0,130);},
+  win:function(){[523,659,784,1047,784,1319].forEach(function(f,i){t(f,.2,'triangle',.14,i*.13);});}
+ };
+})();
+
+/* ================= DOM & STATE ================= */
+var board=$('#board'),grid=$('#grid'),overlay=$('#overlay');
+var turnName=$('#turnName'),btnRoll=$('#btnRoll'),msgEl=$('#msg'),logEl=$('#log');
+var diceEl=$('#dice'),diceVal=$('#diceVal');
+var pcs=[$('#pc0'),$('#pc1')];
+var setupOvl=$('#setupOvl'),qOvl=$('#qOvl'),winOvl=$('#winOvl'),keyOvl=$('#keyOvl'),howOvl=$('#howOvl');
+var qBadge=$('#qBadge'),qTitle=$('#qTitle'),qText=$('#qText'),optsEl=$('#opts');
+var btnSkip=$('#btnSkip'),btnNext=$('#btnNext');
+var qFeedback=$('#qFeedback'),qExplain=$('#qExplain');
+
+var players=[],pawnEls=[],current=0,busy=false,started=false,lastWinner=-1;
+var qMap={},hotsReserve=[],snakePaths={},cellEls={},qCtx=null;
+
+/* ================= GEOMETRI PAPAN ================= */
+function cellCenter(n){var r=Math.floor((n-1)/10),c=(n-1)%10,col=(r%2)?9-c:c;
+ return{x:col*100+50,y:(9-r)*100+50};}
+function zoneOf(n){return n<=50?'p1':'p2';}
+
+function buildCells(){
+ grid.innerHTML='';cellEls={};
+ var ladS=Object.keys(LADDERS).map(Number);
+ var snkH=Object.keys(SNAKES).map(Number);
+ for(var vr=0;vr<10;vr++){var r=9-vr;
+  for(var c=0;c<10;c++){
+   var n=(r%2===0)?r*10+c+1:r*10+(10-c);
+   var d=document.createElement('div');
+   d.className='cell'+(((r+c)%2)?' alt':'');
+   var inner='<span class="num">'+n+'</span>';
+   if(n===100){d.classList.add('finish','spec');inner+=TROPHY_MINI+'<span class="q">FINIS</span>';}
+   else if(n===1){d.classList.add('start','spec');inner+='<span class="q">MULAI</span>';}
+   else if(ladS.indexOf(n)>=0){d.classList.add('lad','spec');inner+=LAD_MINI+'<span class="q">Tangga HOTS<br>ke '+LADDERS[n]+'</span>';}
+   else if(snkH.indexOf(n)>=0){d.classList.add('snk','spec');inner+=SNK_MINI+'<span class="q">Ular HOTS<br>ke '+SNAKES[n]+'</span>';}
+   else{d.classList.add(zoneOf(n));inner+='<span class="q">'+esc(qMap[n].t)+'</span>';}
+   d.innerHTML=inner;grid.appendChild(d);cellEls[n]=d;
+  }}
+}
+function drawLadder(g,a,b){
+ var A=cellCenter(a),B=cellCenter(b);
+ var dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L,R=11;
+ svgEl('line',{x1:A.x+px*R,y1:A.y+py*R,x2:B.x+px*R,y2:B.y+py*R,'class':'rail'},g);
+ svgEl('line',{x1:A.x-px*R,y1:A.y-py*R,x2:B.x-px*R,y2:B.y-py*R,'class':'rail'},g);
+ var n=Math.max(3,Math.floor(L/34));
+ for(var i=1;i<=n;i++){var t=i/(n+1),cx=A.x+dx*t,cy=A.y+dy*t;
+  svgEl('line',{x1:cx+px*R,y1:cy+py*R,x2:cx-px*R,y2:cy-py*R,'class':'rung'},g);}
+}
+function smoothPath(p){
+ var d='M '+p[0].x+' '+p[0].y;
+ for(var i=1;i<p.length-1;i++){var mx=(p[i].x+p[i+1].x)/2,my=(p[i].y+p[i+1].y)/2;
+  d+=' Q '+p[i].x+' '+p[i].y+' '+mx+' '+my;}
+ d+=' L '+p[p.length-1].x+' '+p[p.length-1].y;return d;}
+function drawSnake(g,head,tail,ci){
+ var H=cellCenter(head),T=cellCenter(tail);
+ var dx=T.x-H.x,dy=T.y-H.y,L=Math.hypot(dx,dy);
+ var ux=dx/L,uy=dy/L,px=-uy,py=ux;
+ var waves=Math.max(1,Math.round(L/220)),amp=Math.min(34,L*.12);
+ var segs=Math.max(8,Math.round(L/60)),pts=[];
+ for(var i=0;i<=segs;i++){var t=i/segs,env=Math.sin(t*Math.PI);
+  var off=amp*Math.sin(t*Math.PI*2*waves)*env;
+  pts.push({x:H.x+dx*t+px*off,y:H.y+dy*t+py*off});}
+ var d=smoothPath(pts),col=SNAKE_COLORS[ci%SNAKE_COLORS.length];
+ svgEl('path',{d:d,fill:'none',stroke:col.d,'stroke-width':16.5,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+ var body=svgEl('path',{d:d,fill:'none',stroke:col.b,'stroke-width':13,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+ svgEl('path',{d:d,fill:'none',stroke:'rgba(255,255,255,.5)','stroke-width':4.5,'stroke-dasharray':'1 21','stroke-linecap':'round'},g);
+ var fx=-ux,fy=-uy,ang=Math.atan2(fy,fx)*180/Math.PI;
+ var cx0=H.x+fx*8,cy0=H.y+fy*8;
+ svgEl('ellipse',{cx:cx0,cy:cy0,rx:16.5,ry:12.5,fill:col.b,stroke:col.d,'stroke-width':2.5,transform:'rotate('+ang+' '+cx0+' '+cy0+')'},g);
+ [1,-1].forEach(function(s){var ex=cx0+px*6.5*s+fx*4,ey=cy0+py*6.5*s+fy*4;
+  svgEl('circle',{cx:ex,cy:ey,r:4,fill:'#fff'},g);
+  svgEl('circle',{cx:ex+fx*1.6,cy:ey+fy*1.6,r:1.9,fill:'#26201a'},g);});
+ var mx=cx0+fx*16,my=cy0+fy*16,tx=cx0+fx*27,ty=cy0+fy*27;
+ svgEl('path',{d:'M '+mx+' '+my+' L '+tx+' '+ty+' M '+tx+' '+ty+' L '+(tx+px*5)+' '+(ty+py*5)+' M '+tx+' '+ty+' L '+(tx-px*5)+' '+(ty-py*5),
+  stroke:'#d6336c','stroke-width':2.4,fill:'none','stroke-linecap':'round'},g);
+ svgEl('circle',{cx:T.x,cy:T.y,r:5.5,fill:col.b,stroke:col.d,'stroke-width':2},g);
+ snakePaths[head]=body;
+}
+function drawOverlay(){
+ overlay.innerHTML='';snakePaths={};
+ var gl=svgEl('g',{},overlay),gs=svgEl('g',{},overlay);
+ var a;for(a in LADDERS)drawLadder(gl,+a,LADDERS[a]);
+ var ci=0,h;for(h in SNAKES){drawSnake(gs,+h,SNAKES[h],ci++);}
+}
+
+/* ============ PENEMPATAN SOAL SESUAI ZONA ============ */
+function buildQuestionMap(){
+ qMap={};
+ var med=shuffle(QUESTIONS.filter(function(q){return q.part===1;}).map(function(q){return Object.assign({},q);}));
+ var hard=shuffle(QUESTIONS.filter(function(q){return q.part===2;}).map(function(q){return Object.assign({},q);}));
+ var hots=shuffle(QUESTIONS.filter(function(q){return q.part===3;}).map(function(q){return Object.assign({},q);}));
+ var exHard=shuffle(EXTRA_HARD.map(function(q){return Object.assign({},q);}));
+ /* 1) Kotak tangga & kepala ular <- Bagian 4 (HOTS) */
+ var specials=shuffle(Object.keys(LADDERS).map(Number).concat(Object.keys(SNAKES).map(Number)));
+ specials.forEach(function(b){qMap[b]=hots.pop();});
+ hotsReserve=hots.slice();
+ /* 2) Kotak 2-50 <- SEDANG (Bagian 1-2); kotak 51-99 <- SULIT (Bagian 3) */
+ var zM=[],zH=[];
+ for(var n=2;n<=99;n++){if(!qMap[n]){(n<=50?zM:zH).push(n);}}
+ zM.forEach(function(b){qMap[b]=med.pop();});
+ while(med.length&&zH.length){qMap[zH.shift()]=med.pop();}
+ zH.forEach(function(b){qMap[b]=hard.pop()||exHard.pop();});
+ /* 3) PENGAMAN: pastikan tidak ada kotak kosong (pencegah crash) */
+ var pool=exHard.concat(hard,med,hots).filter(function(q){return q;});
+ for(var m=2;m<=99;m++){if(!qMap[m])qMap[m]=Object.assign({},pick(pool));}
+}
+
+/* ================= UI DASAR ================= */
+function setMsg(t){msgEl.textContent=t;}
+function log(t,pi){var d=document.createElement('div');d.textContent=t;if(pi===0)d.className='lp0';if(pi===1)d.className='lp1';
+ logEl.prepend(d);while(logEl.children.length>40)logEl.lastChild.remove();}
+function clearLog(){logEl.innerHTML='';}
+var pipEls=[];
+(function(){for(var i=0;i<9;i++){var p=document.createElement('span');p.className='pip';diceEl.appendChild(p);pipEls.push(p);}})();
+function setFace(f){var F={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+ pipEls.forEach(function(p,i){p.classList.toggle('on',F[f].indexOf(i)>=0);});}
+
+function updateHUD(){
+ if(!players.length)return;
+ turnName.textContent=players[current].name;
+ turnName.style.color=PCOL[current];
+ players.forEach(function(p,i){
+  pcs[i].classList.toggle('active',i===current);
+  pcs[i].innerHTML='<span class="pdot" style="background:'+PCOL[i]+'"></span>'
+   +'<div><div class="pname">'+esc(p.name)+'</div>'
+   +'<div class="pstat">Kotak: <b>'+p.pos+'</b> &nbsp;\u2022&nbsp; Bintang: <b>'+p.stars+'</b> '+STAR+' &nbsp;\u2022&nbsp; Benar: <b>'+p.correct+'</b> soal</div></div>';
+ });
+ btnRoll.disabled=busy||!started;
+}
+function setPawnXY(i,x,y){var e=pawnEls[i];e.style.left=(x/10)+'%';e.style.top=(y/10)+'%';e.style.transform='translate(-50%,-52%)';}
+function refreshPawns(){
+ document.querySelectorAll('.cell.occ0,.cell.occ1').forEach(function(c){c.classList.remove('occ0','occ1');});
+ players.forEach(function(p,i){
+  var c=cellCenter(p.pos),ox=0,oy=0;
+  if(players[1-i].pos===p.pos){ox=i?15:-15;oy=i?-11:11;}
+  var e=pawnEls[i];
+  e.style.left=(c.x/10)+'%';e.style.top=(c.y/10)+'%';
+  e.style.transform='translate(calc(-50% + '+ox+'px), calc(-50% + '+oy+'px))';
+  if(cellEls[p.pos])cellEls[p.pos].classList.add('occ'+i);
+ });
+}
+
+/* ================= ALUR PERMAINAN ================= */
+function walkSteps(steps){
+ var p=players[current];
+ var pr=Promise.resolve();
+ steps.forEach(function(s){pr=pr.then(function(){p.pos=s;refreshPawns();sfx.step();return wait(330);});});
+ return pr;
+}
+function doRoll(){
+ if(busy||!started)return;
+ busy=true;updateHUD();
+ sfx.dice();
+ var v=ri(1,6);
+ diceEl.classList.add('rolling');
+ var spinPr=Promise.resolve();
+ for(var i=0;i<9;i++){(function(k){spinPr=spinPr.then(function(){setFace(ri(1,6));return wait(75);});})(i);}
+ spinPr.then(function(){
+  diceEl.classList.remove('rolling');setFace(v);diceVal.textContent=v;
+  var p=players[current];
+  var cur=p.pos,dir=1,steps=[];
+  for(var j=0;j<v;j++){if(cur===100)dir=-1;cur+=dir;steps.push(cur);}
+  var dest=steps[steps.length-1];
+  var isL=LADDERS[dest]!==undefined,isS=SNAKES[dest]!==undefined;
+  if(isL||isS){
+   setMsg(p.name+' melempar angka '+v+'. Bergerak satu kotak demi satu kotak...');
+   log(p.name+' melempar dadu: '+v,current);
+   return wait(300).then(function(){return walkSteps(steps);})
+    .then(function(){setMsg(p.name+' berhenti di kotak '+p.pos+'. Jawab soal HOTS-nya!');return wait(250);})
+    .then(function(){openQuestion(dest,null);});
+  }else if(dest===100){
+   setMsg(p.name+' melempar angka '+v+' dan melangkah menuju kotak 100...');
+   log(p.name+' melempar dadu: '+v,current);
+   return wait(300).then(function(){return walkSteps(steps);})
+    .then(function(){return wait(350);}).then(function(){doWin();});
+  }else{
+   setMsg(p.name+' melempar angka '+v+'. Jawab soal kotak '+dest+' dengan benar agar pion boleh maju!');
+   log(p.name+' melempar dadu: '+v+' (tujuan: kotak '+dest+')',current);
+   return wait(600).then(function(){openQuestion(dest,{steps:steps,dest:dest});});
+  }
+ });
+}
+function renderOptions(q){
+ optsEl.innerHTML='';
+ q.opts.forEach(function(o,i){
+  var b=document.createElement('button');
+  b.className='optBtn';b.type='button';
+  b.innerHTML='<span class="key">'+'ABCD'[i]+'</span><span>'+esc(o)+'</span>';
+  b.addEventListener('click',function(){pickOption(i);});
+  optsEl.appendChild(b);
+ });
+}
+function openQuestion(sq,moveCtx){
+ var isL=LADDERS[sq]!==undefined,isS=SNAKES[sq]!==undefined;
+ var q=qMap[sq];
+ qCtx={sq:sq,kind:isL?'ladder':isS?'snake':'normal',q:q,attempts:0,correct:false,done:false,moveCtx:moveCtx||null};
+ if(isL){qBadge.className='badge hots';qBadge.innerHTML=STAR_BADGE+' HOTS \u2022 SOAL #'+q.n+' \u2022 KOTAK TANGGA';}
+ else if(isS){qBadge.className='badge hots';qBadge.innerHTML=STAR_BADGE+' HOTS \u2022 SOAL #'+q.n+' \u2022 KEPALA ULAR';}
+ else{qBadge.className='badge '+(q.part===1?'p1':'p2');
+  qBadge.textContent=(q.part===1?'SEDANG \u2022 BAGIAN 1\u20132 \u2022 ':'SULIT \u2022 BAGIAN 3 \u2022 ')+(q.extra?'SOAL TAMBAHAN':'SOAL #'+q.n);}
+ var title='Kotak '+sq;
+ if(isL)title+=' \u2014 Tangga menuju '+LADDERS[sq]+' (HOTS)';
+ else if(isS)title+=' \u2014 Ular menuju '+SNAKES[sq]+' (HOTS)';
+ else if(moveCtx)title+=' \u2014 jawab benar agar pion boleh maju ke sini!';
+ qTitle.textContent=title;
+ qText.textContent=q.q;
+ renderOptions(q);
+ qFeedback.className='qFeedback';qFeedback.innerHTML='';
+ qExplain.className='explain';qExplain.innerHTML='';
+ btnNext.classList.add('hidden');btnSkip.classList.remove('hidden');
+ show(qOvl);
+}
+function finishQuestion(ok,feedText){
+ qCtx.done=true;qCtx.correct=ok;
+ Array.prototype.forEach.call(optsEl.children,function(b){b.disabled=true;});
+ qFeedback.className='qFeedback show '+(ok?'good':'bad');
+ qFeedback.innerHTML=(ok?OK_ICON:NO_ICON)+'<span>'+feedText+'</span>';
+ qExplain.innerHTML='<b>Pembahasan:</b> '+esc(qCtx.q.ex);qExplain.classList.add('show');
+ btnSkip.classList.add('hidden');
+ btnNext.classList.remove('hidden');
+}
+function pickOption(i){
+ if(!qCtx||qCtx.done)return;
+ var btns=Array.prototype.slice.call(optsEl.children),b=btns[i];
+ if(!b||b.disabled)return;
+ if(i===qCtx.q.ans){
+  b.classList.add('correct');sfx.good();
+  var feed=(qCtx.kind==='normal'&&qCtx.moveCtx)?'Benar! Pionmu boleh maju!':'Benar! Kerja bagus!';
+  finishQuestion(true,feed);
+ }else{
+  qCtx.attempts++;sfx.bad();
+  b.classList.add('wrong');b.disabled=true;
+  if(qCtx.kind!=='normal'||qCtx.attempts>=2){
+   btns[qCtx.q.ans].classList.add('reveal');
+   var feed='Belum tepat. Jawaban yang benar: <b>'+esc(answerText(qCtx.q))+'</b>';
+   if(qCtx.kind==='normal'&&qCtx.moveCtx)feed='Pion gagal maju. '+feed;
+   finishQuestion(false,feed);
+  }else{
+   qFeedback.className='qFeedback show bad';
+   qFeedback.innerHTML=NO_ICON+'<span>Belum tepat \u2014 pilih jawaban lain!</span>';
+   optsEl.classList.add('shake');setTimeout(function(){optsEl.classList.remove('shake');},600);
+  }
+ }
+}
+function skipQuestion(){
+ if(!qCtx||qCtx.done)return;
+ Array.prototype.forEach.call(optsEl.children,function(x){x.disabled=true;});
+ optsEl.children[qCtx.q.ans].classList.add('reveal');
+ var feed='Soal dilewati tutor. Jawaban: <b>'+esc(answerText(qCtx.q))+'</b>';
+ if(qCtx.kind==='normal'&&qCtx.moveCtx)feed='Pion gagal maju. '+feed;
+ finishQuestion(false,feed);
+}
+function resolveTurn(ctx){
+ var p=players[current],sq=ctx.sq;
+ var pr;
+ if(ctx.kind==='ladder'){
+  if(ctx.correct){
+   p.correct++;p.stars+=2;updateHUD();
+   log(p.name+' menjawab HOTS dengan benar! Naik tangga...',current);
+   pr=climbAnim(sq,LADDERS[sq]).then(function(){
+    p.pos=LADDERS[sq];refreshPawns();sfx.step();
+    log(p.name+' NAIK TANGGA dari '+sq+' ke kotak '+p.pos+'!',current);
+   });
+  }else{log(p.name+' belum berhasil menjawab, peluang naik tangga lepas. Tetap di kotak '+sq+'.',current);pr=Promise.resolve();}
+ }else if(ctx.kind==='snake'){
+  if(ctx.correct){p.correct++;p.stars+=2;log(p.name+' menjawab HOTS dengan benar! Aman dari ular, tidak turun.',current);pr=Promise.resolve();}
+  else{
+   log(p.name+' gagal menjawab... Aduh, ada ular!',current);
+   pr=slideAnim(sq).then(function(){
+    p.pos=SNAKES[sq];refreshPawns();
+    log(p.name+' TURUN dari kotak '+sq+' ke kotak '+p.pos+'.',current);
+   });
+  }
+ }else{
+  if(ctx.correct&&ctx.moveCtx){
+   p.correct++;p.stars++;updateHUD();
+   log(p.name+' menjawab benar! Pion berjalan maju...',current);
+   pr=wait(250).then(function(){return walkSteps(ctx.moveCtx.steps);})
+    .then(function(){log(p.name+' berhasil maju ke kotak '+p.pos+'. +1 bintang.',current);});
+  }else{
+   log(p.name+' gagal menjawab \u2014 pion gagal maju, tetap di kotak '+p.pos+'.',current);pr=Promise.resolve();
+  }
+ }
+ pr.then(function(){
+  updateHUD();
+  if(p.pos===100)return doWin();
+  current=1-current;busy=false;updateHUD();
+  setMsg('Giliran '+players[current].name+' \u2014 lempar dadunya!');
+ });
+}
+function climbAnim(a,b){
+ var A=cellCenter(a),B=cellCenter(b),el=pawnEls[current];
+ el.classList.add('noTrans');sfx.climb();
+ var dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L;
+ var dur=980,t0=performance.now();
+ return new Promise(function(res){(function f(now){
+  var t=Math.min(1,(now-t0)/dur);
+  var bob=Math.sin(t*Math.PI*7)*7;
+  setPawnXY(current,A.x+dx*t+px*bob,A.y+dy*t+py*bob);
+  if(t<1)requestAnimationFrame(f);else{el.classList.remove('noTrans');res();}
+ })(t0);});
+}
+function slideAnim(head){
+ var path=snakePaths[head],el=pawnEls[current];
+ el.classList.add('noTrans');sfx.slide();
+ var len=path.getTotalLength(),dur=Math.min(1600,600+len*1.1),t0=performance.now();
+ return new Promise(function(res){(function f(now){
+  var t=Math.min(1,(now-t0)/dur),e=t*t;
+  var pt=path.getPointAtLength(e*len);
+  setPawnXY(current,pt.x,pt.y);
+  if(t<1)requestAnimationFrame(f);else{el.classList.remove('noTrans');res();}
+ })(t0);});
+}
+
+/* ================= MENANG ================= */
+function doWin(){
+ busy=true;lastWinner=current;updateHUD();
+ var p=players[current];
+ sfx.win();
+ log(p.name+' mencapai kotak 100 \u2014 PEMENANGNYA!',current);
+ setMsg('Permainan selesai. '+p.name+' menang!');
+ $('#winName').textContent=p.name;
+ $('#winStats').innerHTML=players.map(function(pl,i){
+  return '<div class="wrow"><span class="pdot" style="background:'+PCOL[i]+'"></span><b>'+esc(pl.name)+'</b>'
+   +' <span>\u2022 Kotak akhir: <b>'+pl.pos+'</b></span><span>\u2022 Bintang: <b>'+pl.stars+'</b></span>'
+   +' <span>\u2022 Benar: <b>'+pl.correct+'</b> soal</span>'+(i===current?'<span class="winTag">JUARA</span>':'')+'</div>';
+ }).join('');
+ spawnConfetti();show(winOvl);
+}
+function spawnConfetti(){
+ var box=$('#confetti');box.innerHTML='';
+ var cols=['#e8590c','#0ca678','#ffd43b','#d6336c','#1098ad','#2f9e44'];
+ for(var i=0;i<90;i++){var s=document.createElement('i');
+  s.style.left=Math.random()*100+'%';
+  s.style.background=pick(cols);
+  s.style.width=(7+Math.random()*7)+'px';s.style.height=(10+Math.random()*8)+'px';
+  s.style.borderRadius=Math.random()<.4?'50%':'2px';
+  s.style.animationDuration=(2.6+Math.random()*2.6)+'s';
+  s.style.animationDelay=(Math.random()*1.6)+'s';
+  box.appendChild(s);}
+}
+
+/* ================= KUNCI TUTOR ================= */
+function buildKey(){
+ var h='';
+ var zones=[
+  {p:1,name:'Kotak 2\u201350 \u2022 SEDANG \u2014 Bagian 1 &amp; 2: Sudut Berpenyiku/Berpelurus &amp; Segitiga (Soal 1\u201350)'},
+  {p:2,name:'Kotak 51\u201399 \u2022 SULIT \u2014 Bagian 3: Sudut Bertolak Belakang &amp; Garis Sejajar (Soal 51\u201375)'}
+ ];
+ zones.forEach(function(z){
+  var items=Object.keys(qMap).map(Number).filter(function(b){return qMap[b].part===z.p;}).sort(function(a,b){return a-b;});
+  h+='<details'+(z.p===1?' open':'')+'><summary>'+z.name+' ('+items.length+' kotak)</summary>';
+  items.forEach(function(b){var q=qMap[b];
+   var label=q.extra?' <i>(soal tambahan)</i>':' \u2014 Soal #'+q.n;
+   h+='<div class="kitem"><b>Kotak '+b+'</b>'+label+': '+esc(q.q)
+    +'<br><b>Jawaban: '+esc(answerText(q))+'</b> <i>'+esc(q.ex)+'</i></div>';});
+  h+='</details>';
+ });
+ var hItems=Object.keys(qMap).map(Number).filter(function(b){return qMap[b].part===3;}).sort(function(a,b){return a-b;});
+ h+='<details open><summary>Kotak Tangga &amp; Kepala Ular \u2022 HOTS \u2014 Bagian 4: Kombinasi Kompleks (Soal 76\u2013100) ('+hItems.length+' kotak)</summary>';
+ hItems.forEach(function(b){var q=qMap[b];
+  h+='<div class="kitem"><b>Kotak '+b+'</b> \u2014 Soal #'+q.n+': '+esc(q.q)
+   +'<br><b>Jawaban: '+esc(answerText(q))+'</b> <i>'+esc(q.ex)+'</i></div>';});
+ h+='</details>';
+ if(hotsReserve.length){
+  h+='<details><summary>HOTS cadangan ronde ini ('+hotsReserve.length+' soal)</summary>';
+  hotsReserve.forEach(function(q){h+='<div class="kitem"><b>Soal #'+q.n+'</b>: '+esc(q.q)
+   +'<br><b>Jawaban: '+esc(answerText(q))+'</b> <i>'+esc(q.ex)+'</i></div>';});
+  h+='</details>';
+ }
+ $('#keyBody').innerHTML=h;
+}
+
+/* ================= MULAI / ULANG ================= */
+function startGame(){
+ try{
+  var n1=($('#inName1').value||'').trim()||'Pemain 1';
+  var n2=($('#inName2').value||'').trim()||'Pemain 2';
+  players=[{name:n1.slice(0,14),pos:1,stars:0,correct:0},{name:n2.slice(0,14),pos:1,stars:0,correct:0}];
+  current=0;busy=false;started=true;lastWinner=-1;
+  pawnEls.forEach(function(e){e.remove();});pawnEls=[];
+  players.forEach(function(p,i){
+   var e=document.createElement('div');
+   e.className='pawn x'+i;e.textContent=p.name.charAt(0).toUpperCase();
+   board.appendChild(e);pawnEls.push(e);
+  });
+  buildQuestionMap();buildCells();drawOverlay();buildKey();
+  pawnEls.forEach(function(e){e.classList.add('noTrans');});
+  refreshPawns();
+  requestAnimationFrame(function(){requestAnimationFrame(function(){pawnEls.forEach(function(e){e.classList.remove('noTrans');});});});
+  updateHUD();hide(setupOvl);clearLog();
+  log('Permainan dimulai! Semua pion berdiri di kotak 1. Semangat!');
+  setMsg('Giliran '+players[0].name+' \u2014 lempar dadunya!');
+ }catch(err){
+  setMsg('Gagal memulai: '+err.message);
+ }
+}
+function resetGame(){
+ players.forEach(function(p){p.pos=1;p.stars=0;p.correct=0;});
+ current=(lastWinner===1)?0:1; // yang kalah jalan lebih dulu di ronde baru
+ buildQuestionMap();buildCells();drawOverlay();buildKey();
+ pawnEls.forEach(function(e){e.classList.add('noTrans');});
+ refreshPawns();
+ requestAnimationFrame(function(){requestAnimationFrame(function(){pawnEls.forEach(function(e){e.classList.remove('noTrans');});});});
+ busy=false;started=true;clearLog();updateHUD();
+ setMsg('Ronde baru! Giliran '+players[current].name+' \u2014 lempar dadunya!');
+ log('Ronde baru dimulai. '+players[current].name+' jalan pertama.');
+}
+
+/* ================= EVENT ================= */
+btnRoll.addEventListener('click',doRoll);
+ $('#btnAgain').addEventListener('click',function(){hide(winOvl);resetGame();});
+ $('#btnNew').addEventListener('click',function(){hide(winOvl);started=false;busy=false;show(setupOvl);});
+ $('#btnKey').addEventListener('click',function(){show(keyOvl);});
+ $('#btnKeyClose').addEventListener('click',function(){hide(keyOvl);});
+ $('#btnHow').addEventListener('click',function(){show(howOvl);});
+ $('#btnHowClose').addEventListener('click',function(){hide(howOvl);});
+ $('#btnSound').addEventListener('click',function(e){e.target.textContent='Suara: '+(sfx.toggle()?'OFF':'ON');});
+[ $('#inName1'), $('#inName2') ].forEach(function(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter')startGame();});});
+btnSkip.addEventListener('click',skipQuestion);
+btnNext.addEventListener('click',function(){if(!qCtx)return;hide(qOvl);var ctx=qCtx;qCtx=null;resolveTurn(ctx);});
+window.addEventListener('keydown',function(e){
+ if(!qOvl.classList.contains('hidden')&&qCtx&&!qCtx.done){
+  var map={a:0,b:1,c:2,d:3,'1':0,'2':1,'3':2,'4':3};
+  var k=e.key.toLowerCase();
+  if(k in map&&map[k]<qCtx.q.opts.length){e.preventDefault();pickOption(map[k]);return;}
+  if(e.key==='Enter'&&!btnNext.classList.contains('hidden')){e.preventDefault();btnNext.click();}
+  return;
+ }
+ if(e.code==='Space'&&started&&!busy&&!anyOvl()){e.preventDefault();doRoll();}
+});
+function anyOvl(){return[setupOvl,qOvl,winOvl,keyOvl,howOvl].some(function(o){return !o.classList.contains('hidden');});}
+
+/* ================= INISIALISASI ================= */
+ $('#setupRules').innerHTML=RULES_HTML;
+ $('#howBody').innerHTML='<div class="rules">'+RULES_HTML+'</div>';
+buildQuestionMap();buildCells();drawOverlay();setFace(5);diceVal.textContent='\u2013';
+</script>
+</body>
+</html>

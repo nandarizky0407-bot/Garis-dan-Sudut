@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kekongruenan, Kesebangunan &amp; Teorema Pythagoras — TKA SMA | Interaktif &amp; Mendalam</title>
+<style>
+:root{
+  --bg:#eef2f7; --card:#ffffff; --ink:#0f172a; --muted:#5b6b7f;
+  --blue:#2563eb; --rose:#e11d48; --amber:#d97706; --green:#059669;
+  --purple:#7c3aed; --slate:#475569; --line:#e2e8f0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+sup,sub{font-size:72%}
+body{font-family:'Segoe UI',Tahoma,system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+
+/* ===== Topbar & progress ===== */
+#topbar{position:fixed;top:0;left:0;right:0;background:rgba(11,18,32,.96);color:#fff;z-index:50;box-shadow:0 2px 12px rgba(2,6,23,.35)}
+.tb-in{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:9px 18px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#38bdf8,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:19px;flex:none}
+.brand{font-weight:700;letter-spacing:.3px;font-size:15px;white-space:nowrap}
+.tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:2px 10px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:1px;white-space:nowrap}
+.pwrap{margin-left:auto;flex:1;max-width:260px;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+#pbar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#34d399);border-radius:99px;transition:width .3s}
+
+/* ===== Bottom nav ===== */
+#navbar{position:fixed;bottom:0;left:0;right:0;background:rgba(11,18,32,.96);z-index:50;border-top:1px solid rgba(255,255,255,.08)}
+.nb-in{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:9px 18px}
+.nb-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;padding:8px 15px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13.5px;font-family:inherit;white-space:nowrap}
+.nb-btn:hover{background:rgba(255,255,255,.24)}
+#counter{color:#cbd5e1;font-size:13px;min-width:64px;text-align:center;font-weight:600}
+.spacer{flex:1}
+
+/* ===== Deck & slide ===== */
+#deck{max-width:1000px;margin:0 auto;padding:78px 18px 90px}
+.slide{display:none;background:var(--card);border-radius:20px;padding:36px 42px;min-height:540px;box-shadow:0 10px 34px rgba(15,23,42,.09)}
+.slide.active{display:block;animation:fadein .4s ease}
+.slide:not(.active){display:none!important}
+.slide.active.cover{display:flex}
+.slide.active.divider{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.acc-rose{--acc:#e11d48}.acc-blue{--acc:#2563eb}.acc-amber{--acc:#d97706}
+.acc-green{--acc:#059669}.acc-purple{--acc:#7c3aed}.acc-slate{--acc:#475569}
+
+h2{font-size:26px;letter-spacing:-.3px}
+h3{font-size:17px}
+.sub{color:var(--muted);margin:6px 0 18px;font-size:15px}
+.rule{width:64px;height:5px;border-radius:99px;background:var(--acc,var(--blue));margin:10px 0 20px}
+
+/* ===== Boxes ===== */
+.defbox{background:#f8fafc;border:1px solid var(--line);border-left:5px solid var(--acc,var(--blue));padding:15px 20px;border-radius:12px;margin:14px 0;font-size:15.5px}
+.formula{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1px solid #c7d2fe;border-radius:12px;padding:13px 18px;margin:10px 0;font-size:16.5px;font-weight:600;color:#1e3a8a;line-height:1.7}
+.formula small{display:block;font-weight:400;color:#475569;font-size:12.5px;margin-top:4px}
+.callout{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:14.5px}
+.note{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:14.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:12px 0}
+.mini{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.mini h4{font-size:13px;color:var(--acc,var(--blue));margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.mini p{font-size:14px}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.tbl th{background:#0f172a;color:#fff;padding:8px 10px;text-align:left;font-size:12.5px}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--line)}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.tbl tr.hi td{background:#fef9c3;font-weight:700}
+
+/* ===== Cover ===== */
+.slide.cover{background:linear-gradient(140deg,#0b1220 0%,#10254d 55%,#16324f 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.cover::after{content:'';position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.25),transparent 65%)}
+.cover::before{content:'';position:absolute;left:-100px;bottom:-140px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.22),transparent 65%)}
+.kicker{font-size:12.5px;letter-spacing:3px;font-weight:800;color:#7dd3fc;margin-bottom:14px}
+.cover h1{font-size:46px;line-height:1.1;letter-spacing:-1px;margin-bottom:14px;position:relative;z-index:1}
+.cover .subtitle{font-size:16px;color:#cbd5e1;max-width:680px;margin-bottom:22px;position:relative;z-index:1}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;position:relative;z-index:1}
+.chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.cta{background:linear-gradient(135deg,#38bdf8,#2563eb);border:none;color:#fff;font-weight:800;font-size:16px;padding:13px 30px;border-radius:12px;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px rgba(37,99,235,.45);transition:transform .15s;position:relative;z-index:1}
+.cta:hover{transform:translateY(-2px)}
+.hintline{margin-top:18px;font-size:12.5px;color:#94a3b8}
+
+/* ===== Menu ===== */
+.menugrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+.menucard{background:#f8fafc;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;cursor:pointer;transition:.18s}
+.menucard:hover{border-color:var(--acc);transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,23,42,.1)}
+.mnum{font-size:11.5px;font-weight:800;letter-spacing:2px;color:var(--acc)}
+.menucard h3{margin:4px 0 6px;font-size:17px}
+.menucard p{font-size:13.5px;color:var(--muted)}
+.mtag{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+
+/* ===== Divider ===== */
+.slide.divider{background:linear-gradient(140deg,#0f172a,#1e293b);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.dnum{position:absolute;right:20px;bottom:-46px;font-size:190px;font-weight:900;color:rgba(255,255,255,.06);line-height:1}
+.dkicker{color:var(--acc);font-weight:800;letter-spacing:3px;font-size:13px;margin-bottom:10px}
+.divider h1{font-size:40px;margin-bottom:16px;letter-spacing:-.5px}
+.dlist{list-style:none}
+.dlist li{padding:7px 0 7px 28px;position:relative;color:#cbd5e1;font-size:15.5px}
+.dlist li::before{content:'\25B8';position:absolute;left:6px;color:var(--acc);font-weight:700}
+.slide:not(.divider):not(.cover) .dlist{color:var(--ink)}
+.slide:not(.divider):not(.cover) .dlist li{color:#334155}
+
+/* ===== Kartu syarat kongruen (lab 1) ===== */
+.condgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.condcard{background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:13px 16px;cursor:pointer;transition:.18s}
+.condcard:hover{border-color:var(--acc,var(--blue));box-shadow:0 6px 18px rgba(15,23,42,.08)}
+.condcard .cname{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14.5px;color:var(--acc,var(--blue))}
+.condcard .cmark{font-size:18px;color:#94a3b8;transition:transform .2s}
+.condcard.open .cmark{transform:rotate(180deg)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.tags span{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #e0e7ff}
+.verdict{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:999px;margin-top:2px}
+.v-yes{background:#dcfce7;color:#166534}
+.v-no{background:#fee2e2;color:#991b1b}
+.why{display:none;border-top:1px dashed var(--line);margin-top:9px;padding-top:9px;font-size:13.5px;color:#334155;line-height:1.6}
+.condcard.open .why{display:block;animation:fadein .25s}
+
+/* ===== Stepper langkah (lab bambu) ===== */
+.steplist{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.steplist .defbox{margin:0}
+.stepcard{display:none}
+.stepcard.shown{display:block;animation:fadein .3s}
+
+/* ===== Quiz ===== */
+.quiz-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.lvl{background:#ede9fe;color:#6d28d9;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.5px}
+.qcount{margin-left:auto;color:var(--muted);font-size:13.5px;font-weight:600}
+.qtext{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:15.5px;margin:12px 0 16px;line-height:1.65}
+.figbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 10px 2px;margin:0 0 12px;text-align:center}
+.figbox svg{max-width:100%;height:auto}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:14.5px;font-family:inherit;line-height:1.5;transition:.15s;color:var(--ink)}
+.opt:hover:not(.locked){border-color:#94a3b8;background:#f8fafc}
+.opt.selected{border-color:var(--blue);background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.opt.correct{border-color:#16a34a;background:#f0fdf4;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.opt.wrong{border-color:#dc2626;background:#fef2f2;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
+.opt.locked{cursor:default}
+.optletter{flex:none;width:26px;height:26px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#334155;margin-top:1px}
+.opt.selected .optletter{background:var(--blue);color:#fff}
+.opt.correct .optletter{background:#16a34a;color:#fff}
+.opt.wrong .optletter{background:#dc2626;color:#fff}
+.expbox{border-radius:12px;padding:14px 18px;margin-top:14px;font-size:14.5px;line-height:1.65;display:none}
+.expbox.good{background:#f0fdf4;border:1px solid #86efac}
+.expbox.bad{background:#fef2f2;border:1px solid #fca5a5}
+.qctrl{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{border:none;border-radius:11px;padding:11px 22px;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
+.btn.pri{background:var(--acc,var(--blue));color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.ghost{background:#eef2f7;color:#334155;border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.qresult{text-align:center;padding:30px 10px}
+.qscore{font-size:62px;font-weight:900;color:var(--acc)}
+.qscore span{font-size:26px;color:var(--muted);font-weight:700}
+.qpct{color:var(--muted);margin:8px 0 18px;font-weight:700}
+
+/* ===== Lab SVG interaktif ===== */
+.labbox{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:16px;padding:18px 20px;margin:16px 0}
+.labbox h3{font-size:15.5px;margin-bottom:12px;color:var(--acc,var(--blue))}
+.lgrid{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.labsvg{flex:1;min-width:270px}
+.labsvg svg{width:100%;height:auto;display:block;touch-action:none}
+.lctl{flex:0 0 250px;display:flex;flex-direction:column;gap:12px}
+.lctl label{font-size:11.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;display:flex;flex-direction:column;gap:5px}
+.lctl input[type=range]{width:100%;accent-color:var(--acc,var(--blue))}
+.lval{font-size:15px;font-weight:700;color:var(--acc,var(--blue))}
+.labinfo{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6}
+.draghint{font-size:12.5px;color:#64748b;text-align:center;margin-top:6px}
+.kilat{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin-top:16px;font-size:14.5px}
+.kilat h4{font-size:13px;color:#b45309;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.kilat input{border:1.5px solid #cbd5e1;border-radius:8px;padding:7px 10px;width:92px;font-size:15px;font-family:inherit;margin:4px 6px}
+.kbtn{border:none;background:#d97706;color:#fff;font-weight:700;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:inherit;font-size:13px}
+.kbtn.ghost{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.kfb{font-weight:700;margin-left:6px}
+.kfb.good{color:#059669}.kfb.bad{color:#dc2626}
+
+/* ===== Skor ===== */
+.scorebig{display:flex;gap:20px;align-items:center;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:18px;padding:20px 26px;margin:14px 0}
+.scorebig .big{font-size:50px;font-weight:900;color:#7dd3fc;line-height:1}
+.scorebar{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;display:inline-block}
+.scorebar i{display:block;height:100%;border-radius:99px}
+
+@media (max-width:760px){
+  .grid2,.grid3,.menugrid,.condgrid{grid-template-columns:1fr}
+  .slide{padding:24px 18px;min-height:auto}
+  .cover h1{font-size:32px}
+  .divider h1{font-size:30px}
+  .brand span.tag{display:none}
+  .lctl{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+<header id="topbar"><div class="tb-in">
+  <div class="logo">&#9651;</div>
+  <div class="brand">Kekongruenan &amp; Kesebangunan + Pythagoras <span class="tag">TKA SMA</span></div>
+  <div class="pwrap"><div id="pbar"></div></div>
+</div></header>
+
+<div id="deck">
+
+<!-- 1. COVER -->
+<section class="slide cover" id="s-cover">
+  <p class="kicker">BANK MATERI TKA SMA &middot; INTERAKTIF &amp; MENDALAM</p>
+  <h1>Kekongruenan, Kesebangunan<br>&amp; Teorema Pythagoras</h1>
+  <p class="subtitle">Syarat kekongruenan dua bangun &middot; kesebangunan &amp; skala (k, k&sup2;, k&sup3;) &middot; teorema Pythagoras &amp; kebalikannya &middot; triple Pythagoras &middot; penerapan dalam kehidupan sehari-hari: tangga, layar TV, navigasi, bambu patah, bayangan, dan skala peta.</p>
+  <div class="chips">
+    <span class="chip">4 Materi Inti</span>
+    <span class="chip">40 Soal HOTS</span>
+    <span class="chip">6 Lab Interaktif</span>
+    <span class="chip">Pembahasan Lengkap</span>
+  </div>
+  <button class="cta" data-goto="s-menu">Mulai Belajar</button>
+  <p class="hintline">Tips: gunakan tombol panah &larr; &rarr; pada keyboard untuk berpindah halaman. Skor latihan tersimpan otomatis di perangkatmu.</p>
+</section>
+
+<!-- 2. MENU -->
+<section class="slide" id="s-menu">
+  <h2>Peta Materi</h2>
+  <p class="sub">Klik kartu untuk langsung menuju bab. Alur belajar: kekongruenan &rarr; kesebangunan &rarr; teorema Pythagoras &rarr; penerapan dalam kehidupan sehari-hari. Setiap bab ditutup 10 soal HOTS berpembahasan.</p>
+  <div class="menugrid">
+    <div class="menucard acc-rose" data-goto="s-d1">
+      <span class="mnum">BAB 01</span>
+      <h3>Kekongruenan</h3>
+      <p>Definisi &amp; notasi &cong;, pasangan sisi-sudut yang bersesuaian, transformasi isometri, dan empat syarat kongruen segitiga &mdash; plus dua jebakan: SSA &amp; AAA.</p>
+      <span class="mtag">10 Soal HOTS</span>
+    </div>
+    <div class="menucard acc-blue" data-goto="s-d2">
+      <span class="mnum">BAB 02</span>
+      <h3>Kesebangunan</h3>
+      <p>Sama bentuk, beda ukuran: syarat AA, sisi sebanding, rasio keliling k, luas k&sup2;, volume k&sup3;, dan lab skala interaktif dengan slider.</p>
+      <span class="mtag">10 Soal HOTS</span>
+    </div>
+    <div class="menucard acc-amber" data-goto="s-d3">
+      <span class="mnum">BAB 03</span>
+      <h3>Teorema Pythagoras</h3>
+      <p>Bukti visual persegi interaktif, kebalikan teorema untuk menguji sudut siku, klasifikasi lancip-tumpul, dan keluarga triple Pythagoras.</p>
+      <span class="mtag">10 Soal HOTS</span>
+    </div>
+    <div class="menucard acc-green" data-goto="s-d4">
+      <span class="mnum">BAB 04</span>
+      <h3>Penerapan Sehari-hari</h3>
+      <p>Tangga &amp; dinding, diagonal layar TV, navigasi kapal, bambu patah, mengukur tinggi lewat bayangan, skala peta, dan kontrol mutu pabrik.</p>
+      <span class="mtag">10 Soal HOTS</span>
+    </div>
+    <div class="menucard acc-blue" data-goto="s-score">
+      <span class="mnum">REKAP</span>
+      <h3>Nilai Kamu</h3>
+      <p>Rekapitulasi otomatis 40 soal HOTS dari 4 bab, lengkap dengan predikat &mdash; tersimpan otomatis di perangkatmu.</p>
+      <span class="mtag">Cek Progres</span>
+    </div>
+    <div class="menucard acc-rose" data-goto="s-summary">
+      <span class="mnum">PENUTUP</span>
+      <h3>Rangkuman &amp; Strategi</h3>
+      <p>Kartu rumus inti keempat bab plus lima strategi menaklukkan soal HOTS kekongruenan, kesebangunan, dan Pythagoras pada TKA.</p>
+      <span class="mtag">Baca Sebelum Ujian</span>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DIVIDER BAB 1 -->
+<section class="slide divider acc-rose" id="s-d1">
+  <div class="dnum">01</div>
+  <p class="dkicker">BAB 1</p>
+  <h1>Kekongruenan</h1>
+  <ul class="dlist">
+    <li>Pengertian kongruen: sama bentuk dan sama ukuran, notasi &cong;</li>
+    <li>Sisi dan sudut yang bersesuaian dari urutan penulisan notasi</li>
+    <li>Empat syarat kongruen segitiga: SSS, SAS, ASA, AAS</li>
+    <li>Dua pola yang menipu: SSA (ambigu) dan AAA (hanya sebangun)</li>
+    <li>Lab interaktif: Penguji Syarat Kongruen + 10 soal HOTS</li>
+  </ul>
+</section>
+
+<!-- 4. BAB1 KONSEP -->
+<section class="slide acc-rose" id="s-m1a">
+  <h2>Konsep Kekongruenan</h2>
+  <p class="sub">Dua bangun yang "kembar" &mdash; sama bentuk dan sama ukuran.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Kekongruenan</b> adalah hubungan antara dua bangun datar yang memiliki <b>bentuk sama</b> dan <b>ukuran sama</b>. Salah satu bangun dapat saling menutupi yang lain dengan sempurna setelah digeser, diputar, atau dicerminkan. Simbolnya <b>&cong;</b> (dibaca: kongruen dengan).</div>
+  <div class="formula">&#9651;ABC &cong; &#9651;PQR
+    <small>Urutan huruf adalah <b>aturan baku</b>: A berpasangan dengan P, B dengan Q, C dengan R. Dari urutan ini semua pasangan bersesuaian mengikuti secara otomatis.</small>
+  </div>
+  <div class="grid2">
+    <div class="mini"><h4>Sisi yang bersesuaian</h4><p>Dari &#9651;ABC &cong; &#9651;PQR diperoleh:<br><b>AB = PQ</b>, <b>BC = QR</b>, <b>CA = RP</b>.<br>Ambil dua huruf berurutan pada segitiga pertama, lalu cari posisi yang sama pada segitiga kedua. Sisi yang bersesuaian selalu <b>sama panjang</b>.</p></div>
+    <div class="mini"><h4>Sudut yang bersesuaian</h4><p>Dengan pasangan titik yang sama:<br><b>&ang;A = &ang;P</b>, <b>&ang;B = &ang;Q</b>, <b>&ang;C = &ang;R</b>.<br>Sudut yang bersesuaian selalu <b>sama besar</b>. Maka keliling dan luasnya juga sama &mdash; tetapi untuk membuktikan kongruen cukup tiga bagian tertentu saja (slide berikutnya).</p></div>
+  </div>
+  <div class="defbox"><b>Contoh aljabar.</b> Diketahui &#9651;ABC &cong; &#9651;PQR dengan AB = (2x + 3) cm dan PQ = (4x &minus; 11) cm. Karena sisi bersesuaian sama panjang: 2x + 3 = 4x &minus; 11 &rarr; 3 + 11 = 4x &minus; 2x &rarr; <b>x = 7</b>, sehingga AB = 2(7) + 3 = <b>17 cm</b>. Cek: PQ = 4(7) &minus; 11 = 17 cm &#10003;</div>
+  <div class="callout"><b>Awas jebakan!</b> Kongruen &ne; sebangun. Kongruen menuntut <b>ukuran juga sama</b>. Dua segitiga dengan sudut-sudut sama besar tetapi sisi berbeda hanyalah <b>sebangun</b> (Bab 2). Inilah alasan AAA tidak boleh dipakai sebagai syarat kongruen.</div>
+</section>
+
+<!-- 5. BAB1 LAB -->
+<section class="slide acc-rose" id="s-m1b">
+  <h2>Lab Interaktif &mdash; Penguji Syarat Kongruen</h2>
+  <p class="sub">Untuk membuktikan dua segitiga kongruen, cukup <b>tiga bagian tertentu</b>. Klik setiap kartu untuk membuka vonis dan alasannya!</p>
+  <div class="rule"></div>
+  <div class="condgrid">
+    <div class="condcard">
+      <div class="cname">SSS &mdash; Sisi-Sisi-Sisi <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-yes">MENJAMIN KONGRUEN</span>
+      <div class="tags"><span>Sisi &#10003;</span><span>Sisi &#10003;</span><span>Sisi &#10003;</span></div>
+      <div class="why">Ketiga pasang sisi bersesuaian sama panjang. Bila ketiga sisi terkunci, tidak ada kebebasan bentuk tersisa &mdash; sudut-sudutnya otomatis ikut sama. Inilah syarat paling praktis untuk benda nyata: cukup ukur 3 sisi.</div>
+    </div>
+    <div class="condcard">
+      <div class="cname">SAS &mdash; Sisi-Sudut-Sisi <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-yes">MENJAMIN KONGRUEN</span>
+      <div class="tags"><span>Sisi &#10003;</span><span>Sudut apit &#10003;</span><span>Sisi &#10003;</span></div>
+      <div class="why">Sudut yang diketahui harus <b>terletak di antara</b> kedua sisi (sudut apit). Dengan dua sisi dan sudut apit terkunci, titik sudut ketiga pasti tunggal &mdash; segitiganya tidak mungkin berbeda.</div>
+    </div>
+    <div class="condcard">
+      <div class="cname">ASA &mdash; Sudut-Sisi-Sudut <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-yes">MENJAMIN KONGRUEN</span>
+      <div class="tags"><span>Sudut &#10003;</span><span>Sisi apit &#10003;</span><span>Sudut &#10003;</span></div>
+      <div class="why">Sisi yang diketahui berada <b>di antara kedua sudut</b>. Karena jumlah sudut segitiga selalu 180&deg;, sudut ketiga otomatis sama, lalu bentuk segitiga terkunci sepenuhnya.</div>
+    </div>
+    <div class="condcard">
+      <div class="cname">AAS &mdash; Sudut-Sudut-Sisi <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-yes">MENJAMIN KONGRUEN</span>
+      <div class="tags"><span>Sudut &#10003;</span><span>Sudut &#10003;</span><span>Sisi &#10003; (tak diapit)</span></div>
+      <div class="why">Dua sudut sama membuat sudut ketiga juga sama, dan satu pasang sisi bersesuaian menentukan skala ukurnya. Sisanya mengikuti &mdash; kongruen terjamin.</div>
+    </div>
+    <div class="condcard">
+      <div class="cname">SSA &mdash; Sisi-Sudut-Sisi (tak diapit) <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-no">TIDAK MENJAMIN</span>
+      <div class="tags"><span>Sisi &#10003;</span><span>Sisi &#10003;</span><span>Sudut &#10007; tak diapit</span></div>
+      <div class="why">Ini <b>kasus ambigu</b>: dengan data yang sama sering kali dapat dibentuk <b>dua segitiga berbeda</b> (sudut ketiganya berbeda). Contoh: dua sisi 7 dan 5 dengan sudut 30&deg; yang <i>tidak</i> diapit keduanya dapat menghasilkan dua segitiga berbeda. Jadi SSA bukan syarat kongruen.</div>
+    </div>
+    <div class="condcard">
+      <div class="cname">AAA &mdash; Sudut-Sudut-Sudut <span class="cmark">&#9662;</span></div>
+      <span class="verdict v-no">TIDAK MENJAMIN</span>
+      <div class="tags"><span>Sudut &#10003;</span><span>Sudut &#10003;</span><span>Sudut &#10003;</span></div>
+      <div class="why">Tiga sudut sama hanya mengunci <b>bentuk</b>, bukan <b>ukuran</b>. Segitiga kecil dan segitiga besar bisa bertiga sudut sama &mdash; keduanya <b>sebangun</b> (Bab 2), tetapi tidak kongruen.</div>
+    </div>
+  </div>
+  <div class="note"><b>Cara mengingat:</b> pola yang sah menjamin kongruen adalah <b>SSS, SAS, ASA, AAS</b> &mdash; asal posisi sudutnya "mengapit" dengan benar. Pola dengan sudut <i>tak diapit</i> di antara dua sisi (SSA) dan pola tanpa sisi sama sekali (AAA) pasti menipu.</div>
+  <div class="callout"><b>Isometri juga menjamin kongruen.</b> Translasi (geser), rotasi (putar), dan refleksi (cermin) tidak mengubah ukuran, sehingga hasil transformasinya selalu kongruen dengan bangun asal &mdash; walaupun "menghadap" ke arah yang berbeda.</div>
+</section>
+
+<!-- 6. BAB1 KUIS -->
+<section class="slide acc-rose" id="s-m1q">
+  <div id="q-kongruen-body">
+    <h2>Latihan HOTS &mdash; Kekongruenan</h2>
+    <p class="sub">10 soal HOTS. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-kongruen-lvl"></span><span class="qcount">Soal <b id="q-kongruen-num">1</b>/10 &middot; Skor: <b id="q-kongruen-score">0</b></span></div>
+    <div class="qtext" id="q-kongruen-text"></div>
+    <div class="opts" id="q-kongruen-opts"></div>
+    <div class="expbox" id="q-kongruen-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-kongruen-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-kongruen-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+<!-- 7. DIVIDER BAB 2 -->
+<section class="slide divider acc-blue" id="s-d2">
+  <div class="dnum">02</div>
+  <p class="dkicker">BAB 2</p>
+  <h1>Kesebangunan</h1>
+  <ul class="dlist">
+    <li>Pengertian sebangun: sama bentuk, ukuran boleh berbeda, notasi ~</li>
+    <li>Syarat dua segitiga sebangun: AA, sisi sebanding (SSS/SAS)</li>
+    <li>Rasio sisi k, keliling k, luas k&sup2;, volume bangun ruang k&sup3;</li>
+    <li>Lab interaktif: geser skala k dan amati luasnya melonjak</li>
+    <li>10 soal HOTS: peta, foto, bayangan, kerucut, dan segitiga bersusun</li>
+  </ul>
+</section>
+
+<!-- 8. BAB2 KONSEP -->
+<section class="slide acc-blue" id="s-m2a">
+  <h2>Konsep Kesebangunan</h2>
+  <p class="sub">Dua bangun yang "satu keluarga" &mdash; sama bentuk, berbeda ukuran.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Kesebangunan</b> adalah hubungan dua bangun yang <b>sama bentuk</b> tetapi <b>ukurannya boleh berbeda</b>. Syarat mutlaknya dua hal: <b>sudut-sudut yang bersesuaian sama besar</b> dan <b>sisi-sisi yang bersesuaian sebanding</b> (perbandingannya tetap). Simbolnya <b>~</b> (dibaca: sebangun dengan).</div>
+  <div class="formula">&#9651;ABC ~ &#9651;DEF &nbsp;&rArr;&nbsp; <span style="white-space:nowrap">AB/DE = BC/EF = CA/FD = k</span>
+    <small>k disebut <b>skala</b> (rasio sisi yang bersesuaian). Sudutnya: &ang;A = &ang;D, &ang;B = &ang;E, &ang;C = &ang;F.</small>
+  </div>
+  <table class="tbl">
+    <tr><th>Aspek</th><th>Kongruen &cong;</th><th>Sebangun ~</th></tr>
+    <tr><td>Bentuk</td><td>Sama</td><td>Sama</td></tr>
+    <tr><td>Ukuran</td><td>Sama persis</td><td>Boleh berbeda</td></tr>
+    <tr><td>Sisi bersesuaian</td><td>Sama panjang (k = 1)</td><td>Sebanding dengan rasio tetap k</td></tr>
+    <tr><td>Sudut bersesuaian</td><td>Sama besar</td><td>Sama besar</td></tr>
+    <tr class="hi"><td>Contoh</td><td>Dua ubin identik</td><td>Peta dengan wilayah aslinya</td></tr>
+  </table>
+  <div class="grid2">
+    <div class="mini"><h4>Syarat segitiga sebangun</h4><p><b>1. AA</b> &mdash; dua sudut sama besar (sudut ketiga otomatis sama).<br><b>2. SSS sebanding</b> &mdash; ketiga pasang sisi berbanding sama.<br><b>3. SAS sebanding</b> &mdash; dua pasang sisi berbanding sama dan sudut apitnya sama besar.<br>Cukup salah satu; pola "dua sisi sebanding + sudut tak diapit" tetap ambigu!</p></div>
+    <div class="mini"><h4>Sebangun di sekitar kita</h4><p>Peta dan wilayah asli, foto asli dengan cetakannya, miniatur mobil, denah rumah, bayangan benda oleh sinar matahari, dan dua segitiga yang dibatasi garis sejajar &mdash; semuanya pasangan sebangun.</p></div>
+  </div>
+  <div class="defbox"><b>Contoh.</b> Andi tinggi 1,6 m dengan bayangan 2 m. Pada saat yang sama bayangan pohon 12 m. Karena sinar matahari sejajar, kedua segitiga bayangan <b>sebangun (AA)</b>: tinggi pohon / 12 = 1,6 / 2 &rarr; tinggi pohon = 12 &times; 0,8 = <b>9,6 m</b>. Inilah cara mengukur objek tinggi tanpa memanjatnya.</div>
+  <div class="callout"><b>Awas jebakan!</b> Pasangan sisi harus yang <b>bersesuaian</b> (posisinya sejajar dalam gambar, di hadapan sudut yang sama), bukan sekadar terlihat mirip. Salah memasangkan sisi = salah total, walau hitungannya rapi.</div>
+</section>
+
+<!-- 9. BAB2 LAB -->
+<section class="slide acc-blue" id="s-m2b">
+  <h2>Lab Interaktif &mdash; Geser Skala, Amati Luasnya</h2>
+  <p class="sub">Segitiga asal: sisi tegak 3, alas 4, sisi miring 5 (keliling 12, luas 6). Geser k dan bandingkan!</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m2-svg"></div>
+      <div class="lctl">
+        <label>Skala k (perbandingan bayangan : asal)<input type="range" id="m2-range" min="0.5" max="3" step="0.25" value="1"><span class="lval" id="m2-val"></span></label>
+        <div class="labinfo" id="m2-info"></div>
+      </div>
+    </div>
+  </div>
+  <div class="formula">Keliling bayangan = k &times; keliling asal &nbsp;&middot;&nbsp; Luas bayangan = k&sup2; &times; luas asal &nbsp;&middot;&nbsp; Volume bayangan = k&sup3; &times; volume asal
+    <small>Luas memakai k&sup2; karena luas adalah hasil kali <b>dua dimensi</b> (alas &times; tinggi). Volume memakai k&sup3; karena melibatkan <b>tiga dimensi</b>. Inilah penyebab soal luas/volume HOTS hampir selalu menguji k&sup2; dan k&sup3;.</small>
+  </div>
+  <div class="kilat">
+    <h4>Pemeriksa Kilat &mdash; Luas &times; k&sup2;</h4>
+    <p id="m2k-q"></p>
+    <input type="text" id="m2k-in" placeholder="jawaban"><button class="kbtn" id="m2k-check">Periksa</button>
+    <span class="kfb" id="m2k-fb"></span>
+    <button class="kbtn ghost" id="m2k-new">Soal Baru</button>
+  </div>
+</section>
+
+<!-- 10. BAB2 KUIS -->
+<section class="slide acc-blue" id="s-m2q">
+  <div id="q-sebangun-body">
+    <h2>Latihan HOTS &mdash; Kesebangunan</h2>
+    <p class="sub">10 soal HOTS. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-sebangun-lvl"></span><span class="qcount">Soal <b id="q-sebangun-num">1</b>/10 &middot; Skor: <b id="q-sebangun-score">0</b></span></div>
+    <div class="qtext" id="q-sebangun-text"></div>
+    <div class="opts" id="q-sebangun-opts"></div>
+    <div class="expbox" id="q-sebangun-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-sebangun-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-sebangun-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+<!-- 11. DIVIDER BAB 3 -->
+<section class="slide divider acc-amber" id="s-d3">
+  <div class="dnum">03</div>
+  <p class="dkicker">BAB 3</p>
+  <h1>Teorema Pythagoras</h1>
+  <ul class="dlist">
+    <li>Teorema: kuadrat sisi miring = jumlah kuadrat kedua sisi tegak</li>
+    <li>Bukti visual interaktif: geser a dan b, amati ketiga persegi</li>
+    <li>Kebalikan teorema: menguji apakah segitiga siku-siku</li>
+    <li>Klasifikasi lancip &amp; tumpul lewat perbandingan c&sup2; vs a&sup2;+b&sup2;</li>
+    <li>Keluarga triple Pythagoras + lab pemeriksa jenis segitiga</li>
+  </ul>
+</section>
+
+<!-- 12. BAB3 TEOREMA + LAB -->
+<section class="slide acc-amber" id="s-m3a">
+  <h2>Teorema Pythagoras &amp; Bukti Visualnya</h2>
+  <p class="sub">Pada segitiga <b>siku-siku</b>: luas persegi pada sisi miring = luas gabungan dua persegi pada sisi tegak.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Teorema Pythagoras.</b> Jika segitiga siku-siku memiliki sisi tegak <b>a</b> dan <b>b</b>, serta sisi miring <b>c</b> (sisi terpanjang yang berhadapan dengan sudut siku), maka berlaku <b>a&sup2; + b&sup2; = c&sup2;</b>. Teorema ini berlaku <b>hanya</b> untuk segitiga siku-siku &mdash; cek dulu sudut 90&deg;-nya sebelum memakainya.</div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m3-svg"></div>
+      <div class="lctl">
+        <label>Sisi tegak a<input type="range" id="m3-in-a" min="1" max="8" step="1" value="3"><span class="lval" id="m3-val-a"></span></label>
+        <label>Sisi tegak b<input type="range" id="m3-in-b" min="1" max="8" step="1" value="4"><span class="lval" id="m3-val-b"></span></label>
+        <div class="labinfo" id="m3-info"></div>
+      </div>
+    </div>
+    <p class="draghint">Perhatikan: luas persegi biru + luas persegi hijau selalu tepat sama dengan luas persegi kuning. Itulah makna a&sup2; + b&sup2; = c&sup2;.</p>
+  </div>
+  <div class="grid2">
+    <div class="mini"><h4>Mencari sisi miring</h4><p>Jika sisi tegaknya diketahui:<br><b>c = &radic;(a&sup2; + b&sup2;)</b><br>Contoh: a = 6, b = 8 &rarr; c = &radic;(36 + 64) = &radic;100 = <b>10</b>.</p></div>
+    <div class="mini"><h4>Mencari sisi tegak</h4><p>Jika sisi miringnya diketahui:<br><b>a = &radic;(c&sup2; &minus; b&sup2;)</b><br>Contoh: c = 13, b = 5 &rarr; a = &radic;(169 &minus; 25) = &radic;144 = <b>12</b>.</p></div>
+  </div>
+  <div class="callout"><b>Awas jebakan!</b> Tiga kesalahan paling umum: (1) menjumlahkan sisi tanpa mengkuadratkan, (2) salah menunjuk sisi miring &mdash; ingat, sisi miring selalu <b>terpanjang</b> dan berhadapan langsung dengan sudut siku, (3) lupa menarik akar di langkah terakhir.</div>
+</section>
+
+<!-- 13. BAB3 KEBALIKAN + TRIPLE + LAB -->
+<section class="slide acc-amber" id="s-m3b">
+  <h2>Kebalikan Teorema, Klasifikasi Sudut &amp; Triple Pythagoras</h2>
+  <p class="sub">Kebalikan teorema memakai <b>sisi</b> untuk membuktikan ada tidaknya sudut siku &mdash; tanpa busur derajat.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Kebalikan Teorema Pythagoras.</b> Untuk segitiga dengan sisi a, b, dan c (c terpanjang): jika <b>c&sup2; = a&sup2; + b&sup2;</b> maka segitiganya <b>siku-siku</b>. Jika tidak sama, teorema Pythagoras tidak boleh dipakai padanya.</div>
+  <table class="tbl">
+    <tr><th>Perbandingan</th><th>Kesimpulan</th><th>Contoh</th></tr>
+    <tr><td>c&sup2; = a&sup2; + b&sup2;</td><td><b>Siku-siku</b></td><td>6, 8, 10 &rarr; 100 = 36 + 64</td></tr>
+    <tr><td>c&sup2; &gt; a&sup2; + b&sup2;</td><td><b>Tumpul</b></td><td>7, 9, 12 &rarr; 144 &gt; 130</td></tr>
+    <tr><td>c&sup2; &lt; a&sup2; + b&sup2;</td><td><b>Lancip</b></td><td>6, 8, 9 &rarr; 81 &lt; 100</td></tr>
+  </table>
+  <div class="formula">Keluarga triple Pythagoras (a, b, c bilangan asli dengan a&sup2; + b&sup2; = c&sup2;)
+    <small>3-4-5 &nbsp;&middot;&nbsp; 5-12-13 &nbsp;&middot;&nbsp; 8-15-17 &nbsp;&middot;&nbsp; 7-24-25 &nbsp;&middot;&nbsp; 9-40-41 &nbsp;&mdash;&nbsp; beserta <b>semua kelipatannya</b>: 6-8-10, 9-12-15, 10-24-26, 15-36-39, dan seterusnya. Hafalkan pola ini untuk mengerjakan soal dengan kecepatan 10 detik!</small>
+  </div>
+  <div class="labbox">
+    <h3>Lab: Pemeriksa Jenis Segitiga</h3>
+    <div class="labsm" style="flex-direction:row;gap:8px;flex-wrap:wrap;align-items:center">
+      <span>Sisi 1</span><input type="text" id="c3-a" placeholder="mis. 7" style="width:70px">
+      <span>Sisi 2</span><input type="text" id="c3-b" placeholder="mis. 9" style="width:70px">
+      <span>Sisi 3</span><input type="text" id="c3-c" placeholder="mis. 12" style="width:70px">
+      <button class="kbtn" id="c3-check">Periksa Jenisnya</button>
+    </div>
+    <div class="labinfo" id="c3-out" style="margin-top:10px">Isi ketiga panjang sisi, lalu tekan Periksa. Mesin ini memakai kebalikan teorema Pythagoras.</div>
+  </div>
+  <div class="callout"><b>Awas jebakan!</b> Selalu bandingkan <b>kuadrat sisi terpanjang</b> dengan jumlah kuadrat dua sisi lainnya. Jika tertukar, kesimpulan lancip/tumpul bisa terbalik. Dan ingat: "triple" menuntut <b>tiga bilangan asli</b> &mdash; 1, 2, &radic;5 memenuhi Pythagoras tetapi bukan triple.</div>
+</section>
+
+<!-- 14. BAB3 KUIS -->
+<section class="slide acc-amber" id="s-m3q">
+  <div id="q-pythagoras-body">
+    <h2>Latihan HOTS &mdash; Teorema Pythagoras</h2>
+    <p class="sub">10 soal HOTS. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-pythagoras-lvl"></span><span class="qcount">Soal <b id="q-pythagoras-num">1</b>/10 &middot; Skor: <b id="q-pythagoras-score">0</b></span></div>
+    <div class="qtext" id="q-pythagoras-text"></div>
+    <div class="opts" id="q-pythagoras-opts"></div>
+    <div class="expbox" id="q-pythagoras-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-pythagoras-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-pythagoras-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+<!-- 15. DIVIDER BAB 4 -->
+<section class="slide divider acc-green" id="s-d4">
+  <div class="dnum">04</div>
+  <p class="dkicker">BAB 4</p>
+  <h1>Penerapan dalam Kehidupan Sehari-hari</h1>
+  <ul class="dlist">
+    <li>Pythagoras: tangga, diagonal layar, navigasi kapal, bambu patah</li>
+    <li>Kesebangunan: mengukur tinggi lewat bayangan, skala peta &amp; foto</li>
+    <li>Kekongruenan: kontrol mutu ubin dan komponen pabrik</li>
+    <li>Lab: simulasi bambu patah + kalkulator tangga interaktif</li>
+    <li>Strategi 5 langkah menaklukkan soal cerita HOTS</li>
+  </ul>
+</section>
+
+<!-- 16. BAB4 PYTHAGORAS DI KEHIDUPAN -->
+<section class="slide acc-green" id="s-m4a">
+  <h2>Pythagoras dalam Kehidupan Sehari-hari</h2>
+  <p class="sub">Di mana pun ada "jalur terpendek", "sisi miring", atau "diagonal" &mdash; di situ Pythagoras bekerja.</p>
+  <div class="rule"></div>
+  <div class="grid3">
+    <div class="mini"><h4>Tangga &amp; dinding</h4><p>Tangga = sisi miring; jarak kaki tangga ke dinding dan tinggi ujung tangga = kedua sisi tegak. Soal klasik: berapa tinggi yang terjangkau, atau sejauh mana kaki tangga bergeser.</p></div>
+    <div class="mini"><h4>Layar TV &amp; HP</h4><p>Ukuran "40 inci" adalah <b>diagonal</b> layar, bukan lebarnya. Dengan rasio lebar : tinggi 4 : 3, diagonal 5 bagian &rarr; muncul triple 3-4-5 di layarmu.</p></div>
+    <div class="mini"><h4>Navigasi &amp; jalan pintas</h4><p>Kapal berlayar 16 km ke timur lalu 12 km ke utara. Jarak lurus dari pelabuhan = &radic;(16&sup2; + 12&sup2;) = 20 km &mdash; selisih 8 km dari total jalurnya. Prinsip yang sama dipakai drone dan aplikasi peta.</p></div>
+  </div>
+  <div class="labbox">
+    <h3>Lab: Simulasi Bambu Patah (soal klasik, langkah demi langkah)</h3>
+    <p style="font-size:14.5px">Sebatang bambu setinggi <b>16 m</b> patah; puncaknya menyentuh tanah pada jarak <b>8 m</b> dari pangkal. Berapa ketinggian titik patahnya?</p>
+    <div class="steplist" id="bamboo-steps">
+      <div class="defbox stepcard"><b>Langkah 1 &mdash; Gambar modelnya.</b> Bambu patah membentuk segitiga siku-siku: sisi tegak = tinggi titik patah (misal <b>x</b>), sisi datar = 8 m, sisi miring = bagian bambu yang roboh = <b>16 &minus; x</b> (panjang total bambu tidak berubah!).</div>
+      <div class="defbox stepcard"><b>Langkah 2 &mdash; Tulis Pythagoras.</b> x&sup2; + 8&sup2; = (16 &minus; x)&sup2;</div>
+      <div class="defbox stepcard"><b>Langkah 3 &mdash; Jabarkan ruas kanan.</b> x&sup2; + 64 = 256 &minus; 32x + x&sup2; <small>(gunakan selisih kuadrat: (16&minus;x)&sup2; = 256 &minus; 32x + x&sup2;)</small></div>
+      <div class="defbox stepcard"><b>Langkah 4 &mdash; Sederhanakan.</b> x&sup2; di kedua ruas saling menghapus: 64 = 256 &minus; 32x &rarr; 32x = 192 &rarr; <b>x = 6</b>.</div>
+      <div class="defbox stepcard"><b>Langkah 5 &mdash; Simpulkan &amp; uji.</b> Titik patah 6 m dari tanah, bagian roboh 10 m. Cek: 6&sup2; + 8&sup2; = 100 = 10&sup2; &#10003; dan 6 + 10 = 16 m &#10003; &mdash; masuk akal!</div>
+    </div>
+    <div class="qctrl"><button class="btn pri" id="bamboo-next">Tampilkan Langkah Berikutnya</button><span class="lval" id="bamboo-pos" style="align-self:center">Tekan tombol untuk mulai</span></div>
+  </div>
+  <div class="labbox">
+    <h3>Lab: Kalkulator Tangga</h3>
+    <div class="lgrid">
+      <div class="lctl" style="flex:1">
+        <label>Panjang tangga L<input type="range" id="m4-in-L" min="3" max="15" step="0.5" value="7.5"><span class="lval" id="m4-val-L"></span></label>
+        <label>Jarak kaki tangga ke dinding d<input type="range" id="m4-in-d" min="0" max="14" step="0.25" value="6"><span class="lval" id="m4-val-d"></span></label>
+      </div>
+      <div class="labinfo" style="flex:1;min-width:230px" id="m4-out"></div>
+    </div>
+    <p class="draghint">Coba dorong d mendekati L: tangga jadi hampir mendatar dan tingginya menus ke nol. Jika d &ge; L, tangga tidak bisa berdiri sama sekali!</p>
+  </div>
+</section>
+
+<!-- 17. BAB4 KESEBANGUNAN & KONGRUEN DI KEHIDUPAN -->
+<section class="slide acc-green" id="s-m4b">
+  <h2>Kesebangunan &amp; Kongruen dalam Kehidupan Sehari-hari</h2>
+  <p class="sub">Mengukur yang mustahil diukur langsung, memperbesar tanpa melar, dan memastikan dua benda benar-benar identik.</p>
+  <div class="rule"></div>
+  <div class="grid2">
+    <div class="mini"><h4>Bayangan &rarr; tinggi objek (kesebangunan AA)</h4><p>Sinar matahari datang sejajar, jadi segitiga "objek-bayangan" dan "tongkat-bayangan" <b>sebangun</b>.<br>Tinggi menara = (bayangan menara : bayangan tongkat) &times; tinggi tongkat.<br>Contoh: tongkat 1 m bayangannya 0,8 m; menara bayangannya 24 m &rarr; tinggi menara = 24 : 0,8 = <b>30 m</b>. Metode ini dipakai sejak jaman Thales untuk mengukur piramida!</p></div>
+    <div class="mini"><h4>Skala peta, denah &amp; perbesaran foto</h4><p>Skala 1 : 100.000 berarti 1 cm peta mewakili 100.000 cm = <b>1 km</b>. Untuk <b>luas</b> gunakan k&sup2;: 1 cm&sup2; peta = 10&sup1;&sup0; cm&sup2; = 1 km&sup2; wilayah.<br>Foto 10 &times; 15 cm diperbesar k = 2 &rarr; 20 &times; 30 cm, dan <b>luasnya menjadi 4 kali</b> &mdash; bukan 2 kali. Di sinilah soal biaya cetak sering menjebak.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="mini"><h4>Kongruen di industri &amp; konstruksi</h4><p>Ubin, baut, roda gigi, dan potongan kayu massal harus <b>kongruen</b> agar saling menggantikan. Kontrol mutu memakai SSS (ukur 3 dimensi) atau SAS. Perlu diingat: dua komponen berluas sama <b>belum tentu</b> kongruen &mdash; bentuknya bisa beda.</p></div>
+    <div class="mini"><h4>Cara cepat memilih konsep</h4><p>Kata "identik, sama persis, tanpa sisa" &rarr; <b>kongruen</b>.<br>Kata "diperbesar, diperkecil, skala, bayangan, miniatur" &rarr; <b>kesebangunan</b>.<br>Kata "sisi miring, terpendek, diagonal, ketinggian" + sudut siku &rarr; <b>Pythagoras</b>.<br>Soal HOTS sering menggabungkan dua konsep sekaligus (contoh: skala + Pythagoras).</p></div>
+  </div>
+  <div class="defbox"><b>Strategi 5 langkah soal cerita:</b>
+    <b>(1)</b> Pahami apa yang diketahui dan ditanya, tulis satu per satu.
+    <b>(2)</b> Buat sketsa &mdash; gambar yang jelas menyimpan setengah jawaban.
+    <b>(3)</b> Pilih konsep: kongruen, kesebangunan, atau Pythagoras.
+    <b>(4)</b> Susun persamaan (samakan sudut, kali silang perbandingan, atau kuadratkan sisi) lalu hitung rapi.
+    <b>(5)</b> Uji kewajaran: substitusi balik, cek satuan, dan tanyakan "apakah angkanya masuk akal pada gambar?"</div>
+  <div class="callout"><b>Pola HOTS favorit TKA:</b> peta + Pythagoras (jarak dua kota yang miring di peta), bayangan + perbandingan berantai, dan perbesaran + biaya per cm&sup2;. Semua pola ini ada di latihan bab ini &mdash; kuasai pembahasannya.</div>
+</section>
+
+<!-- 18. BAB4 KUIS -->
+<section class="slide acc-green" id="s-m4q">
+  <div id="q-terapan-body">
+    <h2>Latihan HOTS &mdash; Penerapan Sehari-hari</h2>
+    <p class="sub">10 soal HOTS. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-terapan-lvl"></span><span class="qcount">Soal <b id="q-terapan-num">1</b>/10 &middot; Skor: <b id="q-terapan-score">0</b></span></div>
+    <div class="qtext" id="q-terapan-text"></div>
+    <div class="opts" id="q-terapan-opts"></div>
+    <div class="expbox" id="q-terapan-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-terapan-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-terapan-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 19. SKOR -->
+<section class="slide acc-blue" id="s-score">
+  <h2>Nilai Kamu</h2>
+  <p class="sub">Rekapitulasi otomatis seluruh latihan. Skor tersimpan di perangkatmu, walau halaman ditutup.</p>
+  <div class="rule"></div>
+  <div id="score-overall"></div>
+  <div id="score-table"></div>
+  <div class="qctrl">
+    <button class="btn ghost" id="btn-reset">Reset Semua Skor</button>
+    <button class="btn pri" data-goto="s-menu">Kembali ke Peta Materi</button>
+  </div>
+</section>
+
+<!-- 20. RANGKUMAN -->
+<section class="slide acc-amber" id="s-summary">
+  <h2>Rangkuman &amp; Strategi TKA</h2>
+  <p class="sub">Empat kartu rumus inti dan lima strategi menaklukkan soal HOTS kekongruenan, kesebangunan, dan Pythagoras.</p>
+  <div class="rule"></div>
+  <div class="grid2">
+    <div class="mini acc-rose"><h4>Kekongruenan &cong;</h4><p>Sama bentuk + sama ukuran.<br>Syarat segitiga: <b>SSS, SAS, ASA, AAS</b>.<br>SSA ambigu &amp; AAA hanya sebangun &mdash; keduanya <b>bukan</b> syarat.<br>Isometri (geser, putar, cermin) selalu menghasilkan bangun kongruen.</p></div>
+    <div class="mini acc-blue"><h4>Kesebangunan ~</h4><p>Sama bentuk, rasio sisi tetap <b>k</b>.<br>Syarat segitiga: <b>AA</b>, SSS sebanding, SAS sebanding.<br>Sisi k &middot; keliling k &middot; <b>luas k&sup2;</b> &middot; volume k&sup3;.</p></div>
+    <div class="mini acc-amber"><h4>Teorema Pythagoras</h4><p>a&sup2; + b&sup2; = <b>c&sup2;</b> (c = sisi miring, terpanjang).<br>Kebalikan: c&sup2; = a&sup2;+b&sup2; &rarr; siku; &gt; &rarr; tumpul; &lt; &rarr; lancip.<br>Triple: <b>3-4-5, 5-12-13, 8-15-17, 7-24-25</b> + semua kelipatannya.</p></div>
+    <div class="mini acc-green"><h4>Penerapan Sehari-hari</h4><p>Pythagoras: tangga, diagonal layar, navigasi, bambu patah.<br>Kesebangunan: bayangan &rarr; tinggi, skala peta &amp; foto.<br>Kongruen: ubin &amp; komponen pabrik.<br>Skala 1 : 100.000 &rarr; 1 cm = 1 km; luas pakai k&sup2;.</p></div>
+  </div>
+  <div class="defbox"><b>Lima strategi soal HOTS:</b></div>
+  <ul class="dlist" style="margin-top:0">
+    <li><b>Gambar dulu, hitung kemudian.</b> Sketsa sederhana sering langsung memperlihatkan hubungan yang tersembunyi di kalimat soal.</li>
+    <li><b>Kenali konsepnya dari kata kunci.</b> "Identik/tanpa sisa" &rarr; kongruen; "skala/bayangan/diperbesar" &rarr; kesebangunan; "sisi miring/diagonal/terpendek" &rarr; Pythagoras.</li>
+    <li><b>Ubah gambar menjadi persamaan.</b> Bagian sama &rarr; samakan; sebanding &rarr; kali silang; Pythagoras &rarr; kuadratkan lalu akarkan.</li>
+    <li><b>Manfaatkan triple Pythagoras dan kelipatannya.</b> Melihat 9 dan 12, otomatis terpikir 15; melihat 6 dan 8, otomatis terpikir 10 &mdash; hemat 30 detik per soal.</li>
+    <li><b>Uji jawabanmu sebelum yakin.</b> Substitusi balik ke soal, cek satuan (cm vs m, cm&sup2; vs km&sup2;), dan pastikan luas memang memakai k&sup2; &mdash; bukan k.</li>
+  </ul>
+  <div class="callout" style="margin-top:16px"><b>Langkah terakhir:</b> kerjakan ulang soal yang salah pada tiap bab lewat Peta Materi, lalu pantau halaman Nilai hingga keempat bab hijau. Selamat berlatih!</div>
+</section>
+
+</div><!-- /deck -->
+
+<nav id="navbar"><div class="nb-in">
+  <button class="nb-btn" id="btn-menu">&#8801; Peta</button>
+  <button class="nb-btn" id="btn-prev">&larr; Sebelumnya</button>
+  <span id="counter">1 / 20</span>
+  <span class="spacer"></span>
+  <button class="nb-btn" id="btn-next">Berikutnya &rarr;</button>
+</div></nav>
+<script>
+/* ================= HELPERS SVG & FIGUR SOAL ================= */
+function L(x1,y1,x2,y2,o){o=o||{};return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(o.c||'#334155')+'" stroke-width="'+(o.w||2)+'"'+(o.dash?' stroke-dasharray="'+o.dash+'"':'')+' stroke-linecap="round"/>';}
+function T(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.fs||13)+'" font-weight="'+(o.fw||700)+'" fill="'+(o.fill||'#0f172a')+'" text-anchor="'+(o.an||'middle')+'">'+s+'</text>';}
+function P(pts,fill,o){o=o||{};return '<polygon points="'+pts+'" fill="'+fill+'"'+(o.stroke?' stroke="'+o.stroke+'" stroke-width="'+(o.w||2)+'"':'')+(o.op?' opacity="'+o.op+'"':'')+' stroke-linejoin="round"/>';}
+function SVG(vb,inner){return '<svg viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg" style="max-width:340px">'+inner+'</svg>';}
+
+const FIGS={};
+
+/* Jajargenjang ABCD dengan diagonal AC */
+FIGS.jajar=SVG('0 0 310 185',
+  L(20,168,295,168,{c:'#cbd5e1'})+
+  P('50,150 210,150 270,60 110,60','#eef2ff',{stroke:'#e11d48',w:2.5})+
+  L(50,150,270,60,{c:'#d97706',w:2.5,dash:'7 5'})+
+  T(40,165,'A',{fill:'#e11d48'})+T(220,165,'B',{fill:'#e11d48'})+
+  T(283,58,'C',{fill:'#e11d48'})+T(100,50,'D',{fill:'#e11d48'})+
+  T(107,141,'35&deg;',{fs:11,fill:'#be123c',fw:600})+
+  T(198,100,'65&deg;',{fs:11,fill:'#be123c',fw:600})
+);
+
+/* Segitiga ABC dengan DE sejajar BC */
+FIGS.thales=SVG('0 0 290 205',
+  P('100,25 35,175 245,175','#eff6ff',{stroke:'#2563eb',w:2.5})+
+  L(71,93,165,93,{c:'#2563eb',w:2.5,dash:'7 5'})+
+  T(100,16,'A',{fill:'#2563eb'})+T(27,190,'B',{fill:'#2563eb'})+T(253,190,'C',{fill:'#2563eb'})+
+  T(51,89,'D',{fill:'#0ea5e9'})+T(181,89,'E',{fill:'#0ea5e9'})+
+  T(84,55,'x',{fs:12,fill:'#334155',fw:600})+T(44,140,'x + 2',{fs:12,fill:'#334155',fw:600})+
+  T(136,55,'6',{fs:12,fill:'#334155',fw:600})+T(210,55,'10',{fs:12,fill:'#334155',fw:600})
+);
+
+/* Tangga bersandar pada dinding */
+FIGS.tangga=SVG('0 0 270 195',
+  L(190,15,190,160,{c:'#475569',w:4})+
+  L(20,160,252,160,{c:'#475569',w:3})+
+  L(70,160,190,45,{c:'#d97706',w:3.5})+
+  L(178,160,178,148,{c:'#94a3b8',w:1.5})+L(178,148,190,148,{c:'#94a3b8',w:1.5})+
+  T(112,92,'13 m',{fill:'#d97706',fs:13})+
+  T(128,177,'5 m',{fill:'#334155',fs:12})+
+  T(206,105,'?',{fs:17,fill:'#be123c'})
+);
+
+/* Bambu patah */
+FIGS.bambu=SVG('0 0 285 195',
+  L(20,165,262,165,{c:'#475569',w:3})+
+  L(90,165,90,75,{c:'#059669',w:4})+
+  L(90,75,190,165,{c:'#059669',w:4})+
+  L(102,165,102,153,{c:'#94a3b8',w:1.5})+L(102,153,90,153,{c:'#94a3b8',w:1.5})+
+  T(74,122,'x',{fill:'#059669',fs:14})+
+  T(158,102,'16 &minus; x',{fill:'#059669',fs:12})+
+  T(142,181,'8 m',{fill:'#334155',fs:12})
+);
+</script>
+<script>
+/* ================= DATA LATIHAN BAB 1-2 ================= */
+const QUIZ={};
+
+QUIZ.kongruen={title:'Kekongruenan',acc:'#e11d48',qs:[
+{lvl:'C4 \u00B7 Analisis',
+ q:'Diketahui \u25B3ABC \u2245 \u25B3PQR dengan AB = (2x + 3) cm dan PQ = (4x \u2212 11) cm. Nilai x dan panjang AB adalah\u2026',
+ opts:['x = 4 dan AB = 11 cm','x = 7 dan AB = 17 cm','x = 7 dan AB = 25 cm','x = 14 dan AB = 31 cm'],
+ ans:1,
+ exp:'Sisi yang bersesuaian pada segitiga kongruen sama panjang, jadi AB = PQ.<br>2x + 3 = 4x \u2212 11 \u2192 3 + 11 = 4x \u2212 2x \u2192 <b>x = 7</b>.<br>AB = 2(7) + 3 = <b>17 cm</b>. Cek: PQ = 4(7) \u2212 11 = 17 cm \u2713'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Seorang siswa menyimpulkan \u25B3KLM \u2245 \u25B3STU hanya dari KL = ST, LM = TU, dan \u2220K = \u2220S \u2014 padahal \u2220K <b>tidak terletak di antara</b> KL dan LM. Bagaimana penilaian yang tepat?',
+ opts:['Benar \u2014 tiga bagian yang sama sudah cukup','Benar, tetapi hanya jika \u2220K lancip','Salah \u2014 pola itu SSA yang ambigu: data yang sama dapat membentuk dua segitiga berbeda','Salah \u2014 seharusnya yang dibandingkan adalah tiga sudut'],
+ ans:2,
+ exp:'Sisi\u2013sisi\u2013sudut yang <b>tak diapit</b> (SSA) bukan syarat kongruen karena kasusnya ambigu: bisa terbentuk dua segitiga berbeda dari data yang sama.<br>Yang menjamin kongruen: SSS, SAS (sudut <i>diapit</i>), ASA, atau AAS.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'"Dua segitiga yang luasnya sama besar pasti kongruen." Pernyataan ini\u2026',
+ opts:['Benar \u2014 luas mencakup seluruh daerah segitiga','Benar, asal keduanya segitiga siku-siku','Salah \u2014 segitiga alas 8 tinggi 3 dan segitiga alas 6 tinggi 4 sama-sama berluas 12 cm\u00B2 tetapi sisi-sisinya berbeda','Salah \u2014 dua segitiga tidak mungkin berluas sama'],
+ ans:2,
+ exp:'Luas sama tidak mengunci bentuk. Segitiga (\u00BD \u00D7 8 \u00D7 3) dan (\u00BD \u00D7 6 \u00D7 4) keduanya 12 cm\u00B2, tetapi sisi-sisinya berbeda sehingga tidak kongruen.<br>Kongruen menuntut <b>semua</b> sisi dan sudut bersesuaiannya sama.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar. ABCD jajargenjang dengan diagonal AC sehingga \u25B3ABC \u2245 \u25B3CDA. Jika \u2220BAC = 35\u00B0 dan \u2220BCA = 65\u00B0, besar \u2220ADC adalah\u2026',
+ fig:'jajar',
+ opts:['65\u00B0','80\u00B0','100\u00B0','115\u00B0'],
+ ans:1,
+ exp:'Pada \u25B3ABC: \u2220ABC = 180 \u2212 35 \u2212 65 = 80\u00B0.<br>Karena \u25B3ABC \u2245 \u25B3CDA (SSS), sudut yang bersesuaian sama besar: \u2220ADC \u2194 \u2220ABC.<br>Jadi \u2220ADC = <b>80\u00B0</b> \u2014 inilah mengapa sudut-sudut berhadapan jajargenjang selalu sama.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Seorang perancang mebel memerlukan dua potongan kayu segitiga yang <b>pasti identik</b>. Data pengukuran manakah yang menjamin hal itu?',
+ opts:['Keliling sama dan luas sama','Tiga pasang sudut sama besar','Dua pasang sudut sama dan satu pasang sisi yang bersesuaian sama panjang (AAS)','Luas sama dan satu pasang sisi sama'],
+ ans:2,
+ exp:'AAS menjamin kongruen: dua sudut sama membuat sudut ketiga otomatis sama, dan satu sisi mengunci ukurannya.<br>Keliling/luas sama tidak cukup, dan tiga sudut sama hanya menghasilkan kesebangunan.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'\u25B3ABC \u2245 \u25B3DEF. Jika \u2220A = 30\u00B0 dan \u2220B = 110\u00B0, besar \u2220DFE adalah\u2026',
+ opts:['30\u00B0','40\u00B0','70\u00B0','110\u00B0'],
+ ans:1,
+ exp:'Pada \u25B3ABC: \u2220C = 180 \u2212 30 \u2212 110 = 40\u00B0.<br>Dari notasi kongruensi, pasangannya A\u2194D, B\u2194E, C\u2194F, sehingga \u2220DFE \u2194 \u2220ACB.<br>Jadi \u2220DFE = <b>40\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan pernyataan tentang dua bangun datar yang kongruen:<br>(1) Kelilingnya sama panjang.<br>(2) Luasnya sama besar.<br>(3) Keduanya pasti berimpit tanpa digeser, diputar, atau dicerminkan.<br>(4) Sisi-sisi yang bersesuaian sama panjang.<br>Pernyataan yang benar adalah\u2026',
+ opts:['(1) dan (2) saja','(1), (2), dan (4)','(2), (3), dan (4)','Semuanya benar'],
+ ans:1,
+ exp:'(1), (2), (4) benar \u2014 semua ukuran bersesuaian sama.<br>(3) salah: kongruensi tetap berlaku setelah <b>translasi, rotasi, atau refleksi</b> (isometri), karena ukuran tidak berubah \u2014 hanya posisinya.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'\u25B3ABC dengan A(1, 2), B(1, 6), dan C(4, 2) dicerminkan terhadap garis y = x menghasilkan \u25B3A\u2032B\u2032C\u2032. Panjang A\u2032B\u2032 adalah\u2026',
+ opts:['3 satuan','4 satuan','5 satuan','6 satuan'],
+ ans:1,
+ exp:'Refleksi terhadap y = x memetakan (x, y) \u2192 (y, x): A\u2032(2, 1) dan B\u2032(6, 1).<br>Refleksi adalah isometri, jadi A\u2032B\u2032 = AB = 6 \u2212 2 = <b>4 satuan</b>.<br>Cek koordinat: \u221A((6\u22122)\u00B2 + (1\u22121)\u00B2) = \u221A16 = 4 \u2713'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Diketahui AB = DE, BC = EF, dan \u2220BAC = \u2220DEF. Seorang siswa langsung menyimpulkan \u25B3ABC \u2245 \u25B3DEF. Penilaian yang tepat adalah\u2026',
+ opts:['Benar \u2014 memenuhi pola SAS','Benar \u2014 dua sisi dan satu sudut sudah cukup','Salah \u2014 itu pola SSA; untuk sah, perlu sisi ketiga (SSS) atau sudut yang mengapit kedua sisi (SAS)','Salah \u2014 yang harus dibandingkan adalah ketiga sudut'],
+ ans:2,
+ exp:'Sudut yang dibandingkan (\u2220A) <b>tidak diapit</b> oleh AB dan BC \u2014 yang mengapitnya adalah \u2220B. Polanya SSA, yang ambigu.<br>Penyelidikan sah: tambahkan AC = DF (SSS), atau ganti sudutnya menjadi \u2220B = \u2220E (SAS).'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Tiga bingkai foto segitiga: <b>P</b> bersisi 15, 20, 25 cm; <b>Q</b> bersisi 20, 25, 15 cm; <b>R</b> memiliki dua sisi 15 cm dan 20 cm dengan sudut apit 90\u00B0. Bingkai yang kongruen dengan P adalah\u2026',
+ opts:['Hanya Q','Hanya R','Q dan R','Tidak ada'],
+ ans:2,
+ exp:'<b>Q</b>: ketiga sisinya sama dengan P \u2192 kongruen (SSS; urutan penyebutan tidak penting).<br><b>R</b>: 15\u00B2 + 20\u00B2 = 225 + 400 = 625 = 25\u00B2, jadi P siku-siku dengan sudut 90\u00B0 tepat di antara sisi 15 dan 20 \u2014 persis seperti R \u2192 kongruen (SAS).<br>Jadi <b>Q dan R</b> \u2014 soal ini menggabungkan SSS, SAS, dan kebalikan Pythagoras!'}
+]};
+
+QUIZ.sebangun={title:'Kesebangunan',acc:'#2563eb',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'\u25B3ABC ~ \u25B3DEF dengan AB = 6 cm, DE = 9 cm, BC = (x + 4) cm, dan EF = 15 cm. Nilai x adalah\u2026',
+ opts:['5','6','7','9'],
+ ans:1,
+ exp:'Sisi yang bersesuaian sebanding: EF/BC = DE/AB.<br>15/(x + 4) = 9/6 = 3/2 \u2192 30 = 3(x + 4) \u2192 x + 4 = 10 \u2192 <b>x = 6</b>.<br>Cek: BC = 10 dan skala 9/6 = 15/10 = 1,5 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Dua segitiga sebangun memiliki perbandingan keliling 3 : 5. Jika luas segitiga besar 200 cm\u00B2, luas segitiga kecil adalah\u2026',
+ opts:['72 cm\u00B2','80 cm\u00B2','120 cm\u00B2','125 cm\u00B2'],
+ ans:0,
+ exp:'Perbandingan keliling = perbandingan sisi, k = 3/5.<br>Perbandingan luas = k\u00B2 = 9/25.<br>Luas kecil = 200 \u00D7 9/25 = <b>72 cm\u00B2</b>.<br>Jebakan klasik: memakai k (bukan k\u00B2) sehingga menjawab 120.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'"Jika perbandingan panjang sisi yang bersesuaian dua segitiga sebangun adalah 2 : 3, maka perbandingan luasnya adalah 4 : 9." Pernyataan ini\u2026',
+ opts:['Benar \u2014 luas memakai kuadrat skala: (2/3)\u00B2 = 4/9','Salah \u2014 luasnya tetap berbanding 2 : 3','Salah \u2014 luasnya justru berbanding 3 : 2','Benar, tetapi hanya berlaku untuk segitiga sama kaki'],
+ ans:0,
+ exp:'Luas adalah besaran <b>dua dimensi</b> (alas \u00D7 tinggi), sehingga skala luas = k\u00B2 = (2/3)\u00B2 = 4/9.<br>Logika yang sama: volume bangun ruang sebangun berbanding k\u00B3.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'\u25B3PQR memiliki \u2220P = 40\u00B0 dan \u2220Q = 75\u00B0. \u25B3STU memiliki \u2220S = 40\u00B0 dan \u2220T = 65\u00B0. Kesimpulan yang tepat adalah\u2026',
+ opts:['Sebangun; P\u2194S, Q\u2194T, R\u2194U','Sebangun; P\u2194S, Q\u2194U, R\u2194T','Sebangun; P\u2194T, Q\u2194S, R\u2194U','Tidak sebangun \u2014 tidak ada data sisi'],
+ ans:1,
+ exp:'\u2220R = 180 \u2212 40 \u2212 75 = 65\u00B0 dan \u2220U = 180 \u2212 40 \u2212 65 = 75\u00B0.<br>Sudut sama: 40\u00B0 (P\u2194S), 75\u00B0 (Q\u2194U), 65\u00B0 (R\u2194T).<br>Dua sudut sama (<b>AA</b>) sudah cukup menjamin kesebangunan \u2014 data sisi tidak diperlukan.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Pada pukul 08.00, bayangan Andi yang tingginya 1,6 m adalah 2 m. Pada saat yang sama, bayangan sebuah pohon 12 m, sedangkan tiang bendera tingginya 8 m. Tinggi pohon dan panjang bayangan tiang bendera berturut-turut adalah\u2026',
+ opts:['9,6 m dan 10 m','9,6 m dan 6,4 m','10 m dan 9,6 m','8 m dan 10 m'],
+ ans:0,
+ exp:'Rasio bayangan : tinggi = 2 : 1,6 = 5 : 4 (tetap karena sinar matahari sejajar).<br>Pohon: tinggi = 12 \u00D7 4/5 = <b>9,6 m</b>.<br>Tiang: bayangan = 8 \u00D7 5/4 = <b>10 m</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar. Pada \u25B3ABC, DE sejajar BC dengan D pada AB dan E pada AC. Jika AD = x, DB = x + 2, AE = 6, dan EC = 10, panjang AD adalah\u2026',
+ fig:'thales',
+ opts:['2','3','4','6'],
+ ans:1,
+ exp:'DE \u2225 BC \u2192 \u25B3ADE ~ \u25B3ABC (AA: sehadap sama besar).<br>AD/AB = AE/AC \u2192 x/(2x + 2) = 6/16 \u2192 16x = 12x + 12 \u2192 4x = 12 \u2192 <b>x = 3</b>.<br>Cek teorema perbandingan: AD/DB = 3/5 = AE/EC = 6/10 \u2713'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan data dua segitiga berikut:<br>(1) Dua pasang sudut sama besar.<br>(2) Tiga pasang sisi sebanding.<br>(3) Dua pasang sisi sebanding dan sudut apitnya sama besar.<br>(4) Dua pasang sisi sebanding dan satu sudut yang tidak diapit sama besar.<br>Data yang CUKUP untuk menyimpulkan kesebangunan adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (2), dan (4)','(2), (3), dan (4)','Semuanya'],
+ ans:0,
+ exp:'(1) AA \u2713, (2) SSS sebanding \u2713, (3) SAS sebanding \u2713.<br>(4) ambigu \u2014 seperti SSA pada kongruen, pola ini bisa menghasilkan dua segitiga berbeda bentuk, jadi tidak cukup.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah foto berukuran 8 cm \u00D7 12 cm diperbesar sehingga sisi terpanjangnya menjadi 30 cm. Selanjutnya bagian atas hasil cetakan dipotong selebar 2 cm. Luas foto akhir adalah\u2026',
+ opts:['480 cm\u00B2','520 cm\u00B2','560 cm\u00B2','600 cm\u00B2'],
+ ans:2,
+ exp:'Skala k = 30/12 = 2,5 \u2192 ukuran baru = 20 cm \u00D7 30 cm.<br>Cek dengan k\u00B2: 96 \u00D7 6,25 = 600 cm\u00B2 \u2713<br>Setelah dipotong 2 cm: 20 \u00D7 (30 \u2212 2) = 20 \u00D7 28 = <b>560 cm\u00B2</b>. Dua operasi beruntun \u2014 kerjakan bertahap!'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Dua kerucut sejenis (sebangun) memiliki perbandingan tinggi 2 : 5. Jika volume kerucut kecil 96 cm\u00B3, volume kerucut besar adalah\u2026',
+ opts:['240 cm\u00B3','600 cm\u00B3','1.200 cm\u00B3','1.500 cm\u00B3'],
+ ans:3,
+ exp:'Bangun ruang sebangun: perbandingan volume = k\u00B3 = (2/5)\u00B3 = 8/125.<br>Volume besar = 96 \u00D7 125/8 = <b>1.500 cm\u00B3</b>.<br>Ingat tangga skala: sisi k \u2192 luas k\u00B2 \u2192 volume k\u00B3.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Peta dibuat dengan skala 1 : 500.000. Jika luas sebuah danau pada peta 6 cm\u00B2, luas danau yang sebenarnya adalah\u2026',
+ opts:['15 km\u00B2','30 km\u00B2','150 km\u00B2','300 km\u00B2'],
+ ans:2,
+ exp:'Luas memakai k\u00B2: 1 cm\u00B2 peta = 500.000\u00B2 cm\u00B2 = 2,5 \u00D7 10\u00B9\u00B9 cm\u00B2.<br>Konversi: 1 km = 100.000 cm sehingga 1 km\u00B2 = 10\u00B9\u2070 cm\u00B2.<br>Jadi 1 cm\u00B2 peta = 25 km\u00B2, dan 6 \u00D7 25 = <b>150 km\u00B2</b>.'}
+]};
+</script>
+<script>
+/* ================= DATA LATIHAN BAB 3-4 ================= */
+
+QUIZ.pythagoras={title:'Teorema Pythagoras',acc:'#d97706',qs:[
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah segitiga siku-siku memiliki sisi tegak x dan (x + 7), serta sisi miring (x + 8). Nilai x dan panjang sisi miring adalah\u2026',
+ opts:['x = 3 dan sisi miring 11','x = 5 dan sisi miring 12','x = 5 dan sisi miring 13','x = 8 dan sisi miring 16'],
+ ans:2,
+ exp:'Pythagoras: x\u00B2 + (x + 7)\u00B2 = (x + 8)\u00B2<br>x\u00B2 + x\u00B2 + 14x + 49 = x\u00B2 + 16x + 64<br>x\u00B2 \u2212 2x \u2212 15 = 0 \u2192 (x \u2212 5)(x + 3) = 0 \u2192 <b>x = 5</b> (yang positif).<br>Sisinya 5, 12, 13 \u2014 triple Pythagoras klasik!'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Perhatikan gambar. Sebuah tangga sepanjang 13 m disandarkan ke dinding yang tegak lurus tanah, dengan kaki tangga berjarak 5 m dari dinding. Tinggi ujung tangga dari tanah adalah\u2026',
+ fig:'tangga',
+ opts:['8 m','10 m','12 m','12,5 m'],
+ ans:2,
+ exp:'Tangga = sisi miring, jadi h\u00B2 + 5\u00B2 = 13\u00B2.<br>h\u00B2 = 169 \u2212 25 = 144 \u2192 h = <b>12 m</b>.<br>Kenali pola 5-12-13 agar soal seperti ini selesai dalam 10 detik.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'"Segitiga dengan panjang sisi 7, 9, dan 12 adalah segitiga siku-siku." Pernyataan ini\u2026',
+ opts:['Benar \u2014 karena 7 + 9 lebih besar dari 12','Benar \u2014 karena 7-9-12 adalah triple Pythagoras','Salah \u2014 7\u00B2 + 9\u00B2 = 130 sedangkan 12\u00B2 = 144; segitiganya justru tumpul','Salah \u2014 sisi terpanjangnya seharusnya 13'],
+ ans:2,
+ exp:'Uji dengan kebalikan teorema: 7\u00B2 + 9\u00B2 = 49 + 81 = 130, sedangkan 12\u00B2 = 144.<br>Karena 144 &gt; 130 (c\u00B2 &gt; a\u00B2 + b\u00B2), sudut terbesarnya melebihi 90\u00B0 \u2192 segitiga <b>tumpul</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Tanpa menggambar, tentukan jenis segitiga yang panjang sisinya 6, 8, dan 9.',
+ opts:['Siku-siku','Lancip','Tumpul','Tidak dapat ditentukan'],
+ ans:1,
+ exp:'Sisi terpanjang c = 9: c\u00B2 = 81.<br>a\u00B2 + b\u00B2 = 36 + 64 = 100.<br>Karena c\u00B2 &lt; a\u00B2 + b\u00B2 (81 &lt; 100), sudut terbesarnya kurang dari 90\u00B0 \u2192 segitiga <b>lancip</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Panjang ketiga sisi sebuah segitiga siku-siku berbanding 3 : 4 : 5 dan kelilingnya 48 cm. Luas segitiga tersebut adalah\u2026',
+ opts:['90 cm\u00B2','96 cm\u00B2','108 cm\u00B2','120 cm\u00B2'],
+ ans:1,
+ exp:'Jumlah perbandingan 12 \u2192 setiap bagian = 48 : 12 = 4.<br>Sisi-sisinya: 12, 16, 20 cm (kelipatan 3-4-5; cek: 12\u00B2 + 16\u00B2 = 400 = 20\u00B2 \u2713).<br>Luas = \u00BD \u00D7 12 \u00D7 16 = <b>96 cm\u00B2</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Sebuah lapangan berukuran 24 m \u00D7 32 m. Andi melintasi diagonal lapangan, sedangkan Budi mengikuti dua sisi yang bertemu di sudut. Budi berjalan lebih jauh sejauh\u2026',
+ opts:['8 m','16 m','24 m','40 m'],
+ ans:1,
+ exp:'Diagonal = \u221A(24\u00B2 + 32\u00B2) = \u221A(576 + 1024) = \u221A1600 = 40 m (3-4-5 \u00D7 8).<br>Jalur Budi = 24 + 32 = 56 m.<br>Selisih = 56 \u2212 40 = <b>16 m</b> \u2014 inilah "jalur terpendek" ala Pythagoras.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Perhatikan himpunan berikut:<br>(1) 6, 8, 10 &nbsp;&nbsp;(2) 5, 12, 13 &nbsp;&nbsp;(3) 4, 6, 8 &nbsp;&nbsp;(4) 9, 12, 15<br>Himpunan yang merupakan triple Pythagoras adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (2), dan (4)','(1), (3), dan (4)','(2), (3), dan (4)'],
+ ans:1,
+ exp:'(1) 36 + 64 = 100 = 10\u00B2 \u2713<br>(2) 25 + 144 = 169 = 13\u00B2 \u2713<br>(3) 16 + 36 = 52 \u2260 64 \u2717<br>(4) 81 + 144 = 225 = 15\u00B2 \u2713 (kelipatan 3-4-5)<br>Jadi <b>(1), (2), dan (4)</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah belah ketupat memiliki diagonal 10 cm dan 24 cm. Keliling belah ketupat adalah\u2026',
+ opts:['26 cm','34 cm','52 cm','68 cm'],
+ ans:2,
+ exp:'Diagonal belah ketupat saling tegak lurus dan saling membagi dua \u2192 terbentuk 4 segitiga siku-siku kongruen dengan sisi tegak 5 dan 12.<br>Sisi ketupat = \u221A(25 + 144) = \u221A169 = 13 cm.<br>Keliling = 4 \u00D7 13 = <b>52 cm</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Sebuah kardus berukuran 3 cm \u00D7 4 cm \u00D7 12 cm. Sebuah semut merayap permukaan kardus dari satu titik sudut ke titik sudut yang berhadapan. Jalur terpendek yang bisa ditempuhnya adalah\u2026',
+ opts:['19 cm','\u221A193 cm','\u221A241 cm','\u221A265 cm'],
+ ans:1,
+ exp:'Kunci soal ini: <b>buka jaring kardus</b>, lalu uji tiga kemungkinan garis lurus:<br>(3 + 4) dan 12 \u2192 \u221A(49 + 144) = \u221A193 \u2190 terpendek<br>(3 + 12) dan 4 \u2192 \u221A(225 + 16) = \u221A241<br>(4 + 12) dan 3 \u2192 \u221A(256 + 9) = \u221A265<br>Jadi jawabannya <b>\u221A193 \u2248 13,9 cm</b> \u2014 bukan sekadar 3 + 4 + 12.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Tangga sepanjang 25 m disandarkan dengan ujung atas mencapai dinding pada ketinggian 24 m. Jika ujung atas tangga bergeser turun 4 m sepanjang dinding, ujung bawah tangga bergeser menjauhi dinding sejauh\u2026',
+ opts:['4 m','5 m','8 m','15 m'],
+ ans:2,
+ exp:'Awal: kaki = \u221A(625 \u2212 576) = \u221A49 = 7 m (7-24-25!).<br>Setelah turun: tinggi 20 m \u2192 kaki = \u221A(625 \u2212 400) = \u221A225 = 15 m.<br>Geser = 15 \u2212 7 = <b>8 m</b>. Jebakannya: geseran kaki (8 m) TIDAK sama dengan turunnya ujung atas (4 m)!'}
+]};
+
+QUIZ.terapan={title:'Penerapan Sehari-hari',acc:'#059669',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Layar sebuah televisi diiklankan berdiagonal 40 inci dengan rasio lebar : tinggi = 4 : 3. Luas layar televisi tersebut adalah\u2026',
+ opts:['480 inci\u00B2','640 inci\u00B2','768 inci\u00B2','960 inci\u00B2'],
+ ans:2,
+ exp:'Misal lebar 4t dan tinggi 3t \u2192 diagonal = \u221A(16t\u00B2 + 9t\u00B2) = 5t = 40 \u2192 t = 8.<br>Lebar 32 inci, tinggi 24 inci \u2014 muncul triple 3-4-5 \u00D7 8.<br>Luas = 32 \u00D7 24 = <b>768 inci\u00B2</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Lampu taman setinggi 4,5 m. Andi yang tingginya 1,5 m berdiri dengan telapak kaki berjarak 4 m dari tiang. Panjang bayangan Andi adalah\u2026',
+ opts:['1,33 m','1,5 m','2 m','3 m'],
+ ans:2,
+ exp:'Segitiga bayangan sebangun: s/(s + 4) = 1,5/4,5 = 1/3.<br>3s = s + 4 \u2192 2s = 4 \u2192 <b>s = 2 m</b>.<br>Jebakan: sisi besar segitiga adalah (jarak + panjang bayangan), bukan jaraknya saja!'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Untuk memperbaiki jendela setinggi 4,5 m, seorang tukang menyiapkan tangga yang kakinya diletakkan 6 m dari dinding. Panjang tangga minimal yang tepat mencapai jendela adalah\u2026',
+ opts:['6,5 m','7 m','7,5 m','8 m'],
+ ans:2,
+ exp:'Tangga = sisi miring: L = \u221A(6\u00B2 + 4,5\u00B2) = \u221A(36 + 20,25) = \u221A56,25 = <b>7,5 m</b>.<br>Angka 4,5-6-7,5 adalah kelipatan 3-4-5 \u00D7 1,5 \u2014 hafalan triple sangat membantu.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Kapal A berlayar 16 km ke timur lalu belok 12 km ke utara menuju pulau. Kapal B berlayar lurus dari pelabuhan ke pulau yang sama. Dengan konsumsi 0,5 liter per km, bahan bakar yang lebih banyak dibakar Kapal A adalah\u2026',
+ opts:['4 liter','8 liter','12 liter','28 liter'],
+ ans:0,
+ exp:'Jarak Kapal A = 16 + 12 = 28 km; Kapal B = \u221A(16\u00B2 + 12\u00B2) = \u221A400 = 20 km.<br>Selisih jarak = 8 km \u2192 selisih bahan bakar = 8 \u00D7 0,5 = <b>4 liter</b>.<br>Dua konsep beruntun: Pythagoras lalu perkalian skalar.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Pada peta berskala 1 : 200.000, Desa P terletak tepat 3 cm di timur Desa R, dan Desa S tepat 4 cm di utara Desa P. Jarak sebenarnya antara Desa R dan Desa S adalah\u2026',
+ opts:['7 km','10 km','12 km','14 km'],
+ ans:1,
+ exp:'Jarak peta R\u2013S = \u221A(3\u00B2 + 4\u00B2) = 5 cm \u2014 <b>bukan</b> 3 + 4 = 7 cm!<br>Jarak sebenarnya = 5 \u00D7 200.000 cm = 1.000.000 cm = <b>10 km</b>.<br>Gabungan kesebangunan (arah tegak lurus) + Pythagoras + konversi skala.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Tinggi sebuah menara dapat ditentukan tanpa memanjatnya: cukup ukur bayangan menara dan bayangan tongkat yang tingginya diketahui, pada waktu yang sama. Konsep matematika yang bekerja di balik trik ini adalah\u2026',
+ opts:['Kekongruenan \u2014 kedua segitiga sama persis','Kesebangunan \u2014 dua segitiga sebangun (AA); rasio bayangan = rasio tinggi','Teorema Pythagoras \u2014 menghitung panjang sinar matahari','Perbandingan luas \u2014 karena bayangan berupa bidang datar'],
+ ans:1,
+ exp:'Sinar matahari sejajar \u2192 sudut kemiringan sama \u2192 dua sudut sama (AA) \u2192 segitiga <b>sebangun</b>, bukan kongruen (ukurannya jelas beda).<br>Maka tinggi menara/bayangan menara = tinggi tongkat/bayangan tongkat \u2014 metode yang dipakai Thales untuk mengukur piramida.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar. Sebatang bambu setinggi 16 m patah dan puncaknya menyentuh tanah pada jarak 8 m dari pangkal. Ketinggian titik patah bambu dari tanah adalah\u2026',
+ fig:'bambu',
+ opts:['4 m','6 m','8 m','10 m'],
+ ans:1,
+ exp:'Misal titik patah setinggi x; bagian yang roboh = 16 \u2212 x.<br>Pythagoras: x\u00B2 + 8\u00B2 = (16 \u2212 x)\u00B2<br>x\u00B2 + 64 = 256 \u2212 32x + x\u00B2 \u2192 64 = 256 \u2212 32x \u2192 32x = 192 \u2192 <b>x = 6 m</b>.<br>Cek: bagian roboh 10 m; 6\u00B2 + 8\u00B2 = 10\u00B2 \u2713'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Pabrik mensyaratkan komponen segitiga identik dengan sisi 5 cm, 12 cm, dan 13 cm. Dalam satu kotak: <b>P</b> bersisi 5, 12, 13; <b>Q</b> memiliki dua sisi 5 dan 12 dengan sudut apit 90\u00B0; <b>R</b> memiliki dua sisi 12 dan 13 dengan sudut apit 90\u00B0. Komponen yang lolos kontrol mutu adalah\u2026',
+ opts:['Hanya P','P dan Q','P dan R','P, Q, dan R'],
+ ans:1,
+ exp:'<b>P</b>: SSS \u2192 lolos.<br><b>Q</b>: 5\u00B2 + 12\u00B2 = 169 = 13\u00B2 \u2192 sudut apit antara 5 dan 12 memang 90\u00B0 \u2192 kongruen dengan standar (SAS) \u2192 lolos.<br><b>R</b>: jika 12 dan 13 diapit 90\u00B0, sisi ketiganya = \u221A(144 + 169) = \u221A313 \u2248 17,7 cm \u2260 5 \u2192 tidak lolos.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Foto berukuran 10 cm \u00D7 15 cm diperbesar dengan skala 2 : 1, lalu dipasangi kaca seharga Rp500 per cm\u00B2. Biaya kaca untuk foto hasil perbesaran adalah\u2026',
+ opts:['Rp75.000','Rp150.000','Rp300.000','Rp600.000'],
+ ans:2,
+ exp:'Ukuran baru = 20 cm \u00D7 30 cm \u2192 luas = 600 cm\u00B2.<br>Cek dengan k\u00B2: luas awal 150 cm\u00B2 \u00D7 4 = 600 cm\u00B2 \u2713<br>Biaya = 600 \u00D7 Rp500 = <b>Rp300.000</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Lahan pak Budi berbentuk persegi panjang 60 m \u00D7 80 m. Ia memasang pagar lurus di diagonal untuk membagi lahan menjadi dua bagian sama luas. Biaya pemasangan Rp15.000 per meter. Total biaya pagar diagonal adalah\u2026',
+ opts:['Rp900.000','Rp1.200.000','Rp1.500.000','Rp2.100.000'],
+ ans:2,
+ exp:'Diagonal = \u221A(60\u00B2 + 80\u00B2) = \u221A10.000 = 100 m (3-4-5 \u00D7 20).<br>Biaya = 100 \u00D7 Rp15.000 = <b>Rp1.500.000</b>.<br>Pembanding: membagi dengan garis sejajar sisi pendek hanya 60 m (Rp900.000), tetapi diagonallah yang membelah lahan menjadi dua bagian yang persis sama luas.'}
+]};
+</script>
+<script>
+/* ================= MESIN APLIKASI ================= */
+const $=id=>document.getElementById(id);
+const LETTERS=['A','B','C','D'];
+function fmt(n){const r=Math.round(n*100)/100;return String(r).replace('.',',');}
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  $('pbar').style.width=((cur+1)/slides.length*100)+'%';
+  $('counter').textContent=(cur+1)+' / '+slides.length;
+  window.scrollTo({top:0,behavior:'auto'});
+  if(slides[cur].id==='s-score')renderScores();
+}
+function goId(id){const k=slides.findIndex(s=>s.id===id);if(k>=0)go(k);}
+
+/* ================= MESIN KUIS ================= */
+const qState={};
+Object.keys(QUIZ).forEach(k=>{qState[k]={i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]};});
+const origBody={};
+
+function qRender(k){
+  const st=qState[k],q=QUIZ[k].qs[st.i];
+  st.sel=null;st.checked=false;
+  $('q-'+k+'-num').textContent=st.i+1;
+  $('q-'+k+'-score').textContent=st.score;
+  $('q-'+k+'-lvl').textContent=q.lvl;
+  $('q-'+k+'-text').innerHTML=(q.fig?'<div class="figbox">'+FIGS[q.fig]+'</div>':'')+q.q;
+  const box=$('q-'+k+'-opts');box.innerHTML='';
+  q.opts.forEach((t,idx)=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='opt';
+    b.innerHTML='<span class="optletter">'+LETTERS[idx]+'</span><span>'+t+'</span>';
+    b.addEventListener('click',()=>{
+      if(st.checked)return;
+      st.sel=idx;
+      [...box.children].forEach((c,j)=>c.classList.toggle('selected',j===idx));
+      $('q-'+k+'-check').disabled=false;
+    });
+    box.appendChild(b);
+  });
+  $('q-'+k+'-exp').style.display='none';
+  $('q-'+k+'-check').disabled=true;
+  $('q-'+k+'-next').disabled=true;
+}
+function qCheck(k){
+  const st=qState[k],q=QUIZ[k].qs[st.i];
+  if(st.sel==null||st.checked)return;
+  st.checked=true;
+  const ok=st.sel===q.ans;
+  if(ok)st.score++;
+  st.answered++;
+  st.results.push(ok);
+  [...$('q-'+k+'-opts').children].forEach((b,j)=>{
+    b.classList.add('locked');
+    if(j===q.ans)b.classList.add('correct');
+    else if(j===st.sel)b.classList.add('wrong');
+  });
+  const eb=$('q-'+k+'-exp');
+  eb.style.display='block';
+  eb.className='expbox '+(ok?'good':'bad');
+  eb.innerHTML=(ok?'<b>Benar! </b>':'<b>Belum tepat. Jawaban yang benar: '+LETTERS[q.ans]+'. </b>')+q.exp;
+  $('q-'+k+'-score').textContent=st.score;
+  $('q-'+k+'-check').disabled=true;
+  const nx=$('q-'+k+'-next');
+  nx.disabled=false;
+  nx.textContent=(st.i===QUIZ[k].qs.length-1)?'Lihat Hasil \u2192':'Soal Berikutnya \u2192';
+  saveProg();
+}
+function qNext(k){
+  const st=qState[k];
+  if(!st.checked)return;
+  if(st.i<QUIZ[k].qs.length-1){st.i++;qRender(k);}
+  else{st.done=true;qResult(k);saveProg();}
+}
+function qResult(k){
+  const st=qState[k],d=QUIZ[k];
+  const p=Math.round(st.score/QUIZ[k].qs.length*100);
+  const msg=st.score>=9?'Luar biasa! Kamu sangat menguasai materi ini.':st.score>=7?'Bagus! Sedikit lagi menuju sempurna.':st.score>=5?'Cukup. Baca ulang bagian teori, lalu coba lagi.':'Ayo pelajari kembali materinya, lalu ulangi latihan ini.';
+  $('q-'+k+'-body').innerHTML='<div class="qresult"><div class="qscore">'+st.score+'<span>/10</span></div><h3>Latihan '+d.title+' selesai</h3><p style="margin-top:6px">'+msg+'</p><p class="qpct">'+p+'% benar</p><button class="btn pri" id="q-'+k+'-retry">Ulangi Latihan</button></div>';
+  $('q-'+k+'-retry').addEventListener('click',()=>qRetry(k));
+}
+function qRetry(k){
+  Object.assign(qState[k],{i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]});
+  $('q-'+k+'-body').innerHTML=origBody[k];
+  qRender(k);saveProg();
+}
+
+/* ================= PENYIMPANAN LOKAL ================= */
+function saveProg(){
+  try{
+    const d={};
+    for(const k in qState){const s=qState[k];d[k]={score:s.score,answered:s.answered,done:s.done,i:s.i,results:s.results};}
+    localStorage.setItem('kkp-tka-v1',JSON.stringify(d));
+  }catch(e){}
+}
+function loadProg(){
+  try{
+    const d=JSON.parse(localStorage.getItem('kkp-tka-v1')||'{}');
+    for(const k in d){
+      if(!qState[k])continue;
+      Object.assign(qState[k],{
+        i:Math.min(d[k].i||0,QUIZ[k].qs.length-1),
+        score:d[k].score||0,
+        answered:d[k].answered||0,
+        done:!!d[k].done,
+        results:Array.isArray(d[k].results)?d[k].results:[],
+        sel:null,checked:false
+      });
+    }
+  }catch(e){}
+}
+
+/* ================= HALAMAN NILAI ================= */
+function renderScores(){
+  const order=['kongruen','sebangun','pythagoras','terapan'];
+  let h='<table class="tbl"><tr><th>Bab</th><th>Dijawab</th><th>Benar</th><th>Nilai</th><th>Status</th></tr>';
+  let tc=0;
+  order.forEach(k=>{
+    const s=qState[k],d=QUIZ[k];tc+=s.score;
+    const nilai=Math.round(s.score/QUIZ[k].qs.length*100);
+    h+='<tr><td><b>'+d.title+'</b></td><td>'+s.answered+' / '+QUIZ[k].qs.length+'</td><td>'+s.score+'</td><td><div class="scorebar" style="width:110px;vertical-align:middle"><i style="width:'+nilai+'%;background:'+d.acc+'"></i></div> '+nilai+'</td><td>'+(s.done?'Selesai':'Berjalan')+'</td></tr>';
+  });
+  h+='</table>';
+  $('score-table').innerHTML=h;
+  const pct=Math.round(tc/40*100);
+  const pred=tc>=36?'Istimewa! Kamu siap menghadapi soal kekongruenan, kesebangunan, dan Pythagoras pada TKA.':tc>=28?'Hebat \u2014 tinggal poles soal yang masih keliru.':tc>=20?'Bagus, lanjutkan latihan pada bagian yang lemah.':'Terus semangat: baca ulang teorinya, lalu kerjakan lagi latihannya.';
+  $('score-overall').innerHTML='<div class="scorebig"><div class="big">'+tc+'<span style="font-size:22px;color:#94a3b8">/40</span></div><div><b>Skor total: '+pct+'%</b><br><span style="color:#cbd5e1;font-size:14px">'+pred+'</span></div></div>';
+}
+
+/* ================= LAB 2: SKALA KESEBANGUNAN ================= */
+function lab2(){
+  const k=parseFloat($('m2-range').value);
+  $('m2-val').textContent='k = '+fmt(k);
+  const s=22,ox=64,oy=214;
+  const Ax=ox,Ay=oy,Bx=ox+4*k*s,By=oy,Cx=ox,Cy=oy-3*k*s;
+  let h='<svg viewBox="0 0 360 252" xmlns="http://www.w3.org/2000/svg" style="max-width:360px">';
+  h+='<line x1="20" y1="'+oy+'" x2="348" y2="'+oy+'" stroke="#cbd5e1" stroke-width="1.5"/>';
+  h+='<polygon points="'+Ax+','+Ay+' '+Bx+','+By+' '+Cx+','+Cy+'" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>';
+  h+='<line x1="'+(Ax+12)+'" y1="'+Ay+'" x2="'+(Ax+12)+'" y2="'+(Ay-12)+'" stroke="#94a3b8" stroke-width="1.5"/>';
+  h+='<line x1="'+(Ax+12)+'" y1="'+(Ay-12)+'" x2="'+Ax+'" y2="'+(Ay-12)+'" stroke="#94a3b8" stroke-width="1.5"/>';
+  h+='<text x="'+(Ax-16)+'" y="'+(Ay+5)+'" font-size="13" font-weight="700" fill="#2563eb">A</text>';
+  h+='<text x="'+(Bx+12)+'" y="'+(By+5)+'" font-size="13" font-weight="700" fill="#2563eb">B</text>';
+  h+='<text x="'+(Cx-16)+'" y="'+(Cy-8)+'" font-size="13" font-weight="700" fill="#2563eb">C</text>';
+  h+='<text x="'+((Ax+Bx)/2)+'" y="'+(Ay+22)+'" font-size="12" font-weight="700" fill="#334155" text-anchor="middle">'+fmt(4*k)+'</text>';
+  h+='<text x="'+(Ax-22)+'" y="'+((Ay+Cy)/2)+'" font-size="12" font-weight="700" fill="#334155" text-anchor="middle">'+fmt(3*k)+'</text>';
+  h+='<text x="'+((Bx+Cx)/2+27)+'" y="'+((By+Cy)/2-8)+'" font-size="12" font-weight="700" fill="#d97706" text-anchor="middle">'+fmt(5*k)+'</text>';
+  h+='</svg>';
+  $('m2-svg').innerHTML=h;
+  $('m2-info').innerHTML='<table class="tbl" style="margin:0">'
+    +'<tr><th>Besaran</th><th>Rumus</th><th>Nilai</th></tr>'
+    +'<tr><td>Sisi AB (alas)</td><td>4k</td><td>'+fmt(4*k)+'</td></tr>'
+    +'<tr><td>Sisi AC (tinggi)</td><td>3k</td><td>'+fmt(3*k)+'</td></tr>'
+    +'<tr><td>Sisi BC (miring)</td><td>5k</td><td>'+fmt(5*k)+'</td></tr>'
+    +'<tr class="hi"><td>Keliling</td><td>12k</td><td>'+fmt(12*k)+'</td></tr>'
+    +'<tr class="hi"><td>Luas</td><td>6k\u00B2</td><td>'+fmt(6*k*k)+'</td></tr>'
+    +'</table>'
+    +'<p style="font-size:12.5px;color:#64748b;margin:8px 0 0">Keliling ikut <b>k</b> (satu dimensi), luas melonjak ikut <b>k\u00B2</b> (dua dimensi). Bangun ruang sebangun: volume ikut <b>k\u00B3</b>.</p>';
+}
+
+/* --- Pemeriksa kilat luas --- */
+let k2ans=0;
+function k2New(){
+  const ks=[1.5,2,2.5,3];
+  const k=ks[Math.floor(Math.random()*ks.length)];
+  k2ans=8*k*k;
+  $('m2k-q').innerHTML='Dua segitiga sebangun dengan skala <b>k = '+fmt(k)+'</b>. Jika luas segitiga kecil <b>8 cm\u00B2</b>, luas segitiga besar = \u2026 cm\u00B2';
+  $('m2k-in').value='';
+  const fb=$('m2k-fb');fb.textContent='';fb.className='kfb';
+}
+function k2Check(){
+  const v=parseFloat($('m2k-in').value.replace(',','.'));
+  const fb=$('m2k-fb');
+  if(isNaN(v)){fb.textContent='Isi jawabanmu dulu ya.';fb.className='kfb bad';return;}
+  if(Math.abs(v-k2ans)<0.01){fb.textContent='Benar! Luas = 8 \u00D7 k\u00B2 = '+fmt(k2ans)+' cm\u00B2.';fb.className='kfb good';}
+  else{fb.textContent='Belum tepat. Ingat: luas = 8 \u00D7 k\u00B2 = '+fmt(k2ans)+' cm\u00B2.';fb.className='kfb bad';}
+}
+
+/* ================= LAB 3: BUKTI VISUAL PYTHAGORAS ================= */
+function lab3(){
+  const a=parseInt($('m3-in-a').value,10),b=parseInt($('m3-in-b').value,10);
+  $('m3-val-a').textContent='a = '+a;
+  $('m3-val-b').textContent='b = '+b;
+  const c2=a*a+b*b,c=Math.sqrt(c2);
+  const pad=2.5;
+  const vb=(-b-pad)+' '+(-(a+b)-pad)+' '+(a+2*b+2*pad)+' '+(2*a+b+2*pad);
+  let h='<svg viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg" style="max-width:400px">';
+  h+='<polygon points="0,0 '+a+',0 '+a+','+a+' 0,'+a+'" fill="#dbeafe" stroke="#60a5fa" stroke-width="0.14"/>';
+  h+='<polygon points="0,0 0,'+(-b)+' '+(-b)+','+(-b)+' '+(-b)+',0" fill="#d1fae5" stroke="#34d399" stroke-width="0.14"/>';
+  h+='<polygon points="'+a+',0 0,'+(-b)+' '+b+','+(-b-a)+' '+(a+b)+','+(-a)+'" fill="#fef3c7" stroke="#f59e0b" stroke-width="0.14"/>';
+  h+='<polygon points="0,0 '+a+',0 0,'+(-b)+'" fill="rgba(180,83,9,.9)" stroke="#7c2d12" stroke-width="0.12"/>';
+  h+='<text x="'+(a/2)+'" y="'+(a/2+0.45)+'" font-size="1.25" font-weight="700" fill="#1d4ed8" text-anchor="middle">a\u00B2 = '+(a*a)+'</text>';
+  h+='<text x="'+(-b/2)+'" y="'+(-b/2+0.45)+'" font-size="1.25" font-weight="700" fill="#047857" text-anchor="middle">b\u00B2 = '+(b*b)+'</text>';
+  h+='<text x="'+((a+b)/2)+'" y="'+(-(a+b)/2-0.45)+'" font-size="1.25" font-weight="700" fill="#b45309" text-anchor="middle">c\u00B2 = '+c2+'</text>';
+  h+='<text x="'+(a/2)+'" y="-0.5" font-size="1" fill="#fff" text-anchor="middle">a='+a+'</text>';
+  h+='<text x="0.55" y="'+(-b/2-0.35)+'" font-size="1" fill="#fff" text-anchor="middle">b='+b+'</text>';
+  const len=Math.sqrt(c2);
+  h+='<text x="'+(a/2+1.5*b/len)+'" y="'+(-b/2-1.5*a/len-0.2)+'" font-size="1" font-weight="700" fill="#b45309" text-anchor="middle">c='+fmt(c)+'</text>';
+  h+='<text x="-0.6" y="1.15" font-size="1.15" font-weight="700" fill="#0f172a" text-anchor="middle">C</text>';
+  h+='<text x="'+(a+0.6)+'" y="1.1" font-size="1.15" font-weight="700" fill="#0f172a" text-anchor="middle">A</text>';
+  h+='<text x="-0.6" y="'+(-b-0.6)+'" font-size="1.15" font-weight="700" fill="#0f172a" text-anchor="middle">B</text>';
+  h+='</svg>';
+  $('m3-svg').innerHTML=h;
+  const bulat=(Math.abs(c-Math.round(c))<1e-9);
+  $('m3-info').innerHTML='a\u00B2 + b\u00B2 = c\u00B2<br><b>'+(a*a)+' + '+(b*b)+' = '+c2+'</b><br>c = \u221A'+c2+' = <b>'+fmt(c)+'</b>'
+    +(bulat?'<br><small style="color:#059669">Bulat sempurna \u2014 polanya seperti triple Pythagoras!</small>':'<br><small style="color:#b45309">Tidak bulat \u2014 bukan triple, tetapi teoremanya tetap berlaku.</small>');
+}
+
+/* --- Lab: pemeriksa jenis segitiga --- */
+function cek3(){
+  const va=parseFloat($('c3-a').value.replace(',','.'));
+  const vb=parseFloat($('c3-b').value.replace(',','.'));
+  const vc=parseFloat($('c3-c').value.replace(',','.'));
+  const out=$('c3-out');
+  if(isNaN(va)||isNaN(vb)||isNaN(vc)||va<=0||vb<=0||vc<=0){
+    out.innerHTML='<b style="color:#dc2626">Isi ketiga panjang sisi dengan bilangan positif.</b>';return;
+  }
+  const m=Math.max(va,vb,vc);
+  const s=va+vb+vc-m;
+  if(s<=m){
+    out.innerHTML='<b style="color:#dc2626">Bukan segitiga yang sah:</b> jumlah dua sisi terpendek ('+fmt(s)+') harus lebih besar dari sisi terpanjang ('+fmt(m)+').';return;
+  }
+  const cmp=va*va+vb*vb+vc*vc-m*m;
+  const m2=m*m;
+  let jenis,detail;
+  if(Math.abs(m2-cmp)<1e-9){
+    jenis='<b style="color:#059669">SIKU-SIKU</b>';
+    detail='c\u00B2 = a\u00B2 + b\u00B2 terpenuhi tepat: '+fmt(m2)+' = '+fmt(cmp)+'. Kebalikan teorema Pythagoras membenarkan adanya sudut 90\u00B0 \u2014 teorema Pythagoras boleh dipakai padanya.';
+  }else if(m2>cmp){
+    jenis='<b style="color:#dc2626">TUMPUL</b>';
+    detail='c\u00B2 = '+fmt(m2)+' lebih besar dari a\u00B2 + b\u00B2 = '+fmt(cmp)+' \u2192 sudut terbesarnya melebihi 90\u00B0.';
+  }else{
+    jenis='<b style="color:#2563eb">LANCIP</b>';
+    detail='c\u00B2 = '+fmt(m2)+' lebih kecil dari a\u00B2 + b\u00B2 = '+fmt(cmp)+' \u2192 semua sudutnya kurang dari 90\u00B0.';
+  }
+  out.innerHTML='Segitiga bersisi '+fmt(va)+', '+fmt(vb)+', '+fmt(vc)+' adalah segitiga '+jenis+'<br><small>'+detail+'</small>';
+}
+
+/* ================= LAB 4A: BAMBU PATAH (STEPPER) ================= */
+let bstep=0;const BTOT=5;
+function bambooUpd(){
+  document.querySelectorAll('#bamboo-steps .stepcard').forEach((c,i)=>c.classList.toggle('shown',i<bstep));
+  $('bamboo-pos').textContent=bstep===0?'Tekan tombol untuk mulai':'Langkah '+bstep+' dari '+BTOT+' tampil';
+  const b=$('bamboo-next');
+  if(bstep>=BTOT){b.disabled=true;b.textContent='Selesai \u2713';}
+  else{b.disabled=false;b.textContent='Tampilkan Langkah Berikutnya';}
+}
+
+/* ================= LAB 4B: KALKULATOR TANGGA ================= */
+function ladderCalc(){
+  const l=parseFloat($('m4-in-L').value),d=parseFloat($('m4-in-d').value);
+  $('m4-val-L').textContent=fmt(l)+' m';
+  $('m4-val-d').textContent=fmt(d)+' m';
+  const out=$('m4-out');
+  if(d>=l){
+    out.innerHTML='<b style="color:#dc2626">Tangga tidak bisa berdiri!</b><br>h\u00B2 = '+fmt(l*l)+' \u2212 '+fmt(d*d)+' bernilai negatif. Jarak kaki tangga ke dinding harus <b>lebih kecil</b> dari panjang tangganya.';
+    return;
+  }
+  const h=Math.sqrt(l*l-d*d);
+  out.innerHTML='Tinggi ujung tangga dari tanah:<br><b style="color:#059669;font-size:21px">'+fmt(h)+' m</b><br><small>h = \u221A(L\u00B2 \u2212 d\u00B2) = \u221A('+fmt(l*l)+' \u2212 '+fmt(d*d)+') = \u221A'+fmt(l*l-d*d)+'</small>';
+}
+
+/* ================= INISIALISASI ================= */
+document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>goId(el.dataset.goto)));
+$('btn-prev').addEventListener('click',()=>go(cur-1));
+$('btn-next').addEventListener('click',()=>go(cur+1));
+$('btn-menu').addEventListener('click',()=>goId('s-menu'));
+document.addEventListener('keydown',e=>{
+  if(e.target&&/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+for(const k in QUIZ){
+  origBody[k]=$('q-'+k+'-body').innerHTML;
+  $('q-'+k+'-check').addEventListener('click',()=>qCheck(k));
+  $('q-'+k+'-next').addEventListener('click',()=>qNext(k));
+}
+document.querySelectorAll('.condcard').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+$('m2-range').addEventListener('input',lab2);
+$('m2k-check').addEventListener('click',k2Check);
+$('m2k-new').addEventListener('click',k2New);
+$('m3-in-a').addEventListener('input',lab3);
+$('m3-in-b').addEventListener('input',lab3);
+$('c3-check').addEventListener('click',cek3);
+$('bamboo-next').addEventListener('click',()=>{if(bstep<BTOT){bstep++;bambooUpd();}});
+$('m4-in-L').addEventListener('input',ladderCalc);
+$('m4-in-d').addEventListener('input',ladderCalc);
+$('btn-reset').addEventListener('click',()=>{
+  try{localStorage.removeItem('kkp-tka-v1');}catch(e){}
+  for(const k in qState)Object.assign(qState[k],{i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]});
+  for(const k in QUIZ){$('q-'+k+'-body').innerHTML=origBody[k];qRender(k);}
+  renderScores();
+});
+lab2();k2New();lab3();bambooUpd();ladderCalc();
+loadProg();
+for(const k in QUIZ){if(qState[k].done)qResult(k);else qRender(k);}
+go(0);
+</script>
+</body>
+</html>

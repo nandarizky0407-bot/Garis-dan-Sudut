@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hubungan Garis &amp; Sudut — TKA SMA | Berpelurus · Berpenyiku · Segitiga · Transversal</title>
+<style>
+:root{
+  --bg:#eef2f7; --card:#ffffff; --ink:#0f172a; --muted:#5b6b7f;
+  --blue:#2563eb; --rose:#e11d48; --amber:#d97706; --green:#059669;
+  --purple:#7c3aed; --slate:#475569; --line:#e2e8f0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+sup,sub{font-size:72%}
+body{font-family:'Segoe UI',Tahoma,system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+
+/* ===== Topbar & progress ===== */
+#topbar{position:fixed;top:0;left:0;right:0;background:rgba(11,18,32,.96);color:#fff;z-index:50;box-shadow:0 2px 12px rgba(2,6,23,.35)}
+.tb-in{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:9px 18px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#38bdf8,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:19px;flex:none}
+.brand{font-weight:700;letter-spacing:.3px;font-size:15px;white-space:nowrap}
+.tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:2px 10px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:1px;white-space:nowrap}
+.pwrap{margin-left:auto;flex:1;max-width:260px;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+#pbar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#34d399);border-radius:99px;transition:width .3s}
+
+/* ===== Bottom nav ===== */
+#navbar{position:fixed;bottom:0;left:0;right:0;background:rgba(11,18,32,.96);z-index:50;border-top:1px solid rgba(255,255,255,.08)}
+.nb-in{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:9px 18px}
+.nb-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;padding:8px 15px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13.5px;font-family:inherit;white-space:nowrap}
+.nb-btn:hover{background:rgba(255,255,255,.24)}
+#counter{color:#cbd5e1;font-size:13px;min-width:64px;text-align:center;font-weight:600}
+.spacer{flex:1}
+
+/* ===== Deck & slide ===== */
+#deck{max-width:1000px;margin:0 auto;padding:78px 18px 90px}
+.slide{display:none;background:var(--card);border-radius:20px;padding:36px 42px;min-height:540px;box-shadow:0 10px 34px rgba(15,23,42,.09)}
+.slide.active{display:block;animation:fadein .4s ease}
+.slide:not(.active){display:none!important}
+.slide.active.cover{display:flex}
+.slide.active.divider{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.acc-rose{--acc:#e11d48}.acc-blue{--acc:#2563eb}.acc-amber{--acc:#d97706}
+.acc-green{--acc:#059669}.acc-purple{--acc:#7c3aed}.acc-slate{--acc:#475569}
+
+h2{font-size:26px;letter-spacing:-.3px}
+h3{font-size:17px}
+.sub{color:var(--muted);margin:6px 0 18px;font-size:15px}
+.rule{width:64px;height:5px;border-radius:99px;background:var(--acc,var(--blue));margin:10px 0 20px}
+
+/* ===== Boxes ===== */
+.defbox{background:#f8fafc;border:1px solid var(--line);border-left:5px solid var(--acc,var(--blue));padding:15px 20px;border-radius:12px;margin:14px 0;font-size:15.5px}
+.formula{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1px solid #c7d2fe;border-radius:12px;padding:13px 18px;margin:10px 0;font-size:16.5px;font-weight:600;color:#1e3a8a;line-height:1.7}
+.formula small{display:block;font-weight:400;color:#475569;font-size:12.5px;margin-top:4px}
+.callout{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:14.5px}
+.note{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:14.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:12px 0}
+.mini{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.mini h4{font-size:13px;color:var(--acc,var(--blue));margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.mini p{font-size:14px}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.tbl th{background:#0f172a;color:#fff;padding:8px 10px;text-align:left;font-size:12.5px}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--line)}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.tbl tr.hi td{background:#fef9c3;font-weight:700}
+
+/* ===== Cover ===== */
+.slide.cover{background:linear-gradient(140deg,#0b1220 0%,#10254d 55%,#16324f 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.cover::after{content:'';position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.25),transparent 65%)}
+.cover::before{content:'';position:absolute;left:-100px;bottom:-140px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.22),transparent 65%)}
+.kicker{font-size:12.5px;letter-spacing:3px;font-weight:800;color:#7dd3fc;margin-bottom:14px}
+.cover h1{font-size:48px;line-height:1.1;letter-spacing:-1px;margin-bottom:14px;position:relative;z-index:1}
+.cover .subtitle{font-size:16px;color:#cbd5e1;max-width:680px;margin-bottom:22px;position:relative;z-index:1}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;position:relative;z-index:1}
+.chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.cta{background:linear-gradient(135deg,#38bdf8,#2563eb);border:none;color:#fff;font-weight:800;font-size:16px;padding:13px 30px;border-radius:12px;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px rgba(37,99,235,.45);transition:transform .15s;position:relative;z-index:1}
+.cta:hover{transform:translateY(-2px)}
+.hintline{margin-top:18px;font-size:12.5px;color:#94a3b8}
+
+/* ===== Menu ===== */
+.menugrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+.menucard{background:#f8fafc;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;cursor:pointer;transition:.18s}
+.menucard:hover{border-color:var(--acc);transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,23,42,.1)}
+.mnum{font-size:11.5px;font-weight:800;letter-spacing:2px;color:var(--acc)}
+.menucard h3{margin:4px 0 6px;font-size:17px}
+.menucard p{font-size:13.5px;color:var(--muted)}
+.mtag{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+
+/* ===== Divider ===== */
+.slide.divider{background:linear-gradient(140deg,#0f172a,#1e293b);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.dnum{position:absolute;right:20px;bottom:-46px;font-size:190px;font-weight:900;color:rgba(255,255,255,.06);line-height:1}
+.dkicker{color:var(--acc);font-weight:800;letter-spacing:3px;font-size:13px;margin-bottom:10px}
+.divider h1{font-size:40px;margin-bottom:16px;letter-spacing:-.5px}
+.dlist{list-style:none}
+.dlist li{padding:7px 0 7px 28px;position:relative;color:#cbd5e1;font-size:15.5px}
+.dlist li::before{content:'\25B8';position:absolute;left:6px;color:var(--acc);font-weight:700}
+.slide:not(.divider):not(.cover) .dlist{color:var(--ink)}
+.slide:not(.divider):not(.cover) .dlist li{color:#334155}
+
+/* ===== Quiz ===== */
+.quiz-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.lvl{background:#ede9fe;color:#6d28d9;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.5px}
+.qcount{margin-left:auto;color:var(--muted);font-size:13.5px;font-weight:600}
+.qtext{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:15.5px;margin:12px 0 16px;line-height:1.65}
+.figbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 10px 2px;margin:0 0 12px;text-align:center}
+.figbox svg{max-width:100%;height:auto}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:14.5px;font-family:inherit;line-height:1.5;transition:.15s;color:var(--ink)}
+.opt:hover:not(.locked){border-color:#94a3b8;background:#f8fafc}
+.opt.selected{border-color:var(--blue);background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.opt.correct{border-color:#16a34a;background:#f0fdf4;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.opt.wrong{border-color:#dc2626;background:#fef2f2;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
+.opt.locked{cursor:default}
+.optletter{flex:none;width:26px;height:26px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#334155;margin-top:1px}
+.opt.selected .optletter{background:var(--blue);color:#fff}
+.opt.correct .optletter{background:#16a34a;color:#fff}
+.opt.wrong .optletter{background:#dc2626;color:#fff}
+.expbox{border-radius:12px;padding:14px 18px;margin-top:14px;font-size:14.5px;line-height:1.65;display:none}
+.expbox.good{background:#f0fdf4;border:1px solid #86efac}
+.expbox.bad{background:#fef2f2;border:1px solid #fca5a5}
+.qctrl{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{border:none;border-radius:11px;padding:11px 22px;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
+.btn.pri{background:var(--acc,var(--blue));color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.ghost{background:#eef2f7;color:#334155;border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.qresult{text-align:center;padding:30px 10px}
+.qscore{font-size:62px;font-weight:900;color:var(--acc)}
+.qscore span{font-size:26px;color:var(--muted);font-weight:700}
+.qpct{color:var(--muted);margin:8px 0 18px;font-weight:700}
+
+/* ===== Lab SVG interaktif ===== */
+.labbox{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:16px;padding:18px 20px;margin:16px 0}
+.labbox h3{font-size:15.5px;margin-bottom:12px;color:var(--acc,var(--blue))}
+.lgrid{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.labsvg{flex:1;min-width:270px}
+.labsvg svg{width:100%;height:auto;display:block;touch-action:none}
+.lctl{flex:0 0 250px;display:flex;flex-direction:column;gap:12px}
+.lctl label{font-size:11.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;display:flex;flex-direction:column;gap:5px}
+.lctl input[type=range]{width:100%;accent-color:var(--acc,var(--blue))}
+.lval{font-size:15px;font-weight:700;color:var(--acc,var(--blue))}
+.labinfo{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6}
+.relbtn{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;color:#334155}
+.relbtn.on{color:#fff!important;border-color:transparent}
+.draghint{font-size:12.5px;color:#64748b;text-align:center;margin-top:6px}
+.kilat{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 16px;margin-top:16px;font-size:14.5px}
+.kilat h4{font-size:13px;color:#b45309;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.kilat input{border:1.5px solid #cbd5e1;border-radius:8px;padding:7px 10px;width:92px;font-size:15px;font-family:inherit;margin:4px 6px}
+.kbtn{border:none;background:#d97706;color:#fff;font-weight:700;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:inherit;font-size:13px}
+.kbtn.ghost{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.kfb{font-weight:700;margin-left:6px}
+.kfb.good{color:#059669}.kfb.bad{color:#dc2626}
+
+/* ===== Skor ===== */
+.scorebig{display:flex;gap:20px;align-items:center;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:18px;padding:20px 26px;margin:14px 0}
+.scorebig .big{font-size:50px;font-weight:900;color:#7dd3fc;line-height:1}
+.scorebar{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;display:inline-block}
+.scorebar i{display:block;height:100%;border-radius:99px}
+
+@media (max-width:760px){
+  .grid2,.grid3,.menugrid{grid-template-columns:1fr}
+  .slide{padding:24px 18px;min-height:auto}
+  .cover h1{font-size:34px}
+  .divider h1{font-size:30px}
+  .brand span.tag{display:none}
+  .lctl{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+<header id="topbar"><div class="tb-in">
+  <div class="logo">&ang;</div>
+  <div class="brand">Hubungan Garis &amp; Sudut <span class="tag">TKA SMA</span></div>
+  <div class="pwrap"><div id="pbar"></div></div>
+</div></header>
+
+<div id="deck">
+
+<!-- 1. COVER -->
+<section class="slide cover" id="s-cover">
+  <p class="kicker">BANK MATERI TKA SMA &middot; INTERAKTIF &amp; MENDALAM</p>
+  <h1>Hubungan<br>Garis &amp; Sudut</h1>
+  <p class="subtitle">Sudut Berpelurus &middot; Sudut Berpenyiku &middot; Sudut Satu Putaran Penuh &middot; Sudut Dalam Segitiga &middot; Sudut Eksterior Segitiga &middot; Dua Garis Sejajar dipotong Garis Transversal</p>
+  <div class="chips">
+    <span class="chip">6 Materi Inti</span>
+    <span class="chip">60 Soal Latihan</span>
+    <span class="chip">6 Lab Interaktif</span>
+    <span class="chip">Pembahasan Lengkap</span>
+  </div>
+  <button class="cta" data-goto="s-menu">Mulai Belajar</button>
+  <p class="hintline">Tips: gunakan tombol panah &larr; &rarr; pada keyboard untuk berpindah halaman. Skor latihan tersimpan otomatis di perangkatmu.</p>
+</section>
+
+<!-- 2. MENU -->
+<section class="slide" id="s-menu">
+  <h2>Peta Materi</h2>
+  <p class="sub">Klik kartu untuk langsung menuju materi. Urutan alur belajar: sudut berpelurus &rarr; berpenyiku &rarr; satu putaran penuh &rarr; sudut dalam segitiga &rarr; sudut eksterior &rarr; garis sejajar &amp; transversal.</p>
+  <div class="menugrid">
+    <div class="menucard acc-rose" data-goto="s-d1">
+      <span class="mnum">MATERI 01</span>
+      <h3>Sudut Berpelurus</h3>
+      <p>Dua sudut yang berjumlah 180&deg;: pelurus cepat, pasangan linear, penerapan pada garis lurus, dan lab interaktif geser-sudut.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-blue" data-goto="s-d2">
+      <span class="mnum">MATERI 02</span>
+      <h3>Sudut Berpenyiku</h3>
+      <p>Dua sudut yang berjumlah 90&deg;: penyiku cepat, bentuk aljabar, aplikasi tangga &amp; atap, plus lab sudut siku-siku interaktif.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-amber" data-goto="s-d3">
+      <span class="mnum">MATERI 03</span>
+      <h3>Sudut Satu Putaran Penuh</h3>
+      <p>360&deg; di sekeliling satu titik: sudut jam, kincir, mata angin &mdash; dengan simulasi putaran dan jam interaktif.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-green" data-goto="s-d4">
+      <span class="mnum">MATERI 04</span>
+      <h3>Sudut Dalam Segitiga</h3>
+      <p>Jumlah tiga sudut selalu 180&deg;: jenis segitiga, sifat sama kaki &amp; sama sisi, dan lab segitiga yang bisa digeser-geser.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-purple" data-goto="s-d5">
+      <span class="mnum">MATERI 05</span>
+      <h3>Sudut Eksterior Segitiga</h3>
+      <p>Teorema sudut luar: sama dengan jumlah dua sudut dalam tak berdekatan; jumlah semua sudut luar 360&deg;; lab interaktif.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-slate" data-goto="s-d6">
+      <span class="mnum">MATERI 06</span>
+      <h3>Garis Sejajar &amp; Transversal</h3>
+      <p>Delapan sudut dari dua garis sejajar yang dipotong garis transversal: sehadap, berseberangan, bersebelahan &mdash; beserta besar sudutnya.</p>
+      <span class="mtag">10 Soal Latihan</span>
+    </div>
+    <div class="menucard acc-blue" data-goto="s-score">
+      <span class="mnum">REKAP</span>
+      <h3>Nilai Kamu</h3>
+      <p>Rekapitulasi otomatis 60 soal dari 6 materi, lengkap dengan predikat &mdash; tersimpan otomatis di perangkatmu.</p>
+      <span class="mtag">Cek Progres</span>
+    </div>
+    <div class="menucard acc-rose" data-goto="s-summary">
+      <span class="mnum">PENUTUP</span>
+      <h3>Rangkuman &amp; Strategi</h3>
+      <p>Kartu rumus inti keenam materi plus 5 strategi menaklukkan soal hubungan garis dan sudut pada TKA.</p>
+      <span class="mtag">Baca Sebelum Ujian</span>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DIVIDER M1 -->
+<section class="slide divider acc-rose" id="s-d1">
+  <div class="dnum">01</div>
+  <p class="dkicker">MATERI 1</p>
+  <h1>Sudut Berpelurus</h1>
+  <ul class="dlist">
+    <li>Pengertian sudut berpelurus (suplemen): jumlahnya 180&deg;</li>
+    <li>Pelurus cepat: 180&deg; &minus; sudut yang diketahui</li>
+    <li>Linear pair: pasangan berpelurus yang berdempetan</li>
+    <li>Lab interaktif: geser sudut dan amati pasangannya</li>
+    <li>10 soal latihan dengan pembahasan lengkap</li>
+  </ul>
+</section>
+
+<!-- 4. M1 KONSEP -->
+<section class="slide acc-rose" id="s-m1a">
+  <h2>Konsep Sudut Berpelurus</h2>
+  <p class="sub">Dua sudut yang "melengkapi" satu garis lurus.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Sudut berpelurus</b> adalah dua sudut yang jumlah besar keduanya tepat <b>180&deg;</b>. Jika kedua sudut itu berdempetan dan kakinya bersama-sama membentuk sebuah garis lurus, pasangan itu disebut <b>linear pair</b> (pasangan garis lurus).</div>
+  <div class="formula">&alpha; + &beta; = 180&deg;<small>Pelurus dari sudut &alpha; = 180&deg; &minus; &alpha; &middot; contoh: pelurus 65&deg; = 115&deg;, pelurus 121&deg; = 59&deg;</small></div>
+  <div class="grid2">
+    <div class="mini"><h4>Berdempetan atau tidak?</h4><p>Dua sudut tetap disebut berpelurus <b>walaupun tidak berdempetan</b>, asalkan jumlahnya 180&deg;. Contoh: 130&deg; dan 50&deg; di dua tempat berbeda tetap saling berpelurus. Syarat tunggalnya hanya satu: <b>jumlahnya 180&deg;</b>.</p></div>
+    <div class="mini"><h4>Kenapa harus dua sudut?</h4><p>Istilah <i>berpelurus</i> hanya berlaku untuk <b>tepat dua sudut</b>. Tiga sudut pada garis lurus (misal 60&deg;, 50&deg;, 70&deg;) memang berjumlah 180&deg;, tetapi tidak disebut saling berpelurus &mdash; perhitungannya tetap memakai total 180&deg;.</p></div>
+  </div>
+  <div class="defbox"><b>Contoh aljabar.</b> Sudut A = (2x + 15)&deg; dan sudut B = (x + 15)&deg; saling berpelurus. Maka: (2x + 15) + (x + 15) = 180 &rarr; 3x + 30 = 180 &rarr; 3x = 150 &rarr; <b>x = 50</b>. Sudutnya A = 115&deg; dan B = 65&deg; &mdash; cek: 115 + 65 = 180 &#10003;</div>
+  <div class="callout"><b>Awas jebakan!</b> Sudut 90&deg; berpelurus dengan 90&deg; (90 + 90 = 180). Dan ingat: "pelurus" selalu terkait <b>180&deg;</b> (garis lurus), jangan tertukar dengan "penyiku" yang terkait 90&deg;.</div>
+</section>
+
+<!-- 5. M1 LAB -->
+<section class="slide acc-rose" id="s-m1b">
+  <h2>Lab Interaktif &mdash; Geser Sudutnya!</h2>
+  <p class="sub">Geser slider &alpha; dan amati: berapa pun &alpha;, pasangannya selalu melengkapi hingga 180&deg;.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m1-svg"></div>
+      <div class="lctl">
+        <label>Sudut &alpha; (derajat)<input type="range" id="m1-range" min="10" max="170" step="1" value="60"><span class="lval" id="m1-val"></span></label>
+        <div class="labinfo" id="m1-info"></div>
+      </div>
+    </div>
+  </div>
+  <div class="kilat">
+    <h4>Pemeriksa Kilat</h4>
+    <p id="m1k-q"></p>
+    <input type="number" id="m1k-in" placeholder="jawaban"><button class="kbtn" id="m1k-check">Periksa</button>
+    <span class="kfb" id="m1k-fb"></span>
+    <button class="kbtn ghost" id="m1k-new">Soal Baru</button>
+  </div>
+</section>
+
+<!-- 6. M1 KUIS -->
+<section class="slide acc-rose" id="s-m1q">
+  <div id="q-pelurus-body">
+    <h2>Latihan &mdash; Sudut Berpelurus</h2>
+    <p class="sub">10 soal. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-pelurus-lvl"></span><span class="qcount">Soal <b id="q-pelurus-num">1</b>/10 &middot; Skor: <b id="q-pelurus-score">0</b></span></div>
+    <div class="qtext" id="q-pelurus-text"></div>
+    <div class="opts" id="q-pelurus-opts"></div>
+    <div class="expbox" id="q-pelurus-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-pelurus-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-pelurus-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 7. DIVIDER M2 -->
+<section class="slide divider acc-blue" id="s-d2">
+  <div class="dnum">02</div>
+  <p class="dkicker">MATERI 2</p>
+  <h1>Sudut Berpenyiku</h1>
+  <ul class="dlist">
+    <li>Pengertian sudut berpenyiku (komplemen): jumlahnya 90&deg;</li>
+    <li>Penyiku cepat: 90&deg; &minus; sudut yang diketahui</li>
+    <li>Bedakan dengan berpelurus: 90&deg; vs 180&deg;</li>
+    <li>Aplikasi: tangga, kasau atap, palang tegak lurus</li>
+    <li>Lab interaktif + 10 soal latihan berpembahasan</li>
+  </ul>
+</section>
+
+<!-- 8. M2 KONSEP -->
+<section class="slide acc-blue" id="s-m2a">
+  <h2>Konsep Sudut Berpenyiku</h2>
+  <p class="sub">Dua sudut yang bersama-sama membentuk sudut siku-siku.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Sudut berpenyiku</b> adalah dua sudut yang jumlah besar keduanya tepat <b>90&deg;</b>. Bila kedua sudut itu berdempetan, keduanya membentuk sebuah <b>sudut siku-siku</b>.</div>
+  <div class="formula">&alpha; + &beta; = 90&deg;<small>Penyiku dari sudut &alpha; = 90&deg; &minus; &alpha; &middot; contoh: penyiku 38&deg; = 52&deg;, penyiku 45&deg; = 45&deg;</small></div>
+  <div class="grid2">
+    <div class="mini"><h4>Penyiku vs Pelurus</h4><p>Jangan tertukar! <b>Penyiku &rarr; 90&deg;</b> (siku-siku, kata kunci "per-<i>siku</i>-an"), <b>pelurus &rarr; 180&deg;</b> (garis lurus). Trik hafal: <i>penyIku</i> berisi "iku" seperti "siku", jumlahnya 90&deg;; <i>pelurus</i> seperti "melurus menjadi garis", jumlahnya 180&deg;.</p></div>
+    <div class="mini"><h4>Perhatikan ini</h4><p>Penyiku dari 45&deg; adalah <b>45&deg;</b> (dirinya sendiri). Dua sudut yang sama besar dan berpenyiku pasti masing-masing 45&deg;. Sudut tetap berpenyiku walau tidak berdempetan, cukup jumlahnya 90&deg;.</p></div>
+  </div>
+  <div class="defbox"><b>Contoh aljabar.</b> Sudut P = (3x + 5)&deg; dan sudut Q = (2x + 15)&deg; berpenyiku. Maka: (3x + 5) + (2x + 15) = 90 &rarr; 5x + 20 = 90 &rarr; 5x = 70 &rarr; <b>x = 14</b>. Sudutnya P = 47&deg; dan Q = 43&deg; &mdash; cek: 47 + 43 = 90 &#10003;</div>
+  <div class="callout"><b>Awas jebakan!</b> Soal sering menggabungkan keduanya: "pelurus dari x adalah 150&deg;" berarti x = 30&deg;, lalu penyiku x = 90&deg; &minus; 30&deg; = 60&deg;. Kerjakan bertahap, jangan langsung menebak.</div>
+</section>
+
+<!-- 9. M2 LAB -->
+<section class="slide acc-blue" id="s-m2b">
+  <h2>Lab Interaktif &mdash; Membelah Sudut Siku-Siku</h2>
+  <p class="sub">Geser slider dan lihat sudut siku-siku 90&deg; terbagi menjadi dua sudut yang selalu berpenyiku.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m2-svg"></div>
+      <div class="lctl">
+        <label>Sudut &gamma; (derajat)<input type="range" id="m2-range" min="5" max="85" step="1" value="35"><span class="lval" id="m2-val"></span></label>
+        <div class="labinfo" id="m2-info"></div>
+      </div>
+    </div>
+  </div>
+  <div class="kilat">
+    <h4>Pemeriksa Kilat</h4>
+    <p id="m2k-q"></p>
+    <input type="number" id="m2k-in" placeholder="jawaban"><button class="kbtn" id="m2k-check">Periksa</button>
+    <span class="kfb" id="m2k-fb"></span>
+    <button class="kbtn ghost" id="m2k-new">Soal Baru</button>
+  </div>
+</section>
+
+<!-- 10. M2 KUIS -->
+<section class="slide acc-blue" id="s-m2q">
+  <div id="q-penyiku-body">
+    <h2>Latihan &mdash; Sudut Berpenyiku</h2>
+    <p class="sub">10 soal. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-penyiku-lvl"></span><span class="qcount">Soal <b id="q-penyiku-num">1</b>/10 &middot; Skor: <b id="q-penyiku-score">0</b></span></div>
+    <div class="qtext" id="q-penyiku-text"></div>
+    <div class="opts" id="q-penyiku-opts"></div>
+    <div class="expbox" id="q-penyiku-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-penyiku-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-penyiku-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 11. DIVIDER M3 -->
+<section class="slide divider acc-amber" id="s-d3">
+  <div class="dnum">03</div>
+  <p class="dkicker">MATERI 3</p>
+  <h1>Sudut Satu Putaran Penuh</h1>
+  <ul class="dlist">
+    <li>Satu putaran penuh = 360&deg;</li>
+    <li>Sudut-sudut yang bertemu di satu titik berjumlah 360&deg;</li>
+    <li>Sudut jam: 30&deg; per angka, 6&deg; per menit</li>
+    <li>Arah mata angin: 45&deg; per arah</li>
+    <li>Simulasi putaran + jam interaktif + 10 soal latihan</li>
+  </ul>
+</section>
+
+<!-- 12. M3 KONSEP -->
+<section class="slide acc-amber" id="s-m3a">
+  <h2>Konsep Satu Putaran Penuh</h2>
+  <p class="sub">Berputar sekali sampai kembali ke titik semula: 360&deg;.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Satu putaran penuh</b> (satu rotasi lengkap) besarnya <b>360&deg;</b>. Karena itu, semua sudut yang kakinya bertemu di <b>satu titik yang sama</b> dan mengelilingi titik itu secara penuh akan berjumlah tepat <b>360&deg;</b>.</div>
+  <div class="formula">Jumlah sudut di sekeliling satu titik = 360&deg;<small>&alpha; + &beta; + &gamma; + &hellip; = 360&deg; &middot; satu putaran = 2 &times; 180&deg; = 4 &times; 90&deg;</small></div>
+  <div class="grid2">
+    <div class="mini"><h4>Sudut pada Jam</h4><p>Wajah jam dibagi 12 angka, jadi setiap angka = 360&deg; : 12 = <b>30&deg;</b>. Jarum <b>jam</b> maju 30&deg; per jam (plus 0,5&deg; per menit!). Jarum <b>menit</b> maju 360&deg; : 60 = <b>6&deg;</b> per menit.</p></div>
+    <div class="mini"><h4>Arah Mata Angin</h4><p>Delapan arah (U, TL, T, TG, S, BD, B, BL) berjarak sama: 360&deg; : 8 = <b>45&deg;</b> per arah. Putar 90&deg; searah jarum jam dari Utara = Timur; 180&deg; = Selatan; 270&deg; = Barat.</p></div>
+  </div>
+  <div class="defbox"><b>Contoh.</b> Tiga sudut bertemu di titik O: 115&deg;, 100&deg;, dan x. Maka x = 360&deg; &minus; (115&deg; + 100&deg;) = <b>145&deg;</b>. Contoh lain: kincir dengan 8 bilah sama jarak &rarr; sudut antarbilah = 360&deg; : 8 = 45&deg;.</div>
+  <div class="callout"><b>Awas jebakan!</b> Pada soal jam, jarum jam <b>tidak diam di angka</b>: pada pukul 03.30 jarum jam sudah bergeser &frac12; &times; 30&deg; = 15&deg; dari angka 3. Banyak soal HOTS menguji geseran kecil ini.</div>
+</section>
+
+<!-- 13. M3 LAB -->
+<section class="slide acc-amber" id="s-m3b">
+  <h2>Lab Interaktif &mdash; Putaran &amp; Jam</h2>
+  <p class="sub">Dua simulasi: menyapu sudut hingga satu putaran penuh, dan sudut antarjarum jam.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <h3>A. Menyapu Satu Putaran</h3>
+    <div class="lgrid">
+      <div class="labsvg" id="m3-svg-a"></div>
+      <div class="lctl">
+        <label>Besar putaran (derajat)<input type="range" id="m3-sweep" min="0" max="360" step="5" value="120"><span class="lval" id="m3-sweep-val"></span></label>
+        <div class="labinfo" id="m3-sweep-info"></div>
+      </div>
+    </div>
+  </div>
+  <div class="labbox">
+    <h3>B. Sudut Antarjarum Jam</h3>
+    <div class="lgrid">
+      <div class="labsvg" id="m3-svg-b"></div>
+      <div class="lctl">
+        <label>Jam<input type="range" id="m3-hr" min="1" max="12" step="1" value="3"></label>
+        <label>Menit<input type="range" id="m3-min" min="0" max="55" step="5" value="30"></label>
+        <div class="labinfo" id="m3-clock-info"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14. M3 KUIS -->
+<section class="slide acc-amber" id="s-m3q">
+  <div id="q-putaran-body">
+    <h2>Latihan &mdash; Satu Putaran Penuh</h2>
+    <p class="sub">10 soal. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-putaran-lvl"></span><span class="qcount">Soal <b id="q-putaran-num">1</b>/10 &middot; Skor: <b id="q-putaran-score">0</b></span></div>
+    <div class="qtext" id="q-putaran-text"></div>
+    <div class="opts" id="q-putaran-opts"></div>
+    <div class="expbox" id="q-putaran-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-putaran-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-putaran-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 15. DIVIDER M4 -->
+<section class="slide divider acc-green" id="s-d4">
+  <div class="dnum">04</div>
+  <p class="dkicker">MATERI 4</p>
+  <h1>Sudut Dalam Segitiga</h1>
+  <ul class="dlist">
+    <li>Jumlah tiga sudut dalam segitiga selalu 180&deg;</li>
+    <li>Jenis segitiga berdasarkan sudutnya: lancip, siku-siku, tumpul</li>
+    <li>Sifat sudut segitiga sama kaki dan sama sisi</li>
+    <li>Lab: geser titik sudut, jumlah tetap 180&deg;</li>
+    <li>10 soal latihan dengan pembahasan lengkap</li>
+  </ul>
+</section>
+
+<!-- 16. M4 KONSEP -->
+<section class="slide acc-green" id="s-m4a">
+  <h2>Konsep Sudut Dalam Segitiga</h2>
+  <p class="sub">Sifat paling fundamental geometri segitiga.</p>
+  <div class="rule"></div>
+  <div class="defbox">Pada setiap segitiga, jumlah ketiga sudut di dalamnya <b>selalu 180&deg;</b> &mdash; apa pun bentuk dan ukurannya. Inilah alasan segitiga siku-siku selalu punya dua sudut lancip yang berpenyiku, dan alasan segitiga tidak mungkin punya dua sudut tumpul.</div>
+  <div class="formula">&#8736;A + &#8736;B + &#8736;C = 180&deg;<small>Bukti kilat: tarik garis sejajar melalui satu titik sudut &mdash; tiga sudut pada garis itu berpelurus (180&deg;) dan sama besar dengan tiga sudut dalam segitiga (sudut berseberangan)</small></div>
+  <div class="grid2">
+    <div class="mini"><h4>Jenis Berdasar Sudut</h4><p><b>Lancip</b>: ketiga sudut &lt; 90&deg;.<br><b>Siku-siku</b>: ada satu sudut tepat 90&deg;.<br><b>Tumpul</b>: ada satu sudut &gt; 90&deg;. Cukup lihat <b>sudut terbesarnya</b> untuk menentukan jenis.</p></div>
+    <div class="mini"><h4>Sama Kaki &amp; Sama Sisi</h4><p><b>Sama kaki</b>: dua sisi sama panjang &rarr; dua sudut alas <b>sama besar</b>.<br><b>Sama sisi</b>: ketiga sisi sama &rarr; ketiga sudut sama besar, yaitu <b>60&deg;</b> semuanya.<br>Hati-hati: soal "salah satu sudut sama kaki 50&deg;" punya <b>dua kemungkinan</b> jawaban!</p></div>
+  </div>
+  <div class="defbox"><b>Contoh.</b> (1) Dua sudut 58&deg; dan 47&deg; &rarr; ketiga = 180 &minus; 105 = 75&deg;. (2) Sama kaki sudut puncak 46&deg; &rarr; alas = (180 &minus; 46) : 2 = 67&deg;. (3) Sudut berbanding 2:3:4 &rarr; 9x = 180, x = 20 &rarr; sudutnya 40&deg;, 60&deg;, 80&deg; (segitiga lancip).</div>
+  <div class="callout"><b>Strategi cepat:</b> segitiga siku-siku &rarr; dua sudut lancipnya langsung berpenyiku (90&deg; &minus; yang diketahui). Segitiga sama sisi &rarr; semua 60&deg;. Dua fakta ini banyak memangkas langkah pada soal TKA.</div>
+</section>
+
+<!-- 17. M4 LAB -->
+<section class="slide acc-green" id="s-m4b">
+  <h2>Lab Interaktif &mdash; Segitiga Ajaib</h2>
+  <p class="sub">Tarik (drag) ketiga titik sudutnya. Seberapa pun bentuknya, jumlah tiga sudut TIDAK pernah berubah.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m4-svg"></div>
+      <div class="lctl">
+        <div class="labinfo" id="m4-info"></div>
+        <p class="draghint">Seret titik A, B, atau C langsung pada gambar (gunakan mouse atau sentuhan).</p>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Amati:</b> saat segitiga dibuat tumpul, dua sudut lainnya otomatis mengecil; saat dibuat siku-siku, dua sudut lainnya berpenyiku. Jumlahnya terkunci di 180&deg; &mdash; inilah yang disebut invarian.</div>
+</section>
+
+<!-- 18. M4 KUIS -->
+<section class="slide acc-green" id="s-m4q">
+  <div id="q-segitiga-body">
+    <h2>Latihan &mdash; Sudut Dalam Segitiga</h2>
+    <p class="sub">10 soal. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-segitiga-lvl"></span><span class="qcount">Soal <b id="q-segitiga-num">1</b>/10 &middot; Skor: <b id="q-segitiga-score">0</b></span></div>
+    <div class="qtext" id="q-segitiga-text"></div>
+    <div class="opts" id="q-segitiga-opts"></div>
+    <div class="expbox" id="q-segitiga-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-segitiga-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-segitiga-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 19. DIVIDER M5 -->
+<section class="slide divider acc-purple" id="s-d5">
+  <div class="dnum">05</div>
+  <p class="dkicker">MATERI 5</p>
+  <h1>Sudut Eksterior Segitiga</h1>
+  <ul class="dlist">
+    <li>Pengertian sudut luar (eksterior) segitiga</li>
+    <li>Teorema: sudut luar = jumlah dua sudut dalam tak berdekatan</li>
+    <li>Hubungan pelurus: sudut luar + sudut dalam berdekatan = 180&deg;</li>
+    <li>Jumlah ketiga sudut luar selalu 360&deg;</li>
+    <li>Lab interaktif + 10 soal latihan berpembahasan</li>
+  </ul>
+</section>
+
+<!-- 20. M5 KONSEP -->
+<section class="slide acc-purple" id="s-m5a">
+  <h2>Konsep Sudut Eksterior Segitiga</h2>
+  <p class="sub">Perpanjang satu sisi segitiga, muncullah sudut luar yang penuh kejutan.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Sudut luar (eksterior)</b> adalah sudut yang terbentuk di luar segitiga ketika <b>satu sisi diperpanjang</b>. Di setiap titik sudut terdapat sepasang sudut luar yang bertolak belakang (sama besar). Sudut luar <b>berpelurus</b> dengan sudut dalam yang berdekatan dengannya.</div>
+  <div class="formula">Sudut luar = 180&deg; &minus; sudut dalam berdekatan<br>Sudut luar = &#8736;A + &#8736;C (jumlah dua sudut dalam tak berdekatan)<small>Teorema sudut luar &mdash; alat paling cepat menyelesaikan soal sudut segitiga berlevel HOTS</small></div>
+  <div class="grid2">
+    <div class="mini"><h4>Dari mana teorema itu?</h4><p>Sudut luar + sudut dalam berdekatan = 180&deg; (berpelurus). Karena ketiga sudut dalam juga berjumlah 180&deg;, maka sudut luar = 180&deg; &minus; B = A + C. Teorema ini hanyalah "aljabar dari berpelurus".</p></div>
+    <div class="mini"><h4>Jumlah Semua Sudut Luar</h4><p>Ambil satu sudut luar di tiap titik sudut. Tiap pasangan (dalam + luarnya) = 180&deg;, total tiga pasangan = 3 &times; 180&deg; = 540&deg;. Kurangi jumlah sudut dalam (180&deg;) &rarr; sisa <b>360&deg;</b>. Inilah alasan semut yang mengelilingi segitiga total berbelok 360&deg;.</p></div>
+  </div>
+  <div class="defbox"><b>Contoh.</b> Dua sudut dalam tak berdekatan dari suatu sudut luar adalah 55&deg; dan 63&deg; &rarr; sudut luar = 55 + 63 = <b>118&deg;</b>. Kebalikannya juga berlaku: sudut luar 122&deg;, salah satu tak berdekatan 71&deg; &rarr; yang lain = 122 &minus; 71 = 51&deg;.</div>
+  <div class="callout"><b>Awas jebakan!</b> Sudut luar <b>bukan</b> seluruh sudut di luar segitiga: ia berpelurus dengan sudut dalam di titik sudut yang sama. Jangan menjumlahkan dua sudut dalam yang salah satu di antaranya berdekatan dengan sudut luarnya.</div>
+</section>
+
+<!-- 21. M5 LAB -->
+<section class="slide acc-purple" id="s-m5b">
+  <h2>Lab Interaktif &mdash; Teorema Sudut Luar</h2>
+  <p class="sub">Geser titik sudutnya: sudut luar di B selalu sama dengan jumlah &#8736;A + &#8736;C.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m5-svg"></div>
+      <div class="lctl">
+        <div class="labinfo" id="m5-info"></div>
+        <p class="draghint">Seret titik A, B, atau C. Perhatikan dua angka yang selalu cocok: sudut luar di B = &#8736;A + &#8736;C, dan sudut luar + &#8736;B = 180&deg;.</p>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Coba uji:</b> buat &#8736;B sangat kecil (dekatkan A dan C ke garis yang sama) &mdash; sudut luarnya mendekati 180&deg;. Buat &#8736;B besar (tumpul) &mdash; sudut luarnya justru mengecil. Persamaan e = 180&deg; &minus; &#8736;B selalu benar.</div>
+</section>
+
+<!-- 22. M5 KUIS -->
+<section class="slide acc-purple" id="s-m5q">
+  <div id="q-luar-body">
+    <h2>Latihan &mdash; Sudut Eksterior Segitiga</h2>
+    <p class="sub">10 soal. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-luar-lvl"></span><span class="qcount">Soal <b id="q-luar-num">1</b>/10 &middot; Skor: <b id="q-luar-score">0</b></span></div>
+    <div class="qtext" id="q-luar-text"></div>
+    <div class="opts" id="q-luar-opts"></div>
+    <div class="expbox" id="q-luar-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-luar-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-luar-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 23. DIVIDER M6 -->
+<section class="slide divider acc-slate" id="s-d6">
+  <div class="dnum">06</div>
+  <p class="dkicker">MATERI 6</p>
+  <h1>Garis Sejajar &amp; Transversal</h1>
+  <ul class="dlist">
+    <li>Delapan sudut yang terbentuk saat dua garis sejajar dipotong transversal</li>
+    <li>Sudut sehadap &mdash; sama besar</li>
+    <li>Sudut dalam &amp; luar berseberangan &mdash; sama besar</li>
+    <li>Sudut dalam &amp; luar bersebelahan &mdash; berjumlah 180&deg;</li>
+    <li>Lab transversal interaktif + 10 soal latihan bergambar</li>
+  </ul>
+</section>
+
+<!-- 24. M6 KONSEP -->
+<section class="slide acc-slate" id="s-m6a">
+  <h2>Konsep Transversal</h2>
+  <p class="sub">Dua garis sejajar dipotong satu garis: 8 sudut dengan aturan yang sangat tertib.</p>
+  <div class="rule"></div>
+  <div class="defbox"><b>Garis transversal</b> adalah garis yang memotong dua garis lain (di sini: dua garis <b>sejajar</b> g dan h). Pada gambar, perpotongan dengan garis atas menghasilkan sudut <b>1&ndash;4</b> dan dengan garis bawah menghasilkan sudut <b>5&ndash;8</b>. Sebagai contoh, ambil &#8736;4 = 60&deg; sehingga sudut-sudut lancipnya 60&deg; dan sudut tumpulnya 120&deg;.</div>
+  <div class="figbox" id="m6-fig"></div>
+  <table class="tbl">
+    <tr><th>Nama Hubungan</th><th>Pasangan Sudut</th><th>Hubungan Besar</th><th>Contoh (&#8736;4 = 60&deg;)</th></tr>
+    <tr><td><b>Sehadap</b> (bersesuaian)</td><td>1&ndash;5, 2&ndash;6, 3&ndash;7, 4&ndash;8</td><td>Sama besar</td><td>&#8736;4 = &#8736;8 = 60&deg;</td></tr>
+    <tr><td><b>Dalam berseberangan</b></td><td>3&ndash;5, 4&ndash;6</td><td>Sama besar</td><td>&#8736;6 = &#8736;4 = 60&deg;</td></tr>
+    <tr><td><b>Luar berseberangan</b></td><td>1&ndash;7, 2&ndash;8</td><td>Sama besar</td><td>&#8736;8 = &#8736;2 = 60&deg;</td></tr>
+    <tr><td><b>Dalam bersebelahan</b></td><td>3&ndash;6, 4&ndash;5</td><td>Jumlah 180&deg;</td><td>&#8736;4 + &#8736;5 = 60&deg; + 120&deg;</td></tr>
+    <tr><td><b>Luar bersebelahan</b></td><td>1&ndash;8, 2&ndash;7</td><td>Jumlah 180&deg;</td><td>&#8736;1 + &#8736;8 = 120&deg; + 60&deg;</td></tr>
+    <tr><td><b>Bertolak belakang</b></td><td>1&ndash;3, 2&ndash;4, 5&ndash;7, 6&ndash;8</td><td>Sama besar</td><td>&#8736;2 = &#8736;4 = 60&deg;</td></tr>
+    <tr><td><b>Berpelurus</b> (bertetangga)</td><td>1&ndash;4, 2&ndash;3, dst.</td><td>Jumlah 180&deg;</td><td>&#8736;1 + &#8736;4 = 180&deg;</td></tr>
+  </table>
+  <div class="callout"><b>Awas jebakan!</b> Semua aturan "sama besar" dan "berjumlah 180&deg;" di atas hanya berlaku jika kedua garis <b>benar-benar sejajar</b>. Jika garisnya tidak sejajar, yang tetap berlaku hanya <b>bertolak belakang</b> dan <b>berpelurus</b> di masing-masing perpotongan.</div>
+</section>
+
+<!-- 25. M6 LAB -->
+<section class="slide acc-slate" id="s-m6b">
+  <h2>Lab Interaktif &mdash; Transversal Hidup</h2>
+  <p class="sub">Geser kemiringan transversal, lalu klik nama hubungan untuk menyorot pasangan sudutnya.</p>
+  <div class="rule"></div>
+  <div class="labbox">
+    <div class="lgrid">
+      <div class="labsvg" id="m6-svg"></div>
+      <div class="lctl">
+        <label>Sudut lancip &#8736;4 (derajat)<input type="range" id="m6-range" min="35" max="75" step="1" value="55"><span class="lval" id="m6-val"></span></label>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="relbtn" data-rel="sehadap">Sehadap &mdash; sama besar</button>
+          <button class="relbtn" data-rel="dalseber">Dalam berseberangan &mdash; sama besar</button>
+          <button class="relbtn" data-rel="luaseber">Luar berseberangan &mdash; sama besar</button>
+          <button class="relbtn" data-rel="dalbelah">Dalam bersebelahan &mdash; jumlah 180&deg;</button>
+          <button class="relbtn" data-rel="tolak">Bertolak belakang &mdash; sama besar</button>
+        </div>
+        <div class="labinfo" id="m6-info">Klik salah satu tombol hubungan di atas.</div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Cara baca:</b> warna yang sama menandai satu pasangan. Amati bahwa memutar transversal tidak pernah merusak aturannya &mdash; yang berubah hanya besarnya sudut lancip dan tumpul.</div>
+</section>
+
+<!-- 26. M6 KUIS -->
+<section class="slide acc-slate" id="s-m6q">
+  <div id="q-transversal-body">
+    <h2>Latihan &mdash; Garis Sejajar &amp; Transversal</h2>
+    <p class="sub">10 soal bergambar. Pilih satu jawaban lalu klik <b>Periksa Jawaban</b>; pembahasan muncul otomatis.</p>
+    <div class="quiz-top"><span class="lvl" id="q-transversal-lvl"></span><span class="qcount">Soal <b id="q-transversal-num">1</b>/10 &middot; Skor: <b id="q-transversal-score">0</b></span></div>
+    <div class="qtext" id="q-transversal-text"></div>
+    <div class="opts" id="q-transversal-opts"></div>
+    <div class="expbox" id="q-transversal-exp"></div>
+    <div class="qctrl">
+      <button class="btn pri" id="q-transversal-check" disabled>Periksa Jawaban</button>
+      <button class="btn ghost" id="q-transversal-next" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- 27. SKOR -->
+<section class="slide acc-blue" id="s-score">
+  <h2>Nilai Kamu</h2>
+  <p class="sub">Rekapitulasi otomatis seluruh latihan. Skor tersimpan di perangkatmu, walau halaman ditutup.</p>
+  <div class="rule"></div>
+  <div id="score-overall"></div>
+  <div id="score-table"></div>
+  <div class="qctrl">
+    <button class="btn ghost" id="btn-reset">Reset Semua Skor</button>
+    <button class="btn pri" data-goto="s-menu">Kembali ke Peta Materi</button>
+  </div>
+</section>
+
+<!-- 28. RANGKUMAN -->
+<section class="slide acc-amber" id="s-summary">
+  <h2>Rangkuman &amp; Strategi TKA</h2>
+  <p class="sub">Enam kartu rumus inti dan lima strategi menaklukkan soal hubungan garis dan sudut.</p>
+  <div class="rule"></div>
+  <div class="grid3">
+    <div class="mini acc-rose"><h4>Sudut Berpelurus</h4><p>Dua sudut, jumlah <b>180&deg;</b>.<br>Pelurus &alpha; = 180&deg; &minus; &alpha;.<br>Tidak harus berdempetan.</p></div>
+    <div class="mini acc-blue"><h4>Sudut Berpenyiku</h4><p>Dua sudut, jumlah <b>90&deg;</b>.<br>Penyiku &alpha; = 90&deg; &minus; &alpha;.<br>Jangan tertukar dengan pelurus!</p></div>
+    <div class="mini acc-amber"><h4>Satu Putaran Penuh</h4><p>Sudut di sekeliling satu titik = <b>360&deg;</b>.<br>Jam: 30&deg;/angka, 6&deg;/menit.<br>Mata angin: 45&deg;/arah.</p></div>
+    <div class="mini acc-green"><h4>Sudut Dalam Segitiga</h4><p>&#8736;A + &#8736;B + &#8736;C = <b>180&deg;</b>.<br>Sama kaki: sudut alas sama.<br>Sama sisi: semua 60&deg;.</p></div>
+    <div class="mini acc-purple"><h4>Sudut Eksterior Segitiga</h4><p>Sudut luar = jumlah dua sudut dalam <b>tak berdekatan</b>.<br>Total ketiga sudut luar = <b>360&deg;</b>.</p></div>
+    <div class="mini acc-slate"><h4>Sejajar + Transversal</h4><p>Sehadap &amp; berseberangan: <b>sama besar</b>.<br>Dalam bersebelahan: <b>180&deg;</b>.<br>Bertolak belakang: sama besar.</p></div>
+  </div>
+  <div class="defbox"><b>Lima strategi soal HOTS:</b></div>
+  <ul class="dlist" style="margin-top:0">
+    <li><b>Gambar dulu, hitung kemudian.</b> Untuk soal cerita (tangga, atap, rel), buat sketsa kasar dan tandai sudut yang diketahui.</li>
+    <li><b>Kenali dulu nama hubungannya.</b> Tanya dirimu: pasangan ini sehadap, berseberangan, berpelurus, atau berpenyiku? Namanya menentukan rumusnya.</li>
+    <li><b>Ubah gambar menjadi persamaan.</b> Sudut dengan x langsung ditulis sebagai persamaan: sama besar &rarr; samakan; berpelurus &rarr; jumlahkan lalu set 180&deg;.</li>
+    <li><b>Selalu cek konsistensi.</b> Hasil akhir harus lulus uji: sudut segitiga berjumlah 180&deg;, sudut di satu titik 360&deg;, pasangan berpenyiku 90&deg;.</li>
+    <li><b>Waspadai jawaban ganda.</b> Pada segitiga sama kaki, satu angka bisa menghasilkan dua konfigurasi (50&deg; puncak atau 50&deg; alas) &mdash; periksa keduanya.</li>
+  </ul>
+  <div class="callout" style="margin-top:16px"><b>Langkah terakhir:</b> kerjakan ulang soal yang salah pada tiap materi lewat Peta Materi, lalu cek halaman Nilai hingga seluruh materi hijau. Selamat berlatih!</div>
+</section>
+
+</div><!-- /deck -->
+
+<nav id="navbar"><div class="nb-in">
+  <button class="nb-btn" id="btn-menu">&#8801; Peta</button>
+  <button class="nb-btn" id="btn-prev">&larr; Sebelumnya</button>
+  <span id="counter">1 / 28</span>
+  <span class="spacer"></span>
+  <button class="nb-btn" id="btn-next">Berikutnya &rarr;</button>
+</div></nav>
+<script>
+/* ================= UTILITAS & KONSTRUKTOR SVG ================= */
+const $=id=>document.getElementById(id);
+const D2R=Math.PI/180;
+const P={blue:'#2563eb',green:'#059669',amber:'#d97706',purple:'#7c3aed',rose:'#e11d48',slate:'#475569',ink:'#0f172a',gray:'#94a3b8'};
+
+function line(x1,y1,x2,y2,c,w,dash){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+c+'" stroke-width="'+w+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+' stroke-linecap="round"/>';}
+function txt(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.fs||13)+'" font-weight="'+(o.fw||600)+'" fill="'+(o.fill||P.ink)+'" text-anchor="'+(o.an||'middle')+'">'+s+'</text>';}
+function poly(pts,fill,stroke,w,op){return '<polygon points="'+pts+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="'+(w||2)+'"':'')+(op?' opacity="'+op+'"':'')+'/>';}
+function uni(dx,dy){const L=Math.hypot(dx,dy)||1;return{x:dx/L,y:dy/L};}
+function angAt(V,A,B){const a1=Math.atan2(A.y-V.y,A.x-V.x),a2=Math.atan2(B.y-V.y,B.x-V.x);let d=Math.abs(a1-a2);if(d>Math.PI)d=2*Math.PI-d;return d/D2R;}
+
+/* --- Diagram transversal bernomor (statik, a = sudut lancip) --- */
+function figTrans(badges){
+  const a=55, Pg={x:165,y:64}, dy=140, dx=dy/Math.tan(a*D2R);
+  const Ph={x:Pg.x+dx,y:Pg.y+dy};
+  const ux=Math.cos(a*D2R), uy=Math.sin(a*D2R);
+  const phis=[90-a/2,180-a/2,270-a/2,360-a/2];
+  const map={1:[Pg,phis[0]],2:[Pg,phis[1]],3:[Pg,phis[2]],4:[Pg,phis[3]],5:[Ph,phis[0]],6:[Ph,phis[1]],7:[Ph,phis[2]],8:[Ph,phis[3]]};
+  let s='<svg viewBox="0 0 440 258">';
+  s+=line(28,Pg.y,412,Pg.y,'#334155',2.5)+line(28,Ph.y,412,Ph.y,'#334155',2.5);
+  s+=line(Pg.x-46*ux,Pg.y-46*uy,Ph.x+46*ux,Ph.y+46*uy,P.rose,2.5);
+  for(let k=1;k<=8;k++){
+    const pt=map[k][0], ph=map[k][1]*D2R;
+    const lx=pt.x+40*Math.cos(ph), ly=pt.y-40*Math.sin(ph);
+    const b=(badges||[]).find(x=>x[0]===k);
+    if(b){
+      const w=b[1].length*6.6+14;
+      s+='<rect x="'+(lx-w/2)+'" y="'+(ly-11)+'" width="'+w+'" height="22" rx="11" fill="'+P.rose+'"/>';
+      s+=txt(lx,ly+4,b[1],{fs:10.5,fw:700,fill:'#fff'});
+    }else{
+      s+=txt(lx,ly+4.5,k,{fs:13.5,fw:800,fill:P.slate});
+    }
+  }
+  s+=txt(34,Pg.y-9,'g',{fs:15,fw:800,fill:P.slate,an:'start'});
+  s+=txt(34,Ph.y-9,'h',{fs:15,fw:800,fill:P.slate,an:'start'});
+  s+=txt(Ph.x+52*ux+6,Ph.y+52*uy+4,'k',{fs:15,fw:800,fill:P.rose,an:'start'});
+  s+='</svg>';
+  return s;
+}
+
+/* --- Diagram segitiga dengan sudut luar --- */
+function figTriExt(o){
+  const A={x:82,y:200},B={x:230,y:72},C={x:376,y:200};
+  let extFrom,v1,v2;
+  if(o.extAt==='B'){v1=uni(B.x-A.x,B.y-A.y);v2=uni(C.x-B.x,C.y-B.y);extFrom=B;}
+  else{v1=uni(C.x-B.x,C.y-B.y);v2=uni(A.x-C.x,A.y-C.y);extFrom=C;}
+  const ext={x:extFrom.x+v1.x*66,y:extFrom.y+v1.y*66};
+  let s='<svg viewBox="0 0 440 252">';
+  s+=poly(A.x+','+A.y+' '+B.x+','+B.y+' '+C.x+','+C.y,'rgba(124,58,237,.08)',P.slate,2.5);
+  s+=line(extFrom.x,extFrom.y,ext.x,ext.y,P.amber,3,'7 5');
+  const r=36,p1x=extFrom.x+r*v1.x,p1y=extFrom.y+r*v1.y,p2x=extFrom.x+r*v2.x,p2y=extFrom.y+r*v2.y;
+  s+=poly(extFrom.x+','+extFrom.y+' '+p1x+','+p1y+' '+p2x+','+p2y,'rgba(217,119,6,.28)');
+  const bis=uni(v1.x+v2.x,v1.y+v2.y);
+  s+=txt(extFrom.x+56*bis.x,extFrom.y+56*bis.y+4,o.le||'',{fs:14,fw:800,fill:P.amber});
+  s+=txt(A.x-6,A.y+20,o.la||'',{fs:13.5,fw:800,fill:P.rose});
+  s+=txt(B.x+2,B.y-14,o.lb||'',{fs:13.5,fw:800,fill:P.blue});
+  s+=txt(C.x+10,C.y+20,o.lc||'',{fs:13.5,fw:800,fill:P.green});
+  s+=txt(A.x-20,A.y-8,'A',{fs:11,fw:700,fill:P.gray});
+  s+=txt(B.x-20,B.y+2,'B',{fs:11,fw:700,fill:P.gray});
+  s+=txt(C.x+24,C.y-8,'C',{fs:11,fw:700,fill:P.gray});
+  s+='</svg>';
+  return s;
+}
+
+/* --- Diagram rel kereta + bantalan --- */
+function figRails(){
+  let s='<svg viewBox="0 0 440 236">';
+  s+=line(30,58,410,58,'#334155',3.5)+line(30,178,410,178,'#334155',3.5);
+  s+=line(215,22,215,214,P.amber,5);
+  s+='<polyline points="193,58 193,38 215,38" fill="none" stroke="'+P.green+'" stroke-width="2.5"/>';
+  s+=txt(163,50,'90°',{fs:14,fw:800,fill:P.green});
+  s+='<polyline points="215,196 237,196 237,178" fill="none" stroke="'+P.purple+'" stroke-width="2.5"/>';
+  s+=txt(268,200,'x°',{fs:15,fw:800,fill:P.purple});
+  s+=txt(400,50,'rel atas',{fs:11.5,fw:700,fill:P.slate,an:'end'});
+  s+=txt(400,170,'rel bawah',{fs:11.5,fw:700,fill:P.slate,an:'end'});
+  s+=txt(240,26,'bantalan',{fs:11.5,fw:700,fill:P.amber,an:'start'});
+  s+='</svg>';
+  return s;
+}
+
+/* --- Diagram segitiga di antara dua garis sejajar --- */
+function figParTri(){
+  const Pp={x:135,y:62},Q={x:330,y:62},R={x:218,y:214};
+  let s='<svg viewBox="0 0 450 262">';
+  s+=line(28,62,422,62,'#334155',3)+line(28,214,422,214,'#334155',3);
+  s+=poly(Pp.x+','+Pp.y+' '+Q.x+','+Q.y+' '+R.x+','+R.y,'rgba(37,99,235,.07)',P.blue,2.5);
+  s+=txt(Pp.x-4,Pp.y+34,'65°',{fs:14.5,fw:800,fill:P.blue});
+  s+=txt(Q.x+8,Q.y+34,'45°',{fs:14.5,fw:800,fill:P.blue});
+  s+=txt(R.x+26,R.y-10,'x°',{fs:15.5,fw:800,fill:P.rose});
+  s+=txt(Pp.x-16,Pp.y-10,'P',{fs:11,fw:700,fill:P.gray});
+  s+=txt(Q.x+16,Q.y-10,'Q',{fs:11,fw:700,fill:P.gray});
+  s+=txt(R.x-20,R.y+2,'R',{fs:11,fw:700,fill:P.gray});
+  s+=txt(430,66,'l',{fs:14,fw:800,fill:P.slate});
+  s+=txt(430,218,'m',{fs:14,fw:800,fill:P.slate});
+  s+='</svg>';
+  return s;
+}
+
+const FIGS={};
+FIGS.t1=figTrans([[1,'70°']]);
+FIGS.t3=figTrans([[3,'65°']]);
+FIGS.t4=figTrans([[2,'(3x−20)°'],[6,'(x+40)°']]);
+FIGS.t5=figTrans([[3,'(2x+20)°'],[6,'(x+40)°']]);
+FIGS.t6=figTrans([[2,'110°']]);
+FIGS.t7=figTrans([[4,'115°']]);
+FIGS.t9=figTrans([[1,'60°']]);
+FIGS.rails=figRails();
+FIGS.partri=figParTri();
+FIGS.e1=figTriExt({la:'55°',lc:'63°',le:'x°',extAt:'B'});
+FIGS.e3=figTriExt({la:'71°',lc:'x°',le:'122°',extAt:'B'});
+FIGS.e6=figTriExt({la:'x°',lb:'60°',le:'(2x+20)°',extAt:'C'});
+FIGS.e7=figTriExt({lb:'x°',le:'115°',extAt:'C'});
+FIGS.e9=figTriExt({lc:'(x+35)°',le:'(3x−15)°',extAt:'C'});
+FIGS.e10=figTriExt({la:'65°',lc:'x°',le:'120°',extAt:'B'});
+FIGS.m6=figTrans([[4,'60°']]);
+
+/* ================= LAB 1: SUDUT BERPELURUS ================= */
+function lab1(){
+  const a=+$('m1-range').value, b=180-a;
+  const O={x:255,y:140}, R=105, r=50;
+  const px=O.x+R*Math.cos(a*D2R), py=O.y-R*Math.sin(a*D2R);
+  const w1x=O.x+r*Math.cos(a*D2R), w1y=O.y-r*Math.sin(a*D2R);
+  let s='<svg viewBox="0 0 510 185">';
+  s+=poly(O.x+','+O.y+' '+(O.x+r)+','+O.y+' '+w1x+','+w1y,'rgba(37,99,235,.22)');
+  s+=poly(O.x+','+O.y+' '+w1x+','+w1y+' '+(O.x-r)+','+O.y,'rgba(217,119,6,.26)');
+  s+=line(40,140,470,140,'#334155',3);
+  s+=line(O.x,O.y,px,py,P.rose,3);
+  s+=txt(O.x+74*Math.cos(a/2*D2R),O.y-74*Math.sin(a/2*D2R)+4,'α = '+a+'°',{fs:14,fw:800,fill:P.blue});
+  s+=txt(O.x+74*Math.cos((a+180)/2*D2R),O.y-74*Math.sin((a+180)/2*D2R)+4,'β = '+b+'°',{fs:14,fw:800,fill:P.amber});
+  s+='</svg>';
+  $('m1-svg').innerHTML=s;
+  $('m1-val').textContent='α = '+a+'°  ·  β = '+b+'°';
+  $('m1-info').innerHTML='<b>Cek:</b> α + β = '+a+' + '+b+' = <b style="color:'+P.green+'">180°</b> ✓<br>Berapa pun α, pasangan pelurusnya selalu 180° − α.';
+}
+
+/* ================= LAB 2: SUDUT BERPENYIKU ================= */
+function lab2(){
+  const g=+$('m2-range').value, d=90-g;
+  const O={x:120,y:178}, R=152, r=52;
+  const px=O.x+R*Math.cos(g*D2R), py=O.y-R*Math.sin(g*D2R);
+  const w1x=O.x+r*Math.cos(g*D2R), w1y=O.y-r*Math.sin(g*D2R);
+  let s='<svg viewBox="0 0 520 200">';
+  s+=poly(O.x+','+O.y+' '+(O.x+r)+','+O.y+' '+w1x+','+w1y,'rgba(37,99,235,.22)');
+  s+=poly(O.x+','+O.y+' '+w1x+','+w1y+' '+O.x+','+(O.y-r),'rgba(217,119,6,.26)');
+  s+=line(O.x,O.y,478,O.y,'#334155',3);
+  s+=line(O.x,O.y,O.x,26,'#334155',3);
+  s+=line(O.x,O.y,px,py,P.rose,3);
+  s+='<polyline points="'+(O.x+158)+','+O.y+' '+(O.x+158)+','+(O.y-158)+' '+O.x+','+(O.y-158)+'" fill="none" stroke="'+P.gray+'" stroke-width="1.6" stroke-dasharray="5 5"/>';
+  s+=txt(O.x+176,O.y-76,'90°',{fs:13,fw:800,fill:P.slate,an:'start'});
+  s+=txt(O.x+80*Math.cos(g/2*D2R),O.y-80*Math.sin(g/2*D2R)+4,'γ = '+g+'°',{fs:14,fw:800,fill:P.blue});
+  s+=txt(O.x+80*Math.cos((g+90)/2*D2R),O.y-80*Math.sin((g+90)/2*D2R)+4,'δ = '+d+'°',{fs:14,fw:800,fill:P.amber});
+  s+='</svg>';
+  $('m2-svg').innerHTML=s;
+  $('m2-val').textContent='γ = '+g+'°  ·  δ = '+d+'°';
+  $('m2-info').innerHTML='<b>Cek:</b> γ + δ = '+g+' + '+d+' = <b style="color:'+P.green+'">90°</b> ✓<br>Sudut siku-siku selalu terbelah menjadi dua sudut berpenyiku.';
+}
+
+/* ================= LAB 3: PUTARAN & JAM ================= */
+function lab3a(){
+  const t=+$('m3-sweep').value;
+  const cx=132,cy=128,r=90;
+  const ex=cx+r*Math.sin(t*D2R), ey=cy-r*Math.cos(t*D2R);
+  const la=t>180?1:0;
+  let s='<svg viewBox="0 0 268 252">';
+  if(t>=360){
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="rgba(37,99,235,.28)"/>';
+  }else{
+    s+='<path d="M '+cx+' '+cy+' L '+cx+' '+(cy-r)+' A '+r+' '+r+' 0 '+la+' 1 '+ex.toFixed(1)+' '+ey.toFixed(1)+' Z" fill="rgba(37,99,235,.28)" stroke="none"/>';
+  }
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+P.gray+'" stroke-width="1.8"/>';
+  s+=line(cx,cy,ex.toFixed(1),ey.toFixed(1),P.rose,3.2);
+  s+=line(cx,cy,cx,cy-r,P.slate,2.4);
+  s+=txt(cx,cy-108,'0°',{fs:11.5,fw:700,fill:P.slate});
+  s+=txt(cx+r+20,cy+4,'90°',{fs:11.5,fw:700,fill:P.slate});
+  s+=txt(cx,cy+r+20,'180°',{fs:11.5,fw:700,fill:P.slate});
+  s+=txt(cx-r-20,cy+4,'270°',{fs:11.5,fw:700,fill:P.slate});
+  s+=txt(cx,cy+4,'θ = '+t+'°',{fs:13.5,fw:800,fill:P.blue});
+  s+='</svg>';
+  $('m3-svg-a').innerHTML=s;
+  $('m3-sweep-val').textContent='θ = '+t+'°';
+  $('m3-sweep-info').innerHTML='Sisa menuju putaran penuh: 360° − '+t+'° = <b style="color:'+P.amber+'">'+(360-t)+'°</b>.'+(t===360?' <b>Satu putaran penuh tercapai!</b>':'');
+}
+function lab3b(){
+  const h=+$('m3-hr').value, m=+$('m3-min').value;
+  const cx=132,cy=128,r=90;
+  const H=(h%12)*30+m*0.5, M=m*6;
+  let diff=Math.abs(H-M)%360; const ang=Math.min(diff,360-diff);
+  const hx=cx+52*Math.sin(H*D2R), hy=cy-52*Math.cos(H*D2R);
+  const mx=cx+74*Math.sin(M*D2R), my=cy-74*Math.cos(M*D2R);
+  let s='<svg viewBox="0 0 268 252">';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fffbeb" stroke="'+P.slate+'" stroke-width="2.6"/>';
+  for(let k=0;k<12;k++){
+    const a2=k*30*D2R, x1=cx+82*Math.sin(a2), y1=cy-82*Math.cos(a2), x2=cx+88*Math.sin(a2), y2=cy-88*Math.cos(a2);
+    s+=line(x1.toFixed(1),y1.toFixed(1),x2.toFixed(1),y2.toFixed(1),P.gray,2);
+    s+=txt(cx+68*Math.sin(a2),cy-68*Math.cos(a2)+3.5,(k===0?12:k),{fs:9.5,fw:700,fill:P.slate});
+  }
+  s+=line(cx,cy,hx.toFixed(1),hy.toFixed(1),P.blue,5);
+  s+=line(cx,cy,mx.toFixed(1),my.toFixed(1),P.rose,2.8);
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="4.5" fill="'+P.ink+'"/>';
+  s+=txt(cx,cy+114,'Sudut terkecil ≈ '+(Math.round(ang*10)/10).toString().replace('.',',')+'°',{fs:13,fw:800,fill:P.blue});
+  s+='</svg>';
+  $('m3-svg-b').innerHTML=s;
+  $('m3-clock-info').innerHTML='Pukul <b>'+h+':'+(m<10?'0':'')+m+'</b><br>Jarum jam: <b>'+Math.round(H*10)/10+'°</b> dari angka 12 &middot; jarum menit: <b>'+M+'°</b>.<br>Sudut terkecil di antara keduanya: <b style="color:'+P.amber+'">'+(Math.round(ang*10)/10).toString().replace('.',',')+'°</b>.';
+}
+
+/* ================= LAB 4: SEGITIGA DRAGGABLE ================= */
+const T4={A:{x:160,y:345},B:{x:480,y:345},C:{x:305,y:118}};
+function renderTri4(){
+  const {A,B,C}=T4;
+  const names=[['A',A,'rgba(225,29,72,.24)',P.rose],['B',B,'rgba(37,99,235,.24)',P.blue],['C',C,'rgba(217,119,6,.24)',P.amber]];
+  let s='<svg viewBox="0 0 640 430">';
+  s+=poly(A.x+','+A.y+' '+B.x+','+B.y+' '+C.x+','+C.y,'#f0fdf4',P.green,3);
+  const cx=(A.x+B.x+C.x)/3, cy=(A.y+B.y+C.y)/3;
+  let vals={};
+  names.forEach(nm=>{
+    const [lb,V,col]=nm;
+    const others=names.filter(o=>o[0]!==lb).map(o=>o[1]);
+    const ang=Math.round(angAt(V,others[0],others[1]));
+    vals[lb]=ang;
+    const u1=uni(others[0].x-V.x,others[0].y-V.y), u2=uni(others[1].x-V.x,others[1].y-V.y);
+    s+=poly(V.x+','+V.y+' '+(V.x+38*u1.x)+','+(V.y+38*u1.y)+' '+(V.x+38*u2.x)+','+(V.y+38*u2.y),col);
+    const bis=uni(u1.x+u2.x,u1.y+u2.y);
+    s+=txt(V.x+62*bis.x,V.y+62*bis.y+4,ang+'°',{fs:14.5,fw:800,fill:col});
+  });
+  names.forEach(nm=>{
+    const [lb,V]=nm;
+    const uo=uni(V.x-cx,V.y-cy);
+    s+=txt(V.x+22*uo.x,V.y+22*uo.y+4,lb,{fs:13,fw:800,fill:P.gray});
+    s+='<circle cx="'+V.x+'" cy="'+V.y+'" r="9" fill="'+P.ink+'" opacity=".85"/>';
+  });
+  s+='</svg>';
+  $('m4-svg').innerHTML=s;
+  const sum=vals.A+vals.B+vals.C;
+  const mx=Math.max(vals.A,vals.B,vals.C);
+  const jenis=mx>90.5?'TUMPUL':(Math.abs(mx-90)<=1?'SIKU-SIKU':'LANCIP');
+  $('m4-info').innerHTML='<b>&#8736;A = '+vals.A+'° · &#8736;B = '+vals.B+'° · &#8736;C = '+vals.C+'°</b><br>Jumlah: '+vals.A+' + '+vals.B+' + '+vals.C+' = <b style="color:'+P.green+'">180°</b> — tidak pernah berubah!<br>Sudut terbesar '+mx+'° → segitiga <b>'+jenis+'</b>.';
+}
+
+/* ================= LAB 5: SUDUT LUAR SEGITIGA ================= */
+const T5={A:{x:160,y:345},B:{x:470,y:150},C:{x:480,y:345}};
+function renderTri5(){
+  const {A,B,C}=T5;
+  const v1=uni(B.x-A.x,B.y-A.y);
+  const ext={x:B.x+v1.x*74,y:B.y+v1.y*74};
+  const aA=Math.round(angAt(A,B,C)), aB=Math.round(angAt(B,A,C)), aC=Math.round(angAt(C,A,B));
+  const lu=Math.round(angAt(B,{x:B.x+v1.x,y:B.y+v1.y},C));
+  let s='<svg viewBox="0 0 640 430">';
+  s+=poly(A.x+','+A.y+' '+B.x+','+B.y+' '+C.x+','+C.y,'#f5f3ff',P.purple,3);
+  s+=line(B.x,B.y,ext.x,ext.y,P.amber,3,'8 6');
+  const u2=uni(C.x-B.x,C.y-B.y);
+  s+=poly(B.x+','+B.y+' '+(B.x+40*v1.x)+','+(B.y+40*v1.y)+' '+(B.x+40*u2.x)+','+(B.y+40*u2.y),'rgba(217,119,6,.3)');
+  const bis=uni(v1.x+u2.x,v1.y+u2.y);
+  s+=txt(B.x+64*bis.x,B.y+64*bis.y+4,lu+'°',{fs:15,fw:800,fill:P.amber});
+  s+=txt(A.x+64*Math.cos(0.62),A.y-20,aA+'°',{fs:14.5,fw:800,fill:P.rose});
+  s+=txt(C.x-38,C.y-22,aC+'°',{fs:14.5,fw:800,fill:P.green});
+  s+=txt(B.x+((bis.y>0)?-70:20),B.y+8,'B = '+aB+'°',{fs:13,fw:700,fill:P.blue});
+  s+=txt(A.x-22,A.y+6,'A',{fs:13,fw:800,fill:P.gray});
+  s+=txt(B.x-24,B.y+4,'B',{fs:13,fw:800,fill:P.gray});
+  s+=txt(C.x+26,C.y+6,'C',{fs:13,fw:800,fill:P.gray});
+  s+=txt(ext.x+14,ext.y-6,'luar',{fs:11.5,fw:700,fill:P.amber});
+  s+='</svg>';
+  $('m5-svg').innerHTML=s;
+  $('m5-info').innerHTML='<b>Sudut luar di B = '+lu+'°</b><br>&#8736;A + &#8736;C = '+aA+' + '+aC+' = <b style="color:'+P.amber+'">'+(aA+aC)+'°</b> → cocok dengan teorema!<br>Sudut luar + &#8736;B = '+lu+' + '+aB+' = <b style="color:'+P.green+'">180°</b> (berpelurus) ✓';
+}
+
+/* ================= LAB 6: TRANSVERSAL ================= */
+const REL={
+  sehadap:{c:P.blue,pairs:[[1,5],[2,6],[3,7],[4,8]],txt:'Sehadap: posisi sama pada tiap perpotongan → <b>sama besar</b>.'},
+  dalseber:{c:P.green,pairs:[[3,5],[4,6]],txt:'Dalam berseberangan: di antara kedua garis, sisi berlawanan transversal → <b>sama besar</b>.'},
+  luaseber:{c:P.purple,pairs:[[1,7],[2,8]],txt:'Luar berseberangan: di luar kedua garis, sisi berlawanan transversal → <b>sama besar</b>.'},
+  dalbelah:{c:P.amber,pairs:[[3,6],[4,5]],txt:'Dalam bersebelahan: di antara kedua garis, sisi sama transversal → <b>berjumlah 180°</b>.'},
+  tolak:{c:P.rose,pairs:[[1,3],[2,4],[5,7],[6,8]],txt:'Bertolak belakang: berhadapan pada satu perpotongan → <b>sama besar</b>.'}
+};
+let rel6=null;
+function lab6(){
+  const a=+$('m6-range').value;
+  $('m6-val').textContent='∠4 = '+a+'° (lancip) · sudut tumpulnya '+(180-a)+'°';
+  const Pg={x:175,y:70}, dy=200, dx=dy/Math.tan(a*D2R);
+  const Ph={x:Pg.x+dx,y:Pg.y+dy};
+  const ux=Math.cos(a*D2R), uy=Math.sin(a*D2R);
+  const phis=[90-a/2,180-a/2,270-a/2,360-a/2];
+  const rays={1:[0,180-a],2:[180-a,180],3:[180,360-a],4:[360-a,360]};
+  const map={1:Pg,2:Pg,3:Pg,4:Pg,5:Ph,6:Ph,7:Ph,8:Ph};
+  const val=k=>(k%2===1?180-a:a);
+  let s='<svg viewBox="0 0 640 350">';
+  if(rel6){
+    const R6=REL[rel6];
+    R6.pairs.forEach(pr=>{
+      pr.forEach((k,idx)=>{
+        const pt=map[k], rr=rays[(k-1)%4+1];
+        const p1x=pt.x+32*Math.cos(rr[0]*D2R), p1y=pt.y-32*Math.sin(rr[0]*D2R);
+        const p2x=pt.x+32*Math.cos(rr[1]*D2R), p2y=pt.y-32*Math.sin(rr[1]*D2R);
+        s+=poly(pt.x+','+pt.y+' '+p1x.toFixed(1)+','+p1y.toFixed(1)+' '+p2x.toFixed(1)+','+p2y.toFixed(1),R6.c,'none',0,idx===0?0.42:0.22);
+      });
+    });
+  }
+  s+=line(25,Pg.y,615,Pg.y,'#334155',3);
+  s+=line(25,Ph.y,615,Ph.y,'#334155',3);
+  s+=line(Pg.x-55*ux,Pg.y-55*uy,Ph.x+55*ux,Ph.y+55*uy,P.rose,3);
+  for(let k=1;k<=8;k++){
+    const pt=map[k], ph=phis[(k-1)%4]*D2R;
+    const lx=pt.x+44*Math.cos(ph), ly=pt.y-44*Math.sin(ph);
+    let label='<tspan>'+k+'</tspan>';
+    if(rel6&&REL[rel6].pairs.some(p=>p.includes(k)))label='<tspan font-weight="800">'+k+'</tspan>';
+    s+=txt(lx,ly+4.5,label,{fs:14,fw:800,fill:rel6&&REL[rel6].pairs.some(p=>p.includes(k))?REL[rel6].c:P.slate});
+    if(rel6)s+=txt(lx,ly+19,val(k)+'°',{fs:10.5,fw:700,fill:rel6&&REL[rel6].pairs.some(p=>p.includes(k))?REL[rel6].c:P.gray});
+  }
+  s+=txt(31,Pg.y-10,'g',{fs:15,fw:800,fill:P.slate,an:'start'});
+  s+=txt(31,Ph.y-10,'h',{fs:15,fw:800,fill:P.slate,an:'start'});
+  s+='</svg>';
+  $('m6-svg').innerHTML=s;
+  const X=180-a, Y=a;
+  if(!rel6){$('m6-info').innerHTML='Klik salah satu tombol hubungan untuk menyorot pasangan sudutnya.';}
+  else if(rel6==='sehadap'){$('m6-info').innerHTML=REL.sehadap.txt+'<br>∠1 = ∠5 = <b>'+X+'°</b>, ∠2 = ∠6 = <b>'+Y+'°</b>, ∠3 = ∠7 = <b>'+X+'°</b>, ∠4 = ∠8 = <b>'+Y+'°</b>';}
+  else if(rel6==='dalseber'){$('m6-info').innerHTML=REL.dalseber.txt+'<br>∠3 = ∠5 = <b>'+X+'°</b> dan ∠4 = ∠6 = <b>'+Y+'°</b>';}
+  else if(rel6==='luaseber'){$('m6-info').innerHTML=REL.luaseber.txt+'<br>∠1 = ∠7 = <b>'+X+'°</b> dan ∠2 = ∠8 = <b>'+Y+'°</b>';}
+  else if(rel6==='dalbelah'){$('m6-info').innerHTML=REL.dalbelah.txt+'<br>∠3 + ∠6 = '+X+' + '+Y+' = <b>180°</b> dan ∠4 + ∠5 = '+Y+' + '+X+' = <b>180°</b>';}
+  else{$('m6-info').innerHTML=REL.tolak.txt+'<br>∠1 = ∠3 = <b>'+X+'°</b>, ∠2 = ∠4 = <b>'+Y+'°</b>, ∠5 = ∠7 = <b>'+X+'°</b>, ∠6 = ∠8 = <b>'+Y+'°</b>';}
+}
+function relPick(r){
+  rel6=(rel6===r)?null:r;
+  document.querySelectorAll('.relbtn').forEach(b=>{
+    const on=b.dataset.rel===rel6;
+    b.classList.toggle('on',on);
+    b.style.background=on?REL[b.dataset.rel].c:'#fff';
+    b.style.color=on?'#fff':'#334155';
+  });
+  lab6();
+}
+
+/* ================= PEMERIKSA KILAT ================= */
+let k1v=0,k2v=0;
+function k1New(){
+  k1v=10+Math.floor(Math.random()*171);
+  $('m1k-q').innerHTML='Berapakah <b>pelurus</b> dari sudut <b>'+k1v+'°</b>?';
+  $('m1k-in').value='';$('m1k-fb').textContent='';$('m1k-fb').className='kfb';
+}
+function k1Check(){
+  const fb=$('m1k-fb');
+  if($('m1k-in').value===''){fb.textContent='Isi dulu jawabannya.';fb.className='kfb bad';return;}
+  const v=+$('m1k-in').value;
+  if(v===180-k1v){fb.textContent='Benar! 180° − '+k1v+'° = '+(180-k1v)+'°.';fb.className='kfb good';}
+  else{fb.textContent='Belum tepat. Ingat: pasangan berpelurus berjumlah 180°.';fb.className='kfb bad';}
+}
+function k2New(){
+  k2v=5+Math.floor(Math.random()*81);
+  $('m2k-q').innerHTML='Berapakah <b>penyiku</b> dari sudut <b>'+k2v+'°</b>?';
+  $('m2k-in').value='';$('m2k-fb').textContent='';$('m2k-fb').className='kfb';
+}
+function k2Check(){
+  const fb=$('m2k-fb');
+  if($('m2k-in').value===''){fb.textContent='Isi dulu jawabannya.';fb.className='kfb bad';return;}
+  const v=+$('m2k-in').value;
+  if(v===90-k2v){fb.textContent='Benar! 90° − '+k2v+'° = '+(90-k2v)+'°.';fb.className='kfb good';}
+  else{fb.textContent='Belum tepat. Ingat: pasangan berpenyiku berjumlah 90°.';fb.className='kfb bad';}
+}
+
+/* ================= DRAG GENERIK ================= */
+function dragify(svgEl,W,H,getPts,setPt,onChange){
+  let act=null;
+  const toSvg=e=>{const r=svgEl.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};};
+  svgEl.addEventListener('pointerdown',e=>{
+    const p=toSvg(e);let best=null,bd=32;
+    const pts=getPts();
+    for(const k in pts){const d=Math.hypot(pts[k].x-p.x,pts[k].y-p.y);if(d<bd){bd=d;best=k;}}
+    if(best){act=best;try{svgEl.setPointerCapture(e.pointerId);}catch(err){}e.preventDefault();}
+  });
+  svgEl.addEventListener('pointermove',e=>{
+    if(!act)return;
+    const p=toSvg(e);
+    setPt(act,{x:Math.max(28,Math.min(W-26,p.x)),y:Math.max(30,Math.min(H-32,p.y))});
+    onChange();
+  });
+  const end=()=>{act=null;};
+  svgEl.addEventListener('pointerup',end);
+  svgEl.addEventListener('pointercancel',end);
+}
+</script>
+<script>
+/* ================= DATA LATIHAN MATERI 1-3 ================= */
+const QUIZ={};
+
+QUIZ.pelurus={title:'Sudut Berpelurus',acc:'#e11d48',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Dua sudut saling berpelurus. Jika salah satunya 65\u00B0, besar sudut yang lain adalah\u2026',
+ opts:['105\u00B0','115\u00B0','125\u00B0','145\u00B0'],
+ ans:1,
+ exp:'Dua sudut berpelurus selalu berjumlah 180\u00B0.<br>Sudut lainnya = 180\u00B0 \u2212 65\u00B0 = <b>115\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Dua sudut berpelurus dengan perbandingan 2 : 3. Besar sudut yang <b>terbesar</b> adalah\u2026',
+ opts:['72\u00B0','90\u00B0','108\u00B0','126\u00B0'],
+ ans:2,
+ exp:'Misal sudutnya 2x dan 3x.<br>2x + 3x = 180 \u2192 5x = 180 \u2192 x = 36.<br>Sudut terbesar = 3 \u00D7 36 = <b>108\u00B0</b> (yang kecil 72\u00B0).'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sudut A = (2x + 15)\u00B0 dan sudut B = (x + 15)\u00B0 saling berpelurus. Nilai x adalah\u2026',
+ opts:['30','40','50','70'],
+ ans:2,
+ exp:'(2x + 15) + (x + 15) = 180<br>3x + 30 = 180 \u2192 3x = 150 \u2192 <b>x = 50</b>.<br>Cek: A = 115\u00B0 dan B = 65\u00B0, jumlahnya 180\u00B0 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah sudut besarnya 34\u00B0 <b>lebih besar</b> daripada sudut pelurusnya. Besar sudut itu adalah\u2026',
+ opts:['73\u00B0','97\u00B0','107\u00B0','113\u00B0'],
+ ans:2,
+ exp:'Misal pelurusnya \u03B2, maka sudut itu = \u03B2 + 34.<br>\u03B2 + (\u03B2 + 34) = 180 \u2192 2\u03B2 = 146 \u2192 \u03B2 = 73.<br>Sudut yang ditanya = 73 + 34 = <b>107\u00B0</b> (pelurusnya 73\u00B0).'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Diketahui \u03B1 = 120\u00B0, \u03B2 = 60\u00B0, dan \u03B3 = 90\u00B0. Perhatikan pernyataan berikut:<br>(1) \u03B1 dan \u03B2 saling berpelurus.<br>(2) \u03B2 dan \u03B3 saling berpelurus.<br>(3) \u03B1 + \u03B2 + \u03B3 = 270\u00B0.<br>Pernyataan yang benar adalah\u2026',
+ opts:['(1) saja','(1) dan (3)','(2) dan (3)','(1), (2), dan (3)'],
+ ans:1,
+ exp:'(1) 120\u00B0 + 60\u00B0 = 180\u00B0 \u2713<br>(2) 60\u00B0 + 90\u00B0 = 150\u00B0 \u2260 180\u00B0 \u2717<br>(3) 120 + 60 + 90 = 270\u00B0 \u2713<br>Jadi yang benar <b>(1) dan (3)</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Sebuah laci meja ditarik sehingga membentuk sudut 62\u00B0 dengan sisi meja yang berbentuk garis lurus. Besar sudut antara laci dan sisi meja pada <b>sisi sebelahnya</b> adalah\u2026',
+ opts:['28\u00B0','62\u00B0','118\u00B0','152\u00B0'],
+ ans:2,
+ exp:'Kedua sudut itu terletak pada satu garis lurus sehingga saling berpelurus.<br>180\u00B0 \u2212 62\u00B0 = <b>118\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Tiga sudut terletak pada satu garis lurus dengan besar x, 2x, dan 3x. Besar sudut <b>terbesar</b> adalah\u2026',
+ opts:['30\u00B0','60\u00B0','90\u00B0','120\u00B0'],
+ ans:2,
+ exp:'Jumlah sudut pada garis lurus = 180\u00B0.<br>x + 2x + 3x = 180 \u2192 6x = 180 \u2192 x = 30.<br>Sudutnya 30\u00B0, 60\u00B0, 90\u00B0 \u2014 yang terbesar <b>90\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'\u03B1 dan \u03B2 saling berpelurus dengan \u03B1 = 3\u03B2 \u2212 20. Besar \u03B1 adalah\u2026',
+ opts:['110\u00B0','120\u00B0','130\u00B0','150\u00B0'],
+ ans:2,
+ exp:'\u03B1 + \u03B2 = 180 \u2192 (3\u03B2 \u2212 20) + \u03B2 = 180 \u2192 4\u03B2 = 200 \u2192 \u03B2 = 50.<br>\u03B1 = 3(50) \u2212 20 = <b>130\u00B0</b>. Pelurusnya memang 50\u00B0: 130 + 50 = 180 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan pasangan sudut berikut:<br>(1) 100\u00B0 dan 80\u00B0<br>(2) 95\u00B0 dan 85\u00B0<br>(3) 120\u00B0 dan 50\u00B0<br>(4) 90\u00B0 dan 90\u00B0<br>Pasangan yang saling berpelurus adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (2), dan (4)','(1), (3), dan (4)','(2), (3), dan (4)'],
+ ans:1,
+ exp:'(1) 100 + 80 = 180 \u2713<br>(2) 95 + 85 = 180 \u2713<br>(3) 120 + 50 = 170 \u2717<br>(4) 90 + 90 = 180 \u2713 \u2014 dua sudut 90\u00B0 tetap sah berpelurus.<br>Jadi <b>(1), (2), dan (4)</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Sebuah daun pintu terbuka membentuk dua sudut dengan garis dinding: sudut kecil di sisi kusen dan sudut besar di sisi lainnya. Jika sudut besar <b>4 kali</b> sudut kecil, besar sudut di <b>sisi besar</b> adalah\u2026',
+ opts:['36\u00B0','44\u00B0','136\u00B0','144\u00B0'],
+ ans:3,
+ exp:'Kedua sudut berpelurus karena dinding berupa garis lurus.<br>Misal sudut kecil = x, maka x + 4x = 180 \u2192 5x = 180 \u2192 x = 36.<br>Sudut besar = 4 \u00D7 36 = <b>144\u00B0</b>.'}
+]};
+
+QUIZ.penyiku={title:'Sudut Berpenyiku',acc:'#2563eb',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Penyiku dari sudut 38\u00B0 adalah\u2026',
+ opts:['42\u00B0','48\u00B0','52\u00B0','62\u00B0'],
+ ans:2,
+ exp:'Dua sudut berpenyiku berjumlah 90\u00B0.<br>90\u00B0 \u2212 38\u00B0 = <b>52\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Dua sudut berpenyiku dengan perbandingan 1 : 2. Besar sudut yang <b>kecil</b> adalah\u2026',
+ opts:['20\u00B0','30\u00B0','45\u00B0','60\u00B0'],
+ ans:1,
+ exp:'Misal sudutnya x dan 2x.<br>x + 2x = 90 \u2192 3x = 90 \u2192 x = 30.<br>Sudut kecil = <b>30\u00B0</b> (yang besar 60\u00B0).'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sudut P = (3x + 5)\u00B0 dan sudut Q = (2x + 15)\u00B0 saling berpenyiku. Nilai x adalah\u2026',
+ opts:['10','12','14','18'],
+ ans:2,
+ exp:'(3x + 5) + (2x + 15) = 90<br>5x + 20 = 90 \u2192 5x = 70 \u2192 <b>x = 14</b>.<br>Cek: P = 47\u00B0 dan Q = 43\u00B0, jumlahnya 90\u00B0 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah sudut besarnya 18\u00B0 lebih besar daripada penyikunya. Besar sudut itu adalah\u2026',
+ opts:['36\u00B0','44\u00B0','54\u00B0','64\u00B0'],
+ ans:2,
+ exp:'Misal penyikunya \u03B2, maka sudut itu = \u03B2 + 18.<br>\u03B2 + (\u03B2 + 18) = 90 \u2192 2\u03B2 = 72 \u2192 \u03B2 = 36.<br>Sudut yang ditanya = 36 + 18 = <b>54\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Selisih dua sudut berpenyiku adalah 26\u00B0. Besar sudut yang <b>lebih besar</b> adalah\u2026',
+ opts:['32\u00B0','48\u00B0','58\u00B0','62\u00B0'],
+ ans:2,
+ exp:'\u03B1 \u2212 \u03B2 = 26 dan \u03B1 + \u03B2 = 90.<br>Jumlahkan kedua persamaan: 2\u03B1 = 116 \u2192 \u03B1 = <b>58\u00B0</b> (\u03B2 = 32\u00B0).'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Diketahui \u03B1 = 25\u00B0, \u03B2 = 65\u00B0, dan \u03B3 = 35\u00B0. Perhatikan pernyataan berikut:<br>(1) \u03B1 dan \u03B2 saling berpenyiku.<br>(2) \u03B2 dan \u03B3 saling berpenyiku.<br>(3) Penyiku dari \u03B3 adalah 55\u00B0.<br>Pernyataan yang benar adalah\u2026',
+ opts:['(1) saja','(1) dan (3)','(2) dan (3)','(1), (2), dan (3)'],
+ ans:1,
+ exp:'(1) 25\u00B0 + 65\u00B0 = 90\u00B0 \u2713<br>(2) 65\u00B0 + 35\u00B0 = 100\u00B0 \u2717<br>(3) 90\u00B0 \u2212 35\u00B0 = 55\u00B0 \u2713<br>Jadi yang benar <b>(1) dan (3)</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Sebuah tangga bersandar pada tembok yang tegak lurus terhadap tanah. Sudut antara tangga dan tanah 62\u00B0. Sudut antara tangga dan tembok adalah\u2026',
+ opts:['18\u00B0','28\u00B0','32\u00B0','38\u00B0'],
+ ans:1,
+ exp:'Tembock tegak lurus tanah membentuk 90\u00B0, sehingga kedua sudut yang dibentuk tangga saling berpenyiku.<br>90\u00B0 \u2212 62\u00B0 = <b>28\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Pelurus dari sudut x adalah 150\u00B0. Penyiku dari sudut x adalah\u2026',
+ opts:['30\u00B0','50\u00B0','60\u00B0','120\u00B0'],
+ ans:2,
+ exp:'Langkah 1: x = 180\u00B0 \u2212 150\u00B0 = 30\u00B0.<br>Langkah 2: penyiku x = 90\u00B0 \u2212 30\u00B0 = <b>60\u00B0</b>.<br>Dua langkah berurutan \u2014 jangan tertukar 90 dan 180!'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan pasangan sudut berikut:<br>(1) 27\u00B0 dan 63\u00B0<br>(2) 18\u00B0 dan 82\u00B0<br>(3) 45\u00B0 dan 45\u00B0<br>(4) 10\u00B0 dan 80\u00B0<br>Pasangan yang saling berpenyiku adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (3), dan (4)','(2), (3), dan (4)','(1), (2), dan (4)'],
+ ans:1,
+ exp:'(1) 27 + 63 = 90 \u2713<br>(2) 18 + 82 = 100 \u2717<br>(3) 45 + 45 = 90 \u2713<br>(4) 10 + 80 = 90 \u2713<br>Jadi <b>(1), (3), dan (4)</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Kasau atap membentuk sudut 35\u00B0 dengan lantai (bidang horizontal). Palang penyangga dipasang <b>tegap lurus</b> terhadap lantai. Sudut antara kasau dan palang adalah\u2026',
+ opts:['35\u00B0','45\u00B0','55\u00B0','65\u00B0'],
+ ans:2,
+ exp:'Palang tegak lurus lantai \u2192 palang dan lantai membentuk 90\u00B0.<br>Kedua sudut yang dibentuk kasau di titik temu itu saling berpenyiku.<br>90\u00B0 \u2212 35\u00B0 = <b>55\u00B0</b>.'}
+]};
+
+QUIZ.putaran={title:'Sudut Satu Putaran Penuh',acc:'#d97706',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Tiga sudut bertemu di satu titik: 115\u00B0, 100\u00B0, dan x. Besar x adalah\u2026',
+ opts:['125\u00B0','135\u00B0','145\u00B0','155\u00B0'],
+ ans:2,
+ exp:'Sudut-sudut di sekeliling satu titik berjumlah 360\u00B0 (satu putaran penuh).<br>x = 360 \u2212 (115 + 100) = <b>145\u00B0</b>.'},
+{lvl:'C2 \u00B7 Pemahaman',
+ q:'Empat sudut yang sama besar bertemu di satu titik. Besar masing-masing sudut adalah\u2026',
+ opts:['60\u00B0','80\u00B0','90\u00B0','120\u00B0'],
+ ans:2,
+ exp:'360\u00B0 : 4 = <b>90\u00B0</b> per sudut \u2014 keempatnya membentuk pola siku-siku seperti perpotongan sumbu koordinat.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Jarum menit sebuah jam bergerak dari angka 12 ke angka 5. Besar sudut yang dilaluinya adalah\u2026',
+ opts:['120\u00B0','140\u00B0','150\u00B0','180\u00B0'],
+ ans:2,
+ exp:'Satu wajah jam = 360\u00B0 dibagi 12 angka \u2192 tiap angka = 30\u00B0.<br>Dari 12 ke 5 ada 5 langkah angka: 5 \u00D7 30\u00B0 = <b>150\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Jarum jam bergerak dari pukul 03.00 ke pukul 07.00. Besar sudut putarannya adalah\u2026',
+ opts:['90\u00B0','100\u00B0','120\u00B0','150\u00B0'],
+ ans:2,
+ exp:'Jarum jam maju 30\u00B0 untuk setiap 1 jam.<br>Selisih waktu = 4 jam \u2192 4 \u00D7 30\u00B0 = <b>120\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Kincir taman memiliki 8 bilah yang berjarak sama. Sudut antara dua bilah yang berdekatan adalah\u2026',
+ opts:['30\u00B0','36\u00B0','45\u00B0','60\u00B0'],
+ ans:2,
+ exp:'Delapan bilah membagi satu putaran penuh sama rata.<br>360\u00B0 : 8 = <b>45\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Empat sudut bertemu di titik O dengan besar x, 2x, 3x, dan 4x. Nilai x adalah\u2026',
+ opts:['24','30','36','45'],
+ ans:2,
+ exp:'x + 2x + 3x + 4x = 360 \u2192 10x = 360 \u2192 <b>x = 36</b>.<br>Sudutnya 36\u00B0, 72\u00B0, 108\u00B0, 144\u00B0 \u2014 jumlahnya tepat 360\u00B0 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Andi menghadap <b>utara</b>, lalu berputar <b>searah jarum jam</b> sejauh 270\u00B0. Sekarang ia menghadap arah\u2026',
+ opts:['Timur','Selatan','Barat','Barat Laut'],
+ ans:2,
+ exp:'Setiap 90\u00B0 = satu arah mata angin.<br>Utara \u219290\u00B0\u2192 Timur \u219290\u00B0\u2192 Selatan \u219290\u00B0\u2192 <b>Barat</b>.<br>Total 3 \u00D7 90 = 270\u00B0 searah jarum jam.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Sudut <b>terkecil</b> yang dibentuk kedua jarum jam pada pukul 03.30 adalah\u2026',
+ opts:['65\u00B0','70\u00B0','75\u00B0','80\u00B0'],
+ ans:2,
+ exp:'Pukul 03.30: jarum menit tepat di angka 6 = 180\u00B0 dari angka 12.<br>Jarum jam TIDAK diam di angka 3 \u2014 ia sudah bergeser \u00BD \u00D7 30\u00B0 = 15\u00B0, jadi posisinya 90 + 15 = 105\u00B0.<br>Sudut = 180 \u2212 105 = <b>75\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan himpunan sudut berikut:<br>(1) 130\u00B0, 125\u00B0, 105\u00B0<br>(2) 90\u00B0, 90\u00B0, 90\u00B0, 60\u00B0<br>(3) 200\u00B0, 100\u00B0, 60\u00B0<br>(4) 150\u00B0, 80\u00B0, 70\u00B0, 60\u00B0<br>Himpunan yang jumlahnya tepat <b>satu putaran penuh</b> adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (3), dan (4)','(2), (3), dan (4)','(1), (2), dan (4)'],
+ ans:1,
+ exp:'(1) 130 + 125 + 105 = 360 \u2713<br>(2) 90 + 90 + 90 + 60 = 330 \u2717<br>(3) 200 + 100 + 60 = 360 \u2713<br>(4) 150 + 80 + 70 + 60 = 360 \u2713<br>Jadi <b>(1), (3), dan (4)</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Seorang pesenam melakukan gerakan tumbling sejauh <b>2\u00BD putaran penuh</b>. Total besar sudut putarannya adalah\u2026',
+ opts:['630\u00B0','720\u00B0','900\u00B0','1080\u00B0'],
+ ans:2,
+ exp:'Satu putaran penuh = 360\u00B0.<br>2,5 \u00D7 360 = <b>900\u00B0</b>.'}
+]};
+</script>
+<script>
+/* ================= DATA LATIHAN MATERI 4-6 ================= */
+
+QUIZ.segitiga={title:'Sudut Dalam Segitiga',acc:'#059669',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Dua sudut dalam sebuah segitiga besarnya 58\u00B0 dan 47\u00B0. Besar sudut ketiga adalah\u2026',
+ opts:['65\u00B0','70\u00B0','75\u00B0','85\u00B0'],
+ ans:2,
+ exp:'Jumlah ketiga sudut dalam segitiga = 180\u00B0.<br>Sudut ketiga = 180 \u2212 (58 + 47) = 180 \u2212 105 = <b>75\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Sudut-sudut sebuah segitiga berbanding 2 : 3 : 4. Besar sudut <b>terbesar</b> adalah\u2026',
+ opts:['40\u00B0','60\u00B0','80\u00B0','90\u00B0'],
+ ans:2,
+ exp:'Misal sudutnya 2x, 3x, 4x \u2192 9x = 180 \u2192 x = 20.<br>Sudutnya 40\u00B0, 60\u00B0, 80\u00B0. Terbesar = <b>80\u00B0</b>.<br>Karena semua sudut < 90\u00B0, segitiga itu lancip.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Segitiga sama kaki memiliki sudut puncak 46\u00B0. Besar masing-masing sudut alasnya adalah\u2026',
+ opts:['57\u00B0','62\u00B0','67\u00B0','77\u00B0'],
+ ans:2,
+ exp:'Sudut alas segitiga sama kaki sama besar.<br>(180 \u2212 46) : 2 = 134 : 2 = <b>67\u00B0</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Segitiga sama kaki memiliki salah satu sudut 50\u00B0. Besar <b>sudut puncak</b> yang MUNGKIN adalah\u2026',
+ opts:['50\u00B0 saja','80\u00B0 saja','50\u00B0 atau 80\u00B0','65\u00B0 atau 80\u00B0'],
+ ans:2,
+ exp:'Kemungkinan 1: 50\u00B0 adalah sudut puncak \u2192 alas = (180 \u2212 50) : 2 = 65\u00B0 \u2713<br>Kemungkinan 2: 50\u00B0 adalah sudut alas \u2192 puncak = 180 \u2212 (2 \u00D7 50) = 80\u00B0 \u2713<br>Jadi sudut puncak mungkin <b>50\u00B0 atau 80\u00B0</b>. Soal sama kaki sering punya dua skenario \u2014 periksa keduanya!'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Segitiga siku-siku memiliki salah satu sudut lancip 37\u00B0. Besar sudut lancip yang lain adalah\u2026',
+ opts:['43\u00B0','47\u00B0','53\u00B0','63\u00B0'],
+ ans:2,
+ exp:'Pada segitiga siku-siku, kedua sudut lancipnya berpenyiku (berjumlah 90\u00B0).<br>90 \u2212 37 = <b>53\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sudut-sudut segitiga ABC adalah x, 2x, dan 3x. Segitiga ABC adalah segitiga\u2026',
+ opts:['Lancip','Siku-siku','Tumpul','Sama sisi'],
+ ans:1,
+ exp:'x + 2x + 3x = 180 \u2192 6x = 180 \u2192 x = 30.<br>Sudutnya 30\u00B0, 60\u00B0, 90\u00B0 \u2014 ada sudut tepat 90\u00B0 \u2192 segitiga <b>siku-siku</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Segitiga PQR sama sisi. Jika \u2220P = (3y + 12)\u00B0, nilai y adalah\u2026',
+ opts:['12','14','16','20'],
+ ans:2,
+ exp:'Segitiga sama sisi \u2192 ketiga sudutnya 60\u00B0.<br>3y + 12 = 60 \u2192 3y = 48 \u2192 <b>y = 16</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Rangka atap berbentuk segitiga sama kaki dengan sudut puncak 100\u00B0. Sudut antara kasau dan balok alas (sudut alas) adalah\u2026',
+ opts:['30\u00B0','40\u00B0','50\u00B0','80\u00B0'],
+ ans:1,
+ exp:'Kedua sudut alas sama besar.<br>(180 \u2212 100) : 2 = 80 : 2 = <b>40\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan tripel sudut berikut:<br>(1) 55\u00B0, 65\u00B0, 60\u00B0<br>(2) 90\u00B0, 45\u00B0, 45\u00B0<br>(3) 100\u00B0, 50\u00B0, 40\u00B0<br>(4) 120\u00B0, 30\u00B0, 30\u00B0<br>Tripel yang <b>dapat</b> menjadi sudut dalam sebuah segitiga adalah\u2026',
+ opts:['(1), (2), dan (3)','(1), (2), dan (4)','(2), (3), dan (4)','(1), (3), dan (4)'],
+ ans:1,
+ exp:'Syaratnya jumlah tepat 180\u00B0.<br>(1) 55 + 65 + 60 = 180 \u2713<br>(2) 90 + 45 + 45 = 180 \u2713<br>(3) 100 + 50 + 40 = 190 \u2717<br>(4) 120 + 30 + 30 = 180 \u2713<br>Jadi <b>(1), (2), dan (4)</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Pada \u25B3ABC, besar \u2220A = 2\u2220B dan \u2220C = 54\u00B0. Besar \u2220A adalah\u2026',
+ opts:['42\u00B0','63\u00B0','72\u00B0','84\u00B0'],
+ ans:3,
+ exp:'\u2220A + \u2220B = 180 \u2212 54 = 126\u00B0.<br>Substitusi \u2220A = 2\u2220B: 2\u2220B + \u2220B = 126 \u2192 \u2220B = 42\u00B0.<br>\u2220A = 2 \u00D7 42 = <b>84\u00B0</b>.'}
+]};
+
+QUIZ.luar={title:'Sudut Eksterior Segitiga',acc:'#7c3aed',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Perhatikan gambar. Dua sudut dalam yang <b>tak berdekatan</b> dengan sudut luar di B besarnya 55\u00B0 dan 63\u00B0. Besar sudut luar x adalah\u2026',
+ fig:'e1',
+ opts:['108\u00B0','112\u00B0','118\u00B0','128\u00B0'],
+ ans:2,
+ exp:'Teorema sudut luar: sudut luar = jumlah dua sudut dalam tak berdekatan.<br>x = 55 + 63 = <b>118\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Sebuah segitiga memiliki sudut dalam 108\u00B0. Besar sudut luar yang <b>berdekatan</b> dengan sudut itu adalah\u2026',
+ opts:['62\u00B0','68\u00B0','72\u00B0','82\u00B0'],
+ ans:2,
+ exp:'Sudut luar berpelurus dengan sudut dalam pada titik sudut yang sama.<br>180 \u2212 108 = <b>72\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar. Sudut luar di B adalah 122\u00B0 dan salah satu sudut dalam tak berdekatan dengannya 71\u00B0. Sudut dalam tak berdekatan yang lain adalah\u2026',
+ fig:'e3',
+ opts:['41\u00B0','49\u00B0','51\u00B0','61\u00B0'],
+ ans:2,
+ exp:'Sudut luar = jumlah dua sudut dalam tak berdekatan.<br>122 = 71 + sudut yang dicari \u2192 sudut itu = <b>51\u00B0</b>.<br>Cek cepat: 71 + 51 = 122 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sudut dalam sebuah segitiga: 45\u00B0, 60\u00B0, dan 75\u00B0. Jumlah ketiga sudut <b>luar</b>nya (diambil satu di tiap titik sudut) adalah\u2026',
+ opts:['180\u00B0','270\u00B0','320\u00B0','360\u00B0'],
+ ans:3,
+ exp:'Sudut luarnya: 180\u221245 = 135; 180\u221260 = 120; 180\u221275 = 105.<br>135 + 120 + 105 = <b>360\u00B0</b>.<br>Sifat umum: jumlah sudut luar segitiga SELALU 360\u00B0, apa pun bentuknya \u2014 karena tiap pasangan dalam + luar = 180 dan 3 \u00D7 180 \u2212 180 = 360.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Sebuah semut berjalan mengelilingi lapangan berbentuk segitiga dan kembali ke titik semula. Di setiap sudut ia berbelok sebesar sudut luarnya. Dua belokan pertamanya 110\u00B0 dan 105\u00B0. Belokan ketiga adalah\u2026',
+ opts:['125\u00B0','135\u00B0','145\u00B0','155\u00B0'],
+ ans:2,
+ exp:'Kembali ke arah semula berarti total belokan = satu putaran penuh = 360\u00B0 (jumlah sudut luar).<br>360 \u2212 (110 + 105) = <b>145\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar. Pada \u25B3ABC, sudut luar di C adalah (2x + 20)\u00B0, \u2220A = x\u00B0, dan \u2220B = 60\u00B0. Besar sudut luar di C adalah\u2026',
+ fig:'e6',
+ opts:['80\u00B0','90\u00B0','100\u00B0','110\u00B0'],
+ ans:2,
+ exp:'Sudut luar di C = \u2220A + \u2220B \u2192 2x + 20 = x + 60 \u2192 x = 40.<br>Sudut luar = 2(40) + 20 = <b>100\u00B0</b>.<br>Cek: \u2220C = 180 \u2212 40 \u2212 60 = 80\u00B0, pelurusnya 100\u00B0 \u2713'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar. Segitiga sama kaki memiliki sudut luar di salah satu titik alasnya 115\u00B0. Besar sudut puncaknya adalah\u2026',
+ fig:'e7',
+ opts:['40\u00B0','50\u00B0','60\u00B0','70\u00B0'],
+ ans:1,
+ exp:'Sudut dalam di titik alas itu = 180 \u2212 115 = 65\u00B0.<br>Karena sama kaki, sudut alas lainnya juga 65\u00B0.<br>Sudut puncak = 180 \u2212 (65 + 65) = <b>50\u00B0</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Sudut dalam sebuah segitiga: 70\u00B0, 50\u00B0, dan 60\u00B0. Perhatikan pernyataan berikut:<br>(1) Sudut luar di titik sudut 70\u00B0 adalah 110\u00B0.<br>(2) Jumlah dua sudut dalam tak berdekatan dari sudut luar 130\u00B0 adalah 130\u00B0.<br>(3) Jumlah ketiga sudut luar adalah 540\u00B0.<br>Pernyataan yang benar adalah\u2026',
+ opts:['(1) saja','(1) dan (2)','(2) dan (3)','(1), (2), dan (3)'],
+ ans:1,
+ exp:'(1) 180 \u2212 70 = 110 \u2713<br>(2) Sudut luar 130\u00B0 berada di titik sudut 50\u00B0; dua sudut tak berdekatan = 70 + 60 = 130 \u2713 (memang selalu sama dengan sudut luarnya!)<br>(3) Jumlah sudut luar = 360\u00B0, bukan 540\u00B0 \u2717<br>Jadi <b>(1) dan (2)</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar. Sudut luar di titik C adalah (3x \u2212 15)\u00B0 dan sudut dalam yang berdekatan dengannya adalah (x + 35)\u00B0. Nilai x adalah\u2026',
+ fig:'e9',
+ opts:['30','35','40','50'],
+ ans:2,
+ exp:'Sudut luar dan sudut dalam berdekatan saling berpelurus:<br>(3x \u2212 15) + (x + 35) = 180 \u2192 4x + 20 = 180 \u2192 <b>x = 40</b>.<br>Sudut luarnya 105\u00B0 dan sudut dalamnya 75\u00B0.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar. Pada \u25B3ABC, \u2220A = 65\u00B0 dan sudut luar di B = 120\u00B0. Besar \u2220C adalah\u2026',
+ fig:'e10',
+ opts:['45\u00B0','50\u00B0','55\u00B0','65\u00B0'],
+ ans:2,
+ exp:'Cara 1 (teorema sudut luar \u2014 tercepat): \u2220C = sudut luar di B \u2212 \u2220A = 120 \u2212 65 = <b>55\u00B0</b>.<br>Cara 2: \u2220B = 180 \u2212 120 = 60\u00B0 \u2192 \u2220C = 180 \u2212 65 \u2212 60 = 55\u00B0 \u2713'}
+]};
+
+QUIZ.transversal={title:'Garis Sejajar & Transversal',acc:'#475569',qs:[
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Perhatikan gambar. Garis g dan h sejajar, dipotong garis k. Jika \u22201 = 70\u00B0, besar \u22205 adalah\u2026',
+ fig:'t1',
+ opts:['60\u00B0','70\u00B0','80\u00B0','110\u00B0'],
+ ans:1,
+ exp:'\u22201 dan \u22205 adalah sudut <b>sehadap</b> (menempati posisi yang sama pada tiap perpotongan).<br>Pada garis sejajar, sudut sehadap <b>sama besar</b>: \u22205 = \u22201 = <b>70\u00B0</b>.'},
+{lvl:'C3 \u00B7 Aplikasi',
+ q:'Masih pada gambar sebelumnya (g \u2225 h, \u22201 = 70\u00B0). Karena \u22204 dan \u22201 saling berpelurus, besar \u22204 adalah\u2026',
+ fig:'t1',
+ opts:['60\u00B0','70\u00B0','110\u00B0','120\u00B0'],
+ ans:2,
+ exp:'\u22201 dan \u22204 bertetangga pada garis lurus k sehingga berpelurus.<br>\u22204 = 180 \u2212 70 = <b>110\u00B0</b>. \u22204 adalah sudut tumpul \u2014 masuk akal karena \u22201 lancip.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar (g \u2225 h). Jika \u22203 = 65\u00B0, besar \u22206 adalah\u2026 (petunjuk: \u22203 dan \u22206 sudut dalam bersebelahan)',
+ fig:'t3',
+ opts:['55\u00B0','65\u00B0','105\u00B0','115\u00B0'],
+ ans:3,
+ exp:'\u22203 dan \u22206 adalah sudut <b>dalam bersebelahan</b> \u2014 keduanya di antara garis g dan h, pada sisi yang sama dari transversal.<br>Sudut dalam bersebelahan berjumlah 180\u00B0: \u22206 = 180 \u2212 65 = <b>115\u00B0</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar (g \u2225 h). \u22202 = (3x \u2212 20)\u00B0 dan \u22206 = (x + 40)\u00B0, keduanya sehadap. Nilai x adalah\u2026',
+ fig:'t4',
+ opts:['20','25','30','40'],
+ ans:2,
+ exp:'Sudut sehadap sama besar:<br>3x \u2212 20 = x + 40 \u2192 2x = 60 \u2192 <b>x = 30</b>.<br>Cek: \u22202 = \u22206 = 70\u00B0 \u2713'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar (g \u2225 h). \u22203 = (2x + 20)\u00B0 dan \u22206 = (x + 40)\u00B0, keduanya sudut dalam bersebelahan. Besar \u22203 adalah\u2026',
+ fig:'t5',
+ opts:['80\u00B0','90\u00B0','100\u00B0','120\u00B0'],
+ ans:2,
+ exp:'Sudut dalam bersebelahan berjumlah 180\u00B0:<br>(2x + 20) + (x + 40) = 180 \u2192 3x + 60 = 180 \u2192 x = 40.<br>\u22203 = 2(40) + 20 = <b>100\u00B0</b> (\u22206 = 80\u00B0, jumlah 180 \u2713).'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Perhatikan gambar (g \u2225 h). Jika \u22202 = 110\u00B0, besar \u22207 adalah\u2026',
+ fig:'t6',
+ opts:['60\u00B0','70\u00B0','80\u00B0','110\u00B0'],
+ ans:1,
+ exp:'Langkah 1: \u22203 = 180 \u2212 110 = 70\u00B0 (berpelurus dengan \u22202 pada garis g).<br>Langkah 2: \u22207 sehadap dengan \u22203 \u2192 \u22207 = <b>70\u00B0</b>.<br>Dua langkah kecil \u2014 begitulah cara soal berantai bekerja.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar (g \u2225 h). Diketahui \u22204 = 115\u00B0. Perhatikan pernyataan berikut:<br>(1) \u22205 = 115\u00B0<br>(2) \u22206 = 115\u00B0<br>(3) \u22208 = 65\u00B0<br>(4) \u22201 = 65\u00B0<br>Pernyataan yang benar adalah\u2026',
+ fig:'t7',
+ opts:['(1) dan (2)','(2) dan (4)','(3) dan (4)','(2) dan (3)'],
+ ans:1,
+ exp:'\u22201 = 180 \u2212 115 = 65\u00B0 (berpelurus dengan \u22204) \u2192 (4) \u2713<br>\u22206 = \u22202 = 115\u00B0 (sehadap) \u2192 (2) \u2713<br>(1) \u22205 = \u22201 = 65\u00B0, bukan 115\u00B0 \u2717<br>(3) \u22208 = \u22204 = 115\u00B0 (sehadap), bukan 65\u00B0 \u2717<br>Jadi <b>(2) dan (4)</b>.'},
+{lvl:'C4 \u00B7 Analisis',
+ q:'Dua rel kereta sejajar dihubungkan bantalan kayu yang <b>tegap lurus</b> terhadap rel atas (lihat gambar). Besar sudut antara bantalan dan <b>rel bawah</b> adalah\u2026',
+ fig:'rails',
+ opts:['45\u00B0','60\u00B0','90\u00B0','180\u00B0'],
+ ans:2,
+ exp:'Bantalan tegak lurus rel atas \u2192 sudutnya 90\u00B0.<br>Rel atas sejajar rel bawah, dan bantalan menjadi transversalnya \u2192 sudut sehadap <b>sama besar</b>.<br>Jadi sudut dengan rel bawah juga <b>90\u00B0</b> \u2014 sifat sehadap "menyalin" sudut ke garis sejajarnya.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar (g \u2225 h). Diketahui \u22201 = 60\u00B0. Perhatikan pernyataan berikut:<br>(1) \u22205 = 60\u00B0<br>(2) \u22203 = 120\u00B0<br>(3) \u22206 = 120\u00B0<br>(4) \u22208 = 120\u00B0<br>Pernyataan yang benar adalah\u2026',
+ fig:'t9',
+ opts:['(1), (2), dan (3)','(1), (3), dan (4)','(2), (3), dan (4)','(1), (2), dan (4)'],
+ ans:1,
+ exp:'(1) \u22205 sehadap \u22201 = 60\u00B0 \u2713<br>(2) \u22203 bertolak belakang dengan \u22201 = 60\u00B0, bukan 120\u00B0 \u2717<br>(3) \u22206 dalam bersebelahan dengan \u22203: 180 \u2212 60 = 120\u00B0 \u2713<br>(4) \u22208 sehadap \u22204: \u22204 = 180 \u2212 60 = 120\u00B0 \u2713<br>Jadi <b>(1), (3), dan (4)</b>.'},
+{lvl:'C5 \u00B7 Evaluasi',
+ q:'Perhatikan gambar. Garis l dan m sejajar; dua garis potong membentuk segitiga PQR di antara keduanya. Besar sudut x di titik R adalah\u2026',
+ fig:'partri',
+ opts:['60\u00B0','65\u00B0','70\u00B0','75\u00B0'],
+ ans:2,
+ exp:'Sudut 65\u00B0 di P dan 45\u00B0 di Q adalah dua sudut dalam segitiga PQR.<br>Jumlah sudut dalam segitiga = 180\u00B0:<br>x = 180 \u2212 65 \u2212 45 = <b>70\u00B0</b>.<br>Kenapa 65\u00B0 dan 45\u00B0 sah menjadi sudut dalam? Karena garis l sejajar m, sudut pada garis l sama besar dengan sudut dalamnya (posisi dalam berseberangan).'}
+]};
+
+/* ================= MESIN APLIKASI ================= */
+const LETTERS=['A','B','C','D'];
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  $('pbar').style.width=((cur+1)/slides.length*100)+'%';
+  $('counter').textContent=(cur+1)+' / '+slides.length;
+  window.scrollTo({top:0,behavior:'auto'});
+  if(slides[cur].id==='s-score')renderScores();
+}
+function goId(id){const k=slides.findIndex(s=>s.id===id);if(k>=0)go(k);}
+
+const qState={};
+Object.keys(QUIZ).forEach(k=>{qState[k]={i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]};});
+const origBody={};
+
+function qRender(k){
+  const st=qState[k],q=QUIZ[k].qs[st.i];
+  st.sel=null;st.checked=false;
+  $('q-'+k+'-num').textContent=st.i+1;
+  $('q-'+k+'-score').textContent=st.score;
+  $('q-'+k+'-lvl').textContent=q.lvl;
+  $('q-'+k+'-text').innerHTML=(q.fig?'<div class="figbox">'+FIGS[q.fig]+'</div>':'')+q.q;
+  const box=$('q-'+k+'-opts');box.innerHTML='';
+  q.opts.forEach((t,idx)=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='opt';
+    b.innerHTML='<span class="optletter">'+LETTERS[idx]+'</span><span>'+t+'</span>';
+    b.addEventListener('click',()=>{
+      if(st.checked)return;
+      st.sel=idx;
+      [...box.children].forEach((c,j)=>c.classList.toggle('selected',j===idx));
+      $('q-'+k+'-check').disabled=false;
+    });
+    box.appendChild(b);
+  });
+  $('q-'+k+'-exp').style.display='none';
+  $('q-'+k+'-check').disabled=true;
+  $('q-'+k+'-next').disabled=true;
+}
+function qCheck(k){
+  const st=qState[k],q=QUIZ[k].qs[st.i];
+  if(st.sel==null||st.checked)return;
+  st.checked=true;
+  const ok=st.sel===q.ans;
+  if(ok)st.score++;
+  st.answered++;
+  st.results.push(ok);
+  [...$('q-'+k+'-opts').children].forEach((b,j)=>{
+    b.classList.add('locked');
+    if(j===q.ans)b.classList.add('correct');
+    else if(j===st.sel)b.classList.add('wrong');
+  });
+  const eb=$('q-'+k+'-exp');
+  eb.style.display='block';
+  eb.className='expbox '+(ok?'good':'bad');
+  eb.innerHTML=(ok?'<b>Benar! </b>':'<b>Belum tepat. Jawaban yang benar: '+LETTERS[q.ans]+'. </b>')+q.exp;
+  $('q-'+k+'-score').textContent=st.score;
+  $('q-'+k+'-check').disabled=true;
+  const nx=$('q-'+k+'-next');
+  nx.disabled=false;
+  nx.textContent=(st.i===QUIZ[k].qs.length-1)?'Lihat Hasil \u2192':'Soal Berikutnya \u2192';
+  saveProg();
+}
+function qNext(k){
+  const st=qState[k];
+  if(!st.checked)return;
+  if(st.i<QUIZ[k].qs.length-1){st.i++;qRender(k);}
+  else{st.done=true;qResult(k);saveProg();}
+}
+function qResult(k){
+  const st=qState[k],d=QUIZ[k];
+  const p=Math.round(st.score/QUIZ[k].qs.length*100);
+  const msg=st.score>=9?'Luar biasa! Kamu sangat menguasai materi ini.':st.score>=7?'Bagus! Sedikit lagi menuju sempurna.':st.score>=5?'Cukup. Baca ulang bagian teori, lalu coba lagi.':'Ayo pelajari kembali materinya, lalu ulangi latihan ini.';
+  $('q-'+k+'-body').innerHTML='<div class="qresult"><div class="qscore">'+st.score+'<span>/10</span></div><h3>Latihan '+d.title+' selesai</h3><p style="margin-top:6px">'+msg+'</p><p class="qpct">'+p+'% benar</p><button class="btn pri" id="q-'+k+'-retry">Ulangi Latihan</button></div>';
+  $('q-'+k+'-retry').addEventListener('click',()=>qRetry(k));
+}
+function qRetry(k){
+  Object.assign(qState[k],{i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]});
+  $('q-'+k+'-body').innerHTML=origBody[k];
+  qRender(k);saveProg();
+}
+
+/* --- Penyimpanan lokal --- */
+function saveProg(){
+  try{
+    const d={};
+    for(const k in qState){const s=qState[k];d[k]={score:s.score,answered:s.answered,done:s.done,i:s.i,results:s.results};}
+    localStorage.setItem('hgs-tka-v1',JSON.stringify(d));
+  }catch(e){}
+}
+function loadProg(){
+  try{
+    const d=JSON.parse(localStorage.getItem('hgs-tka-v1')||'{}');
+    for(const k in d){
+      if(!qState[k])continue;
+      Object.assign(qState[k],{
+        i:Math.min(d[k].i||0,QUIZ[k].qs.length-1),
+        score:d[k].score||0,
+        answered:d[k].answered||0,
+        done:!!d[k].done,
+        results:Array.isArray(d[k].results)?d[k].results:[],
+        sel:null,checked:false
+      });
+    }
+  }catch(e){}
+}
+
+/* --- Halaman nilai --- */
+function renderScores(){
+  const order=['pelurus','penyiku','putaran','segitiga','luar','transversal'];
+  let h='<table class="tbl"><tr><th>Materi</th><th>Dijawab</th><th>Benar</th><th>Nilai</th><th>Status</th></tr>';
+  let tc=0;
+  order.forEach(k=>{
+    const s=qState[k],d=QUIZ[k];tc+=s.score;
+    const nilai=Math.round(s.score/QUIZ[k].qs.length*100);
+    h+='<tr><td><b>'+d.title+'</b></td><td>'+s.answered+' / '+QUIZ[k].qs.length+'</td><td>'+s.score+'</td><td><div class="scorebar" style="width:110px;vertical-align:middle"><i style="width:'+nilai+'%;background:'+d.acc+'"></i></div> '+nilai+'</td><td>'+(s.done?'Selesai':'Berjalan')+'</td></tr>';
+  });
+  h+='</table>';
+  $('score-table').innerHTML=h;
+  const pct=Math.round(tc/60*100);
+  const pred=tc>=54?'Istimewa! Kamu siap menghadapi soal hubungan garis dan sudut pada TKA.':tc>=42?'Hebat \u2014 tinggal poles soal yang masih keliru.':tc>=30?'Bagus, lanjutkan latihan pada bagian yang lemah.':'Terus semangat: baca ulang teorinya, lalu kerjakan lagi latihannya.';
+  $('score-overall').innerHTML='<div class="scorebig"><div class="big">'+tc+'<span style="font-size:22px;color:#94a3b8">/60</span></div><div><b>Skor total: '+pct+'%</b><br><span style="color:#cbd5e1;font-size:14px">'+pred+'</span></div></div>';
+}
+
+/* --- Inisialisasi --- */
+document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>goId(el.dataset.goto)));
+$('btn-prev').addEventListener('click',()=>go(cur-1));
+$('btn-next').addEventListener('click',()=>go(cur+1));
+$('btn-menu').addEventListener('click',()=>goId('s-menu'));
+document.addEventListener('keydown',e=>{
+  if(e.target&&/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+for(const k in QUIZ){
+  origBody[k]=$('q-'+k+'-body').innerHTML;
+  $('q-'+k+'-check').addEventListener('click',()=>qCheck(k));
+  $('q-'+k+'-next').addEventListener('click',()=>qNext(k));
+}
+$('m1-range').addEventListener('input',lab1);
+$('m2-range').addEventListener('input',lab2);
+$('m3-sweep').addEventListener('input',lab3a);
+$('m3-hr').addEventListener('input',lab3b);
+$('m3-min').addEventListener('input',lab3b);
+$('m6-range').addEventListener('input',lab6);
+document.querySelectorAll('.relbtn').forEach(b=>b.addEventListener('click',()=>relPick(b.dataset.rel)));
+$('m1k-check').addEventListener('click',k1Check);
+$('m1k-new').addEventListener('click',k1New);
+$('m2k-check').addEventListener('click',k2Check);
+$('m2k-new').addEventListener('click',k2New);
+$('m1k-in').addEventListener('keydown',e=>{if(e.key==='Enter')k1Check();});
+$('m2k-in').addEventListener('keydown',e=>{if(e.key==='Enter')k2Check();});
+dragify($('m4-svg'),640,430,()=>T4,(kk,v)=>{T4[kk]=v;},renderTri4);
+dragify($('m5-svg'),640,430,()=>T5,(kk,v)=>{T5[kk]=v;},renderTri5);
+$('btn-reset').addEventListener('click',()=>{
+  try{localStorage.removeItem('hgs-tka-v1');}catch(e){}
+  for(const k in qState)Object.assign(qState[k],{i:0,score:0,answered:0,done:false,sel:null,checked:false,results:[]});
+  for(const k in QUIZ){$('q-'+k+'-body').innerHTML=origBody[k];qRender(k);}
+  renderScores();
+});
+$('m6-fig').innerHTML=FIGS.m6;
+lab1();lab2();lab3a();lab3b();renderTri4();renderTri5();lab6();
+k1New();k2New();
+loadProg();
+for(const k in QUIZ){if(qState[k].done)qResult(k);else qRender(k);}
+go(0);
+</script>
+</body>
+</html>

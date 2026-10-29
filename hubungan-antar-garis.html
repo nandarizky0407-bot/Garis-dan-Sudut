@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Hubungan Antar Garis — Matematika Kelas 4 SD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pur:#7C5CFC;--pur2:#B3A5FF;--pink:#FF6B9D;--pink2:#FFA6C9;--yel:#FFC93D;
+  --grn:#3ECB7B;--blu:#4D96FF;--org:#FF9F45;--red:#FF5C7A;
+  --ink:#3A2E5C;--ink2:#6F639B;--bg:#FBF6FF;
+  --shadow:0 10px 28px rgba(96,64,180,.16);--r:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Baloo 2','Comic Sans MS','Chalkboard SE','Segoe UI',sans-serif;color:var(--ink);background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(124,92,252,.09) 2.2px,transparent 2.4px);background-size:34px 34px}
+.blob{position:fixed;border-radius:50%;opacity:.42;z-index:0;pointer-events:none;animation:floaty 10s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(4deg)}}
+
+/* ===== chrome (topbar, progress, nav) ===== */
+#topbar{position:fixed;top:0;left:0;right:0;height:54px;display:flex;align-items:center;gap:10px;padding:0 16px;z-index:60;pointer-events:none}
+#topbar>*{pointer-events:auto}
+.chip{background:#fff;border-radius:999px;padding:7px 15px;box-shadow:var(--shadow);font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:7px}
+#counter{margin-left:auto}
+.ibtn{width:40px;height:40px;border:none;border-radius:50%;background:#fff;box-shadow:var(--shadow);cursor:pointer;font-size:1.05rem;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:.15s}
+.ibtn:hover{transform:scale(1.1)}
+#barWrap{position:fixed;top:54px;left:0;right:0;height:6px;background:rgba(124,92,252,.12);z-index:60}
+#bar{height:100%;width:0;background:linear-gradient(90deg,var(--pur),var(--pink),var(--yel));transition:width .45s;border-radius:0 6px 6px 0}
+#nav{position:fixed;bottom:14px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:12px;z-index:60;pointer-events:none}
+#nav>*{pointer-events:auto}
+.nbtn{width:52px;height:52px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--pur),var(--pink));color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 8px 22px rgba(124,92,252,.4);transition:.15s;font-family:inherit}
+.nbtn:hover:not(:disabled){transform:scale(1.12)}
+.nbtn:disabled{opacity:.35;cursor:default}
+#dots{display:flex;gap:7px;background:#fff;padding:10px 13px;border-radius:999px;box-shadow:var(--shadow)}
+.dot{width:10px;height:10px;border-radius:50%;border:none;background:#E0D6FF;cursor:pointer;transition:.25s;padding:0}
+.dot:hover{background:var(--pur2)}
+.dot.on{background:var(--pink);transform:scale(1.45)}
+#toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(18px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:99;font-size:.95rem;max-width:88vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#fx{position:fixed;inset:0;z-index:90;pointer-events:none}
+
+/* ===== slide base ===== */
+.slide{position:fixed;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;padding:70px 64px 92px;opacity:0;pointer-events:none;transform:translateX(56px);transition:opacity .55s ease,transform .55s ease}
+.slide.active{opacity:1;pointer-events:auto;transform:none;z-index:2}
+.inner{width:min(1180px,100%);max-height:100%;overflow-y:auto;padding:4px 8px;scrollbar-width:thin}
+.rv{opacity:0}
+.slide.active .rv{animation:rise .65s var(--d,0s) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.kicker{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px dashed var(--pur2);color:var(--pur);font-weight:800;padding:6px 16px;border-radius:999px;font-size:.82rem;letter-spacing:.5px;margin-bottom:10px}
+.kicker.kpink{color:#E0447C;border-color:var(--pink2)}
+h2.stitle{font-size:clamp(1.7rem,3.3vw,2.45rem);line-height:1.12;margin-bottom:8px}
+.hl{color:var(--pink)}
+.lead{color:var(--ink2);font-size:clamp(.96rem,1.45vw,1.1rem);line-height:1.5;max-width:960px}
+
+/* ===== buttons & cards ===== */
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--pur),var(--pink));padding:13px 26px;border-radius:16px;font-size:1rem;box-shadow:0 8px 20px rgba(124,92,252,.35);transition:.15s;display:inline-flex;align-items:center;gap:9px}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:scale(.96)}
+.btn.sec{background:#fff;color:var(--pur);box-shadow:var(--shadow);border:2px solid #E4DBFF}
+.btn.small{padding:9px 18px;font-size:.9rem;border-radius:13px}
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:20px}
+.defbox{background:linear-gradient(135deg,#F5F1FF,#EFEBFF);border:2px solid #E0D6FF;border-left:9px solid var(--pur);border-radius:18px;padding:15px 17px;font-size:1rem;line-height:1.58;color:var(--ink)}
+.defbox b{color:var(--pur)}
+.defbox.db-b{border-left-color:var(--blu)} .defbox.db-b b{color:var(--blu)}
+.defbox.db-p{border-left-color:var(--pink);background:linear-gradient(135deg,#FFF0F6,#FFE7F0)} .defbox.db-p b{color:#E0447C}
+.defbox.db-o{border-left-color:var(--org);background:linear-gradient(135deg,#FFF6E8,#FFEFDC)} .defbox.db-o b{color:#E08316}
+.defbox.db-g{border-left-color:var(--grn);background:linear-gradient(135deg,#EDFBF2,#E0F8EA)} .defbox.db-g b{color:#1F9D57}
+.note{margin-top:12px;background:#FFF8E1;border-radius:14px;padding:11px 14px;font-weight:600;font-size:.92rem;line-height:1.5;border:2px dashed var(--yel)}
+.ciri{list-style:none;margin-top:12px;display:grid;gap:9px}
+.ciri li{background:#fff;border-radius:13px;padding:10px 14px 10px 46px;position:relative;box-shadow:var(--shadow);font-size:.95rem;line-height:1.45}
+.ciri li::before{content:'✓';position:absolute;left:13px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--grn);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800}
+.exrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.exlbl{width:100%;font-weight:800;color:var(--ink2);font-size:.85rem;letter-spacing:.4px}
+.ex{background:#fff;border-radius:14px;padding:8px 13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;font-weight:700;font-size:.92rem}
+.ex .em{font-size:1.45rem}
+.cols{display:grid;grid-template-columns:minmax(330px,5fr) 7fr;gap:22px;align-items:start}
+.mnav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.mnav button{border:2px solid #E4DBFF;background:#fff;color:var(--ink2);font-family:inherit;font-weight:700;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:.84rem;transition:.2s}
+.mnav button.cur{background:var(--pur);border-color:var(--pur);color:#fff}
+.mnav button:hover:not(.cur){transform:translateY(-1px);border-color:var(--pur2)}
+
+/* ===== stage svg interaktif ===== */
+.stage{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.stage svg{width:100%;height:auto;max-height:33vh;display:block;border-radius:14px;background:linear-gradient(180deg,#FCFBFF,#F1ECFF)}
+.stage .hint{margin-top:9px;font-size:.93rem;color:var(--ink2);text-align:center;font-weight:600;line-height:1.4}
+.ctrl{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+input[type=range]{flex:1;min-width:150px;accent-color:var(--pink);cursor:pointer;height:28px}
+input[type=range]:disabled{opacity:.5}
+.txtin{width:100%;font-family:inherit;font-size:1.08rem;font-weight:700;padding:13px 16px;border-radius:15px;border:3px solid #E9E1FF;outline:none;text-align:center;color:var(--ink);background:#FBF9FF;transition:.2s}
+.txtin:focus{border-color:var(--pink);background:#fff;box-shadow:0 0 0 5px rgba(255,107,157,.14)}
+.bigmsg{min-height:30px;text-align:center;font-weight:800;margin-top:9px;font-size:1rem;color:var(--pur);line-height:1.4}
+.flow{stroke-dasharray:16 11;animation:dashmove 1s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-27}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pu 1.15s ease-in-out infinite}
+@keyframes pu{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+.train{animation:choo 6.5s linear infinite alternate}
+@keyframes choo{from{transform:translateX(0)}to{transform:translateX(296px)}}
+@keyframes wig{20%{transform:translateX(-9px) rotate(-1deg)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.wiggle{animation:wig .5s}
+.deco{position:absolute;font-size:2.1rem;opacity:.9;animation:floaty 7s ease-in-out infinite;pointer-events:none;user-select:none;z-index:3}
+/* ===== S1 cover ===== */
+#s1 .inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.big-title{font-size:clamp(2.5rem,6.4vw,4.4rem);line-height:1.03;letter-spacing:.5px;background:linear-gradient(92deg,var(--pur) 10%,var(--pink) 55%,var(--org) 95%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 8px 16px rgba(255,107,157,.22))}
+#nameCard{margin-top:14px;width:min(470px,100%);display:flex;flex-direction:column;gap:11px;padding:22px}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.char{display:inline-block;animation:bounce 2.4s ease-in-out infinite}
+
+/* ===== S2 apersepsi (flip) ===== */
+.aper-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px;margin-top:16px}
+.aper{aspect-ratio:1/.82;perspective:700px;cursor:pointer}
+.aper-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.2,.4,1)}
+.aper.open .aper-inner{transform:rotateY(180deg)}
+.aper-f,.aper-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:12px;box-shadow:var(--shadow)}
+.aper-f{background:#fff;font-size:2.3rem}
+.aper-f b{font-size:.98rem;color:var(--ink)}
+.aper-f small{font-size:.72rem;color:var(--pink);font-weight:800}
+.aper-b{transform:rotateY(180deg);font-size:.9rem;line-height:1.45;color:#fff;font-weight:600}
+.aper-b b{color:#FFE47A}
+.think{margin-top:16px;background:linear-gradient(135deg,#FFF8E1,#FFF3C9);border:2px dashed var(--yel);border-radius:18px;padding:14px 18px;font-weight:600;line-height:1.55}
+
+/* ===== S3 tujuan ===== */
+.tj{display:flex;gap:14px;align-items:center;background:#fff;border-radius:18px;padding:13px 18px;box-shadow:var(--shadow);margin-top:12px}
+.tj .n{flex:none;width:46px;height:46px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:1.25rem;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.tj p{line-height:1.5;font-size:1rem}
+.tj b{color:var(--pur)}
+
+/* ===== S4 kartu sudut ===== */
+.angcard{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:11px 14px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;margin-top:10px;border:3px solid transparent}
+.angcard:hover{transform:translateY(-2px);border-color:var(--cc)}
+.angcard .ic{width:52px;height:52px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.55rem;background:var(--cbg)}
+.angcard b{display:block;font-size:.98rem}
+.angcard small{color:var(--ink2);font-weight:600;font-size:.85rem;line-height:1.35;display:block}
+
+/* ===== overlay & modal kuis ===== */
+#overlay{position:fixed;inset:0;background:rgba(58,46,92,.55);backdrop-filter:blur(3px);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.modal{width:min(540px,94vw);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;padding:24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35);animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.55);opacity:0}}
+.qemoji{font-size:4rem;line-height:1.15}
+#qmName{font-size:1.3rem;margin:6px 0 2px}
+.qq{color:var(--ink2);font-weight:700;margin-top:2px}
+.timerWrap{height:12px;background:#F1EAFF;border-radius:99px;overflow:hidden;margin:14px 0 4px}
+.timerBar{height:100%;width:100%;background:linear-gradient(90deg,var(--grn),var(--yel));border-radius:99px;transition:width .1s linear}
+.timerBar.danger{background:linear-gradient(90deg,#FF7B7B,var(--red))}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opt{padding:13px 10px;border-radius:15px;border:3px solid #EFE9FF;background:#FBF9FF;font-family:inherit;font-weight:800;font-size:.98rem;color:var(--ink);cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--pink2);transform:translateY(-2px)}
+.opt.correct{background:#E3FBE9;border-color:var(--grn);color:#157A43}
+.opt.wrong{background:#FFE7E7;border-color:#FF7B7B;color:#C02626}
+.opt.wide{width:100%;text-align:left;display:block;margin-top:10px;border-radius:14px;padding:12px 16px}
+.fb{min-height:26px;font-weight:800;margin-top:10px;font-size:1.02rem}
+
+/* ===== S9 kuis ===== */
+.qstats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.qstat{background:#fff;border-radius:999px;padding:7px 16px;box-shadow:var(--shadow);font-weight:800;font-size:.92rem}
+.qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;max-width:860px;margin:14px auto 0}
+.qcard{height:clamp(76px,12vh,106px);border:none;border-radius:16px;background:linear-gradient(135deg,#FFFFFF,#F1EAFF);box-shadow:var(--shadow);cursor:pointer;font-family:inherit;position:relative;transition:transform .15s}
+.qcard:hover:not([data-done]){transform:translateY(-4px) rotate(-1.5deg)}
+.qcard .num{position:absolute;top:6px;left:9px;font-size:.72rem;font-weight:800;color:var(--ink2)}
+.qcard .qi{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(1.4rem,3vw,2rem)}
+.qcard.ok{background:linear-gradient(135deg,#DFFFEA,#B9F6CF)}
+.qcard.bad{background:linear-gradient(135deg,#FFE3E3,#FFC9C9)}
+
+/* ===== S10 game ===== */
+#s10{background:linear-gradient(160deg,rgba(255,214,235,.55),rgba(255,236,244,.35))}
+#s10 .inner{max-width:800px}
+.gstats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;max-width:640px;margin:8px auto 0}
+.mcard{aspect-ratio:3/3.4;perspective:700px;cursor:pointer;background:transparent;border:none;padding:0}
+.mcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,1.2,.4,1)}
+.mcard.flipped .mcard-inner,.mcard.matched .mcard-inner{transform:rotateY(180deg)}
+.mface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:800;box-shadow:var(--shadow)}
+.mface.back{background:linear-gradient(135deg,#FF8FB8,#B18CFF);font-size:2rem}
+.mface.back::after{content:'Lili';font-size:.68rem;letter-spacing:1px;opacity:.9}
+.mface.front{transform:rotateY(180deg);background:#fff;color:var(--ink);font-size:.86rem;padding:8px;text-align:center;line-height:1.25}
+.mface.front .em{font-size:2rem}
+.mface.front .sym{font-size:2.1rem;color:var(--pink);line-height:1.1}
+.mface.front small{color:var(--ink2);font-weight:700;font-size:.68rem}
+.mcard.matched .mface.front{background:linear-gradient(135deg,#FFE9F3,#FFD9EA);border:3px solid var(--pink);animation:matchpop .5s}
+@keyframes matchpop{50%{transform:rotateY(180deg) scale(1.1)}}
+.mascot{display:flex;gap:10px;align-items:center;justify-content:center;background:#fff;border-radius:999px;padding:8px 18px;box-shadow:var(--shadow);max-width:660px;margin:12px auto 0;font-weight:600;font-size:.93rem;text-align:left}
+.mascot .mf{font-size:1.5rem}
+@keyframes pop2{40%{transform:scale(1.06)}}
+.pop{animation:pop2 .4s}
+
+/* ===== S11 exit ticket ===== */
+#s11 .inner,#s13 .inner{max-width:800px}
+.exitDots{display:flex;gap:8px;justify-content:center;margin:4px 0 2px}
+.exitDots span{width:12px;height:12px;border-radius:50%;background:#E4DBFF;transition:.3s}
+.exitDots span.cur{background:var(--pur);transform:scale(1.25)}
+.exitDots span.ok{background:var(--grn)}
+.exitDots span.bad{background:#FF7B7B}
+.qnum{display:inline-block;background:var(--pur);color:#fff;border-radius:999px;padding:3px 12px;font-size:.78rem;font-weight:800;margin-bottom:6px}
+.exitq{font-size:1.08rem;line-height:1.5;margin-top:6px;font-weight:600}
+.stamp{display:inline-block;margin-top:12px;padding:12px 26px;border:4px solid var(--grn);color:#1F9D57;font-size:1.4rem;font-weight:900;border-radius:14px;transform:rotate(-8deg);animation:stampin .5s cubic-bezier(.2,1.6,.4,1);letter-spacing:2px}
+@keyframes stampin{from{transform:rotate(-8deg) scale(3);opacity:0}}
+
+/* ===== S12 kesimpulan ===== */
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.sum{border-radius:20px;padding:16px;color:#fff;box-shadow:var(--shadow)}
+.sum h3{font-size:1.12rem;margin-bottom:8px;display:flex;gap:8px;align-items:center;justify-content:center}
+.sum p{font-size:.9rem;line-height:1.5;text-align:center;font-weight:600}
+.msvg{width:100%;height:60px;background:rgba(255,255,255,.22);border-radius:12px;margin-bottom:10px;display:block}
+.sum.s1{background:linear-gradient(135deg,#4D96FF,#7BB4FF)}
+.sum.s2{background:linear-gradient(135deg,#FF5C7A,#FF8FA3)}
+.sum.s3{background:linear-gradient(135deg,#2FB86B,#57D68F)}
+.sum.s4{background:linear-gradient(135deg,#B478FF,#8E5CF6)}
+.rhyme{margin-top:16px;background:linear-gradient(135deg,#FFF3D6,#FFE8B3);border:2px dashed var(--yel);border-radius:18px;padding:14px 20px;font-weight:600;line-height:1.7;text-align:center}
+
+/* ===== S13 refleksi ===== */
+.rsec{margin-top:13px;padding:15px 18px}
+.rq{font-weight:800;margin-bottom:9px;font-size:1rem}
+.rrow{display:flex;gap:11px;flex-wrap:wrap;justify-content:center}
+.rbtn{font-size:1.9rem;border:none;background:#FBF9FF;border:3px solid transparent;border-radius:18px;padding:9px 15px 6px;cursor:pointer;box-shadow:var(--shadow);transition:.2s;font-family:inherit;line-height:1.1}
+.rbtn small{display:block;font-size:.68rem;color:var(--ink2);font-weight:800;margin-top:2px}
+.rbtn.sel{background:#FFF0F6;border-color:var(--pink);transform:scale(1.1)}
+.stars{text-align:center;user-select:none}
+.stars span{cursor:pointer;font-size:2.1rem;color:#DDD2FF;transition:.15s;display:inline-block;margin:0 4px}
+.stars span.on{color:var(--yel);transform:scale(1.2);text-shadow:0 4px 10px rgba(255,201,61,.5)}
+.fchip{border:2px solid #E4DBFF;background:#fff;border-radius:999px;padding:9px 16px;font-family:inherit;font-weight:700;cursor:pointer;transition:.2s;color:var(--ink2);font-size:.92rem}
+.fchip.sel{background:var(--pink);border-color:var(--pink);color:#fff;transform:scale(1.05)}
+
+/* ===== S14 thanks ===== */
+#s14{background:linear-gradient(180deg,rgba(255,236,246,.6),rgba(243,238,255,.6))}
+#s14 .inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;max-width:900px}
+.ty-title{font-size:clamp(2.3rem,5.8vw,4rem);background:linear-gradient(92deg,var(--pink),var(--pur),var(--blu));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.recap{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.recard{background:#fff;border-radius:18px;padding:13px 22px;box-shadow:var(--shadow);min-width:165px}
+.recard .v{font-size:1.3rem;font-weight:900;color:var(--pur)}
+.recard small{color:var(--ink2);font-weight:700}
+
+/* ===== responsif ===== */
+@media(max-width:920px){
+  .slide{padding:64px 16px 90px}
+  .cols{grid-template-columns:1fr}
+  .qgrid{grid-template-columns:repeat(4,1fr)}
+  .mgrid{grid-template-columns:repeat(3,1fr);max-width:100%}
+  .big-title{font-size:2.5rem}
+  .blob{display:none}
+}
+/* ===== layar pendek (proyektor) ===== */
+@media(max-height:800px){
+  .slide{padding:62px 56px 88px}
+  .angcard{padding:8px 12px;margin-top:8px}
+  .angcard .ic{width:44px;height:44px;font-size:1.3rem}
+  .defbox{padding:12px 14px;font-size:.95rem}
+  .tj{padding:10px 16px;margin-top:9px}
+  .ciri li{padding:8px 12px 8px 42px;font-size:.9rem}
+  .stage{padding:12px}
+  .bigmsg{font-size:.92rem}
+  .qcard{height:clamp(70px,11vh,96px)}
+  .mcard{aspect-ratio:3/3.2}
+  .exrow{margin-top:10px;gap:8px}
+}
+@media(max-width:560px){
+  .qgrid{grid-template-columns:repeat(3,1fr)}
+  .mgrid{grid-template-columns:repeat(3,1fr)}
+  h2.stitle{font-size:1.45rem}
+  .opts{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<span class="blob" style="width:300px;height:300px;background:#FFD9EC;top:-90px;left:-70px"></span>
+<span class="blob" style="width:360px;height:360px;background:#E4DBFF;bottom:-130px;right:-90px;animation-delay:1.6s"></span>
+<span class="blob" style="width:210px;height:210px;background:#FFF3C9;top:42%;right:10%;animation-delay:.8s;opacity:.3"></span>
+
+<div id="topbar">
+  <span class="chip" id="nameChip">👧 Sahabat</span>
+  <span class="chip" id="counter">1 / 14</span>
+  <button class="ibtn" id="sndBtn" title="Suara nyala/mati">🔊</button>
+  <button class="ibtn" id="fsBtn" title="Layar penuh">⛶</button>
+</div>
+<div id="barWrap"><div id="bar"></div></div>
+<div id="nav">
+  <button class="nbtn" id="prevBtn" title="Slide sebelumnya">◀</button>
+  <div id="dots"></div>
+  <button class="nbtn" id="nextBtn" title="Slide berikutnya">▶</button>
+</div>
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+
+<main id="deck">
+<!-- ============ SLIDE 1 : COVER ============ -->
+<section class="slide active" id="s1">
+  <span class="deco" style="top:13%;left:7%">📏</span>
+  <span class="deco" style="top:17%;right:9%;animation-delay:1.2s">✏️</span>
+  <span class="deco" style="bottom:22%;left:11%;animation-delay:.6s">📐</span>
+  <span class="deco" style="bottom:18%;right:8%;animation-delay:1.8s">🧮</span>
+  <span class="deco" style="top:46%;left:3.5%;animation-delay:2.2s;font-size:1.6rem">💗</span>
+  <span class="deco" style="top:42%;right:3.5%;animation-delay:.9s;font-size:1.6rem">⭐</span>
+  <div class="inner">
+    <div class="rv" style="--d:.05s"><span class="kicker">✨ MATEMATIKA KELAS 4 SD ✨</span></div>
+    <h1 class="big-title rv" style="--d:.15s">Hubungan<br>Antar Garis</h1>
+    <p class="lead rv" style="--d:.25s;font-weight:700">Sejajar ∥ &nbsp;•&nbsp; Berpotongan ✕ &nbsp;•&nbsp; Tegak Lurus ⊥ &nbsp;•&nbsp; Berimpit ＝</p>
+    <div class="rv" style="--d:.33s;font-size:2.5rem">
+      <span class="char">📐</span><span class="char" style="animation-delay:.3s">📏</span><span class="char" style="animation-delay:.6s">✏️</span>
+    </div>
+    <div class="card rv" id="nameCard" style="--d:.45s">
+      <p style="font-weight:800;margin-bottom:2px">Halo, Sahabat Matematika! Siapa namamu? 😊</p>
+      <input class="txtin" id="nameInput" maxlength="20" placeholder="Tulis namamu di sini..." autocomplete="off">
+      <button class="btn" id="startBtn">Mulai Belajar 🚀</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 : APERSEPSI ============ -->
+<section class="slide" id="s2">
+  <div class="inner">
+    <div class="rv"><span class="kicker">KEGIATAN AWAL 🌤️</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Ayo Amati Sekitarmu! <span class="hl">🔍</span></h2>
+    <p class="lead rv" style="--d:.1s">Sebelum masuk materi, perhatikan benda-benda yang sering kamu temui. <b>Klik setiap kartu</b> untuk membuka rahasia garis yang bersembunyi di dalamnya! 👇</p>
+    <div class="aper-grid rv" style="--d:.15s">
+      <div class="aper" onclick="this.classList.toggle('open')"><div class="aper-inner">
+        <div class="aper-f">🚂<b>Rel Kereta Api</b><small>klik aku! 👆</small></div>
+        <div class="aper-b" style="background:linear-gradient(135deg,#4D96FF,#7BB4FF)">Lihat relnya!<br>Dua rel <b>tidak pernah bertemu</b> dan <b>jaraknya selalu sama</b>. Hubungan apa ya? 🤔</div>
+      </div></div>
+      <div class="aper" onclick="this.classList.toggle('open')"><div class="aper-inner">
+        <div class="aper-f">✂️<b>Gunting Terbuka</b><small>klik aku! 👆</small></div>
+        <div class="aper-b" style="background:linear-gradient(135deg,#FF5C7A,#FF8FA3)">Kedua bilah gunting <b>menyilang di satu titik temu</b>. Menarik sekali! 🤔</div>
+      </div></div>
+      <div class="aper" onclick="this.classList.toggle('open')"><div class="aper-inner">
+        <div class="aper-f">🕒<b>Jam Pukul 03.00</b><small>klik aku! 👆</small></div>
+        <div class="aper-b" style="background:linear-gradient(135deg,#FF9F45,#FFBE7A)">Kedua jarum jam membentuk sudut yang <b>siku-siku sempurna</b>! 🤔</div>
+      </div></div>
+      <div class="aper" onclick="this.classList.toggle('open')"><div class="aper-inner">
+        <div class="aper-f">📄<b>Kertas Dilipat</b><small>klik aku! 👆</small></div>
+        <div class="aper-b" style="background:linear-gradient(135deg,#8E5CF6,#B478FF)">Lipatan kertas <b>menumpuk tepat di satu garis yang sama</b>. Unik, kan? 🤔</div>
+      </div></div>
+    </div>
+    <div class="think rv" style="--d:.2s">💭 <b>Pertanyaan pemantik:</b> Menurutmu, apa saja hubungan yang mungkin terjadi antara <b>dua garis lurus</b>? Diskusikan dulu dengan teman sebangkumu, lalu kita cari jawabannya bersama! 🙌</div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : TUJUAN ============ -->
+<section class="slide" id="s3">
+  <div class="inner">
+    <div class="rv"><span class="kicker">SETELAH BELAJAR INI, KAMU BISA... 🎯</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Tujuan Pembelajaran</h2>
+    <div class="tj rv" style="--d:.1s"><span class="n" style="background:var(--blu)">1</span><p>Menyebutkan <b>jenis-jenis sudut</b> — lancip, siku-siku, dan tumpul — beserta ciri-cirinya.</p></div>
+    <div class="tj rv" style="--d:.15s"><span class="n" style="background:var(--pink)">2</span><p>Menjelaskan pengertian <b>garis sejajar, berpotongan, tegak lurus, dan berimpit</b> dengan bahasamu sendiri.</p></div>
+    <div class="tj rv" style="--d:.2s"><span class="n" style="background:var(--org)">3</span><p>Membedakan hubungan antar garis dari <b>gambar dan benda-benda di sekitar</b> kehidupan sehari-hari.</p></div>
+    <div class="tj rv" style="--d:.25s"><span class="n" style="background:var(--grn)">4</span><p>Menunjukkan <b>percaya diri dan semangat belajar</b> melalui kuis jawab cepat, permainan seru, dan refleksi.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : JENIS SUDUT ============ -->
+<section class="slide" id="s4">
+  <div class="inner">
+    <div class="rv"><span class="kicker">MATERI AWAL • KENALAN DULU 🤝</span></div>
+    <div class="mnav rv" style="--d:.03s">
+      <button class="cur">📐 Sudut</button>
+      <button onclick="go(4)">∥ Sejajar</button><button onclick="go(5)">✕ Berpotongan</button><button onclick="go(6)">⊥ Tegak Lurus</button><button onclick="go(7)">＝ Berimpit</button>
+    </div>
+    <h2 class="stitle rv" style="--d:.05s">Jenis-Jenis Sudut <span class="hl">📐</span></h2>
+    <div class="cols">
+      <div>
+        <div class="defbox rv" style="--d:.1s">📐 <b>Sudut</b> terbentuk saat <b>dua garis bertemu di satu titik</b>, diukur dengan <b>derajat (°)</b>. Geser slider dan amati 3 jenisnya!</div>
+        <div class="angcard rv" style="--d:.15s;--cc:#4D96FF;--cbg:#E3EEFF" data-deg="40"><span class="ic">🔵</span><span><b>Sudut Lancip</b><small>Kurang dari 90° — runcing kecil, seperti potongan pizza.</small></span></div>
+        <div class="angcard rv" style="--d:.2s;--cc:#3ECB7B;--cbg:#E0F8EA" data-deg="90"><span class="ic">🟢</span><span><b>Sudut Siku-siku</b><small>Tepat 90° — bentuknya seperti huruf L.</small></span></div>
+        <div class="angcard rv" style="--d:.25s;--cc:#FF9F45;--cbg:#FFF1DE" data-deg="125"><span class="ic">🟠</span><span><b>Sudut Tumpul</b><small>Lebih dari 90°, kurang dari 180° — terbuka lebar.</small></span></div>
+      </div>
+      <div class="stage rv" style="--d:.15s">
+        <svg viewBox="0 0 320 200">
+          <line x1="40" y1="170" x2="292" y2="170" stroke="#3A2E5C" stroke-width="6" stroke-linecap="round"/>
+          <line id="rayB" x1="40" y1="170" x2="215" y2="60" stroke="#4D96FF" stroke-width="6" stroke-linecap="round"/>
+          <path id="angArc" fill="none" stroke="#4D96FF" stroke-width="3.5" d="M 86 170 A 46 46 0 0 0 67 130"/>
+          <path id="raMark" fill="none" stroke="#1F9D57" stroke-width="3" style="display:none"/>
+          <circle cx="40" cy="170" r="6" fill="#3A2E5C"/>
+          <text x="252" y="190" font-size="12" font-weight="700" fill="#6F639B">garis 1</text>
+          <text id="rayLbl" x="140" y="105" font-size="12" font-weight="700" fill="#4D96FF">garis 2</text>
+        </svg>
+        <div class="hint">🎚️ Geser slider: <b>Sudut sekarang <span id="angVal">40°</span></b> — <b id="angType" style="color:#4D96FF">Sudut Lancip</b></div>
+        <div class="ctrl"><input type="range" id="angSlider" min="0" max="180" value="40" step="1"></div>
+        <div class="bigmsg" id="angMsg">🎯 Tantangan: buat sudut SIKU-SIKU (tepat 90°)!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 : SEJAJAR ============ -->
+<section class="slide" id="s5">
+  <div class="inner">
+    <div class="rv"><span class="kicker">MATERI 1 DARI 4 • HUBUNGAN ANTAR GARIS</span></div>
+    <div class="mnav rv" style="--d:.03s">
+      <button onclick="go(3)">📐 Sudut</button>
+      <button class="cur">∥ Sejajar</button><button onclick="go(5)">✕ Berpotongan</button><button onclick="go(6)">⊥ Tegak Lurus</button><button onclick="go(7)">＝ Berimpit</button>
+    </div>
+    <h2 class="stitle rv" style="--d:.05s">1. Garis Sejajar <span style="color:var(--blu)">∥</span></h2>
+    <div class="cols">
+      <div>
+        <div class="defbox db-b rv" style="--d:.1s"><b>Apa itu garis sejajar?</b><br>Dua garis lurus yang <b>tidak akan pernah berpotongan</b> (tidak pernah bertemu), walaupun diperpanjang terus-menerus sampai tak terhingga. <b>Jarak antar keduanya selalu sama.</b></div>
+        <ul class="ciri rv" style="--d:.15s">
+          <li>Tidak pernah bertemu — tidak punya titik potong</li>
+          <li>Jarak antara kedua garis selalu sama</li>
+          <li>Arahnya sama, seperti teman berjalan berdampingan</li>
+        </ul>
+        <div class="exrow rv" style="--d:.2s">
+          <span class="exlbl">CONTOH DI SEKITAR KITA 👀</span>
+          <span class="ex"><span class="em">🚂</span>Rel kereta api</span>
+          <span class="ex"><span class="em">🚸</span>Zebra cross</span>
+          <span class="ex"><span class="em">🎸</span>Senar gitar</span>
+          <span class="ex"><span class="em">🏟️</span>Jalur lari stadion</span>
+        </div>
+      </div>
+      <div class="stage rv" style="--d:.15s">
+        <svg viewBox="0 0 320 210">
+          <line id="parA" x1="30" y1="70" x2="290" y2="70" stroke="#4D96FF" stroke-width="7" stroke-linecap="round" class="flow"/>
+          <line id="parB" x1="30" y1="140" x2="290" y2="140" stroke="#3ECB7B" stroke-width="7" stroke-linecap="round" class="flow"/>
+          <line x1="252" y1="80" x2="252" y2="130" stroke="#FF9F45" stroke-width="3"/>
+          <path d="M252 76 l-5 9 h10 z" fill="#FF9F45"/>
+          <path d="M252 134 l-5 -9 h10 z" fill="#FF9F45"/>
+          <text x="252" y="160" font-size="11.5" font-weight="700" fill="#E08316" text-anchor="middle">jarak selalu sama</text>
+          <text class="train" x="-28" y="119" font-size="27">🚂</text>
+          <text x="34" y="54" font-size="12" font-weight="700" fill="#4D96FF">garis biru</text>
+          <text x="34" y="166" font-size="12" font-weight="700" fill="#2FA35C">garis hijau</text>
+        </svg>
+        <div class="hint">🚂 Perhatikan: jarak kedua garis TIDAK PERNAH berubah!</div>
+        <div class="ctrl">
+          <button class="btn small" id="parBtn">✨ Perpanjang Garisnya!</button>
+          <button class="btn small sec" id="parReset">Atur Ulang</button>
+        </div>
+        <div class="bigmsg" id="parMsg">Coba klik tombol di atas — buktikan mereka takkan pernah bertemu!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : BERPOTONGAN ============ -->
+<section class="slide" id="s6">
+  <div class="inner">
+    <div class="rv"><span class="kicker">MATERI 2 DARI 4 • HUBUNGAN ANTAR GARIS</span></div>
+    <div class="mnav rv" style="--d:.03s">
+      <button onclick="go(3)">📐 Sudut</button>
+      <button onclick="go(4)">∥ Sejajar</button><button class="cur">✕ Berpotongan</button><button onclick="go(6)">⊥ Tegak Lurus</button><button onclick="go(7)">＝ Berimpit</button>
+    </div>
+    <h2 class="stitle rv" style="--d:.05s">2. Garis Berpotongan <span style="color:var(--red)">✕</span></h2>
+    <div class="cols">
+      <div>
+        <div class="defbox db-p rv" style="--d:.1s"><b>Apa itu garis berpotongan?</b><br>Dua garis lurus yang <b>bertemu atau menyilang di satu titik</b>. Titik temu kedua garis tersebut disebut <b>titik potong</b>.</div>
+        <ul class="ciri rv" style="--d:.15s">
+          <li>Bertemu (bersilangan) di tepat satu titik</li>
+          <li>Titik temu itu bernama titik potong</li>
+          <li>Membentuk sudut — besarnya bisa berbeda-beda</li>
+        </ul>
+        <div class="note rv" style="--d:.18s">💡 Titik potong biasanya diberi nama huruf, misalnya <b>titik K</b>.</div>
+        <div class="exrow rv" style="--d:.2s">
+          <span class="exlbl">CONTOH DI SEKITAR KITA 👀</span>
+          <span class="ex"><span class="em">✂️</span>Gunting terbuka</span>
+          <span class="ex"><span class="em">❌</span>Tanda silang (X)</span>
+          <span class="ex"><span class="em">🍕</span>Pizza dipotong</span>
+          <span class="ex"><span class="em">🚧</span>Palang pintu kereta</span>
+        </div>
+      </div>
+      <div class="stage rv" style="--d:.15s">
+        <svg viewBox="0 0 320 210">
+          <line x1="14" y1="105" x2="306" y2="105" stroke="#4D96FF" stroke-width="7" stroke-linecap="round"/>
+          <line id="bpB" x1="74" y1="-19" x2="246" y2="229" stroke="#FF5C7A" stroke-width="7" stroke-linecap="round"/>
+          <path id="bpArc" fill="none" stroke="#FF9F45" stroke-width="3"/>
+          <circle id="bpDot" cx="160" cy="105" r="7" fill="#FF3B5C" class="pulse"/>
+          <text x="172" y="93" font-size="12" font-weight="800" fill="#C02626">titik potong 🔴</text>
+          <text x="20" y="88" font-size="12" font-weight="700" fill="#4D96FF">garis biru</text>
+        </svg>
+        <div class="hint">🎚️ Geser untuk memutar garis merah: <b>Sudut antar garis = <span id="bpVal">55°</span></b></div>
+        <div class="ctrl"><input type="range" id="bpSlider" min="15" max="165" value="55" step="1"></div>
+        <div class="bigmsg">Berapa pun sudutnya, kedua garis SELALU bersilang di TEPAT SATU titik potong! 🔴</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : TEGAK LURUS ============ -->
+<section class="slide" id="s7">
+  <div class="inner">
+    <div class="rv"><span class="kicker">MATERI 3 DARI 4 • HUBUNGAN ANTAR GARIS</span></div>
+    <div class="mnav rv" style="--d:.03s">
+      <button onclick="go(3)">📐 Sudut</button>
+      <button onclick="go(4)">∥ Sejajar</button><button onclick="go(5)">✕ Berpotongan</button><button class="cur">⊥ Tegak Lurus</button><button onclick="go(7)">＝ Berimpit</button>
+    </div>
+    <h2 class="stitle rv" style="--d:.05s">3. Garis Tegak Lurus <span style="color:var(--grn)">⊥</span></h2>
+    <div class="cols">
+      <div>
+        <div class="defbox db-g rv" style="--d:.1s"><b>Apa itu garis tegak lurus?</b><br>Dua garis yang <b>berpotongan</b> dan membentuk <b>sudut siku-siku (90°)</b> di titik potongnya.</div>
+        <ul class="ciri rv" style="--d:.15s">
+          <li>Berpotongan di satu titik</li>
+          <li>Membentuk 4 sudut yang semuanya 90°</li>
+          <li>Ada tanda siku-siku kecil ⌐ di titik potong</li>
+        </ul>
+        <div class="note rv" style="--d:.18s">💡 Jadi, garis tegak lurus adalah <b>keadaan khusus</b> dari garis berpotongan — yaitu saat sudutnya tepat 90°!</div>
+        <div class="exrow rv" style="--d:.2s">
+          <span class="exlbl">CONTOH DI SEKITAR KITA 👀</span>
+          <span class="ex"><span class="em">🕒</span>Jam pukul 03.00</span>
+          <span class="ex"><span class="em">➕</span>Tanda plus apotek</span>
+          <span class="ex"><span class="em">🖼️</span>Bingkai foto</span>
+          <span class="ex"><span class="em">🚩</span>Tiang bendera &amp; tanah</span>
+        </div>
+      </div>
+      <div class="stage rv" style="--d:.15s">
+        <svg viewBox="0 0 320 210">
+          <line x1="14" y1="105" x2="306" y2="105" stroke="#4D96FF" stroke-width="7" stroke-linecap="round"/>
+          <line id="tlB" x1="135" y1="-23" x2="185" y2="233" stroke="#FF9F45" stroke-width="7" stroke-linecap="round"/>
+          <path id="tlArc" fill="none" stroke="#FF9F45" stroke-width="3"/>
+          <g id="tlSquares" stroke="#1F9D57" stroke-width="2.5" fill="none" style="display:none">
+            <path d="M160 105 V87 H178 V105"/><path d="M160 105 V87 H142 V105"/>
+            <path d="M160 105 V123 H178 V105"/><path d="M160 105 V123 H142 V105"/>
+          </g>
+          <circle id="tlDot" cx="160" cy="105" r="7" fill="#FF3B5C" class="pulse"/>
+          <text x="20" y="88" font-size="12" font-weight="700" fill="#4D96FF">garis biru</text>
+        </svg>
+        <div class="hint">🎚️ Atur garis oranye hingga TEPAT 90°: <b>Sudut = <span id="tlVal">40°</span></b></div>
+        <div class="ctrl"><input type="range" id="tlSlider" min="5" max="175" value="40" step="1"></div>
+        <div class="bigmsg" id="tlMsg">Cari posisi tegak lurus! Petunjuk: tanda siku ⌐ muncul saat tepat 90° 🟢</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : BERIMPIT ============ -->
+<section class="slide" id="s8">
+  <div class="inner">
+    <div class="rv"><span class="kicker">MATERI 4 DARI 4 • HUBUNGAN ANTAR GARIS</span></div>
+    <div class="mnav rv" style="--d:.03s">
+      <button onclick="go(3)">📐 Sudut</button>
+      <button onclick="go(4)">∥ Sejajar</button><button onclick="go(5)">✕ Berpotongan</button><button onclick="go(6)">⊥ Tegak Lurus</button><button class="cur">＝ Berimpit</button>
+    </div>
+    <h2 class="stitle rv" style="--d:.05s">4. Garis Berimpit <span style="color:var(--pur)">＝</span></h2>
+    <div class="cols">
+      <div>
+        <div class="defbox rv" style="--d:.1s"><b>Apa itu garis berimpit?</b><br>Dua garis yang <b>menumpuk tepat di garis yang sama</b> — terlihat seperti <b>satu garis saja</b>, padahal ada dua!</div>
+        <ul class="ciri rv" style="--d:.15s">
+          <li>Kedua garis saling menutupi persis</li>
+          <li>Semua titiknya sama (tidak terlihat bedanya)</li>
+          <li>Titik potongnya ada tak terhingga banyaknya</li>
+        </ul>
+        <div class="note rv" style="--d:.18s">💡 Karena menumpuk sempurna, <b>semua titik</b> di garis itu adalah titik potongnya — jumlahnya <b>tak terhingga ∞</b>!</div>
+        <div class="exrow rv" style="--d:.2s">
+          <span class="exlbl">CONTOH DI SEKITAR KITA 👀</span>
+          <span class="ex"><span class="em">📄</span>Kertas dilipat</span>
+          <span class="ex"><span class="em">🕛</span>Jam pukul 12.00</span>
+          <span class="ex"><span class="em">✏️</span>Pensil menumpuk</span>
+          <span class="ex"><span class="em">🥢</span>Sumpit menempel</span>
+        </div>
+      </div>
+      <div class="stage rv" style="--d:.15s">
+        <svg viewBox="0 0 320 210">
+          <line id="biA" x1="30" y1="70" x2="290" y2="70" stroke="#4D96FF" stroke-width="7" stroke-linecap="round"/>
+          <line id="biB" x1="30" y1="130" x2="290" y2="130" stroke="#FF5C7A" stroke-width="7" stroke-linecap="round" stroke-dasharray="13 9"/>
+          <line id="biGapL" x1="160" y1="78" x2="160" y2="122" stroke="#FF9F45" stroke-width="3" stroke-dasharray="5 5"/>
+          <text id="biGapT" x="172" y="104" font-size="12" font-weight="700" fill="#E08316">jarak: 60</text>
+          <text id="biLblA" x="34" y="54" font-size="12" font-weight="700" fill="#4D96FF">garis biru</text>
+          <text id="biLblB" x="34" y="156" font-size="12" font-weight="700" fill="#E04B66">garis merah</text>
+        </svg>
+        <div class="hint">🎚️ Geser garis merah ke bawah sampai MENEMPEL dengan garis biru!</div>
+        <div class="ctrl">
+          <input type="range" id="biSlider" min="0" max="60" value="0" step="1">
+          <button class="btn small sec" id="biReset">Atur Ulang</button>
+        </div>
+        <div class="bigmsg" id="biMsg">Gesar garis merah ke bawah sampai MENEMPEL sempurna dengan garis biru!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : KUIS JAWAB CEPAT ============ -->
+<section class="slide" id="s9">
+  <div class="inner">
+    <div class="rv"><span class="kicker">AYO BERLATIH ⚡</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Kuis Jawab Cepat! ⚡</h2>
+    <div class="card rv" id="quizIntro" style="--d:.1s;text-align:center;max-width:720px;margin:10px auto 0">
+      <p style="font-size:1.05rem;line-height:1.6">Ada <b>20 kartu</b> berisi benda-benda di sekitar kita yang menunggumu! 🎁<br>
+      Aturannya: buka kartu → lihat bendanya → jawab <b>secepat mungkin</b> sebelum waktu <b>10 detik</b> habis.<br>Tiap jawaban benar bernilai <b>+10 poin</b>. Siap? 💪</p>
+      <button class="btn" id="quizGo" style="margin-top:10px">Mulai Kuis 🎯</button>
+    </div>
+    <div id="quizPlay" style="display:none">
+      <div class="qstats rv"><span class="qstat">🏆 Skor: <b id="qScore">0</b></span><span class="qstat">📦 Kartu: <b id="qProg">0 / 20</b></span></div>
+      <div class="qgrid" id="qgrid"></div>
+    </div>
+    <div class="card" id="quizResult" style="display:none;text-align:center;max-width:640px;margin:12px auto 0">
+      <div style="font-size:2.7rem" id="qrEmoji">🏆</div>
+      <h3>Hasil Kuis Jawab Cepat</h3>
+      <div style="font-size:1.9rem;margin:4px 0" id="qrStars">⭐⭐⭐</div>
+      <p style="font-size:1.5rem;font-weight:900;color:var(--pur)" id="qrScore">0 / 200</p>
+      <p style="line-height:1.5;font-weight:600" id="qrMsg"></p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+        <button class="btn sec" id="qRetry">🔁 Ulangi Kuis</button>
+        <button class="btn" id="qToGame">Lanjut ke Game 🎮</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : GAME SERU ============ -->
+<section class="slide" id="s10">
+  <span class="deco" style="top:12%;left:4%;font-size:1.7rem">💗</span>
+  <span class="deco" style="top:16%;right:5%;font-size:1.7rem;animation-delay:1s">🌸</span>
+  <span class="deco" style="bottom:24%;left:3%;font-size:1.5rem;animation-delay:1.7s">🦄</span>
+  <span class="deco" style="bottom:30%;right:3.5%;font-size:1.5rem;animation-delay:.5s">✨</span>
+  <div class="inner">
+    <div class="rv"><span class="kicker kpink">GAME SERU 💗 PASTEL PARTY</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Sweet Line Café <span style="font-size:.85em">🧁</span></h2>
+    <p class="lead rv" style="--d:.08s">Bantu <b>Lili si Unicorn 🦄</b> mencocokkan pasangan manis: <b>benda</b> dengan <b>hubungan garisnya</b>! Buka 2 kartu — jika cocok, pasangan itu milikmu! 🌸</p>
+    <div class="gstats rv" style="--d:.12s">
+      <span class="qstat">👣 Langkah: <b id="gMoves">0</b></span>
+      <span class="qstat">⏱️ Waktu: <b id="gTime">0:00</b></span>
+      <span class="qstat">💗 Pasangan: <b id="gPairs">0 / 6</b></span>
+      <button class="btn small sec" id="gReset">🔀 Acak Ulang</button>
+    </div>
+    <div class="mgrid" id="mgrid"></div>
+    <div class="card" id="gWin" style="display:none;text-align:center;max-width:520px;margin:10px auto 0">
+      <div style="font-size:2.5rem">🎉👑🎉</div>
+      <h3>HEBAT, <span id="gwName">Sahabat</span>!</h3>
+      <p style="line-height:1.6;font-weight:600">Kamu menemukan semua pasangan manis dalam <b id="gwMoves">0</b> langkah, waktu <b id="gwTime">0:00</b>. Lili sangat bangga padamu! 🦄💖</p>
+      <button class="btn" id="gAgain" style="margin-top:8px">🔄 Main Lagi</button>
+    </div>
+    <div class="mascot" id="gMascot"><span class="mf">🦄</span><span id="mascotSay">Halo! Aku Lili. Buka dua kartu untuk mencocokkan ya! 💕</span></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : EXIT TICKET ============ -->
+<section class="slide" id="s11">
+  <div class="inner">
+    <div class="rv"><span class="kicker">SIAP PULANG? TUNGGU DULU! 🎫</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Exit Ticket</h2>
+    <p class="lead rv" style="--d:.08s">Jawab <b>5 soal singkat</b> ini untuk "membeli" tiket pulangmu. Semangat! 💪</p>
+    <div class="card rv" id="exitCard" style="--d:.12s">
+      <div class="exitDots" id="exitDots"></div>
+      <p class="exitq" id="exitQ"></p>
+      <div id="exitOpts"></div>
+      <div class="fb" id="exitFb"></div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn" id="exitNext" style="display:none">Lanjut →</button></div>
+    </div>
+    <div class="card" id="exitResult" style="display:none;text-align:center">
+      <h3>Tiket Pulangmu! 🎫</h3>
+      <p style="font-size:1.6rem;font-weight:900;color:var(--pur);margin:6px 0" id="erScore">0 / 5</p>
+      <p style="line-height:1.55;font-weight:600" id="erMsg"></p>
+      <div><span class="stamp" id="erStamp">TICKET OK ✔</span></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+        <button class="btn sec" id="erAgain">🔁 Coba Lagi</button>
+        <button class="btn" id="erToSum">Lanjut ke Kesimpulan 📝</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : KESIMPULAN ============ -->
+<section class="slide" id="s12">
+  <div class="inner">
+    <div class="rv"><span class="kicker">APA YANG SUDAH KITA PELAJARI? 📝</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Kesimpulan</h2>
+    <p class="lead rv" style="--d:.08s">Empat hubungan antar garis yang sekarang sudah kamu kuasai:</p>
+    <div class="sumgrid">
+      <div class="sum s1 rv" style="--d:.1s">
+        <svg class="msvg" viewBox="0 0 200 64"><line x1="18" y1="22" x2="182" y2="22" stroke="#fff" stroke-width="6" stroke-linecap="round"/><line x1="18" y1="44" x2="182" y2="44" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".6"/></svg>
+        <h3>∥ Garis Sejajar</h3><p>Tidak akan pernah berpotongan. Jaraknya selalu sama, arahnya sama.</p>
+      </div>
+      <div class="sum s2 rv" style="--d:.15s">
+        <svg class="msvg" viewBox="0 0 200 64"><line x1="30" y1="10" x2="170" y2="54" stroke="#fff" stroke-width="6" stroke-linecap="round"/><line x1="30" y1="54" x2="170" y2="10" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/><circle cx="100" cy="32" r="7" fill="#fff"/></svg>
+        <h3>✕ Garis Berpotongan</h3><p>Bertemu di tepat satu titik yang disebut titik potong.</p>
+      </div>
+      <div class="sum s3 rv" style="--d:.2s">
+        <svg class="msvg" viewBox="0 0 200 64"><line x1="100" y1="8" x2="100" y2="56" stroke="#fff" stroke-width="6" stroke-linecap="round"/><line x1="40" y1="32" x2="160" y2="32" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path d="M100 20 h12 v12" fill="none" stroke="#fff" stroke-width="3"/></svg>
+        <h3>⊥ Garis Tegak Lurus</h3><p>Berpotongan dan membentuk sudut siku-siku 90°.</p>
+      </div>
+      <div class="sum s4 rv" style="--d:.25s">
+        <svg class="msvg" viewBox="0 0 200 64"><line x1="20" y1="32" x2="180" y2="32" stroke="#fff" stroke-width="8" stroke-linecap="round"/><line x1="20" y1="32" x2="180" y2="32" stroke="#FFD9EC" stroke-width="3" stroke-dasharray="8 7" stroke-linecap="round"/></svg>
+        <h3>＝ Garis Berimpit</h3><p>Menumpuk persis di garis yang sama — terlihat seperti satu garis.</p>
+      </div>
+    </div>
+    <div class="rhyme rv" style="--d:.3s">🎵 <b>Sajak Pengingat</b> 🎵<br>"Sejajar takkan pernah bertemu, berpotongan silang di satu titik temu,<br>tegak lurus siku sembilan puluh derajat, berimpit menyatu — beda apa lagi, ya?" 😄</div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13 : REFLEKSI ============ -->
+<section class="slide" id="s13">
+  <div class="inner">
+    <div class="rv"><span class="kicker">AKHIR KEGIATAN 🪞</span></div>
+    <h2 class="stitle rv" style="--d:.05s">Refleksi</h2>
+    <p class="lead rv" style="--d:.08s">Ceritakan pengalaman belajarmu hari ini, ya! 💬</p>
+    <div id="refForm">
+      <div class="card rsec rv" style="--d:.1s">
+        <p class="rq">1️⃣ Bagaimana perasaanmu belajar hari ini?</p>
+        <div class="rrow">
+          <button class="rbtn" data-m="Senang">😄<small>Senang</small></button>
+          <button class="rbtn" data-m="Biasa saja">🙂<small>Biasa</small></button>
+          <button class="rbtn" data-m="Bingung">😐<small>Bingung</small></button>
+          <button class="rbtn" data-m="Sedih">😔<small>Sedih</small></button>
+        </div>
+      </div>
+      <div class="card rsec rv" style="--d:.15s">
+        <p class="rq">2️⃣ Seberapa paham kamu dengan materi hari ini?</p>
+        <div class="stars" id="starRow"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      </div>
+      <div class="card rsec rv" style="--d:.2s">
+        <p class="rq">3️⃣ Kegiatan apa yang paling kamu sukai? <small style="color:var(--ink2)">(boleh pilih lebih dari satu)</small></p>
+        <div class="rrow">
+          <button class="fchip">⚡ Kuis Jawab Cepat</button>
+          <button class="fchip">🦄 Sweet Line Café</button>
+          <button class="fchip">📐 Visual Interaktif</button>
+          <button class="fchip">💖 Semuanya!</button>
+        </div>
+      </div>
+      <div class="card rsec rv" style="--d:.25s">
+        <p class="rq">4️⃣ Pesan untuk gurumu <small style="color:var(--ink2)">(opsional)</small>:</p>
+        <input class="txtin" id="refMsg" maxlength="120" placeholder="Tulis pesanmu di sini..." style="text-align:left">
+      </div>
+      <div style="text-align:center;margin-top:14px" class="rv"><button class="btn" id="refSend">Kirim Refleksi 💌</button></div>
+    </div>
+    <div class="card" id="refThanks" style="display:none;text-align:center">
+      <div style="font-size:2.5rem">💌💖</div>
+      <h3>Terima kasih, <span id="refThanksName">Sahabat</span>!</h3>
+      <p style="line-height:1.6;font-weight:600">Refleksimu sudah terkirim. Senang sekali hari ini bisa belajar bersamamu! 🌸</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14 : THANK YOU ============ -->
+<section class="slide" id="s14">
+  <span class="deco" style="top:14%;left:8%;font-size:2rem">🌷</span>
+  <span class="deco" style="top:20%;right:9%;font-size:2rem;animation-delay:1.1s">🌟</span>
+  <span class="deco" style="bottom:26%;left:10%;font-size:1.8rem;animation-delay:.7s">📏</span>
+  <span class="deco" style="bottom:22%;right:8%;font-size:1.8rem;animation-delay:1.9s">📐</span>
+  <div class="inner">
+    <div class="rv" style="font-size:3rem">🌸🌷💖</div>
+    <h2 class="ty-title rv" style="--d:.1s">Thank You for Today!</h2>
+    <p class="rv" style="--d:.18s;font-size:1.22rem;font-weight:800">Kamu luar biasa hari ini, <span id="tyName" style="color:var(--pink)">Sahabat</span>! 🌟</p>
+    <div class="recap rv" style="--d:.25s">
+      <div class="recard"><div class="v" id="tyQuiz">—</div><small>⚡ Skor Kuis</small></div>
+      <div class="recard"><div class="v" id="tyGame">—</div><small>🦄 Sweet Line Café</small></div>
+      <div class="recard"><div class="v" id="tyExit">—</div><small>🎫 Exit Ticket</small></div>
+    </div>
+    <div class="card rv" style="--d:.32s;max-width:660px;margin-top:6px"><p style="line-height:1.65;font-weight:600">📩 <b>Pesan untukmu:</b> Garis ada di mana-mana — di rel kereta, di jendela, di bukumu, bahkan di pizza yang kamu makan! Teruslah mengamati, karena Matematika sebenarnya dekat dengan kita. Sampai jumpa di petualangan berikutnya! 💕</p></div>
+  </div>
+</section>
+</main>
+
+<div id="overlay">
+  <div class="modal">
+    <div class="qemoji" id="qmEmoji">❓</div>
+    <h3 id="qmName">Benda</h3>
+    <p class="qq">Hubungan garis apa yang terbentuk? 🤔</p>
+    <div class="timerWrap"><div class="timerBar" id="qmBar"></div></div>
+    <div class="opts" id="qmOpts"></div>
+    <div class="fb" id="qmFb"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ================= UTIL ================= */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const set=(id,o)=>{const el=document.getElementById(id);for(const k in o)el.setAttribute(k,o[k]);};
+const fmtT=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const stats={name:'',quiz:0,quizDone:false,gameDone:false,gameMoves:0,gameTime:0,exit:0,exitDone:false,refleksi:{mood:null,stars:0,fav:[],msg:''}};
+
+/* ================= SUARA ================= */
+let actx=null,soundOn=true;
+document.addEventListener('pointerdown',()=>{if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}},{once:true});
+function tone(f,d,type,v,dl){d=d||.15;type=type||'sine';v=v||.12;dl=dl||0;if(!soundOn||!actx)return;try{const t=actx.currentTime+dl,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
+const SFX={
+  click(){tone(620,.07,'triangle',.09)},
+  flip(){tone(500,.06,'triangle',.09);tone(760,.07,'triangle',.09,.05)},
+  pop(){tone(880,.06,'square',.05)},
+  correct(){tone(523,.12,'sine',.13);tone(659,.12,'sine',.13,.1);tone(784,.2,'sine',.13,.2)},
+  wrong(){tone(190,.22,'sawtooth',.07);tone(150,.26,'sawtooth',.06,.08)},
+  win(){[523,659,784,1046,1318].forEach((f,i)=>tone(f,.16,'sine',.13,i*.11))}
+};
+$('#sndBtn').onclick=()=>{soundOn=!soundOn;$('#sndBtn').textContent=soundOn?'🔊':'🔇';if(soundOn)SFX.pop();};
+$('#fsBtn').onclick=()=>{if(!document.fullscreenElement){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();}else{document.exitFullscreen();}};
+
+/* ================= CONFETTI ================= */
+const cvs=$('#fx'),cx2=cvs.getContext('2d');let parts=[],fxOn=false;
+function sizeFx(){cvs.width=innerWidth;cvs.height=innerHeight;}
+addEventListener('resize',sizeFx);sizeFx();
+function burst(n,opt){n=n||110;opt=opt||{};const x0=(opt.x==null)?innerWidth/2:opt.x,y0=(opt.y==null)?innerHeight*.35:opt.y;
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,sp=3.5+Math.random()*7;
+    parts.push({x:x0,y:y0,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3.5,g:.16,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3,life:80+Math.random()*70,age:0,size:6+Math.random()*8,color:['#FF6B9D','#FFC93D','#4D96FF','#3ECB7B','#7C5CFC','#FF9F45'][Math.floor(Math.random()*6)],sh:Math.random()<.34?'h':(Math.random()<.5?'r':'c')});}
+  if(!fxOn){fxOn=true;requestAnimationFrame(fxTick);}}
+function fxTick(){cx2.clearRect(0,0,cvs.width,cvs.height);parts=parts.filter(p=>p.age<p.life);
+  for(const p of parts){p.age++;p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.rot+=p.vr;cx2.globalAlpha=Math.max(0,1-p.age/p.life);
+    if(p.sh==='h'){cx2.save();cx2.translate(p.x,p.y);cx2.rotate(p.rot);cx2.font=(p.size*2)+'px serif';cx2.fillStyle=p.color;cx2.fillText('💗',-p.size,-p.size*.7);cx2.restore();}
+    else if(p.sh==='r'){cx2.save();cx2.translate(p.x,p.y);cx2.rotate(p.rot);cx2.fillStyle=p.color;cx2.fillRect(-p.size/2,-p.size/2,p.size,p.size*.62);cx2.restore();}
+    else{cx2.fillStyle=p.color;cx2.beginPath();cx2.arc(p.x,p.y,p.size/2,0,6.283);cx2.fill();}}
+  cx2.globalAlpha=1;
+  if(parts.length){requestAnimationFrame(fxTick);}else{fxOn=false;cx2.clearRect(0,0,cvs.width,cvs.height);}}
+
+/* ================= TOAST ================= */
+let toastT=null;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+function wiggle(el){el.classList.remove('wiggle');void el.offsetWidth;el.classList.add('wiggle');}
+
+/* ================= NAVIGASI ================= */
+const slides=$$('.slide'),TOTAL=slides.length;let cur=0,thanksTimer=null;
+const dotsWrap=$('#dots');
+slides.forEach((s,i)=>{const b=document.createElement('button');b.className='dot';b.title='Slide '+(i+1);b.onclick=()=>go(i);dotsWrap.appendChild(b);});
+function go(i){if(i<0||i>=TOTAL||i===cur)return;
+  if(cur===0&&i>0&&!stats.name){toast('Isi dulu namamu di slide awal, lalu klik "Mulai Belajar" 😊');wiggle($('#nameCard'));return;}
+  const prevId=slides[cur].id;
+  slides[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');
+  $('#bar').style.width=(cur/(TOTAL-1)*100)+'%';
+  $('#counter').textContent=(cur+1)+' / '+TOTAL;
+  [...dotsWrap.children].forEach((d,di)=>d.classList.toggle('on',di===cur));
+  $('#prevBtn').disabled=cur===0;$('#nextBtn').disabled=cur===TOTAL-1;
+  if(prevId==='s14'&&thanksTimer){clearInterval(thanksTimer);thanksTimer=null;}
+  SFX.click();onEnter(cur);}
+function next(){go(cur+1);}
+function prev(){go(cur-1);}
+$('#prevBtn').onclick=prev;$('#nextBtn').onclick=next;
+document.addEventListener('keydown',e=>{const tg=e.target;
+  if(tg&&(tg.tagName==='INPUT'||tg.tagName==='TEXTAREA'))return;
+  if($('#overlay').classList.contains('show'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')next();
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')prev();});
+function onEnter(i){const id=slides[i].id;
+  if(id==='s10'&&!game.started){game.started=true;gameStart();}
+  if(id==='s11'&&!exitStarted){exitStarted=true;exitStart();}
+  if(id==='s14')startThanks();}
+
+/* ================= COVER ================= */
+function startFromCover(){const v=$('#nameInput').value.trim();
+  if(!v){toast('Tulis dulu namamu ya 😊');wiggle($('#nameCard'));$('#nameInput').focus();return;}
+  stats.name=v;$('#nameChip').textContent='👧 '+v;
+  toast('Selamat datang, '+v+'! 🎉');SFX.correct();burst(80);
+  setTimeout(()=>go(1),500);}
+$('#startBtn').onclick=startFromCover;
+$('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startFromCover();});
+
+/* ================= S4 : JENIS SUDUT ================= */
+let ang90=false,angTu=false;
+function drawAngle(){const th=+$('#angSlider').value,V={x:40,y:170},R=192,r=46,rad=th*Math.PI/180;
+  $('#angVal').textContent=th+'°';
+  const ex=V.x+R*Math.cos(rad),ey=V.y-R*Math.sin(rad);
+  set('rayB',{x2:ex.toFixed(1),y2:ey.toFixed(1)});
+  const ax=V.x+r*Math.cos(rad),ay=V.y-r*Math.sin(rad);
+  $('#angArc').setAttribute('d','M '+(V.x+r)+' '+V.y+' A '+r+' '+r+' 0 0 0 '+ax.toFixed(1)+' '+ay.toFixed(1));
+  set('rayLbl',{x:(V.x+R*.62*Math.cos(rad)-16).toFixed(1),y:(V.y-R*.62*Math.sin(rad)-9).toFixed(1)});
+  const ra=$('#raMark'),w=24;
+  if(th===90){ra.style.display='';ra.setAttribute('d','M '+V.x+' '+(V.y-w)+' L '+(V.x+w)+' '+(V.y-w)+' L '+(V.x+w)+' '+V.y);}
+  else{ra.style.display='none';}
+  let t,c,d;
+  if(th<90){t='Sudut Lancip';c='#4D96FF';d='Besarnya KURANG dari 90°. Bentuknya runcing dan kecil. 🔵';}
+  else if(th===90){t='Sudut Siku-siku';c='#1F9D57';d='Besarnya TEPAT 90°, seperti huruf L. Sudut istimewa! 🟢';}
+  else{t='Sudut Tumpul';c='#E08316';d='Besarnya LEBIH dari 90°, kurang dari 180°. Bentuknya lebar. 🟠';}
+  $('#angType').textContent=t;$('#angType').style.color=c;
+  $('#angArc').setAttribute('stroke',c);$('#rayB').setAttribute('stroke',c);$('#rayLbl').setAttribute('fill',c);
+  if(th===90&&!ang90){ang90=true;burst(55);SFX.correct();$('#angMsg').textContent='🎉 Keren! Tantangan kedua: buat sudut TUMPUL (lebih dari 90°)!';}
+  else if(th>90&&ang90&&!angTu){angTu=true;burst(70);SFX.win();$('#angMsg').textContent='🏆 HEBAT! Kamu sudah mengenal semua jenis sudut!';}}
+$('#angSlider').addEventListener('input',drawAngle);
+$('#angSlider').addEventListener('change',()=>SFX.pop());
+$$('.angcard').forEach(c=>c.onclick=()=>{$('#angSlider').value=c.dataset.deg;SFX.pop();drawAngle();});
+
+/* ================= S5 : SEJAJAR ================= */
+let parExt=false,parAnim=null;const PAR={x1:30,x2:290,yA:70,yB:140};
+function parDraw(){set('parA',{x1:PAR.x1.toFixed(1),x2:PAR.x2.toFixed(1),y1:PAR.yA,y2:PAR.yA});set('parB',{x1:PAR.x1.toFixed(1),x2:PAR.x2.toFixed(1),y1:PAR.yB,y2:PAR.yB});}
+function parExtend(){if(parAnim)return;SFX.click();parExt=!parExt;
+  const from={x1:PAR.x1,x2:PAR.x2},to=parExt?{x1:-70,x2:390}:{x1:30,x2:290};
+  if(!parExt)$('#parMsg').textContent='';
+  const t0=performance.now(),D=900;
+  function step(t){const k=Math.min((t-t0)/D,1),e=k*(2-k);
+    PAR.x1=from.x1+(to.x1-from.x1)*e;PAR.x2=from.x2+(to.x2-from.x2)*e;parDraw();
+    if(k<1){parAnim=requestAnimationFrame(step);}
+    else{parAnim=null;
+      if(parExt){$('#parMsg').textContent='∞ Diperpanjang tanpa batas... mereka TETAP tidak bertemu!';burst(45,{y:innerHeight*.5});SFX.correct();}}}
+  parAnim=requestAnimationFrame(step);}
+$('#parBtn').onclick=parExtend;
+$('#parReset').onclick=()=>{if(parExt)parExtend();};
+
+/* ================= S6 : BERPOTONGAN ================= */
+function bpDraw(){const phi=+$('#bpSlider').value,P={x:160,y:105},L=152,rad=phi*Math.PI/180;
+  $('#bpVal').textContent=phi+'°';
+  set('bpB',{x1:(P.x-L*Math.cos(rad)).toFixed(1),y1:(P.y-L*Math.sin(rad)).toFixed(1),x2:(P.x+L*Math.cos(rad)).toFixed(1),y2:(P.y+L*Math.sin(rad)).toFixed(1)});
+  const r=30,bx=P.x+r*Math.cos(rad),by=P.y-r*Math.sin(rad);
+  $('#bpArc').setAttribute('d','M '+(P.x+r)+' '+P.y+' A '+r+' '+r+' 0 0 0 '+bx.toFixed(1)+' '+by.toFixed(1));}
+$('#bpSlider').addEventListener('input',bpDraw);
+$('#bpSlider').addEventListener('change',()=>SFX.pop());
+
+/* ================= S7 : TEGAK LURUS ================= */
+let tlDone=false;
+function tlDraw(){const phi=+$('#tlSlider').value,P={x:160,y:105},L=152,rad=phi*Math.PI/180;
+  $('#tlVal').textContent=phi+'°';
+  set('tlB',{x1:(P.x-L*Math.cos(rad)).toFixed(1),y1:(P.y-L*Math.sin(rad)).toFixed(1),x2:(P.x+L*Math.cos(rad)).toFixed(1),y2:(P.y+L*Math.sin(rad)).toFixed(1)});
+  const ok=phi===90;
+  $('#tlSquares').style.display=ok?'':'none';
+  $('#tlArc').style.display=ok?'none':'';
+  const r=26,bx=P.x+r*Math.cos(rad),by=P.y-r*Math.sin(rad);
+  $('#tlArc').setAttribute('d','M '+(P.x+r)+' '+P.y+' A '+r+' '+r+' 0 0 0 '+bx.toFixed(1)+' '+by.toFixed(1));
+  $('#tlDot').setAttribute('fill',ok?'#3ECB7B':'#FF3B5C');
+  if(ok){$('#tlMsg').textContent='🎉 TEPAT 90°! Kedua garis saling TEGAK LURUS! 🟢';
+    if(!tlDone){tlDone=true;burst(70);SFX.win();}}
+  else{$('#tlMsg').textContent='Sudut sekarang '+phi+'° — geser sampai TEPAT 90° ya!';}}
+$('#tlSlider').addEventListener('input',tlDraw);
+$('#tlSlider').addEventListener('change',()=>SFX.pop());
+
+/* ================= S8 : BERIMPIT ================= */
+let biCeleb=false;
+function biDraw(){const v=+$('#biSlider').value,off=60-v,yB=70+off;
+  set('biB',{y1:yB,y2:yB});
+  $('#biGapL').setAttribute('y2',yB-8);
+  $('#biGapT').setAttribute('y',Math.round((70+yB)/2+4));
+  $('#biGapT').textContent='jarak: '+off;
+  $('#biLblB').setAttribute('y',yB+26);
+  const merged=off===0;
+  ['biGapL','biGapT','biLblA','biLblB'].forEach(id=>{document.getElementById(id).style.display=merged?'none':'';});
+  $('#biB').setAttribute('stroke-dasharray',merged?'none':'13 9');
+  $('#biSlider').disabled=merged;
+  if(merged){$('#biMsg').textContent='🎉 BERIMPIT! Menumpuk persis → terlihat seperti SATU garis. Titik potongnya tak terhingga! ∞';
+    if(!biCeleb){biCeleb=true;burst(70);SFX.win();}}
+  else{$('#biMsg').textContent='Gesar garis merah ke bawah sampai MENEMPEL sempurna dengan garis biru!';}}
+$('#biSlider').addEventListener('input',biDraw);
+$('#biSlider').addEventListener('change',()=>SFX.pop());
+$('#biReset').onclick=()=>{biCeleb=false;const s=$('#biSlider');s.disabled=false;s.value=0;SFX.click();biDraw();};
+
+/* ================= S9 : KUIS JAWAB CEPAT ================= */
+const RELS=['Sejajar','Berpotongan','Tegak Lurus','Berimpit'];
+const QUIZ=[
+  {e:'🚂',n:'Rel kereta api',a:0},
+  {e:'🚸',n:'Rambu zebra cross',a:0},
+  {e:'🎸',n:'Senar gitar',a:0},
+  {e:'🛣️',n:'Jalan raya dua lajur',a:0},
+  {e:'🏟️',n:'Jalur lari stadion',a:0},
+  {e:'✂️',n:'Gunting terbuka',a:1},
+  {e:'❌',n:'Tanda silang (X)',a:1},
+  {e:'🚧',n:'Palang pintu kereta',a:1},
+  {e:'🍕',n:'Pizza dipotong dari tengah',a:1},
+  {e:'📖',n:'Buku terbuka membentuk V',a:1},
+  {e:'🖼️',n:'Bingkai foto',a:2},
+  {e:'🕒',n:'Jam pukul 03.00',a:2},
+  {e:'➕',n:'Tanda plus apotek',a:2},
+  {e:'🚩',n:'Tiang bendera & tanah',a:2},
+  {e:'📒',n:'Sudut buku tulis',a:2},
+  {e:'📄',n:'Kertas dilipat dua',a:3},
+  {e:'✏️',n:'Dua pensil menumpuk rapi',a:3},
+  {e:'🕛',n:'Jam pukul 12.00',a:3},
+  {e:'🥢',n:'Sepasang sumpit menempel',a:3},
+  {e:'🍞',n:'Dua roti ditumpuk rapi',a:3}
+];
+const quiz={started:false,done:0,score:0,opening:false,order:[],orderOpts:[],item:null,btn:null,timeLeft:0,tint:null};
+function quizStart(){
+  quiz.started=true;quiz.done=0;quiz.score=0;quiz.opening=false;quiz.order=shuffle(QUIZ.map((_,i)=>i));
+  $('#quizIntro').style.display='none';$('#quizResult').style.display='none';$('#quizPlay').style.display='';
+  const g=$('#qgrid');g.innerHTML='';
+  quiz.order.forEach((qi,pos)=>{const b=document.createElement('button');b.className='qcard';b.title='Kartu '+(pos+1);
+    b.innerHTML='<span class="num">'+(pos+1)+'</span><span class="qi">❓</span>';
+    b.onclick=()=>openQuiz(pos,b);g.appendChild(b);});
+  updQStats();}
+function updQStats(){$('#qScore').textContent=quiz.score;$('#qProg').textContent=quiz.done+' / 20';}
+function openQuiz(pos,btn){
+  if(btn.dataset.done||quiz.opening)return;
+  quiz.opening=true;SFX.flip();
+  quiz.item=QUIZ[quiz.order[pos]];quiz.btn=btn;
+  $('#qmEmoji').textContent='❓';$('#qmName').textContent='Kartu '+(pos+1)+' — apa bendanya?';
+  setTimeout(()=>{$('#qmEmoji').textContent=quiz.item.e;$('#qmName').textContent=quiz.item.n;},420);
+  $('#qmFb').textContent='';$('#qmFb').style.color='';
+  quiz.orderOpts=shuffle([0,1,2,3]);
+  const wrap=$('#qmOpts');wrap.innerHTML='';
+  quiz.orderOpts.forEach(oi=>{const b=document.createElement('button');b.className='opt';b.textContent=RELS[oi];
+    b.onclick=()=>answerQuiz(oi,b);wrap.appendChild(b);});
+  $('#overlay').classList.add('show');
+  quiz.timeLeft=10;setBar(1);$('#qmBar').classList.remove('danger');
+  clearInterval(quiz.tint);
+  quiz.tint=setInterval(()=>{quiz.timeLeft=Math.max(0,quiz.timeLeft-.1);setBar(quiz.timeLeft/10);
+    if(quiz.timeLeft<=3)$('#qmBar').classList.add('danger');
+    if(quiz.timeLeft<=0)answerQuiz(-1,null);},100);}
+function setBar(f){$('#qmBar').style.width=(f*100)+'%';}
+function answerQuiz(k,btn){
+  if(!quiz.opening)return;
+  quiz.opening=false;
+  clearInterval(quiz.tint);$('#qmBar').classList.remove('danger');
+  const item=quiz.item,ok=k===item.a;
+  [...$('#qmOpts').children].forEach((b,i)=>{b.onclick=null;if(quiz.orderOpts[i]===item.a)b.classList.add('correct');});
+  if(btn&&k!==item.a)btn.classList.add('wrong');
+  const fb=$('#qmFb');const qi=quiz.btn.querySelector('.qi');
+  if(ok){fb.textContent='🎉 Benar! +10 poin';fb.style.color='#157A43';
+    quiz.score+=10;SFX.correct();quiz.btn.classList.add('ok');qi.textContent=item.e;}
+  else if(k===-1){fb.textContent='⏰ Waktu habis! Jawabannya: '+RELS[item.a];fb.style.color='#C02626';
+    SFX.wrong();quiz.btn.classList.add('bad');qi.textContent='😅';}
+  else{fb.textContent='😅 Belum tepat. Jawabannya: '+RELS[item.a];fb.style.color='#C02626';
+    SFX.wrong();quiz.btn.classList.add('bad');qi.textContent='😅';}
+  quiz.btn.dataset.done='1';
+  quiz.done++;updQStats();
+  setTimeout(()=>{$('#overlay').classList.remove('show');if(quiz.done===QUIZ.length)quizFinish();},1500);}
+function quizFinish(){
+  stats.quiz=quiz.score;stats.quizDone=true;
+  const s=quiz.score,stars=s>=180?3:(s>=140?2:(s>=100?1:0));
+  const emojis=['🌱','💪','🌟','🏆'];
+  const msgs=['Tidak apa-apa! Baca lagi materinya, lalu coba lagi ya!','Bagus! Sedikit lagi sempurna — ayo ulangi biar makin jago!','Hebat! Skor kamu tinggi sekali!','LUAR BIASA! Kamu master hubungan antar garis!'];
+  $('#qrEmoji').textContent=emojis[stars];
+  $('#qrStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  $('#qrScore').textContent=s+' / 200';
+  $('#qrMsg').textContent=msgs[stars];
+  $('#quizPlay').style.display='none';$('#quizResult').style.display='';
+  SFX.win();burst(130);}
+$('#quizGo').onclick=()=>{SFX.click();quizStart();};
+$('#qRetry').onclick=()=>{SFX.click();quizStart();};
+$('#qToGame').onclick=()=>{SFX.click();go(9);};
+
+/* ================= S10 : GAME SWEET LINE CAFE ================= */
+const PAIRS=[
+  {e:'🚂',n:'Rel kereta api',rel:'Sejajar'},
+  {e:'🎸',n:'Senar gitar',rel:'Sejajar'},
+  {e:'✂️',n:'Gunting terbuka',rel:'Berpotongan'},
+  {e:'🕒',n:'Jam pukul 03.00',rel:'Tegak Lurus'},
+  {e:'📄',n:'Kertas dilipat',rel:'Berimpit'},
+  {e:'🕛',n:'Jam pukul 12.00',rel:'Berimpit'}
+];
+const SYM={'Sejajar':'∥','Berpotongan':'✕','Tegak Lurus':'⊥','Berimpit':'＝'};
+const PRAISE=['Yeay! Pasangan manis cocok! 💖','Wih, kamu hebat! 🌸','Cocok sempurna! ✨','Kamu keren banget! 💕','Perfect! Lili bangga! 🧁💗'];
+const MISS=['Belum cocok, coba lagi ya! 🌷','Hampir! Ingat-ingat lagi 😊','Semangat, kamu pasti bisa! 💪','Ups! Coba pasangan lain ya 🌸'];
+const game={started:false,first:null,lock:false,matched:0,moves:0,t0:0,tint:null,done:false};
+const praise=()=>PRAISE[Math.floor(Math.random()*PRAISE.length)];
+const miss=()=>MISS[Math.floor(Math.random()*MISS.length)];
+function sayMascot(t){$('#mascotSay').textContent=t;const m=$('#gMascot');m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');}
+function gameStart(){
+  game.first=null;game.lock=false;game.matched=0;game.moves=0;game.done=false;game.t0=0;
+  clearInterval(game.tint);
+  $('#gWin').style.display='none';$('#mgrid').style.display='';
+  $('#gMoves').textContent='0';$('#gPairs').textContent='0 / 6';$('#gTime').textContent='0:00';
+  const deck=[];
+  PAIRS.forEach((p,i)=>{deck.push({kind:'o',rel:p.rel,e:p.e,n:p.n,pi:i});deck.push({kind:'l',rel:p.rel,sym:SYM[p.rel],pi:i});});
+  game.deck=shuffle(deck);
+  const g=$('#mgrid');g.innerHTML='';
+  game.deck.forEach(c=>{const b=document.createElement('button');b.className='mcard';
+    b.dataset.kind=c.kind;b.dataset.rel=c.rel;b.dataset.pi=c.pi;
+    const inner=document.createElement('div');inner.className='mcard-inner';
+    const back=document.createElement('div');back.className='mface back';back.textContent='🧁';
+    const front=document.createElement('div');front.className='mface front';
+    if(c.kind==='o'){front.innerHTML='<span class="em">'+c.e+'</span><b>'+c.n+'</b><small>'+c.rel+'</small>';}
+    else{front.innerHTML='<span class="sym">'+c.sym+'</span><b>'+c.rel+'</b><small>cocokkan denganku!</small>';}
+    inner.appendChild(back);inner.appendChild(front);b.appendChild(inner);
+    b.onclick=()=>flipCard(b);g.appendChild(b);});
+  sayMascot('Halo! Aku Lili 🧁. Buka dua kartu dan cocokkan benda dengan hubungan garisnya ya! 💕');}
+function flipCard(b){
+  if(game.lock||game.done||b.classList.contains('flipped')||b.classList.contains('matched'))return;
+  if(!game.t0){game.t0=Date.now();
+    game.tint=setInterval(()=>{$('#gTime').textContent=fmtT(Math.floor((Date.now()-game.t0)/1000));},500);}
+  b.classList.add('flipped');SFX.flip();
+  if(!game.first){game.first=b;return;}
+  const a=game.first;game.first=null;
+  game.moves++;$('#gMoves').textContent=game.moves;
+  if(a.dataset.rel===b.dataset.rel&&a.dataset.kind!==b.dataset.kind){
+    a.classList.add('matched');b.classList.add('matched');
+    game.matched++;$('#gPairs').textContent=game.matched+' / 6';
+    SFX.correct();sayMascot(praise());
+    const r=b.getBoundingClientRect();burst(26,{x:r.left+r.width/2,y:r.top+r.height/2});
+    if(game.matched===6)gameWin();}
+  else{game.lock=true;sayMascot(miss());SFX.wrong();
+    setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');game.lock=false;},950);}}
+function gameWin(){
+  game.done=true;clearInterval(game.tint);
+  const s=Math.floor((Date.now()-game.t0)/1000);
+  stats.gameDone=true;stats.gameMoves=game.moves;stats.gameTime=s;
+  $('#mgrid').style.display='none';
+  $('#gwName').textContent=stats.name||'Sahabat';
+  $('#gwMoves').textContent=game.moves;$('#gwTime').textContent=fmtT(s);
+  $('#gWin').style.display='';
+  sayMascot('LUAR BIASA! Semua pasangan manis cocok! Kamu bintang Sweet Line Café! 👑💖');
+  SFX.win();burst(170);
+  setTimeout(()=>burst(120,{y:innerHeight*.55}),600);}
+$('#gReset').onclick=()=>{SFX.click();gameStart();};
+$('#gAgain').onclick=()=>{SFX.click();gameStart();};
+
+/* ================= S11 : EXIT TICKET ================= */
+const EXIT=[
+  {q:'Dua garis lurus yang tidak akan pernah bertemu meskipun diperpanjang terus-menerus disebut garis…',o:['Sejajar','Berpotongan','Tegak lurus','Berimpit'],a:0,ex:'Karena tidak pernah bertemu dan jaraknya selalu sama.'},
+  {q:'Dua garis yang berpotongan dan membentuk sudut siku-siku (90°) disebut garis…',o:['Sejajar','Berimpit','Tegak lurus','Melengkung'],a:2,ex:'Berpotongan + sudut 90° = tegak lurus.'},
+  {q:'Dua garis yang menumpuk tepat pada garis yang sama sehingga terlihat seperti satu garis disebut…',o:['Berimpit','Sejajar','Berpotongan','Tegak lurus'],a:0,ex:'Menumpuk persis = berimpit.'},
+  {q:'Jam dinding menunjukkan pukul 09.00. Hubungan kedua jarum jam tersebut adalah…',o:['Sejajar','Berpotongan','Berimpit','Tegak lurus'],a:3,ex:'Pukul 09.00 membentuk sudut 90°, jadi tegak lurus.'},
+  {q:'Dita menggambar dua garis yang menyilang membentuk huruf "X". Hubungan kedua garis itu adalah…',o:['Berimpit','Berpotongan','Sejajar','Tegak lurus'],a:1,ex:'Menyilang di satu titik potong = berpotongan.'}
+];
+let exitStarted=false;
+const et={i:0,score:0,answered:false,hist:[]};
+function exitStart(){
+  et.i=0;et.score=0;et.answered=false;et.hist=[];
+  $('#exitCard').style.display='';$('#exitResult').style.display='none';
+  if(!$('#exitDots').children.length){for(let i=0;i<EXIT.length;i++)$('#exitDots').appendChild(document.createElement('span'));}
+  exitRender();}
+function exitRender(){
+  const q=EXIT[et.i];
+  $('#exitQ').innerHTML='<span class="qnum">Soal '+(et.i+1)+' dari '+EXIT.length+'</span><br>'+q.q;
+  const w=$('#exitOpts');w.innerHTML='';
+  q.o.forEach((t,k)=>{const b=document.createElement('button');b.className='opt wide';
+    b.textContent=String.fromCharCode(65+k)+'. '+t;b.onclick=()=>exitAnswer(k,b);w.appendChild(b);});
+  $('#exitFb').textContent='';$('#exitFb').style.color='';
+  $('#exitNext').style.display='none';
+  [...$('#exitDots').children].forEach((d,di)=>{
+    d.className=di<et.i?(et.hist[di]?'ok':'bad'):(di===et.i?'cur':'');});}
+function exitAnswer(k,btn){
+  if(et.answered)return;et.answered=true;
+  const q=EXIT[et.i],ok=k===q.a;
+  et.hist[et.i]=ok;
+  if(ok){et.score++;SFX.correct();}else SFX.wrong();
+  [...$('#exitOpts').children].forEach((b,i)=>{b.onclick=null;
+    if(i===q.a)b.classList.add('correct');else if(i===k)b.classList.add('wrong');});
+  $('#exitFb').textContent=(ok?'🎉 Benar! ':'💜 Belum tepat. ')+q.ex;
+  $('#exitFb').style.color=ok?'#157A43':'#C02626';
+  const nx=$('#exitNext');nx.style.display='';
+  nx.textContent=et.i===EXIT.length-1?'Lihat Hasil 🏁':'Lanjut →';}
+function exitNext(){if(!et.answered)return;et.answered=false;SFX.click();
+  et.i++;
+  if(et.i<EXIT.length)exitRender();else exitFinish();}
+function exitFinish(){
+  stats.exit=et.score;stats.exitDone=true;
+  $('#exitCard').style.display='none';
+  const good=et.score>=4;
+  $('#erScore').textContent=et.score+' / 5';
+  $('#erMsg').textContent=good?'Hebat! Tiket pulangmu sudah dicetak. Sampai jumpa besok! ✨':(et.score>=3?'Lumayan! Tiketmu dicetak — ayo jelajahi lagi materinya ya! 🌱':'Jangan sedih! Buka lagi materinya, lalu coba sekali lagi ya 💪');
+  $('#exitResult').style.display='';
+  $('#erStamp').style.display=good?'':'none';
+  if(good){SFX.win();burst(110);}}
+$('#exitNext').onclick=exitNext;
+$('#erAgain').onclick=()=>{SFX.click();exitStart();};
+$('#erToSum').onclick=()=>{SFX.click();go(11);};
+
+/* ================= S13 : REFLEKSI ================= */
+$$('.rbtn').forEach(b=>b.onclick=()=>{$$('.rbtn').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');stats.refleksi.mood=b.dataset.m;SFX.pop();});
+const starEls=$$('#starRow span');
+starEls.forEach((s,i)=>s.onclick=()=>{stats.refleksi.stars=i+1;
+  starEls.forEach((x,j)=>x.classList.toggle('on',j<=i));SFX.pop();});
+$$('.fchip').forEach(c=>c.onclick=()=>{c.classList.toggle('sel');SFX.pop();});
+$('#refSend').onclick=()=>{
+  if(!stats.refleksi.mood||!stats.refleksi.stars){toast('Pilih perasaan dan bintang dulu ya 😊');return;}
+  stats.refleksi.fav=$$('.fchip.sel').map(c=>c.textContent.trim());
+  stats.refleksi.msg=$('#refMsg').value.trim();
+  $('#refForm').style.display='none';$('#refThanks').style.display='';
+  $('#refThanksName').textContent=stats.name||'Sahabat';
+  SFX.correct();burst(80);};
+
+/* ================= S14 : THANK YOU ================= */
+function startThanks(){
+  $('#tyName').textContent=stats.name||'Sahabat';
+  $('#tyQuiz').textContent=stats.quizDone?(stats.quiz+' / 200'):'Belum dikerjakan';
+  $('#tyGame').textContent=stats.gameDone?(stats.gameMoves+' langkah ⏱'+fmtT(stats.gameTime)):'Belum dimainkan';
+  $('#tyExit').textContent=stats.exitDone?(stats.exit+' / 5'):'Belum dikerjakan';
+  burst(140);
+  if(thanksTimer)clearInterval(thanksTimer);
+  thanksTimer=setInterval(()=>burst(14,{y:innerHeight+6}),1100);}
+
+/* ================= INIT ================= */
+(function init(){
+  $('#counter').textContent='1 / '+TOTAL;
+  dotsWrap.children[0].classList.add('on');
+  $('#prevBtn').disabled=true;
+  drawAngle();bpDraw();tlDraw();biDraw();
+})();
+</script>
+</body>
+</html>
